@@ -43,9 +43,6 @@
     <Filter Include="リソース ファイル\hlsl\Particle">
       <UniqueIdentifier>{2886e826-dede-4a4f-a88e-eda490946fef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\hlsl\SmartDraw">
-      <UniqueIdentifier>{c3e8d480-a305-4663-b7c4-27452c99cbee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Basic">
       <UniqueIdentifier>{0924d464-474a-4d5b-9f85-a62b2e591306}</UniqueIdentifier>
     </Filter>
@@ -122,15 +119,6 @@
     <FxCompile Include="BasicVS.hlsl">
       <Filter>Engine\Basic</Filter>
     </FxCompile>
-    <FxCompile Include="SmartDrawVS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawPS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawGS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
     </FxCompile>
@@ -159,9 +147,6 @@
   <ItemGroup>
     <None Include="Basic.hlsli">
       <Filter>Engine\Basic</Filter>
-    </None>
-    <None Include="SmartDrawShaderHeader.hlsli">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
     </None>
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli">
       <Filter>リソース ファイル\hlsl\Particle</Filter>

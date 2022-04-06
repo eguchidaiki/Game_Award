@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+.vs/
+x64/
+DirectXTex/Bin/Desktop_2019_Win10/ARM64/Debug/
+DirectXTex/Bin/Desktop_2019_Win10/Win32/Debug/
