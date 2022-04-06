@@ -228,15 +228,8 @@ void ParticleManager::Prototype_Add(int addCount, RVector3 startPos)
 	for (int i = 0; i < addCount; i++) {
 		//uniqueポインタで動的生成
 		ParticlePrototype *newp = prototype_->clone(startPos);
-		std::unique_ptr<ParticlePrototype> addp(std::move(newp));
-		pplist.emplace_front();
-		ParticlePrototype *p = pplist.front().get();
-		p = newp;
 
-		//生成したポインタの所有権をuniqueポインタのリストに譲渡
-		//pplist.push_back(std::move(addp));
-
-		std::cout << "now list size is : " << std::distance(pplist.begin(), pplist.end()) << std::endl;
+		pplist.emplace_front(newp);
 	}
 }
 
@@ -253,7 +246,12 @@ void ParticleManager::Prototype_Update()
 	//	(*itr)->Update();
 	//}
 
-	pplist.remove_if([](ParticlePrototype *p) {return p->nowFrame >= p->endFrame; });
+   	std::erase_if(pplist, [](std::unique_ptr<ParticlePrototype> &p) {
+		return p->nowFrame >= p->endFrame; });
+
+	//pplist.remove_if([](std::unique_ptr<ParticlePrototype> &p) {
+	//	return p->nowFrame >= p->endFrame;
+	//	});
 
 	//バッファデータ転送
 	int vcount = 0;
@@ -264,6 +262,7 @@ void ParticleManager::Prototype_Update()
 		for (std::forward_list<std::unique_ptr<ParticlePrototype>>::iterator it = pplist.begin();
 			it != pplist.end();
 			it++) {
+			(*it)->Update();
 			// 座標
 			vertMap->pos = (*it)->pos;
 			// スケール
