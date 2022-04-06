@@ -9,6 +9,14 @@ cbuffer cbuff0 : register(b0)
 
 struct VSOutput
 {
-	float4 svpos : SV_POSITION;
-	float2 uv    : TEXCOORD;
+	float4 svpos : SV_POSITION;	//頂点座標
+	float2 uv    : TEXCOORD;	//UV座標
+	
+    matrix ins_matrix : INSTANCE_WORLD_MAT;	//インスタンシング用変換行列
+};
+
+struct GSOutput
+{
+    float4 pos : SV_POSITION;
+	
 };
