@@ -3,11 +3,11 @@
 #include "Stage.h"
 #include "InputManger.h"
 #include "DrawShape.h"
-#include "Colors.h"
+//#include "Colors.h"
 
 namespace
 {
-static size_t i = 0;
+	static size_t i = 0;
 }
 
 Player* Player::Get()
@@ -45,6 +45,11 @@ Player::Player() :
 	leg{}
 {
 	Init();
+
+	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
+	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
+
+	PlayerSprite.Create(FaceHandle[0], 50, 50);
 }
 
 Player::~Player()
@@ -63,19 +68,16 @@ void Player::Init()
 	IsColide = false;
 
 	Body_One.Init(CenterPosition, left);
-	Body_One.BodyColor = YELLOW;
+	//Body_One.BodyColor = YELLOW;
 
 	Body_Two.Init(CenterPosition, up);
-	Body_Two.BodyColor = GREEN;
+	//Body_Two.BodyColor = GREEN;
 
 	Body_Three.Init(CenterPosition, right);
-	Body_Three.BodyColor = MAGENTA;
+	//Body_Three.BodyColor = MAGENTA;
 
 	Body_Four.Init(CenterPosition, down);
-	Body_Four.BodyColor = MAGENTA;
-
-	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
-	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
+	//Body_Four.BodyColor = MAGENTA;
 
 	leg.Init();
 	IsLeft = true;
@@ -626,15 +628,17 @@ void Player::Draw(int offsetX, int offsetY)
 		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			DrawExtendGraph(
+			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			DrawExtendGraph(
+			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 	}
 
@@ -684,36 +688,40 @@ void Player::Draw(int offsetX, int offsetY)
 		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			DrawExtendGraph(
+			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			DrawExtendGraph(
+			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 	}
 
+	PlayerSprite.Draw();
+
 #pragma region debug
-	DrawFormatString(0, 0, WHITE, "AD:左右移動");
-	DrawFormatString(0, 20, WHITE, "W:ジャンプ");
-	DrawFormatString(0, 40, WHITE, "←↑→:折る");
-	DrawFormatString(0, 60, WHITE, "SPACE:開く");
-	DrawFormatString(0, 120, WHITE, "%f", CenterPosition.y);
-	DrawFormatString(0, 140, WHITE, "%f", leg.FootLeftUpPosition.y);
-	DrawFormatString(0, 160, WHITE, "%f", static_cast<double>(leg.FootLeftUpPosition.y) - static_cast<double>(CenterPosition.y));
+	//DrawFormatString(0, 0, WHITE, "AD:左右移動");
+	//DrawFormatString(0, 20, WHITE, "W:ジャンプ");
+	//DrawFormatString(0, 40, WHITE, "←↑→:折る");
+	//DrawFormatString(0, 60, WHITE, "SPACE:開く");
+	//DrawFormatString(0, 120, WHITE, "%f", CenterPosition.y);
+	//DrawFormatString(0, 140, WHITE, "%f", leg.FootLeftUpPosition.y);
+	//DrawFormatString(0, 160, WHITE, "%f", static_cast<double>(leg.FootLeftUpPosition.y) - static_cast<double>(CenterPosition.y));
 	//DrawFormatString(0, 180, WHITE, "fall:%d", IsFaceFall);
-	DrawFormatString(0, 200, WHITE, "isleft:%d", IsLeft);
-	DrawFormatString(0, 220, WHITE, "isright:%d", IsRight);
+	//DrawFormatString(0, 200, WHITE, "isleft:%d", IsLeft);
+	//DrawFormatString(0, 220, WHITE, "isright:%d", IsRight);
 	if (IsGoal == true)
 	{
-		DrawFormatString(300, 100, YELLOW, "GOAL");
+		//DrawFormatString(300, 100, YELLOW, "GOAL");
 	}
 	else
 	{
-		DrawFormatString(300, 100, YELLOW, "NO GOAL");
+		//DrawFormatString(300, 100, YELLOW, "NO GOAL");
 	}
 
 #pragma endregion

@@ -3,6 +3,7 @@
 #include "PlayerFoot.h"
 #include <RVector.h>
 #include <TexManager.h>
+#include "Sprite.h"
 
 class Player final
 {
@@ -96,4 +97,7 @@ public: //メンバ変数
 
 	//足
 	PlayerFoot leg;
+
+	//描画用スプライト
+	Sprite PlayerSprite;
 };

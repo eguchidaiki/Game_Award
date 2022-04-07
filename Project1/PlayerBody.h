@@ -3,6 +3,7 @@
 #include <RVector.h>
 #include "Easing.h"
 #include "Stage.h"
+#include "Sprite.h"
 
 enum bodytype
 {
@@ -117,5 +118,7 @@ public: //ƒƒ“ƒo•Ï”
 	int BodyColor;
 
 	//‰æ‘œƒnƒ“ƒhƒ‹
-	int Bodyhandle;
+	UINT Bodyhandle;
+
+	Sprite BodySprite;
 };

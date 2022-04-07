@@ -108,9 +108,6 @@
     <ClCompile Include="BaseBlock.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DrawShape.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Easing.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -121,15 +118,6 @@
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
       <Filter>Engine\Basic</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawVS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawPS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawGS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
@@ -159,9 +147,6 @@
   <ItemGroup>
     <None Include="Basic.hlsli">
       <Filter>Engine\Basic</Filter>
-    </None>
-    <None Include="SmartDrawShaderHeader.hlsli">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
     </None>
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
@@ -241,9 +226,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Colors.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawShape.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Easing.h">

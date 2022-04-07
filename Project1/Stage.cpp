@@ -273,13 +273,13 @@ void Stage::Draw(int offsetX, int offsetY)
 					}
 					case MapchipData::BLOCK:
 					{
-						SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
+						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
 						DrawShape::DrawPlane(pos1, pos2, GRAY);
 						break;
 					}
 					case MapchipData::GOAL:
 					{
-						SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
+						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
 						DrawShape::DrawPlane(pos1, pos2, YELLOW);
 						break;
 					}
@@ -287,7 +287,7 @@ void Stage::Draw(int offsetX, int offsetY)
 					case MapchipData::START:
 					default:
 					{
-						SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
+						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
 						DrawShape::DrawPlane(pos1, pos2, WHITE);
 						break;
 					}
@@ -296,7 +296,7 @@ void Stage::Draw(int offsetX, int offsetY)
 			}
 		}
 
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0xFF);
+		//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0xFF);
 
 		// ‚Â‚È‚¬–Ú
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -1303,7 +1303,7 @@ void Stage::EaseingUpdate()
 
 			stageData[i].stageTileData[j].stageEase.addTime += stageData[i].stageTileData[j].stageEase.maxTime / 25.0f;
 			stageData[i].stageTileData[j].stageEase.timeRate =
-				min(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
+				fmin(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
 			ease = Easing::easeOut(0.0f, 1.0f, stageData[i].stageTileData[j].stageEase.timeRate);
 
 			for (y = 0; y < stageData[i].stageTileData[j].height; y++)

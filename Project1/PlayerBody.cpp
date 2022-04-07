@@ -32,7 +32,10 @@ PlayerBody::PlayerBody() :
 	Ease{}
 {
 	BodyColor = WHITE;
-	Bodyhandle = LoadGraph("./Resources/playerSub.png");
+	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
+
+	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
+	BodySprite.Create(Bodyhandle, BodySize, BodySize);
 }
 
 PlayerBody::~PlayerBody()
@@ -479,11 +482,13 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 {
 	if (IsActivate == true)
 	{
-		/*DrawBox(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, BodyColor, true);*/
-		DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);
+		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
+
+		BodySprite.DrawSprite(BodyStartPos.x, BodyStartPos.y);
 	}
+
+	BodySprite.Draw();
 }
 
 void PlayerBody::setactivate(Vector3 center)

@@ -2,6 +2,7 @@
 #include "PlayerBody.h"
 #include "Vector3.h"
 #include "Easing.h"
+#include "Sprite.h"
 
 class PlayerFoot
 {
@@ -22,5 +23,6 @@ public: //ƒƒ“ƒo•Ï”
 	bool IsFootUp;
 
 	//‰æ‘œƒnƒ“ƒhƒ‹
-	int FootHandle;
+	UINT FootHandle;
+	Sprite FootSprite;
 };
