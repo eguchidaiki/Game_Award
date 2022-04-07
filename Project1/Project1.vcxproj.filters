@@ -84,9 +84,6 @@
     <ClCompile Include="LoadFile.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Matrix4.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -196,9 +193,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="LoadFile.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix4.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
