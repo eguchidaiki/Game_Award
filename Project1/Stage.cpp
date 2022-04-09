@@ -474,6 +474,14 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				continue;
 			}
 
+			for (int y = 0; y < stageData[i].stageTileData[j].height; y++)
+			{
+				for (int x = 0; x < stageData[i].stageTileData[j].width; x++)
+				{
+					mapchipPos = y * stageData[i].stageTileData[j].width + x;
+				}
+			}
+
 			stageData[i].stageTile[j] = static_cast<char>(stageData[i].stageTileData.size() + 1);
 			stageData[i].stageTileData.push_back({});
 			stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].stageNumber = static_cast<char>(j);
@@ -504,6 +512,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].height;
 			stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].mapchip =
 				(char*)malloc(sizeof(char) * stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].size);
+
 			for (size_t k = 0; k < stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].size; k++)
 			{
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].drawLeftUp.push_back({});
