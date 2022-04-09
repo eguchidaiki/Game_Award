@@ -52,7 +52,7 @@ void Title::Draw() {
     //DrawGraph(0, 0, Back, true);
     //DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
     SpriteManager::Get()->SetCommonBeginDraw();
-    stage->Draw(drawOffsetX, drawOffsetY - Raki_WinAPI::window_height);
+    stage->Draw(drawOffsetX, drawOffsetY);
     player->Draw(drawOffsetX, drawOffsetY);
 
     //•`‰æI—¹

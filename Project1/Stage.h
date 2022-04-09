@@ -28,11 +28,17 @@ private:
 public: //サブクラス
 	struct MapChipSprite
 	{
-		char* MapchipData = nullptr;
-		Sprite MaphipSprite;
+		Sprite MapchipSprite;
+
 		void init(UINT* handle)
 		{
-			MaphipSprite.Create(*handle, 60, 60);
+			MapchipSprite.Create(*handle, 60, 60);
+		}
+
+		void draw(float left, float up)
+		{
+			MapchipSprite.DrawSprite(left, up);
+			MapchipSprite.Draw();
 		}
 	};
 
@@ -54,6 +60,8 @@ public: //サブクラス
 		std::vector<RVector3> startPos = {};
 		std::vector<RVector3> endPos = {};
 		std::vector<RVector3> easePos = {};
+
+		std::vector<MapChipSprite> Mapchips = {};
 
 		bool isTop = true;
 	};
@@ -154,4 +162,8 @@ private:
 private: //メンバ変数
 	std::vector<StageData> stageData;
 	std::vector<StageData> initStageData;
+
+	UINT BlockHandle;
+	UINT EnptyHandle;
+	UINT GoalHandle;
 };

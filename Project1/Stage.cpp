@@ -53,6 +53,9 @@ Stage::~Stage()
 
 void Stage::Init()
 {
+	BlockHandle = TexManager::LoadTexture("Resources/block.png");
+	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
+	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
 }
 
 void Stage::Updata()
@@ -264,34 +267,7 @@ void Stage::Draw(int offsetX, int offsetY)
 					pos2.y = stageData[i].stageTileData[j].drawRightDown[mapchipPos].y + static_cast<float>(offsetY);
 					pos2.z = stageData[i].stageTileData[j].drawRightDown[mapchipPos].z;
 
-					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
-					{
-					case MapchipData::EMPTY_STAGE:
-					{
-						continue;
-						break;
-					}
-					case MapchipData::BLOCK:
-					{
-						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
-						//DrawShape::DrawPlane(pos1, pos2, GRAY);
-						break;
-					}
-					case MapchipData::GOAL:
-					{
-						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
-						//DrawShape::DrawPlane(pos1, pos2, YELLOW);
-						break;
-					}
-					case MapchipData::NONE:
-					case MapchipData::START:
-					default:
-					{
-						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
-						//DrawShape::DrawPlane(pos1, pos2, WHITE);
-						break;
-					}
-					}
+					stageData[i].stageTileData[j].Mapchips[mapchipPos].draw(pos1.x, pos1.y);
 				}
 			}
 		}
@@ -474,14 +450,6 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				continue;
 			}
 
-			for (int y = 0; y < stageData[i].stageTileData[j].height; y++)
-			{
-				for (int x = 0; x < stageData[i].stageTileData[j].width; x++)
-				{
-					mapchipPos = y * stageData[i].stageTileData[j].width + x;
-				}
-			}
-
 			stageData[i].stageTile[j] = static_cast<char>(stageData[i].stageTileData.size() + 1);
 			stageData[i].stageTileData.push_back({});
 			stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].stageNumber = static_cast<char>(j);
@@ -520,6 +488,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].startPos.push_back({});
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].endPos.push_back({});
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].easePos.push_back({});
+				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].Mapchips.push_back({});
 			}
 
 			if (stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].mapchip == nullptr)
@@ -539,6 +508,47 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	}
 
 	fclose(fileHandle);
+
+	//ステージスプライトの生成
+	for (i = 0; i < stageData.size(); i++)
+	{
+		for (j = 0; j < stageData[i].stageTileData.size(); j++)
+		{
+			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
+			{
+				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
+				{
+					mapchipPos = y * stageData[i].stageTileData[j].width + x;
+
+					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
+					{
+					case MapchipData::EMPTY_STAGE:
+					{
+						continue;
+						break;
+					}
+					case MapchipData::BLOCK:
+					{
+						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&BlockHandle);
+						break;
+					}
+					case MapchipData::GOAL:
+					{
+						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&GoalHandle);
+						break;
+					}
+					case MapchipData::NONE:
+					case MapchipData::START:
+					default:
+					{
+						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&EnptyHandle);
+						break;
+					}
+					}
+				}
+			}
+		}
+	}
 
 	// オフセット値の計算
 	for (i = 0; i < stageData.size(); i++)
