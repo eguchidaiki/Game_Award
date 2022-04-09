@@ -41,23 +41,23 @@ PlayerBody::~PlayerBody()
 {
 }
 
-void PlayerBody::Init(RVector3 position, bodytype number)
+void PlayerBody::Init(RVector3 position, BodyType number)
 {
 	Body_Type = number;
 
-	if (Body_Type == left)
+	if (Body_Type == BodyType::left)
 	{
 		BodyStartPos = { position.x - 90.0f, position.y - 30.0f, 0.0f };
 	}
-	else if (Body_Type == up)
+	else if (Body_Type == BodyType::up)
 	{
 		BodyStartPos = { position.x - 30.0f, position.y - 90.0f, 0.0f };
 	}
-	else if (Body_Type == right)
+	else if (Body_Type == BodyType::right)
 	{
 		BodyStartPos = { position.x + 30.0f, position.y - 30.0f, 0.0f };
 	}
-	else if (Body_Type == down)
+	else if (Body_Type == BodyType::down)
 	{
 		BodyStartPos = { position.x - 30.0f, position.y + 30.0f, 0.0f };
 	}
@@ -76,7 +76,7 @@ void PlayerBody::Update(RVector3& center)
 		Ease.addTime += Ease.maxTime / 20.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			if (FoldCount == 1)
 			{
@@ -107,7 +107,7 @@ void PlayerBody::Update(RVector3& center)
 				}
 			}
 		}
-		if (Body_Type == up)
+		if (Body_Type == BodyType::up)
 		{
 			BodyEndPos = { center.x + 25.0f, center.y - 25.0f, 0.0f };
 			BodyStartPos.y = Ease.easeOut(BodyEndPos.y + BodySize, BodyEndPos.y - BodySize, Ease.timeRate);
@@ -121,7 +121,7 @@ void PlayerBody::Update(RVector3& center)
 				BodyCenterPos.y = BodyStartPos.y + (BodyEndPos.y - BodyStartPos.y) / 2;
 			}
 		}
-		if (Body_Type == right)
+		if (Body_Type == BodyType::right)
 		{
 			if (FoldCount == 1)
 			{
@@ -152,7 +152,7 @@ void PlayerBody::Update(RVector3& center)
 				}
 			}
 		}
-		if (Body_Type == down)
+		if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 25.0f, center.y + 25.0f, 0.0f };
 			BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
@@ -178,7 +178,7 @@ void PlayerBody::Update(RVector3& center)
 	//開いた後
 	if (IsFold == false && IsOpen == true && IsAction == false)
 	{
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			if (FoldCount == 0)
 			{
@@ -195,13 +195,13 @@ void PlayerBody::Update(RVector3& center)
 				IsOpen = false;
 			}
 		}
-		if (Body_Type == up)
+		if (Body_Type == BodyType::up)
 		{
 			BodyStartPos = { center.x - 25.0f,center.y - 75.0f,0.0f };
 			BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f };
 			BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y + 30,0.0f };
 		}
-		if (Body_Type == right)
+		if (Body_Type == BodyType::right)
 		{
 			if (FoldCount == 0)
 			{
@@ -218,7 +218,7 @@ void PlayerBody::Update(RVector3& center)
 				IsOpen = false;
 			}
 		}
-		if (Body_Type == down)
+		if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 25,center.y + 25 ,0.0f };
 			BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
@@ -231,7 +231,7 @@ void PlayerBody::Update(RVector3& center)
 		Ease.addTime += Ease.maxTime / 20.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			if (FoldCount == 0)
 			{
@@ -262,7 +262,7 @@ void PlayerBody::Update(RVector3& center)
 				}
 			}
 		}
-		if (Body_Type == up)
+		if (Body_Type == BodyType::up)
 		{
 			BodyEndPos = { center.x + 25.0f, center.y - 25.0f, 0.0f };
 			BodyStartPos.y = Ease.easeOut(BodyEndPos.y - BodySize, BodyEndPos.y + BodySize, Ease.timeRate);
@@ -276,7 +276,7 @@ void PlayerBody::Update(RVector3& center)
 				BodyCenterPos.y = BodyEndPos.y + (BodyStartPos.y - BodyEndPos.y) / 2;
 			}
 		}
-		if (Body_Type == right)
+		if (Body_Type == BodyType::right)
 		{
 			if (FoldCount == 0)
 			{
@@ -307,7 +307,7 @@ void PlayerBody::Update(RVector3& center)
 				}
 			}
 		}
-		if (Body_Type == down)
+		if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 25.0f, center.y + 25.0f, 0.0f };
 			BodyEndPos.y = Ease.easeOut(BodyStartPos.y + BodySize, BodyStartPos.y - BodySize, Ease.timeRate);
@@ -332,7 +332,7 @@ void PlayerBody::Update(RVector3& center)
 	//折った後
 	if (IsFold == true && IsOpen == false && IsAction == false)
 	{
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			if (FoldCount == 1)
 			{
@@ -347,13 +347,13 @@ void PlayerBody::Update(RVector3& center)
 				BodyCenterPos = { BodyStartPos.x + 30, BodyStartPos.y + 30 ,0.0f };
 			}
 		}
-		else if (Body_Type == up)
+		else if (Body_Type == BodyType::up)
 		{
 			BodyStartPos = { center.x - 25,center.y + 25 ,0.0f };
 			BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
 			BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y - 30 ,0.0f };
 		}
-		else if (Body_Type == right)
+		else if (Body_Type == BodyType::right)
 		{
 			if (FoldCount == 1)
 			{
@@ -368,7 +368,7 @@ void PlayerBody::Update(RVector3& center)
 				BodyCenterPos = { BodyStartPos.x + 30, BodyStartPos.y + 30 ,0.0f };
 			}
 		}
-		else if (Body_Type == down)
+		else if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 25,center.y + 25 ,0.0f };
 			BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
@@ -383,25 +383,25 @@ void PlayerBody::Update(RVector3& center)
 		Ease.addTime += Ease.maxTime / 25.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			BodyStartPos = { Ease.easeOut(center.x - 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f };
 			BodyEndPos = { BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f };
 			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
-		else if (Body_Type == right)
+		else if (Body_Type == BodyType::right)
 		{
 			BodyStartPos = { Ease.easeOut(center.x + 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f };
 			BodyEndPos = { BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f };
 			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
-		else if (Body_Type == up)
+		else if (Body_Type == BodyType::up)
 		{
 			BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y - 75, center.y + 25, Ease.timeRate), 0.0f };
 			BodyEndPos = { center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f };
 			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
-		else if (Body_Type == down)
+		else if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 25, center.y - 75, Ease.timeRate), 0.0f };
 			BodyEndPos = { center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f };
@@ -414,21 +414,21 @@ void PlayerBody::Update(RVector3& center)
 			IsAction = false;
 			IsSlide = false;
 
-			if (Body_Type == left)
+			if (Body_Type == BodyType::left)
 			{
-				Body_Type = right;
+				Body_Type = BodyType::right;
 			}
-			else if (Body_Type == right)
+			else if (Body_Type == BodyType::right)
 			{
-				Body_Type = left;
+				Body_Type = BodyType::left;
 			}
-			else if (Body_Type == up)
+			else if (Body_Type == BodyType::up)
 			{
-				Body_Type = down;
+				Body_Type = BodyType::down;
 			}
-			else if (Body_Type == down)
+			else if (Body_Type == BodyType::down)
 			{
-				Body_Type = up;
+				Body_Type = BodyType::up;
 			}
 		}
 	}
@@ -439,7 +439,7 @@ void PlayerBody::Update(RVector3& center)
 		Ease.addTime += Ease.maxTime / 25.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			if (SlidePat == -1)
 			{
@@ -453,7 +453,7 @@ void PlayerBody::Update(RVector3& center)
 			}
 			BodyStartPos = { BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f };
 		}
-		else if (Body_Type == right)
+		else if (Body_Type == BodyType::right)
 		{
 			if (SlidePat == -1)
 			{
@@ -490,7 +490,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 	BodySprite.Draw();
 }
 
-void PlayerBody::setactivate(Vector3 center)
+void PlayerBody::setactivate(RVector3 center)
 {
 	if (IsActivate == true)
 	{
@@ -501,19 +501,19 @@ void PlayerBody::setactivate(Vector3 center)
 		Overlap = 0;
 		FoldCount = 0;
 
-		if (Body_Type == left)
+		if (Body_Type == BodyType::left)
 		{
 			BodyStartPos = { center.x - 90.0f, center.y - 30.0f, 0.0f };
 		}
-		else if (Body_Type == right)
+		else if (Body_Type == BodyType::right)
 		{
 			BodyStartPos = { center.x + 30.0f, center.y - 30.0f, 0.0f };
 		}
-		else if (Body_Type == up)
+		else if (Body_Type == BodyType::up)
 		{
 			BodyStartPos = { center.x - 30.0f, center.y - 90.0f, 0.0f };
 		}
-		else if (Body_Type == down)
+		else if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 30.0f, center.y + 30.0f, 0.0f };
 		}
@@ -640,7 +640,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 					}
 					else if (BuriedX < BuriedY)
 					{
-						if (IsHitLeft == false && Body_Type == left || Body_Type == up)
+						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
 							IsHitLeft = true;
@@ -699,7 +699,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 					}
 					else if (BuriedX < BuriedY)
 					{
-						if (IsHitRight == false && Body_Type == right || Body_Type == up)
+						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
 							IsHitRight = true;
@@ -749,11 +749,11 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	}
 }
 
-void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, bodytype extrudetype, bool& isfall, bool& isjump, bool& iscolide)
+void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, BodyType extrudetype, bool& isfall, bool& isjump, bool& iscolide)
 {
 	switch (extrudetype)
 	{
-	case left:
+	case BodyType::left:
 		if (center->x - extrudepos.x < extrudedis)
 		{
 			center->x = extrudepos.x + extrudedis;
@@ -764,7 +764,7 @@ void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis
 			iscolide = false;
 		}
 		break;
-	case right:
+	case BodyType::right:
 		if (extrudepos.x - center->x < extrudedis)
 		{
 			center->x = extrudepos.x - extrudedis;
@@ -775,7 +775,7 @@ void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis
 			iscolide = false;
 		}
 		break;
-	case up:
+	case BodyType::up:
 		if (center->y - extrudepos.y < extrudedis)
 		{
 			center->y = extrudepos.y + extrudedis;
@@ -786,7 +786,7 @@ void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis
 			iscolide = false;
 		}
 		break;
-	case down:
+	case BodyType::down:
 		if (extrudepos.y - center->y < extrudedis)
 		{
 			center->y = extrudepos.y - extrudedis;

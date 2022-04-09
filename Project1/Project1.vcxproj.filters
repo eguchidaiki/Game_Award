@@ -90,9 +90,6 @@
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="BaseBlock.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Easing.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -190,9 +187,6 @@
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Stage.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseBlock.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Colors.h">

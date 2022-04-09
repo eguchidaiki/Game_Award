@@ -152,7 +152,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BaseBlock.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -237,7 +236,6 @@
     <None Include="Resources\Shaders\Sprite.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseBlock.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Colors.h" />
     <ClInclude Include="Easing.h" />

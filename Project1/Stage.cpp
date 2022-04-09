@@ -1,8 +1,9 @@
 #include "Stage.h"
 #include "LoadFile.h"
-#include "InputManger.h"
+//#include "InputManger.h"
 #include "General.h"
 #include "Colors.h"
+#include <Raki_Input.h>
 
 #define EF (-1) //Error Function
 
@@ -244,7 +245,7 @@ void Stage::Draw(int offsetX, int offsetY)
 	static int posX = 0;
 	static int posY = 0;
 
-	static Vector3 pos1, pos2;
+	static RVector3 pos1, pos2;
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -319,7 +320,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -607,26 +608,26 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const Vector3& playerPos, unsigned char playerTile[4])
+int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4])
 {
 	static unsigned char direction = 0;
 	static size_t onPlayerStageTile = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
 
-	if (InputManger::SubUp())
+	if (Input::isKeyTrigger(DIK_UP))
 	{
 		direction = bodytype::up;
 	}
-	else if (InputManger::SubDown())
+	else if (Input::isKeyTrigger(DIK_DOWN))
 	{
 		direction = bodytype::down;
 	}
-	else if (InputManger::SubLeft())
+	else if (Input::isKeyTrigger(DIK_LEFT))
 	{
 		direction = bodytype::left;
 	}
-	else if (InputManger::SubRight())
+	else if (Input::isKeyTrigger(DIK_RIGHT))
 	{
 		direction = bodytype::right;
 	}
@@ -1019,7 +1020,7 @@ char Stage::GetStageMapchip(int i, int j, int mapchipPos)
 	return stageData[i].stageTileData[j].mapchip[mapchipPos];
 }
 
-bool Stage::GetPositionTile(Vector3 center, int i, int j)
+bool Stage::GetPositionTile(RVector3 center, int i, int j)
 {
 	float left = (float)stageData[i].stageTileData[j].offsetX * blockSize;
 	float up = (float)stageData[i].stageTileData[j].offsetY * blockSize;
@@ -1309,8 +1310,8 @@ void Stage::EaseingUpdate()
 			{
 				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
 				{
-					static Vector3 axisPos = {};
-					static Vector3 overPos = {};
+					static RVector3 axisPos = {};
+					static RVector3 overPos = {};
 
 					mapchipPos = y * stageData[i].stageTileData[j].width + x;
 
@@ -1352,7 +1353,7 @@ void Stage::EaseingUpdate()
 						break;
 					}
 
-					std::vector<Vector3> pos = {
+					std::vector<RVector3> pos = {
 						stageData[i].stageTileData[j].startPos[mapchipPos],
 						axisPos,
 						stageData[i].stageTileData[j].endPos[mapchipPos]
@@ -1414,7 +1415,7 @@ void Stage::EaseingUpdate()
 
 int Stage::SearchTopStageTile()
 {
-	std::vector<Vector3> topStageTile; //x‚Ì’l‚ÉstageData‚Ì—v‘f”Ô†Ay‚Ì’l‚ÉstageData[i].stageData‚Ì—v‘f”Ô†‚ğŠi”[‚·‚é
+	std::vector<RVector3> topStageTile; //x‚Ì’l‚ÉstageData‚Ì—v‘f”Ô†Ay‚Ì’l‚ÉstageData[i].stageData‚Ì—v‘f”Ô†‚ğŠi”[‚·‚é
 	static bool isTop = false;
 
 	for (i = 0; i < stageData.size(); i++)

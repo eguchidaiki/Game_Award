@@ -34,7 +34,7 @@ public: //ƒƒ“ƒoŠÖ”
 
 	void IsHitPlayerBody(Stage& stage);
 
-	void ExtrudePlayer(Vector3 ExtrudePos, float ExtrudeDis, bodytype ExtrudeType);
+	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
 
 	bool IsFall();
 public: //ƒƒ“ƒo•Ï”

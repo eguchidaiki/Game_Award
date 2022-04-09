@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "Sprite.h"
 
-enum bodytype
+enum BodyType
 {
 	left,
 	up,
@@ -25,7 +25,7 @@ public: //メンバ関数
 	~PlayerBody();
 
 	// 初期化
-	void Init(RVector3 position, bodytype number);
+	void Init(RVector3 position, BodyType number);
 	// 更新
 	void Update(RVector3& center);
 	/// <summary>
@@ -36,7 +36,7 @@ public: //メンバ関数
 	/// 体を有効化した時の設定
 	/// </summary>
 	/// <param name="center">有効化した時の座標参照先</param>
-	void setactivate(Vector3 center);
+	void setactivate(RVector3 center);
 	/// 体のスライドのセットアップ
 	/// </summary>
 	/// <param name="slidepat">スライドする向き(左上:-1 右下:1)</param>
@@ -58,7 +58,7 @@ public: //メンバ関数
 	/// <param name="extrudepos">押し出す側の座標</param>
 	/// <param name="extrudedis">押し出す距離</param>
 	/// <param name="extrudetype">どの方向"から"押し出すか</param>
-	void Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, bodytype extrudetype, bool& isfall, bool& isjump, bool& iscolide);
+	void Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, BodyType extrudetype, bool& isfall, bool& isjump, bool& iscolide);
 
 public: //メンバ変数
 	//有効化フラグ
