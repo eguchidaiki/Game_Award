@@ -595,7 +595,7 @@ void Player::Update(Stage& stage)
 	{
 		IsDownBody = false;
 	}
-	leg.Update(CenterPosition, (IsDownBody && !(Body_Two.IsFold)), 1);
+	leg.Update(CenterPosition, IsDownBody, 1);
 
 	if (Body_One.IsActivate == true)
 	{
@@ -683,17 +683,17 @@ void Player::Draw(int offsetX, int offsetY)
 
 	if (Body_One.IsSlide == true || Body_Two.IsSlide == true || Body_Three.IsSlide == true)
 	{
-		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
+		//leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			//PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
 			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			//PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
 			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/

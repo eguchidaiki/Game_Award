@@ -26,6 +26,16 @@ private:
 	Stage operator=(const Stage&) = delete;
 
 public: //サブクラス
+	struct MapChipSprite
+	{
+		char* MapchipData = nullptr;
+		Sprite MaphipSprite;
+		void init(UINT* handle)
+		{
+			MaphipSprite.Create(*handle, 60, 60);
+		}
+	};
+
 	struct StageTileData
 	{
 		char* mapchip = nullptr;

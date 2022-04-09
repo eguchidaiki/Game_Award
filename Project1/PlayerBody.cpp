@@ -484,7 +484,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
 			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
 
-		BodySprite.DrawSprite(BodyStartPos.x, BodyStartPos.y);
+		BodySprite.DrawSprite(BodyStartPos.x + offsetX, BodyStartPos.y + offsetY);
 	}
 
 	BodySprite.Draw();
