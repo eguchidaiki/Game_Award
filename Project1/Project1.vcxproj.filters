@@ -75,12 +75,6 @@
     <ClCompile Include="testParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManger.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="LoadFile.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -93,13 +87,7 @@
     <ClCompile Include="PlayerFoot.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="BaseBlock.cpp">
@@ -186,12 +174,6 @@
     <ClInclude Include="General.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManger.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="LoadFile.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
@@ -207,13 +189,7 @@
     <ClInclude Include="PlayerFoot.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Stage.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="BaseBlock.h">

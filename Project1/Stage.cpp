@@ -1,7 +1,6 @@
 #include "Stage.h"
 #include "LoadFile.h"
 #include "InputManger.h"
-#include "DrawShape.h"
 #include "General.h"
 #include "Colors.h"
 
@@ -274,13 +273,13 @@ void Stage::Draw(int offsetX, int offsetY)
 					case MapchipData::BLOCK:
 					{
 						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
-						DrawShape::DrawPlane(pos1, pos2, GRAY);
+						//DrawShape::DrawPlane(pos1, pos2, GRAY);
 						break;
 					}
 					case MapchipData::GOAL:
 					{
 						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
-						DrawShape::DrawPlane(pos1, pos2, YELLOW);
+						//DrawShape::DrawPlane(pos1, pos2, YELLOW);
 						break;
 					}
 					case MapchipData::NONE:
@@ -288,7 +287,7 @@ void Stage::Draw(int offsetX, int offsetY)
 					default:
 					{
 						//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
-						DrawShape::DrawPlane(pos1, pos2, WHITE);
+						//DrawShape::DrawPlane(pos1, pos2, WHITE);
 						break;
 					}
 					}
@@ -340,7 +339,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -361,7 +360,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -381,7 +380,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 						pos2.y = static_cast<float>((posY + 1) * blockSize + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}

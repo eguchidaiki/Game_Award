@@ -1,6 +1,4 @@
 #include "BaseBlock.h"
-//#include <DxLib.h>
-//#include "DrawShape.h"
 #include "Colors.h"
 
 const int BaseBlock::blockSize = 60;

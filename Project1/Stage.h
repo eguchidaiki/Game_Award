@@ -2,6 +2,7 @@
 #include <vector>
 #include "Vector3.h"
 #include "Easing.h"
+#include "Sprite.h"
 
 /*ƒƒ‚ƒŠ‚ª‘å‚«‚­‚È‚è‚·‚¬‚éŒœ”O‚ª‚ ‚é‰ÓŠ‚ÍcharŒ^‚É‚µ‚Ä‚¢‚Ü‚·*/
 
