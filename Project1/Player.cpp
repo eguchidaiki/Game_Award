@@ -1,7 +1,6 @@
 #include <Raki_Input.h>
 #include "Player.h"
 #include "Stage.h"
-#include "InputManger.h"
 #include "DrawShape.h"
 //#include "Colors.h"
 
@@ -87,13 +86,13 @@ void Player::Init()
 void Player::Update(Stage& stage)
 {
 	//左右移動
-	if (InputManger::Right() && !InputManger::Act1() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_D) && Player_IsAction == false)
 	{
 		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
 		IsRight = true;
 	}
-	if (InputManger::Left() && !InputManger::Act1() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_A) && Player_IsAction == false)
 	{
 		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
@@ -112,7 +111,7 @@ void Player::Update(Stage& stage)
 	}
 
 	//ジャンプ
-	if (InputManger::UpTrigger() && !InputManger::Act1() && IsInputjump == true)
+	if (Input::isKeyTrigger(DIK_W) && IsInputjump == true)
 	{
 		IsJump = true;
 		FallSpeed = -9.5f;
@@ -148,25 +147,25 @@ void Player::Update(Stage& stage)
 	IsHitPlayerBody(stage);
 
 
-	if (InputManger::SubLeftTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_LEFT) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsLeftFold = true;
 		leg.Set();
 	}
-	if (InputManger::SubUpTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_UP) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsUpFold = true;
 		leg.Set();
 	}
-	if (InputManger::SubRightTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_RIGHT) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsRightFold = true;
 		leg.Set();
 	}
-	if (InputManger::SubDownTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_DOWN) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsDownFold = true;
@@ -370,7 +369,7 @@ void Player::Update(Stage& stage)
 	}
 
 	//開く
-	if (InputManger::Act1Trigger())
+	if (Input::isKeyTrigger(DIK_SPACE))
 	{
 		//左
 		if (Body_One.IsFold == true && Body_One.IsAction == false && Body_One.Body_Type == left && Body_One.Overlap == 0 ||
