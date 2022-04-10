@@ -85,13 +85,13 @@ void Player::Init()
 void Player::Update(Stage& stage)
 {
 	//ç∂âEà⁄ìÆ
-	if (Input::isKeyTrigger(DIK_D) && Player_IsAction == false)
+	if (Input::isKey(DIK_D) && Player_IsAction == false)
 	{
 		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
 		IsRight = true;
 	}
-	if (Input::isKeyTrigger(DIK_A) && Player_IsAction == false)
+	if (Input::isKey(DIK_A) && Player_IsAction == false)
 	{
 		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;

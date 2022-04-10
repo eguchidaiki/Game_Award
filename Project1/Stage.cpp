@@ -21,10 +21,10 @@ enum bodytype
 
 namespace
 {
-static size_t i = 0, j = 0; //for文のループカウンタ
-static size_t x = 0, y = 0; //マップチップ上の座標
+	static size_t i = 0, j = 0; //for文のループカウンタ
+	static size_t x = 0, y = 0; //マップチップ上の座標
 
-static size_t mapchipPos = 0; //マップチップの要素番号
+	static size_t mapchipPos = 0; //マップチップの要素番号
 }
 
 const int Stage::blockSize = 60;
@@ -519,6 +519,9 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
 				{
 					mapchipPos = y * stageData[i].stageTileData[j].width + x;
+
+					stageData[i].stageTileData[j].drawLeftUp[mapchipPos].x = (x + stageData[i].stageTileData[j].offsetX) * blockSize;
+					stageData[i].stageTileData[j].drawLeftUp[mapchipPos].y = (y + stageData[i].stageTileData[j].offsetY) * blockSize;
 
 					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
 					{

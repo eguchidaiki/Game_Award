@@ -10,7 +10,7 @@ PlayerFoot::PlayerFoot() :
 	Init();
 	FootHandle = TexManager::LoadTexture("./Resources/playerLegs/playerLegs.png");
 
-	FootSprite.Create(FootHandle, 60, 60);
+	FootSprite.Create(FootHandle, 60, 8);
 }
 
 PlayerFoot::~PlayerFoot()
@@ -47,7 +47,7 @@ void PlayerFoot::Update(RVector3& FaceCenterPos, bool IsDownBody, int BodyDis)
 
 	if (IsFootUp == false)
 	{
-		FootLeftUpPosition = { FaceCenterPos.x - 30,FaceCenterPos.y + (IsDownBody * 50 * BodyDis) + 25,0.0f };
+		FootLeftUpPosition = { FaceCenterPos.x - 30,FaceCenterPos.y + 25,0.0f };
 	}
 }
 
