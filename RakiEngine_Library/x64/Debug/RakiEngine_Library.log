@@ -1,0 +1,58 @@
+﻿  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\mpEffectPixelShader.cso
+C:\K020G1234\GameAward\RakiEngine_Library\Shaders\mpPixelShader.hlsl(46,9-28): warning X3571: pow(f, e) will not work for negative f, use abs(f) or conditionally handle negative values if you expect them
+  
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\mpPixelShader.cso
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\mpVertexShader.cso
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\OBJGeometryShader.cso
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\OBJPixelShader.cso
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\OBJVertexShader.cso
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\SpritePS.cso
+  compilation object save succeeded; see C:\K020G1234\GameAward\x64\Debug\SpriteVS.cso
+  AbstructSceneFactory.cpp
+  Audio.cpp
+  FPS.cpp
+C:\K020G1234\GameAward\RakiEngine_Library\FPS.h(15,29): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_dx12.cpp
+  imgui_impl_win32.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  NY_Camera.cpp
+  NY_Model.cpp
+  NY_Object3D.cpp
+C:\K020G1234\GameAward\RakiEngine_Library\NY_Object3D.cpp(395,72): warning C4267: '引数': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
+  NY_Object3DMgr.cpp
+  NY_random.cpp
+  ParticleManager.cpp
+  Raki_DX12B.cpp
+  Raki_imguiMgr.cpp
+  Raki_Input.cpp
+  Raki_WinAPI.cpp
+C:\K020G1234\GameAward\RakiEngine_Library\Raki_WinAPI.cpp(70,66): warning C4311: '型キャスト': ポインターを 'HANDLE' から 'long' へ切り詰めます。
+C:\K020G1234\GameAward\RakiEngine_Library\Raki_WinAPI.cpp(70,66): warning C4302: '型キャスト': 'HANDLE' から 'long' へ切り詰めます。
+  コンパイル中...
+  RVector.cpp
+  SceneFactory.cpp
+  Sprite.cpp
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(28,2): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'SpriteInstance' の左辺を無視します。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(95,47): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(96,49): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(97,47): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(98,48): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(148,99): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(148,72): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(300,99): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(300,72): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(367,83): warning C4267: '=': 'size_t' から 'UINT' に変換しました。データが失われているかもしれません。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(373,137): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\Sprite.cpp(373,110): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+  SpriteManager.cpp
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(28,2): warning C4091: 'typedef ': 変数が何も宣言されていないときは、'SpriteInstance' の左辺を無視します。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(95,47): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(96,49): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(97,47): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\K020G1234\GameAward\RakiEngine_Library\SpriteManager.h(98,48): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+  TexManager.cpp
+  RakiEngine_Library.vcxproj -> C:\K020G1234\GameAward\x64\Debug\RakiEngine_Library.lib
