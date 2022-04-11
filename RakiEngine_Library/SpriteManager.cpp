@@ -20,6 +20,7 @@ void SpriteManager::CreateSpritePipeline()
 #pragma region LoadShader
     ComPtr<ID3DBlob> vsBlob = nullptr; //頂点シェーダーオブジェクト
     ComPtr<ID3DBlob> psBlob = nullptr; //ピクセルシェーダーオブジェクト
+    ComPtr<ID3DBlob> gsBlob = nullptr;
     ID3DBlob *errorBlob = nullptr; //エラーオブジェクト
 
     //頂点シェーダーの読み込みとコンパイル
@@ -73,6 +74,31 @@ void SpriteManager::CreateSpritePipeline()
         OutputDebugStringA(errstr.c_str());
         exit(1);
     }
+
+    //ジオメトリシェーダーの読み込みとコンパイル
+    result = D3DCompileFromFile(
+        L"Resources/Shaders/SpriteGS.hlsl",
+        nullptr,
+        D3D_COMPILE_STANDARD_FILE_INCLUDE,
+        "main", "gs_5_0",
+        D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+        0,
+        &gsBlob, &errorBlob
+    );
+    //シェーダーのエラー内容を表示
+    if (FAILED(result))
+    {
+        std::string errstr;
+        errstr.resize(errorBlob->GetBufferSize());
+
+        std::copy_n((char *)errorBlob->GetBufferPointer(),
+            errorBlob->GetBufferSize(),
+            errstr.begin());
+        errstr += "\n";
+        //エラー内容を出力ウインドウに表示
+        OutputDebugStringA(errstr.c_str());
+        exit(1);
+    }
 #pragma endregion LoadShader
 
     //-----頂点レイアウト-----//
@@ -98,6 +124,9 @@ void SpriteManager::CreateSpritePipeline()
         {//行列
             "INSTANCE_WORLD_MAT",3U,DXGI_FORMAT_R32G32B32A32_FLOAT,1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
         },
+        {//縦横幅
+            "INSTANCE_DRAWSIZE" ,0,DXGI_FORMAT_R32G32_FLOAT,       1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
+        },
     };
 
     
@@ -108,6 +137,7 @@ void SpriteManager::CreateSpritePipeline()
     //頂点シェーダー、ピクセルシェーダーをパイプラインに設定
     gpipeline.VS = CD3DX12_SHADER_BYTECODE(vsBlob.Get());
     gpipeline.PS = CD3DX12_SHADER_BYTECODE(psBlob.Get());
+    gpipeline.GS = CD3DX12_SHADER_BYTECODE(gsBlob.Get());
 
     //サンプルマスクとラスタライザステートの設定
     gpipeline.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;//標準設定
@@ -141,7 +171,7 @@ void SpriteManager::CreateSpritePipeline()
     gpipeline.InputLayout.NumElements = _countof(inputLayout);
 
     //図形の形状を三角形に設定
-    gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
     //その他
     gpipeline.NumRenderTargets = 1;//描画対象は1つ
@@ -178,8 +208,9 @@ void SpriteManager::CreateSpritePipeline()
 
     ComPtr<ID3DBlob> rootSigBlob = nullptr;
     result = D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSigBlob, &errorBlob);
+    if (result != S_OK) { cout << "ERROR : ENGINE : SPRITE : ROOTSIGNATURE" << endl; }
     result = dev->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(&rootsignature));
-
+    if (result != S_OK) { cout << "ERROR : ENGINE : SPRITE : ROOTSIGNATURE" << endl; }
     //パイプラインにルートシグネチャをセット
     gpipeline.pRootSignature = rootsignature.Get();
 
@@ -321,7 +352,7 @@ void SpriteManager::SetCommonBeginDraw()
     //ルートシグネチャをセット
     cmd->SetGraphicsRootSignature(rootsignature.Get());
     //プリミティブ形状設定
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
     cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
@@ -334,7 +365,7 @@ void SpriteManager::SetCommonBeginDrawmpResource()
     //ルートシグネチャをセット
     cmd->SetGraphicsRootSignature(mpRootsig.Get());
     //プリミティブ形状設定
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { RAKI_DX12B_GET->GetMuliPassSrvDescHeap() };
     cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
