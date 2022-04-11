@@ -1,9 +1,9 @@
 #include "Stage.h"
 #include "LoadFile.h"
-#include "InputManger.h"
-#include "DrawShape.h"
+//#include "InputManger.h"
 #include "General.h"
 #include "Colors.h"
+#include <Raki_Input.h>
 
 #define EF (-1) //Error Function
 
@@ -21,10 +21,10 @@ enum bodytype
 
 namespace
 {
-static size_t i = 0, j = 0; //for文のループカウンタ
-static size_t x = 0, y = 0; //マップチップ上の座標
+	static size_t i = 0, j = 0; //for文のループカウンタ
+	static size_t x = 0, y = 0; //マップチップ上の座標
 
-static size_t mapchipPos = 0; //マップチップの要素番号
+	static size_t mapchipPos = 0; //マップチップの要素番号
 }
 
 const int Stage::blockSize = 60;
@@ -53,6 +53,9 @@ Stage::~Stage()
 
 void Stage::Init()
 {
+	BlockHandle = TexManager::LoadTexture("Resources/block.png");
+	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
+	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
 }
 
 void Stage::Updata()
@@ -245,7 +248,7 @@ void Stage::Draw(int offsetX, int offsetY)
 	static int posX = 0;
 	static int posY = 0;
 
-	static Vector3 pos1, pos2;
+	static RVector3 pos1, pos2;
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -264,39 +267,12 @@ void Stage::Draw(int offsetX, int offsetY)
 					pos2.y = stageData[i].stageTileData[j].drawRightDown[mapchipPos].y + static_cast<float>(offsetY);
 					pos2.z = stageData[i].stageTileData[j].drawRightDown[mapchipPos].z;
 
-					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
-					{
-					case MapchipData::EMPTY_STAGE:
-					{
-						continue;
-						break;
-					}
-					case MapchipData::BLOCK:
-					{
-						SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
-						DrawShape::DrawPlane(pos1, pos2, GRAY);
-						break;
-					}
-					case MapchipData::GOAL:
-					{
-						SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xE0);
-						DrawShape::DrawPlane(pos1, pos2, YELLOW);
-						break;
-					}
-					case MapchipData::NONE:
-					case MapchipData::START:
-					default:
-					{
-						SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
-						DrawShape::DrawPlane(pos1, pos2, WHITE);
-						break;
-					}
-					}
+					stageData[i].stageTileData[j].Mapchips[mapchipPos].draw(pos1.x, pos1.y);
 				}
 			}
 		}
 
-		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0xFF);
+		//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0xFF);
 
 		// つなぎ目
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -320,7 +296,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -340,7 +316,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -361,7 +337,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -381,7 +357,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 						pos2.y = static_cast<float>((posY + 1) * blockSize + offsetY);
 
-						DrawShape::DrawPlane(pos1, pos2, BLACK);
+						//DrawShape::DrawPlane(pos1, pos2, BLACK);
 					}
 				}
 			}
@@ -504,6 +480,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].height;
 			stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].mapchip =
 				(char*)malloc(sizeof(char) * stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].size);
+
 			for (size_t k = 0; k < stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].size; k++)
 			{
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].drawLeftUp.push_back({});
@@ -511,6 +488,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].startPos.push_back({});
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].endPos.push_back({});
 				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].easePos.push_back({});
+				stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].Mapchips.push_back({});
 			}
 
 			if (stageData[i].stageTileData[stageData[i].stageTileData.size() - 1].mapchip == nullptr)
@@ -530,6 +508,50 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	}
 
 	fclose(fileHandle);
+
+	//ステージスプライトの生成
+	for (i = 0; i < stageData.size(); i++)
+	{
+		for (j = 0; j < stageData[i].stageTileData.size(); j++)
+		{
+			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
+			{
+				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
+				{
+					mapchipPos = y * stageData[i].stageTileData[j].width + x;
+
+					stageData[i].stageTileData[j].drawLeftUp[mapchipPos].x = (x + stageData[i].stageTileData[j].offsetX) * blockSize;
+					stageData[i].stageTileData[j].drawLeftUp[mapchipPos].y = (y + stageData[i].stageTileData[j].offsetY) * blockSize;
+
+					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
+					{
+					case MapchipData::EMPTY_STAGE:
+					{
+						continue;
+						break;
+					}
+					case MapchipData::BLOCK:
+					{
+						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&BlockHandle);
+						break;
+					}
+					case MapchipData::GOAL:
+					{
+						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&GoalHandle);
+						break;
+					}
+					case MapchipData::NONE:
+					case MapchipData::START:
+					default:
+					{
+						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&EnptyHandle);
+						break;
+					}
+					}
+				}
+			}
+		}
+	}
 
 	// オフセット値の計算
 	for (i = 0; i < stageData.size(); i++)
@@ -608,26 +630,26 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const Vector3& playerPos, unsigned char playerTile[4])
+int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4])
 {
 	static unsigned char direction = 0;
 	static size_t onPlayerStageTile = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
 
-	if (InputManger::SubUp())
+	if (Input::isKeyTrigger(DIK_UP))
 	{
 		direction = bodytype::up;
 	}
-	else if (InputManger::SubDown())
+	else if (Input::isKeyTrigger(DIK_DOWN))
 	{
 		direction = bodytype::down;
 	}
-	else if (InputManger::SubLeft())
+	else if (Input::isKeyTrigger(DIK_LEFT))
 	{
 		direction = bodytype::left;
 	}
-	else if (InputManger::SubRight())
+	else if (Input::isKeyTrigger(DIK_RIGHT))
 	{
 		direction = bodytype::right;
 	}
@@ -1020,7 +1042,7 @@ char Stage::GetStageMapchip(int i, int j, int mapchipPos)
 	return stageData[i].stageTileData[j].mapchip[mapchipPos];
 }
 
-bool Stage::GetPositionTile(Vector3 center, int i, int j)
+bool Stage::GetPositionTile(RVector3 center, int i, int j)
 {
 	float left = (float)stageData[i].stageTileData[j].offsetX * blockSize;
 	float up = (float)stageData[i].stageTileData[j].offsetY * blockSize;
@@ -1303,15 +1325,15 @@ void Stage::EaseingUpdate()
 
 			stageData[i].stageTileData[j].stageEase.addTime += stageData[i].stageTileData[j].stageEase.maxTime / 25.0f;
 			stageData[i].stageTileData[j].stageEase.timeRate =
-				min(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
+				fmin(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
 			ease = Easing::easeOut(0.0f, 1.0f, stageData[i].stageTileData[j].stageEase.timeRate);
 
 			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
 			{
 				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
 				{
-					static Vector3 axisPos = {};
-					static Vector3 overPos = {};
+					static RVector3 axisPos = {};
+					static RVector3 overPos = {};
 
 					mapchipPos = y * stageData[i].stageTileData[j].width + x;
 
@@ -1353,7 +1375,7 @@ void Stage::EaseingUpdate()
 						break;
 					}
 
-					std::vector<Vector3> pos = {
+					std::vector<RVector3> pos = {
 						stageData[i].stageTileData[j].startPos[mapchipPos],
 						axisPos,
 						stageData[i].stageTileData[j].endPos[mapchipPos]
@@ -1415,7 +1437,7 @@ void Stage::EaseingUpdate()
 
 int Stage::SearchTopStageTile()
 {
-	std::vector<Vector3> topStageTile; //xの値にstageDataの要素番号、yの値にstageData[i].stageDataの要素番号を格納する
+	std::vector<RVector3> topStageTile; //xの値にstageDataの要素番号、yの値にstageData[i].stageDataの要素番号を格納する
 	static bool isTop = false;
 
 	for (i = 0; i < stageData.size(); i++)
