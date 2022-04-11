@@ -16,12 +16,12 @@ using namespace Microsoft::WRL;
 
 //コンソール表示用エントリーポイント切り替え
 //Releaseでもコンソールしたい場合、プロパティ->リンカー->サブシステムをコンソールに切り替えてから、WinMainをmainにする
-#ifdef _DEBUG
-int main()
-#else
+//#ifdef _DEBUG
+//int main()
+//#else
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-#endif
+//#endif
 {
 
 #pragma region GameValue

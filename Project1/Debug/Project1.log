@@ -1,5 +1,0 @@
-﻿  compilation object save succeeded; see C:\K020G1234\GameAward\Project1\Debug\BasicPS.cso
-  compilation object save succeeded; see C:\K020G1234\GameAward\Project1\Debug\BasicVS.cso
-C:\K020G1234\GameAward\Project1\Resources\Shaders\mpEffectPixelShader.hlsl(3,29-39): error X4502: invalid vs_2_0 output semantic 'SV_TARGET'
-  
-  compilation failed; no code produced
