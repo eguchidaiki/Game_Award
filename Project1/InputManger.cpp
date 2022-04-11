@@ -1,5 +1,5 @@
 #include "InputManger.h"
-#include <DxLib.h>
+//#include <DxLib.h>
 
 bool InputManger::Escape()
 {

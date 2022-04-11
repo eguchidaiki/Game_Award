@@ -1,7 +1,9 @@
 #pragma once
 #include "PlayerBody.h"
-#include "Vector3.h"
+//#include "Vector3.h"
 #include "Easing.h"
+#include "Sprite.h"
+#include<RVector.h>
 
 class PlayerFoot
 {
@@ -15,12 +17,13 @@ public: //メンバ関数
 	void Draw(int offsetX, int offsetY, bool isleft, bool isright);
 
 public: //メンバ変数
-	Vector3 FootLeftUpPosition;
+	RVector3 FootLeftUpPosition;
 	Easing ease;
 
 	bool FootIsAction;
 	bool IsFootUp;
 
 	//画像ハンドル
-	int FootHandle;
+	UINT FootHandle;
+	Sprite FootSprite;
 };
