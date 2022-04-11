@@ -3,6 +3,7 @@
 #include "PlayerFoot.h"
 #include <RVector.h>
 #include <TexManager.h>
+#include "Sprite.h"
 
 class Player final
 {
@@ -33,7 +34,7 @@ public: //メンバ関数
 
 	void IsHitPlayerBody(Stage& stage);
 
-	void ExtrudePlayer(Vector3 ExtrudePos, float ExtrudeDis, bodytype ExtrudeType);
+	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
 
 	bool IsFall();
 public: //メンバ変数
@@ -96,4 +97,7 @@ public: //メンバ変数
 
 	//足
 	PlayerFoot leg;
+
+	//描画用スプライト
+	Sprite PlayerSprite;
 };

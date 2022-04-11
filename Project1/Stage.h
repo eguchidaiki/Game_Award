@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
-#include "Vector3.h"
+#include <RVector.h>
 #include "Easing.h"
+#include "Sprite.h"
 
 /*メモリが大きくなりすぎる懸念がある箇所はchar型にしています*/
 
@@ -25,14 +26,30 @@ private:
 	Stage operator=(const Stage&) = delete;
 
 public: //サブクラス
+	struct MapChipSprite
+	{
+		Sprite MapchipSprite;
+
+		void init(UINT* handle)
+		{
+			MapchipSprite.Create(*handle, 60, 60);
+		}
+
+		void draw(float left, float up)
+		{
+			MapchipSprite.DrawSprite(left, up);
+			MapchipSprite.Draw();
+		}
+	};
+
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
 		char stageNumber = 0;
 		char offsetX = 0;
 		char offsetY = 0;
-		std::vector<Vector3> drawLeftUp = {};
-		std::vector<Vector3> drawRightDown = {};
+		std::vector<RVector3> drawLeftUp = {};
+		std::vector<RVector3> drawRightDown = {};
 		size_t size = 1;
 		unsigned char width = 1;
 		unsigned char height = 1;
@@ -40,9 +57,11 @@ public: //サブクラス
 		bool isFold = false;
 
 		Easing stageEase = {};
-		std::vector<Vector3> startPos = {};
-		std::vector<Vector3> endPos = {};
-		std::vector<Vector3> easePos = {};
+		std::vector<RVector3> startPos = {};
+		std::vector<RVector3> endPos = {};
+		std::vector<RVector3> easePos = {};
+
+		std::vector<MapChipSprite> Mapchips = {};
 
 		bool isTop = true;
 	};
@@ -62,7 +81,7 @@ public: //定数
 	static const int blockSize;
 	static const int halfBlockSize;
 
-	Vector3 offset = { 0,0,0 };
+	RVector3 offset = { 0,0,0 };
 
 private: //静的メンバ変数
 	static int startPlayerPosX;
@@ -86,7 +105,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const Vector3& playerPos, unsigned char foldCount[4]);
+	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4]);
 	// リセット
 	void Reset();
 	// 内部データ全削除
@@ -119,7 +138,7 @@ public: //メンバ関数
 	// 任意の場所のマップチップ情報を取得
 	char GetStageMapchip(int i, int j, int mapchipPos);
 	// 任意の座標からどのStageTileにいるかを取得
-	bool GetPositionTile(Vector3 center, int i, int j);
+	bool GetPositionTile(RVector3 center, int i, int j);
 	// ステージタイルのX軸のオフセットを返す
 	int GetStageTileOffsetX(int i, int j);
 	// ステージタイルのY軸のオフセットを返す
@@ -143,4 +162,8 @@ private:
 private: //メンバ変数
 	std::vector<StageData> stageData;
 	std::vector<StageData> initStageData;
+
+	UINT BlockHandle;
+	UINT EnptyHandle;
+	UINT GoalHandle;
 };

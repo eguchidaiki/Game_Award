@@ -37,7 +37,7 @@ void Title::Finalize()
 void Title::Update() {
     camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-
+    player->Update(*stage);
 }
 
 //•`‰æ
@@ -51,7 +51,8 @@ void Title::Draw() {
     // •`‰æˆ—
     //DrawGraph(0, 0, Back, true);
     //DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
-    stage->Draw(drawOffsetX, drawOffsetY - Raki_WinAPI::window_height);
+    SpriteManager::Get()->SetCommonBeginDraw();
+    stage->Draw(drawOffsetX, drawOffsetY);
     player->Draw(drawOffsetX, drawOffsetY);
 
     //•`‰æI—¹

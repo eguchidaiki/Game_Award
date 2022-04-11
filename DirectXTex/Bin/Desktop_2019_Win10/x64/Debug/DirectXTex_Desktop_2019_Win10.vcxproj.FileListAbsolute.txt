@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 C:\K020G1188\Award_2\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug\DirectXTex.lib
+=======
+C:\K020G1198\Team\GameAward_clone_02\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug\DirectXTex.lib
+>>>>>>> e24cf14275644d3e8cc8ca229697939ca691d206

@@ -3,6 +3,7 @@
   <ProjectOutputs />
   <ContentFiles>
     <ContentFile>
+<<<<<<< HEAD
       <FullPath>C:\K020G1188\Award_2\x64\Debug\mpEffectPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -25,6 +26,30 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\K020G1188\Award_2\x64\Debug\SpriteVS.cso</FullPath>
+=======
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\mpEffectPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\mpPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\mpVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\OBJGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\OBJPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\OBJVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\SpritePS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\K020G1198\Team\GameAward_clone_02\x64\Debug\SpriteVS.cso</FullPath>
+>>>>>>> e24cf14275644d3e8cc8ca229697939ca691d206
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
