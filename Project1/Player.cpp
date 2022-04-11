@@ -1,13 +1,11 @@
 #include <Raki_Input.h>
 #include "Player.h"
 #include "Stage.h"
-#include "InputManger.h"
-#include "DrawShape.h"
-#include "Colors.h"
+//#include "Colors.h"
 
 namespace
 {
-static size_t i = 0;
+	static size_t i = 0;
 }
 
 Player* Player::Get()
@@ -45,6 +43,11 @@ Player::Player() :
 	leg{}
 {
 	Init();
+
+	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
+	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
+
+	PlayerSprite.Create(FaceHandle[0], 50, 50);
 }
 
 Player::~Player()
@@ -62,20 +65,17 @@ void Player::Init()
 	Player_IsAction = false;
 	IsColide = false;
 
-	Body_One.Init(CenterPosition, left);
-	Body_One.BodyColor = YELLOW;
+	Body_One.Init(CenterPosition, BodyType::left);
+	//Body_One.BodyColor = YELLOW;
 
-	Body_Two.Init(CenterPosition, up);
-	Body_Two.BodyColor = GREEN;
+	Body_Two.Init(CenterPosition, BodyType::up);
+	//Body_Two.BodyColor = GREEN;
 
-	Body_Three.Init(CenterPosition, right);
-	Body_Three.BodyColor = MAGENTA;
+	Body_Three.Init(CenterPosition, BodyType::right);
+	//Body_Three.BodyColor = MAGENTA;
 
-	Body_Four.Init(CenterPosition, down);
-	Body_Four.BodyColor = MAGENTA;
-
-	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
-	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
+	Body_Four.Init(CenterPosition, BodyType::down);
+	//Body_Four.BodyColor = MAGENTA;
 
 	leg.Init();
 	IsLeft = true;
@@ -85,13 +85,13 @@ void Player::Init()
 void Player::Update(Stage& stage)
 {
 	//左右移動
-	if (InputManger::Right() && !InputManger::Act1() && Player_IsAction == false)
+	if (Input::isKey(DIK_D) && Player_IsAction == false)
 	{
 		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
 		IsRight = true;
 	}
-	if (InputManger::Left() && !InputManger::Act1() && Player_IsAction == false)
+	if (Input::isKey(DIK_A) && Player_IsAction == false)
 	{
 		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
@@ -110,7 +110,7 @@ void Player::Update(Stage& stage)
 	}
 
 	//ジャンプ
-	if (InputManger::UpTrigger() && !InputManger::Act1() && IsInputjump == true)
+	if (Input::isKeyTrigger(DIK_W) && IsInputjump == true)
 	{
 		IsJump = true;
 		FallSpeed = -9.5f;
@@ -146,25 +146,25 @@ void Player::Update(Stage& stage)
 	IsHitPlayerBody(stage);
 
 
-	if (InputManger::SubLeftTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_LEFT) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsLeftFold = true;
 		leg.Set();
 	}
-	if (InputManger::SubUpTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_UP) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsUpFold = true;
 		leg.Set();
 	}
-	if (InputManger::SubRightTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_RIGHT) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsRightFold = true;
 		leg.Set();
 	}
-	if (InputManger::SubDownTrigger() && Player_IsAction == false)
+	if (Input::isKeyTrigger(DIK_DOWN) && Player_IsAction == false)
 	{
 		Player_IsAction = true;
 		IsDownFold = true;
@@ -175,7 +175,7 @@ void Player::Update(Stage& stage)
 	{
 		if (IsLeftFold == true)
 		{
-			if (Body_One.Ease.isMove == false && Body_One.Body_Type == left && Body_One.IsActivate == true)
+			if (Body_One.Ease.isMove == false && Body_One.Body_Type == BodyType::left && Body_One.IsActivate == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
 				Body_One.Ease.maxTime = 1.2f;
@@ -199,7 +199,7 @@ void Player::Update(Stage& stage)
 					}
 				}
 
-				if (Body_One.IsFold == true && Body_One.IsOpen == false && Body_One.FoldCount == 1 && Body_One.IsAction == false && Body_Three.Body_Type == left)
+				if (Body_One.IsFold == true && Body_One.IsOpen == false && Body_One.FoldCount == 1 && Body_One.IsAction == false && Body_Three.Body_Type == BodyType::left)
 				{
 					Body_Three.Ease.addTime = 0.1f;
 					Body_Three.Ease.maxTime = 1.2f;
@@ -230,7 +230,7 @@ void Player::Update(Stage& stage)
 		}
 		if (IsUpFold == true)
 		{
-			if (Body_Two.Ease.isMove == false && Body_Two.Body_Type == up && Body_Two.IsActivate == true)
+			if (Body_Two.Ease.isMove == false && Body_Two.Body_Type == BodyType::up && Body_Two.IsActivate == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -244,11 +244,11 @@ void Player::Update(Stage& stage)
 					Body_Two.IsOpen = false;
 					Body_Two.IsAction = true;
 
-					if (Body_One.FoldCount == 1 && Body_One.Body_Type == left)
+					if (Body_One.FoldCount == 1 && Body_One.Body_Type == BodyType::left)
 					{
 						Body_One.Overlap++;
 					}
-					if (Body_Three.FoldCount == 1 && Body_Three.Body_Type == right)
+					if (Body_Three.FoldCount == 1 && Body_Three.Body_Type == BodyType::right)
 					{
 						Body_Three.Overlap++;
 					}
@@ -269,7 +269,7 @@ void Player::Update(Stage& stage)
 		}
 		if (IsRightFold == true)
 		{
-			if (Body_Three.Ease.isMove == false && Body_Three.Body_Type == right && Body_Three.IsActivate == true)
+			if (Body_Three.Ease.isMove == false && Body_Three.Body_Type == BodyType::right && Body_Three.IsActivate == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
 				Body_Three.Ease.maxTime = 1.2f;
@@ -293,7 +293,7 @@ void Player::Update(Stage& stage)
 					}
 				}
 
-				if (Body_Three.IsFold == true && Body_Three.IsOpen == false && Body_Three.FoldCount == 1 && Body_Three.IsAction == false && Body_One.Body_Type == right)
+				if (Body_Three.IsFold == true && Body_Three.IsOpen == false && Body_Three.FoldCount == 1 && Body_Three.IsAction == false && Body_One.Body_Type == BodyType::right)
 				{
 					Body_One.Ease.addTime = 0.1f;
 					Body_One.Ease.maxTime = 1.2f;
@@ -324,7 +324,7 @@ void Player::Update(Stage& stage)
 		}
 		if (IsDownFold == true)
 		{
-			if (Body_Two.Ease.isMove == false && Body_Two.Body_Type == down && Body_Two.IsActivate == true)
+			if (Body_Two.Ease.isMove == false && Body_Two.Body_Type == BodyType::down && Body_Two.IsActivate == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -368,11 +368,11 @@ void Player::Update(Stage& stage)
 	}
 
 	//開く
-	if (InputManger::Act1Trigger())
+	if (Input::isKeyTrigger(DIK_SPACE))
 	{
 		//左
-		if (Body_One.IsFold == true && Body_One.IsAction == false && Body_One.Body_Type == left && Body_One.Overlap == 0 ||
-			Body_Three.Body_Type == left && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+		if (Body_One.IsFold == true && Body_One.IsAction == false && Body_One.Body_Type == BodyType::left && Body_One.Overlap == 0 ||
+			Body_Three.Body_Type == BodyType::left && Body_Three.IsFold == true && Body_Three.Overlap == 0)
 		{
 			Body_One.Ease.addTime = 0.1f;
 			Body_One.Ease.maxTime = 1.2f;
@@ -407,7 +407,7 @@ void Player::Update(Stage& stage)
 			{
 				Body_Two.Overlap--;
 			}
-			if (Body_Three.Body_Type == right && Body_Three.IsFold == true || Body_One.FoldCount == 1 && Body_Three.Body_Type == left)
+			if (Body_Three.Body_Type == BodyType::right && Body_Three.IsFold == true || Body_One.FoldCount == 1 && Body_Three.Body_Type == BodyType::left)
 			{
 				Body_Three.Overlap--;
 			}
@@ -439,8 +439,8 @@ void Player::Update(Stage& stage)
 			}
 		}
 		//右
-		else if (Body_Three.IsFold == true && Body_Three.IsAction == false && Body_Three.Body_Type == right && Body_Three.Overlap == 0 ||
-			Body_One.Body_Type == right && Body_One.IsFold == true)
+		else if (Body_Three.IsFold == true && Body_Three.IsAction == false && Body_Three.Body_Type == BodyType::right && Body_Three.Overlap == 0 ||
+			Body_One.Body_Type == BodyType::right && Body_One.IsFold == true)
 		{
 			Body_Three.Ease.addTime = 0.1f;
 			Body_Three.Ease.maxTime = 1.2f;
@@ -475,7 +475,7 @@ void Player::Update(Stage& stage)
 			{
 				Body_Two.Overlap--;
 			}
-			if (Body_One.Body_Type == left && Body_One.IsFold == true || Body_Three.FoldCount == 1 && Body_One.Body_Type == right)
+			if (Body_One.Body_Type == BodyType::left && Body_One.IsFold == true || Body_Three.FoldCount == 1 && Body_One.Body_Type == BodyType::right)
 			{
 				Body_One.Overlap--;
 			}
@@ -493,14 +493,14 @@ void Player::Update(Stage& stage)
 	{
 		if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
 		{
-			if (Body_One.Body_Type == right)
+			if (Body_One.Body_Type == BodyType::right)
 			{
 				Body_One.Overlap = 0;
 				Body_One.setslide(-1, 2);
 				Body_Three.BodyDistance = 1;
 				Body_Three.setslide(-1, 1);
 			}
-			if (Body_One.Body_Type == left && Body_One.BodyDistance == 1 && Body_Three.IsFold == false)
+			if (Body_One.Body_Type == BodyType::left && Body_One.BodyDistance == 1 && Body_Three.IsFold == false)
 			{
 				if (Body_One.IsFold == true)
 				{
@@ -522,11 +522,11 @@ void Player::Update(Stage& stage)
 				}
 			}
 		}
-		else if (Body_Three.IsActivate == true && Body_Three.Body_Type == right && Body_Three.IsFold == false && Body_Three.IsAction == false)
+		else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::right && Body_Three.IsFold == false && Body_Three.IsAction == false)
 		{
 			Body_Three.setslide(-1, 2);
 		}
-		else if (Body_One.IsActivate == true && Body_One.Body_Type == right && Body_One.IsFold == false)
+		else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::right && Body_One.IsFold == false)
 		{
 			Body_One.setslide(-1, 2);
 		}
@@ -536,14 +536,14 @@ void Player::Update(Stage& stage)
 	{
 		if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
 		{
-			if (Body_Three.Body_Type == left)
+			if (Body_Three.Body_Type == BodyType::left)
 			{
 				Body_Three.Overlap = 0;
 				Body_Three.setslide(1, 2);
 				Body_One.BodyDistance = 1;
 				Body_One.setslide(1, 1);
 			}
-			if (Body_Three.Body_Type == right && Body_Three.BodyDistance == 1 && Body_One.IsFold == false)
+			if (Body_Three.Body_Type == BodyType::right && Body_Three.BodyDistance == 1 && Body_One.IsFold == false)
 			{
 				if (Body_Three.IsFold == true)
 				{
@@ -565,11 +565,11 @@ void Player::Update(Stage& stage)
 				}
 			}
 		}
-		else if (Body_One.IsActivate == true && Body_One.Body_Type == left && Body_One.IsFold == false && Body_One.IsAction == false)
+		else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::left && Body_One.IsFold == false && Body_One.IsAction == false)
 		{
 			Body_One.setslide(1, 2);
 		}
-		else if (Body_Three.IsActivate == true && Body_Three.Body_Type == left && Body_Three.IsFold == false)
+		else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::left && Body_Three.IsFold == false)
 		{
 			Body_Three.setslide(1, 2);
 		}
@@ -577,7 +577,7 @@ void Player::Update(Stage& stage)
 	//上下のスライド
 	if (Input::isKeyTrigger(DIK_C) && Body_Two.IsFold == false && Body_Two.IsAction == false && Body_Two.IsActivate == true)
 	{
-		if (Body_Two.Body_Type == up)
+		if (Body_Two.Body_Type == BodyType::up)
 		{
 			Body_Two.setslide(1, 2);
 		}
@@ -587,7 +587,7 @@ void Player::Update(Stage& stage)
 		}
 	}
 
-	if (Body_One.Body_Type == down || Body_Two.Body_Type == down || Body_Three.Body_Type == down)
+	if (Body_One.Body_Type == BodyType::down || Body_Two.Body_Type == BodyType::down || Body_Three.Body_Type == BodyType::down)
 	{
 		IsDownBody = true;
 	}
@@ -595,7 +595,7 @@ void Player::Update(Stage& stage)
 	{
 		IsDownBody = false;
 	}
-	leg.Update(CenterPosition, (IsDownBody && !(Body_Two.IsFold)), 1);
+	leg.Update(CenterPosition, IsDownBody, 1);
 
 	if (Body_One.IsActivate == true)
 	{
@@ -626,15 +626,17 @@ void Player::Draw(int offsetX, int offsetY)
 		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			DrawExtendGraph(
+			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			DrawExtendGraph(
+			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 	}
 
@@ -681,39 +683,43 @@ void Player::Draw(int offsetX, int offsetY)
 
 	if (Body_One.IsSlide == true || Body_Two.IsSlide == true || Body_Three.IsSlide == true)
 	{
-		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
+		//leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			DrawExtendGraph(
+			//PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			DrawExtendGraph(
+			//PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);
+				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 	}
 
+	PlayerSprite.Draw();
+
 #pragma region debug
-	DrawFormatString(0, 0, WHITE, "AD:左右移動");
-	DrawFormatString(0, 20, WHITE, "W:ジャンプ");
-	DrawFormatString(0, 40, WHITE, "←↑→:折る");
-	DrawFormatString(0, 60, WHITE, "SPACE:開く");
-	DrawFormatString(0, 120, WHITE, "%f", CenterPosition.y);
-	DrawFormatString(0, 140, WHITE, "%f", leg.FootLeftUpPosition.y);
-	DrawFormatString(0, 160, WHITE, "%f", static_cast<double>(leg.FootLeftUpPosition.y) - static_cast<double>(CenterPosition.y));
+	//DrawFormatString(0, 0, WHITE, "AD:左右移動");
+	//DrawFormatString(0, 20, WHITE, "W:ジャンプ");
+	//DrawFormatString(0, 40, WHITE, "←↑→:折る");
+	//DrawFormatString(0, 60, WHITE, "SPACE:開く");
+	//DrawFormatString(0, 120, WHITE, "%f", CenterPosition.y);
+	//DrawFormatString(0, 140, WHITE, "%f", leg.FootLeftUpPosition.y);
+	//DrawFormatString(0, 160, WHITE, "%f", static_cast<double>(leg.FootLeftUpPosition.y) - static_cast<double>(CenterPosition.y));
 	//DrawFormatString(0, 180, WHITE, "fall:%d", IsFaceFall);
-	DrawFormatString(0, 200, WHITE, "isleft:%d", IsLeft);
-	DrawFormatString(0, 220, WHITE, "isright:%d", IsRight);
+	//DrawFormatString(0, 200, WHITE, "isleft:%d", IsLeft);
+	//DrawFormatString(0, 220, WHITE, "isright:%d", IsRight);
 	if (IsGoal == true)
 	{
-		DrawFormatString(300, 100, YELLOW, "GOAL");
+		//DrawFormatString(300, 100, YELLOW, "GOAL");
 	}
 	else
 	{
-		DrawFormatString(300, 100, YELLOW, "NO GOAL");
+		//DrawFormatString(300, 100, YELLOW, "NO GOAL");
 	}
 
 #pragma endregion
@@ -961,11 +967,11 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 }
 
-void Player::ExtrudePlayer(Vector3 ExtrudePos, float ExtrudeDis, bodytype ExtrudeType)
+void Player::ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType)
 {
 	switch (ExtrudeType)
 	{
-	case left:
+	case BodyType::left:
 		if (CenterPosition.x - ExtrudePos.x < ExtrudeDis)
 		{
 			CenterPosition.x = ExtrudePos.x + ExtrudeDis;
@@ -976,7 +982,7 @@ void Player::ExtrudePlayer(Vector3 ExtrudePos, float ExtrudeDis, bodytype Extrud
 			IsColide = false;
 		}
 		break;
-	case right:
+	case BodyType::right:
 		if (ExtrudePos.x - CenterPosition.x < ExtrudeDis)
 		{
 			CenterPosition.x = ExtrudePos.x - ExtrudeDis;
@@ -987,7 +993,7 @@ void Player::ExtrudePlayer(Vector3 ExtrudePos, float ExtrudeDis, bodytype Extrud
 			IsColide = false;
 		}
 		break;
-	case up:
+	case BodyType::up:
 		if (CenterPosition.y - ExtrudePos.y < ExtrudeDis)
 		{
 			CenterPosition.y = ExtrudePos.y + ExtrudeDis;
@@ -998,7 +1004,7 @@ void Player::ExtrudePlayer(Vector3 ExtrudePos, float ExtrudeDis, bodytype Extrud
 			IsColide = false;
 		}
 		break;
-	case down:
+	case BodyType::down:
 		if (ExtrudePos.y - CenterPosition.y < ExtrudeDis)
 		{
 			CenterPosition.y = ExtrudePos.y - ExtrudeDis;

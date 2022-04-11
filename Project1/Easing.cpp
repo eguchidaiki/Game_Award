@@ -1,5 +1,6 @@
 #include "Easing.h"
-#include "Vector3.h"
+//#include "Vector3.h"
+#include<RVector.h>
 
 Easing::Easing() :
 	maxTime(2.0f),
@@ -20,11 +21,11 @@ float Easing::easeOut(const float start, const float end, const float time)
 	return start * (1.0f - position) + end * position;
 }
 
-Vector3 Easing::SplineCurve(const std::vector<Vector3>& points, const size_t& startIndex, const float time)
+RVector3 Easing::SplineCurve(const std::vector<RVector3>& points, const size_t& startIndex, const float time)
 {
 	// ï‚ä‘Ç∑Ç◊Ç´ì_ÇÃêî
 	size_t n = points.size();
-	static Vector3 p0, p1, p2, p3;
+	static RVector3 p0, p1, p2, p3;
 
 	if (startIndex > n)
 	{
@@ -54,17 +55,17 @@ Vector3 Easing::SplineCurve(const std::vector<Vector3>& points, const size_t& st
 		p3 = points[startIndex + 2];
 	}
 
-	Vector3 position =
+	RVector3 position =
 		0.5 * (2 * p1 + (-p0 + p2) * time + (2 * p0 - 5 * p1 + 4 * p2 - p3) * time * time + (-p0 + 3 * p1 - 3 * p2 + p3) * time * time * time);
 
 	return position;
 }
 
-Vector3 Easing::SplineLoop(const std::vector<Vector3>& points, const size_t& startIndex, const float time)
+RVector3 Easing::SplineLoop(const std::vector<RVector3>& points, const size_t& startIndex, const float time)
 {
 	// ï‚ä‘Ç∑Ç◊Ç´ì_ÇÃêî
 	size_t n = points.size();
-	static Vector3 p[4];
+	static RVector3 p[4];
 
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -82,7 +83,7 @@ Vector3 Easing::SplineLoop(const std::vector<Vector3>& points, const size_t& sta
 		}
 	}
 
-	Vector3 position =
+	RVector3 position =
 		0.5 * (2 * p[1] + (-p[0] + p[2]) * time + (2 * p[0] - 5 * p[1] + 4 * p[2] - p[3]) * time * time + (-p[0] + 3 * p[1] - 3 * p[2] + p[3]) * time * time * time);
 
 	return position;
