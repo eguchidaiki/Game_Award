@@ -1,6 +1,4 @@
 #include "BaseBlock.h"
-#include <DxLib.h>
-#include "DrawShape.h"
 #include "Colors.h"
 
 const int BaseBlock::blockSize = 60;
@@ -39,7 +37,7 @@ void BaseBlock::Draw(int offsetX, int offsetY)
 	endPos.x = (pos.x + 1) + offsetX;
 	endPos.y = (pos.y + 1) + offsetY;
 
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
-	DrawShape::DrawPlane(startPos, endPos, WHITE);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0x80);
+	//SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0x80);
+	//DrawShape::DrawPlane(startPos, endPos, WHITE);
+	//SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0x80);
 }

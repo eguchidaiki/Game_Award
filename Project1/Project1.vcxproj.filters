@@ -75,16 +75,7 @@
     <ClCompile Include="testParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManger.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="LoadFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix4.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
@@ -96,19 +87,7 @@
     <ClCompile Include="PlayerFoot.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseBlock.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawShape.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Easing.cpp">
@@ -121,15 +100,6 @@
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
       <Filter>Engine\Basic</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawVS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawPS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
-    </FxCompile>
-    <FxCompile Include="SmartDrawGS.hlsl">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
@@ -159,9 +129,6 @@
   <ItemGroup>
     <None Include="Basic.hlsli">
       <Filter>Engine\Basic</Filter>
-    </None>
-    <None Include="SmartDrawShaderHeader.hlsli">
-      <Filter>リソース ファイル\hlsl\SmartDraw</Filter>
     </None>
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
@@ -204,16 +171,7 @@
     <ClInclude Include="General.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManger.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="LoadFile.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix4.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
@@ -228,22 +186,10 @@
     <ClInclude Include="PlayerFoot.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Quaternion.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Stage.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Vector3.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseBlock.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Colors.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawShape.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Easing.h">
