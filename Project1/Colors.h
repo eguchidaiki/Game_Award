@@ -1,5 +1,5 @@
 #pragma once
-#include <DxLib.h>
+//#include <DxLib.h>
 
 #define BLACK static_cast<unsigned int>(0xFF000000)
 #define BLUE static_cast<unsigned int>(0xFF0000FF)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DxLib.h"
+//#include "DxLib.h"
 #include "Vector3.h"
 
 // MATRIX Œ^‚ğ Matrix4 Œ^‚Æ‚µ‚Äˆµ‚¤ ¦ŒİŠ·«‚ÌŠm•Û&Šg’£‚Ì‚½‚ß
