@@ -1,6 +1,5 @@
 #include "Stage.h"
 #include "LoadFile.h"
-//#include "InputManger.h"
 #include "General.h"
 #include "Colors.h"
 #include <Raki_Input.h>
@@ -56,6 +55,10 @@ void Stage::Init()
 	BlockHandle = TexManager::LoadTexture("Resources/block.png");
 	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
 	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
+
+	MapchipSpriteBlock.Create(BlockHandle);
+	MapchipSpriteEnpty.Create(EnptyHandle);
+	MapchipSpriteGoal.Create(GoalHandle);
 }
 
 void Stage::Updata()
@@ -269,7 +272,31 @@ void Stage::Draw(int offsetX, int offsetY)
 					pos2.y = stageData[i].stageTileData[j].drawRightDown[mapchipPos].y + static_cast<float>(offsetY);
 					pos2.z = stageData[i].stageTileData[j].drawRightDown[mapchipPos].z;
 
-					stageData[i].stageTileData[j].Mapchips[mapchipPos].draw(pos1.x, pos1.y, pos2.x, pos2.y);
+					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
+					{
+					case MapchipData::EMPTY_STAGE:
+					{
+						continue;
+						break;
+					}
+					case MapchipData::BLOCK:
+					{
+						MapchipSpriteBlock.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+					}
+					case MapchipData::GOAL:
+					{
+						MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+					}
+					case MapchipData::NONE:
+					case MapchipData::START:
+					default:
+					{
+						MapchipSpriteEnpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+					}
+					}
 
 					if (j == 2)
 					{
@@ -368,6 +395,10 @@ void Stage::Draw(int offsetX, int offsetY)
 			}
 		}
 	}
+
+	MapchipSpriteBlock.Draw();
+	MapchipSpriteGoal.Draw();
+	MapchipSpriteEnpty.Draw();
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -583,47 +614,6 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 			memcpy_s(initMapchip, sizeof(char) * stageData[i].stageTileData[j].size,
 				stageData[i].stageTileData[j].mapchip, sizeof(char) * stageData[i].stageTileData[j].size);
 			initStageData[i].stageTileData[j].mapchip = initMapchip;
-		}
-	}
-
-	for (i = 0; i < stageData.size(); i++)
-	{
-		for (j = 0; j < stageData[i].stageTileData.size(); j++)
-		{
-			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
-			{
-				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
-				{
-					mapchipPos = y * stageData[i].stageTileData[j].width + x;
-					stageData[i].stageTileData[j].Mapchips.push_back({});
-
-					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
-					{
-					case MapchipData::EMPTY_STAGE:
-					{
-						continue;
-						break;
-					}
-					case MapchipData::BLOCK:
-					{
-						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&BlockHandle);
-						break;
-					}
-					case MapchipData::GOAL:
-					{
-						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&GoalHandle);
-						break;
-					}
-					case MapchipData::NONE:
-					case MapchipData::START:
-					default:
-					{
-						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&EnptyHandle);
-						break;
-					}
-					}
-				}
-			}
 		}
 	}
 

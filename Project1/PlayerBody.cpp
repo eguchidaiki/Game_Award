@@ -73,7 +73,7 @@ void PlayerBody::Update(RVector3& center)
 	//�J���Ă���r��
 	if (IsFold == false && IsOpen == true && IsAction == true && IsSlide == false)
 	{
-		Ease.addTime += Ease.maxTime / 20.0f;
+		Ease.addTime += Ease.maxTime / 30.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
 		if (Body_Type == BodyType::left)
@@ -228,7 +228,7 @@ void PlayerBody::Update(RVector3& center)
 	//折っている途中
 	if (IsFold == true && IsOpen == false && IsAction == true && IsSlide == false)
 	{
-		Ease.addTime += Ease.maxTime / 20.0f;
+		Ease.addTime += Ease.maxTime / 30.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
 		if (Body_Type == BodyType::left)

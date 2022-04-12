@@ -26,22 +26,6 @@ private:
 	Stage operator=(const Stage&) = delete;
 
 public: //サブクラス
-	struct MapChipSprite
-	{
-		Sprite MapchipSprite;
-
-		void init(UINT* handle)
-		{
-			MapchipSprite.Create(*handle);
-		}
-
-		void draw(float left, float up, float right, float down)
-		{
-			MapchipSprite.DrawExtendSprite(left, up, right, down);
-			MapchipSprite.Draw();
-		}
-	};
-
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
@@ -60,8 +44,6 @@ public: //サブクラス
 		std::vector<RVector3> startPos = {};
 		std::vector<RVector3> endPos = {};
 		std::vector<RVector3> easePos = {};
-
-		std::vector<MapChipSprite> Mapchips = {};
 
 		bool isTop = true;
 	};
@@ -166,4 +148,8 @@ private: //メンバ変数
 	UINT BlockHandle;
 	UINT EnptyHandle;
 	UINT GoalHandle;
+
+	Sprite MapchipSpriteBlock;
+	Sprite MapchipSpriteEnpty;
+	Sprite MapchipSpriteGoal;
 };

@@ -100,4 +100,5 @@ public: //メンバ変数
 
 	//描画用スプライト
 	Sprite PlayerSprite;
+	Sprite PlayerSpriteAction;
 };

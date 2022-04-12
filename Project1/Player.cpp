@@ -45,9 +45,10 @@ Player::Player() :
 	Init();
 
 	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
-	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
+	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
 
 	PlayerSprite.Create(FaceHandle[0]);
+	PlayerSpriteAction.Create(FaceHandle[1]);
 }
 
 Player::~Player()
@@ -171,6 +172,7 @@ void Player::Update(Stage& stage)
 		leg.Set();
 	}
 
+	//ë´Çè„Ç∞èIÇÌÇ¡ÇΩÇÁê‹ÇÈ
 	if (leg.FootIsAction == false)
 	{
 		if (IsLeftFold == true)
@@ -620,7 +622,7 @@ void Player::Update(Stage& stage)
 	{
 		IsDownBody = false;
 	}
-	leg.Update(CenterPosition, (IsDownBody && !(Body_Two.IsFold)), 1);
+	leg.Update(CenterPosition, (IsDownBody && !(Body_Four.IsFold)), 1);
 
 	if (Body_One.IsActivate == true)
 	{
@@ -646,32 +648,41 @@ void Player::Update(Stage& stage)
 
 void Player::Draw(int offsetX, int offsetY)
 {
-	if (IsDownBody == true)
-	{
-		leg.FootLeftUpPosition.y = Body_Four.BodyEndPos.y;
-	}
-	else
-	{
-		leg.FootLeftUpPosition.y = CenterPosition.y + 25;
-	}
-
 	if (Body_One.IsSlide == false && Body_Two.IsSlide == false && Body_Three.IsSlide == false)
 	{
 		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			PlayerSprite.DrawExtendSprite(
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+			if (Player_IsAction == true)
+			{
+				PlayerSpriteAction.DrawExtendSprite(
+					(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+					(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+			}
+			else
+			{
+				PlayerSprite.DrawExtendSprite(
+					(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+					(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+			}
 			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			PlayerSprite.DrawExtendSprite(
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+			if (Player_IsAction == true)
+			{
+				PlayerSpriteAction.DrawExtendSprite(
+					(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+					(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+			}
+			else
+			{
+				PlayerSprite.DrawExtendSprite(
+					(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+					(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+			}
 			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
@@ -731,26 +742,8 @@ void Player::Draw(int offsetX, int offsetY)
 	}
 #pragma endregion èdÇ»Ç¡ÇƒÇ¢ÇÈñáêîÇ≤Ç∆Ç…èáî‘Ç…ï`âÊ
 
-	if (Body_One.IsSlide == true || Body_Two.IsSlide == true || Body_Three.IsSlide == true || Body_Four.IsSlide == true)
-	{
-		//leg.Draw(offsetX, offsetY, IsLeft, IsRight);
-		if (IsLeft)
-		{
-			//PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
-			/*DrawExtendGraph(
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
-		}
-		if (IsRight)
-		{
-			//PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
-			/*DrawExtendGraph(
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
-		}
-	}
-
 	PlayerSprite.Draw();
+	PlayerSpriteAction.Draw();
 
 #pragma region debug
 	//DrawFormatString(0, 0, WHITE, "AD:ç∂âEà⁄ìÆ");
