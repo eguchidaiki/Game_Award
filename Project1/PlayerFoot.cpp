@@ -10,7 +10,7 @@ PlayerFoot::PlayerFoot() :
 	Init();
 	FootHandle = TexManager::LoadTexture("./Resources/playerLegs/playerLegs.png");
 
-	FootSprite.Create(FootHandle, 60, 8);
+	FootSprite.Create(FootHandle);
 }
 
 PlayerFoot::~PlayerFoot()

@@ -47,7 +47,7 @@ Player::Player() :
 	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
 	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
 
-	PlayerSprite.Create(FaceHandle[0], 50, 50);
+	PlayerSprite.Create(FaceHandle[0]);
 }
 
 Player::~Player()
