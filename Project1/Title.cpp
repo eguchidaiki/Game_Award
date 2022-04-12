@@ -38,7 +38,6 @@ void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	player->Update(*stage);
-
 	int PlayerBodyStatus[8] = { 0 };
 
 	player->SetBodyStatus(PlayerBodyStatus, 8);
@@ -48,6 +47,7 @@ void Title::Update() {
 		stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus);
 	}
 
+	
 	stage->Updata();
 }
 

@@ -692,23 +692,29 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					Open(playerTile, direction, i, moveStageTile, moveStageData);
+					if (BodyStatus[0] == 1 && BodyStatus[1] == 1)
+					{
+						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 				else
 				{
-					Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+					if (BodyStatus[0] == 1 && BodyStatus[1] == -1)
+					{
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 
 				isAct = true;
