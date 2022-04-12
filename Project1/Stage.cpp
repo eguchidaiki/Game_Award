@@ -267,7 +267,7 @@ void Stage::Draw(int offsetX, int offsetY)
 					pos2.y = stageData[i].stageTileData[j].drawRightDown[mapchipPos].y + static_cast<float>(offsetY);
 					pos2.z = stageData[i].stageTileData[j].drawRightDown[mapchipPos].z;
 
-					stageData[i].stageTileData[j].Mapchips[mapchipPos].draw(pos1.x, pos1.y);
+					stageData[i].stageTileData[j].Mapchips[mapchipPos].draw(pos1.x, pos1.y, pos2.x, pos2.y);
 				}
 			}
 		}
@@ -798,7 +798,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4])
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+					Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
 					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
 					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
@@ -1343,33 +1343,33 @@ void Stage::EaseingUpdate()
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y + (stageData[i].stageTileData[j].offsetY * blockSize)),
 							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
-						overPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
+						/*overPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
 							(stageData[i].stageTileData[j].offsetY * blockSize) - static_cast<float>(stageData[i].stageTileData[j].startPos[2].y),
-							0.0f };
+							0.0f };*/
 						break;
 					case bodytype::down:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y - blockSize),
 							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
-						overPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
+						/*overPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[2].y) + blockSize,
-							0.0f };
+							0.0f };*/
 						break;
 					case bodytype::left:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x + (stageData[i].stageTileData[j].offsetX * blockSize)),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
 							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
-						overPos = { (stageData[i].stageTileData[j].offsetX * blockSize) - static_cast<float>(stageData[i].stageTileData[j].startPos[2].x),
+						/*overPos = { (stageData[i].stageTileData[j].offsetX * blockSize) - static_cast<float>(stageData[i].stageTileData[j].startPos[2].x),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
-							0.0f };
+							0.0f };*/
 						break;
 					case bodytype::right:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x - blockSize),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
 							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
-						overPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[2].x - blockSize),
+						/*overPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[2].x - blockSize),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
-							0.0f };
+							0.0f };*/
 						break;
 					default:
 						break;
@@ -1381,7 +1381,12 @@ void Stage::EaseingUpdate()
 						stageData[i].stageTileData[j].endPos[mapchipPos]
 					};
 
-					if ((stageData[i].stageTileData[j].direction - 1) % 4 == bodytype::left ||
+					stageData[i].stageTileData[j].easePos[mapchipPos] = Easing::SplineCurve(
+						pos,
+						stageData[i].stageTileData[j].stageEase.splineIndex,
+						stageData[i].stageTileData[j].stageEase.timeRate);
+
+					/*if ((stageData[i].stageTileData[j].direction - 1) % 4 == bodytype::left ||
 						(stageData[i].stageTileData[j].direction - 1) % 4 == bodytype::right)
 					{
 						if (x > 2)
@@ -1412,13 +1417,13 @@ void Stage::EaseingUpdate()
 							pos,
 							stageData[i].stageTileData[j].stageEase.splineIndex,
 							stageData[i].stageTileData[j].stageEase.timeRate);
-					}
+					}*/
 				}
 			}
 
 			if (stageData[i].stageTileData[j].stageEase.timeRate >= 1.0f)
 			{
-				if (stageData[i].stageTileData[j].stageEase.splineIndex < 4 - 2)
+				if (stageData[i].stageTileData[j].stageEase.splineIndex < 3 - 2)
 				{
 					stageData[i].stageTileData[j].stageEase.splineIndex++;
 					stageData[i].stageTileData[j].stageEase.timeRate = 0.0f;

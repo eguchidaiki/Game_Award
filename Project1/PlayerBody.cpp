@@ -34,7 +34,7 @@ PlayerBody::PlayerBody() :
 	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
 
 	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
-	BodySprite.Create(Bodyhandle, BodySize, BodySize);
+	BodySprite.Create(Bodyhandle);
 }
 
 PlayerBody::~PlayerBody()
@@ -484,7 +484,16 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
 			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
 
-		BodySprite.DrawSprite(BodyStartPos.x + offsetX, BodyStartPos.y + offsetY);
+		if (IsFold == true)
+		{
+			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+		}
+		else
+		{
+			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+		}
 	}
 
 	BodySprite.Draw();

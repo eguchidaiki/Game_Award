@@ -47,7 +47,7 @@ Player::Player() :
 	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
 	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody/playerBody02.png");
 
-	PlayerSprite.Create(FaceHandle[0], 50, 50);
+	PlayerSprite.Create(FaceHandle[0]);
 }
 
 Player::~Player()
@@ -626,14 +626,18 @@ void Player::Draw(int offsetX, int offsetY)
 		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 		if (IsLeft)
 		{
-			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			PlayerSprite.DrawExtendSprite(
+				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
 			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 		}
 		if (IsRight)
 		{
-			PlayerSprite.DrawSprite((CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY);
+			PlayerSprite.DrawExtendSprite(
+				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
 			/*DrawExtendGraph(
 				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/

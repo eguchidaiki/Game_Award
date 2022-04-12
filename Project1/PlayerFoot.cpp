@@ -10,7 +10,7 @@ PlayerFoot::PlayerFoot() :
 	Init();
 	FootHandle = TexManager::LoadTexture("./Resources/playerLegs/playerLegs.png");
 
-	FootSprite.Create(FootHandle, 60, 8);
+	FootSprite.Create(FootHandle);
 }
 
 PlayerFoot::~PlayerFoot()
@@ -55,14 +55,18 @@ void PlayerFoot::Draw(int offsetX, int offsetY, bool isleft, bool isright)
 {
 	if (isleft)
 	{
-		FootSprite.DrawSprite(FootLeftUpPosition.x + offsetX, FootLeftUpPosition.y + offsetY);
+		FootSprite.DrawExtendSprite(
+			static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y) + offsetY,
+			static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY);
 		/*DrawExtendGraph(
 			static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y) + offsetY,
 			static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY, FootHandle, true);*/
 	}
 	if (isright)
 	{
-		FootSprite.DrawSprite(FootLeftUpPosition.x + offsetX, FootLeftUpPosition.y + offsetY);
+		FootSprite.DrawExtendSprite(
+			static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + offsetY,
+			static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY);
 		/*DrawExtendGraph(
 			static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + offsetY,
 			static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY, FootHandle, true);*/

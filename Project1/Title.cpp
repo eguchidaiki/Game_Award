@@ -13,7 +13,7 @@ Title::Title(ISceneChanger *changer) : BaseScene(changer) {
 
     stage->LoadStage("./Resources/stage1.csv", playerTile);
     player->Init();
-    player->bodysetup(playerTile);
+    player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right);
 
     UINT Back = TexManager::LoadTexture("Resources/back.png");
 
@@ -37,6 +37,12 @@ void Title::Finalize()
 void Title::Update() {
     camera->SetViewStatusEyeTargetUp(eye, target, up);
 
+    if (Input::isKeyTrigger(DIK_LEFT) || Input::isKeyTrigger(DIK_UP) || Input::isKeyTrigger(DIK_RIGHT) || Input::isKeyTrigger(DIK_DOWN))
+    {
+        stage->FoldAndOpen(player->CenterPosition, playerTile);
+    }
+
+    stage->Updata();
     player->Update(*stage);
 }
 
