@@ -34,7 +34,7 @@ PlayerBody::PlayerBody() :
 	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
 
 	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
-	BodySprite.Create(Bodyhandle, BodySize, BodySize);
+	BodySprite.Create(Bodyhandle);
 }
 
 PlayerBody::~PlayerBody()
