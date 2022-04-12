@@ -1087,6 +1087,10 @@ bool Player::IsFall()
 	{
 		FallCount++;
 	}
+	if (Body_Four.IsActivate == true && Body_Four.BodyIsFall == false)
+	{
+		FallCount++;
+	}
 	if (IsFaceFall == false)
 	{
 		FallCount++;
