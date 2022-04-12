@@ -28,7 +28,7 @@ Player::Player() :
 	IsUpFold(),
 	IsRightFold(),
 	IsDownFold(),
-	SideMoveSpeed(3.0f),
+	SideMoveSpeed(2.0f),
 	IsJump(false),
 	JumpSpeed(3.0f),
 	FallSpeed(3.0f),
@@ -878,11 +878,11 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(up_mapchip + 1) * 60.0f + 30.0f;
+						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage.blockSize + 25.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(left_mapchip + 1) * 60.0f + 30.0f;
+						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
 					}
 				}
 			}
@@ -900,12 +900,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(down_mapchip * 60) - 33.0f;
+						CenterPosition.y = static_cast<float>(down_mapchip * stage.blockSize) - 33.0f;
 						FallCount++;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(left_mapchip + 1) * 60.0f + 30.0f;
+						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
 					}
 				}
 			}
@@ -923,11 +923,11 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(up_mapchip + 1) * 60.0f + 30.0f;
+						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage.blockSize + 25.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * 60) - 30.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
 					}
 				}
 			}
@@ -945,12 +945,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(down_mapchip * 60) - 33.0f;
+						CenterPosition.y = static_cast<float>(down_mapchip * stage.blockSize) - 33.0f;
 						FallCount++;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * 60) - 30.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
 					}
 				}
 			}
@@ -1093,5 +1093,53 @@ bool Player::IsFall()
 	else
 	{
 		return true;
+	}
+}
+
+void Player::SetBodyStatus(int* arrangement, int size)
+{
+	if (size != 8)
+	{
+		return;
+	}
+
+	arrangement[0] = (int)Body_Two.IsActivate;
+	arrangement[2] = (int)Body_Four.IsActivate;
+	arrangement[4] = (int)Body_One.IsActivate;
+	arrangement[6] = (int)Body_Three.IsActivate;
+	if (Body_Two.IsFold == true)
+	{
+		arrangement[1] = 1;
+	}
+	else
+	{
+		arrangement[1] = -1;
+	}
+
+	if (Body_Four.IsFold == true)
+	{
+		arrangement[3] = 1;
+	}
+	else
+	{
+		arrangement[3] = -1;
+	}
+
+	if (Body_One.IsFold == true)
+	{
+		arrangement[5] = 1;
+	}
+	else
+	{
+		arrangement[5] = -1;
+	}
+
+	if (Body_Three.IsFold == true)
+	{
+		arrangement[7] = 1;
+	}
+	else
+	{
+		arrangement[7] = -1;
 	}
 }

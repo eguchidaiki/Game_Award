@@ -620,7 +620,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4])
+int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], int BodyStatus[8])
 {
 	static unsigned char direction = 0;
 	static size_t onPlayerStageTile = 0;

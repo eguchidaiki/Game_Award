@@ -37,13 +37,18 @@ void Title::Finalize()
 void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
+	player->Update(*stage);
+
+	int PlayerBodyStatus[8] = { 0 };
+
+	player->SetBodyStatus(PlayerBodyStatus, 8);
+
 	if (Input::isKeyTrigger(DIK_LEFT) || Input::isKeyTrigger(DIK_UP) || Input::isKeyTrigger(DIK_RIGHT) || Input::isKeyTrigger(DIK_DOWN))
 	{
-		stage->FoldAndOpen(player->CenterPosition, playerTile);
+		stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus);
 	}
 
 	stage->Updata();
-	player->Update(*stage);
 }
 
 //•`‰æ

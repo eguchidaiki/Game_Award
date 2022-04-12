@@ -32,11 +32,15 @@ public: //メンバ関数
 	void bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
 	void bodysetup(const unsigned char foldCount[4]);
 
+	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
-
+	//押し出し処理(使ってない)
 	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
-
+	//各体・顔の落下判定
 	bool IsFall();
+	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
+	void SetBodyStatus(int* arrangement, int size);
+
 public: //メンバ変数
 	//床の高さ
 	float FloorHeight;

@@ -87,7 +87,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4]);
+	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], int BodyStatus[8]);
 	// リセット
 	void Reset();
 	// 内部データ全削除
