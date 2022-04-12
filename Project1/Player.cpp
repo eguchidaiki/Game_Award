@@ -114,14 +114,14 @@ void Player::Update(Stage& stage)
 	if (Input::isKeyTrigger(DIK_W) && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -9.5f;
+		FallSpeed = -4.5f;
 	}
 
 	if (IsJump == true)
 	{
 		if (Player_IsAction == false)
 		{
-			FallSpeed += 0.5f;
+			FallSpeed += 0.1f;
 		}
 
 		if (FallSpeed > 0)
@@ -136,7 +136,7 @@ void Player::Update(Stage& stage)
 	{
 		if (FallSpeed < 5.0)
 		{
-			FallSpeed += 0.5f;
+			FallSpeed += 0.1f;
 		}
 	}
 
@@ -648,45 +648,42 @@ void Player::Update(Stage& stage)
 
 void Player::Draw(int offsetX, int offsetY)
 {
-	if (Body_One.IsSlide == false && Body_Two.IsSlide == false && Body_Three.IsSlide == false)
+	leg.Draw(offsetX, offsetY, IsLeft, IsRight);
+	if (IsLeft)
 	{
-		leg.Draw(offsetX, offsetY, IsLeft, IsRight);
-		if (IsLeft)
+		if (Player_IsAction == true)
 		{
-			if (Player_IsAction == true)
-			{
-				PlayerSpriteAction.DrawExtendSprite(
-					(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-					(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
-			}
-			else
-			{
-				PlayerSprite.DrawExtendSprite(
-					(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-					(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
-			}
-			/*DrawExtendGraph(
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
+			PlayerSpriteAction.DrawExtendSprite(
+				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
 		}
-		if (IsRight)
+		else
 		{
-			if (Player_IsAction == true)
-			{
-				PlayerSpriteAction.DrawExtendSprite(
-					(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-					(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
-			}
-			else
-			{
-				PlayerSprite.DrawExtendSprite(
-					(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-					(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
-			}
-			/*DrawExtendGraph(
-				static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-				static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
+			PlayerSprite.DrawExtendSprite(
+				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
 		}
+		/*DrawExtendGraph(
+			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
+			static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
+	}
+	if (IsRight)
+	{
+		if (Player_IsAction == true)
+		{
+			PlayerSpriteAction.DrawExtendSprite(
+				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+		}
+		else
+		{
+			PlayerSprite.DrawExtendSprite(
+				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
+				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+		}
+		/*DrawExtendGraph(
+			static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
+			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
 
 #pragma region èdÇ»Ç¡ÇƒÇ¢ÇÈñáêîÇ≤Ç∆Ç…èáî‘Ç…ï`âÊ
