@@ -32,6 +32,8 @@ public:
     XMFLOAT3 up = { 0,1,0 };
 
     // ゲームループで使う変数の宣言
+    UINT BackHandle;
+    Sprite Back;
     Player *player = Player::Get();
     unsigned char playerTile[4] = { 0 };
 
