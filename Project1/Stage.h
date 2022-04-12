@@ -32,7 +32,7 @@ public: //サブクラス
 
 		void init(UINT* handle)
 		{
-			MapchipSprite.Create(*handle, 60, 60);
+			MapchipSprite.Create(*handle);
 		}
 
 		void draw(float left, float up)
