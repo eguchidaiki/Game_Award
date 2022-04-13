@@ -38,17 +38,23 @@ void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	player->Update(*stage);
-	int PlayerBodyStatus[8] = { 0 };
+	PlayerBody PlayerBodyStatus[4] = {};
 
-	player->SetBodyStatus(PlayerBodyStatus, 8);
+	player->SetBodyStatus(PlayerBodyStatus, 4);
 
-	if (Input::isKeyTrigger(DIK_LEFT) || Input::isKeyTrigger(DIK_UP) || Input::isKeyTrigger(DIK_RIGHT) || Input::isKeyTrigger(DIK_DOWN))
+	bool IsFolds[4] = { 
+		player->IsUpFold,
+		player->IsDownFold,
+		player->IsLeftFold,
+		player->IsRightFold };
+
+	if (Input::isKeyTrigger(DIK_RIGHT))
 	{
-		stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus);
+		int test = 0;
 	}
 
-	
 	stage->Updata();
+	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds);
 }
 
 //•`‰æ

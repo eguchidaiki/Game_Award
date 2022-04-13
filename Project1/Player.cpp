@@ -114,14 +114,14 @@ void Player::Update(Stage& stage)
 	if (Input::isKeyTrigger(DIK_W) && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -4.5f;
+		FallSpeed = -5.6f;
 	}
 
 	if (IsJump == true)
 	{
 		if (Player_IsAction == false)
 		{
-			FallSpeed += 0.1f;
+			FallSpeed += 0.2f;
 		}
 
 		if (FallSpeed > 0)
@@ -134,9 +134,9 @@ void Player::Update(Stage& stage)
 	//—Ž‰º”»’è
 	if (IsJump == false && IsAllFall == true && Player_IsAction == false)
 	{
-		if (FallSpeed < 5.0)
+		if (FallSpeed < 5.2)
 		{
-			FallSpeed += 0.1f;
+			FallSpeed += 0.2f;
 		}
 	}
 
@@ -540,6 +540,7 @@ void Player::Update(Stage& stage)
 		{
 			Body_Four.Overlap--;
 		}
+		OpenCount = 0;
 	}
 	if (Input::isKeyTrigger(DIK_UP) && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
 	{
@@ -564,6 +565,7 @@ void Player::Update(Stage& stage)
 		{
 			Body_Four.Overlap--;
 		}
+		OpenCount = 0;
 	}
 	if (Input::isKeyTrigger(DIK_RIGHT) && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
 	{
@@ -588,6 +590,7 @@ void Player::Update(Stage& stage)
 		{
 			Body_Four.Overlap--;
 		}
+		OpenCount = 0;
 	}
 	if (Input::isKeyTrigger(DIK_DOWN) && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
 	{
@@ -612,6 +615,7 @@ void Player::Update(Stage& stage)
 		{
 			Body_Four.Overlap--;
 		}
+		OpenCount = 0;
 	}
 
 	if (Body_Four.IsActivate == true && Body_Four.Body_Type == down && Body_Four.IsFold == false)
@@ -1096,50 +1100,10 @@ bool Player::IsFall()
 	}
 }
 
-void Player::SetBodyStatus(int* arrangement, int size)
+void Player::SetBodyStatus(PlayerBody* arrangement, int size)
 {
-	if (size != 8)
-	{
-		return;
-	}
-
-	arrangement[0] = (int)Body_Two.IsActivate;
-	arrangement[2] = (int)Body_Four.IsActivate;
-	arrangement[4] = (int)Body_One.IsActivate;
-	arrangement[6] = (int)Body_Three.IsActivate;
-	if (Body_Two.IsFold == true)
-	{
-		arrangement[1] = 1;
-	}
-	else
-	{
-		arrangement[1] = -1;
-	}
-
-	if (Body_Four.IsFold == true)
-	{
-		arrangement[3] = 1;
-	}
-	else
-	{
-		arrangement[3] = -1;
-	}
-
-	if (Body_One.IsFold == true)
-	{
-		arrangement[5] = 1;
-	}
-	else
-	{
-		arrangement[5] = -1;
-	}
-
-	if (Body_Three.IsFold == true)
-	{
-		arrangement[7] = 1;
-	}
-	else
-	{
-		arrangement[7] = -1;
-	}
+	arrangement[0] = Body_Two;
+	arrangement[1] = Body_Four;
+	arrangement[2] = Body_One;
+	arrangement[3] = Body_Three;
 }

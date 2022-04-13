@@ -3,6 +3,7 @@
 #include "PlayerBody.h"
 #include "InputManger.h"
 #include "Colors.h"
+#include "Stage.h"
 
 const float PlayerBody::BodySize = 50.0f;
 const float PlayerBody::HalfBodySize = BodySize / 2.0f;

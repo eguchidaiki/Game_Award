@@ -2,8 +2,9 @@
 
 #include <RVector.h>
 #include "Easing.h"
-#include "Stage.h"
 #include "Sprite.h"
+
+class Stage;
 
 enum BodyType
 {

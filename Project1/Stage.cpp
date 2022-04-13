@@ -3,20 +3,13 @@
 #include "General.h"
 #include "Colors.h"
 #include <Raki_Input.h>
+#include "PlayerBody.h"
 
 #define EF (-1) //Error Function
 
 #define ContainerClear(container)\
 container.clear();\
 container.shrink_to_fit();
-
-enum bodytype
-{
-	left,
-	up,
-	right,
-	down
-};
 
 namespace
 {
@@ -85,7 +78,7 @@ void Stage::Updata()
 
 						switch ((stageData[i].stageTileData[j].direction - 1) % 4)
 						{
-						case bodytype::up:
+						case BodyType::up:
 						{
 							reverseMapchipPos = (stageData[i].stageTileData[j].height - y - 1) * stageData[i].stageTileData[j].width + x;
 
@@ -115,7 +108,7 @@ void Stage::Updata()
 								static_cast<float>(stageData[i].stageTileData[j].easePos[mapchipPos].z);
 							break;
 						}
-						case bodytype::down:
+						case BodyType::down:
 						{
 							reverseMapchipPos = (stageData[i].stageTileData[j].height - y - 1) * stageData[i].stageTileData[j].width + x;
 
@@ -145,7 +138,7 @@ void Stage::Updata()
 								static_cast<float>(stageData[i].stageTileData[j].easePos[mapchipPos].z);
 							break;
 						}
-						case bodytype::left:
+						case BodyType::left:
 						{
 							reverseMapchipPos = y * stageData[i].stageTileData[j].width + (stageData[i].stageTileData[j].width - x - 1);
 
@@ -175,7 +168,7 @@ void Stage::Updata()
 								static_cast<float>(stageData[i].stageTileData[j].easePos[mapchipPos].z);
 							break;
 						}
-						case bodytype::right:
+						case BodyType::right:
 						{
 							reverseMapchipPos = y * stageData[i].stageTileData[j].width + (stageData[i].stageTileData[j].width - x - 1);
 
@@ -620,28 +613,28 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], int BodyStatus[8])
+int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4])
 {
-	static unsigned char direction = 0;
+	unsigned char direction = -1;
 	static size_t onPlayerStageTile = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
 
-	if (Input::isKeyTrigger(DIK_UP))
+	if (IsFolds[0])
 	{
-		direction = bodytype::up;
+		direction = BodyType::up;
 	}
-	else if (Input::isKeyTrigger(DIK_DOWN))
+	else if (IsFolds[1])
 	{
-		direction = bodytype::down;
+		direction = BodyType::down;
 	}
-	else if (Input::isKeyTrigger(DIK_LEFT))
+	else if (IsFolds[2])
 	{
-		direction = bodytype::left;
+		direction = BodyType::left;
 	}
-	else if (Input::isKeyTrigger(DIK_RIGHT))
+	else if (IsFolds[3])
 	{
-		direction = bodytype::right;
+		direction = BodyType::right;
 	}
 
 	static size_t reverseMapchipPos = 0;
@@ -667,7 +660,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 			switch (direction)
 			{
-			case bodytype::up: //è„ì¸óÕ
+			case BodyType::up: //è„ì¸óÕ
 			{
 				if (onPlayerStageTile / stageData[i].width <= 0)
 				{
@@ -692,7 +685,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[0] == 1 && BodyStatus[1] == 1)
+					if (BodyStatus[0].IsActivate == true && BodyStatus[0].IsOpen == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -705,7 +698,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 				}
 				else
 				{
-					if (BodyStatus[0] == 1 && BodyStatus[1] == -1)
+					if (BodyStatus[0].IsActivate == true && IsFootAction == false && IsFolds[0] == true)
 					{
 						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -721,7 +714,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 				break;
 			}
-			case bodytype::down: //â∫ì¸óÕ
+			case BodyType::down: //â∫ì¸óÕ
 			{
 				if (onPlayerStageTile / stageData[i].width >= static_cast<size_t>(stageData[i].height - 1))
 				{
@@ -746,30 +739,36 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					Open(playerTile, direction, i, moveStageTile, moveStageData);
+					if (BodyStatus[1].IsActivate == true && BodyStatus[1].IsOpen == true)
+					{
+						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 				else
 				{
-					Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+					if (BodyStatus[1].IsActivate == true && IsFootAction == false && IsFolds[1] == true)
+					{
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 
 				isAct = true;
 
 				break;
 			}
-			case bodytype::left: //ç∂ì¸óÕ
+			case BodyType::left: //ç∂ì¸óÕ
 			{
 				if (onPlayerStageTile % stageData[i].width <= 0)
 				{
@@ -794,30 +793,36 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
+					if (BodyStatus[2].IsActivate == true && BodyStatus[2].IsFold == false && BodyStatus[2].Overlap == 0)
+					{
+						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 				else
 				{
-					Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+					if (BodyStatus[2].IsActivate == true && IsFootAction == false && IsFolds[2] == true)
+					{
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 
 				isAct = true;
 
 				break;
 			}
-			case bodytype::right: //âEì¸óÕ
+			case BodyType::right: //âEì¸óÕ
 			{
 				if (onPlayerStageTile % stageData[i].width >= static_cast<size_t>(stageData[i].width - 1))
 				{
@@ -842,23 +847,29 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], i
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					Open(playerTile, direction, i, moveStageTile, moveStageData);
+					if (BodyStatus[3].IsActivate == true && BodyStatus[3].IsFold == false && BodyStatus[3].Overlap == 0)
+					{
+						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 				else
 				{
-					Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+					if (BodyStatus[3].IsActivate == true && IsFootAction == false && IsFolds[3] == true)
+					{
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
-					stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-					stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-					stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
+					}
 				}
 
 				isAct = true;
@@ -1074,7 +1085,7 @@ int Stage::Fold(unsigned char playerTile[4], const unsigned char& direction, con
 
 	static size_t reverseMapchipPos = 0;
 
-	if (direction == bodytype::up || direction == bodytype::down)
+	if (direction == BodyType::up || direction == BodyType::down)
 	{
 		EaseingInit(onPlayerStage, moveStageData, direction);
 
@@ -1103,7 +1114,7 @@ int Stage::Fold(unsigned char playerTile[4], const unsigned char& direction, con
 			stageData[onPlayerStage].stageTileData[moveStageData].offsetY -= stageData[onPlayerStage].stageTileData[moveStageData].height;
 		}
 	}
-	if (direction == bodytype::left || direction == bodytype::right)
+	if (direction == BodyType::left || direction == BodyType::right)
 	{
 		EaseingInit(onPlayerStage, moveStageData, direction);
 
@@ -1150,7 +1161,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 
 	static size_t reverseMapchipPos = 0;
 
-	if (direction == bodytype::up || direction == bodytype::down)
+	if (direction == BodyType::up || direction == BodyType::down)
 	{
 		EaseingInit(onPlayerStage, moveStageData, direction + 2);
 
@@ -1179,7 +1190,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 			stageData[onPlayerStage].stageTileData[moveStageData].offsetY += stageData[onPlayerStage].stageTileData[moveStageData].height;
 		}
 	}
-	if (direction == bodytype::left || direction == bodytype::right)
+	if (direction == BodyType::left || direction == BodyType::right)
 	{
 		EaseingInit(onPlayerStage, moveStageData, direction + 2);
 
@@ -1229,7 +1240,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 
 			switch (direction % 4)
 			{
-			case bodytype::up:
+			case BodyType::up:
 			{
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
@@ -1245,7 +1256,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos] *= blockSize;
 				break;
 			}
-			case bodytype::down:
+			case BodyType::down:
 			{
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY) + 1.0f;
@@ -1261,7 +1272,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos] *= blockSize;
 				break;
 			}
-			case bodytype::left:
+			case BodyType::left:
 			{
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
@@ -1278,7 +1289,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 
 				break;
 			}
-			case bodytype::right:
+			case BodyType::right:
 			{
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX) + 1.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
@@ -1319,7 +1330,7 @@ void Stage::EaseingUpdate()
 
 			static float ease = 0.0f;
 
-			stageData[i].stageTileData[j].stageEase.addTime += stageData[i].stageTileData[j].stageEase.maxTime / 25.0f;
+			stageData[i].stageTileData[j].stageEase.addTime += stageData[i].stageTileData[j].stageEase.maxTime / 20.0f;
 			stageData[i].stageTileData[j].stageEase.timeRate =
 				min(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
 			ease = Easing::easeOut(0.0f, 1.0f, stageData[i].stageTileData[j].stageEase.timeRate);
@@ -1334,22 +1345,22 @@ void Stage::EaseingUpdate()
 
 					switch ((stageData[i].stageTileData[j].direction - 1) % 4)
 					{
-					case bodytype::up:
+					case BodyType::up:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y + (stageData[i].stageTileData[j].offsetY * blockSize)),
 							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
 						break;
-					case bodytype::down:
+					case BodyType::down:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y - blockSize),
 							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
 						break;
-					case bodytype::left:
+					case BodyType::left:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x + (stageData[i].stageTileData[j].offsetX * blockSize)),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
 							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
 						break;
-					case bodytype::right:
+					case BodyType::right:
 						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x - blockSize),
 							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
 							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };

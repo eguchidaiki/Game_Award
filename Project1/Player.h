@@ -39,7 +39,7 @@ public: //メンバ関数
 	//各体・顔の落下判定
 	bool IsFall();
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
-	void SetBodyStatus(int* arrangement, int size);
+	void SetBodyStatus(PlayerBody* arrangement, int size);
 
 public: //メンバ変数
 	//床の高さ
@@ -98,6 +98,9 @@ public: //メンバ変数
 
 	//下に体があるかどうか
 	bool IsDownBody;
+
+	//開くまでに数フレーム空ける用
+	int OpenCount = 0;
 
 	//足
 	PlayerFoot leg;

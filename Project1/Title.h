@@ -9,6 +9,7 @@
 
 #include "testParticle.h"
 #include "Player.h"
+#include "Stage.h"
 
 enum NowState {
     title,

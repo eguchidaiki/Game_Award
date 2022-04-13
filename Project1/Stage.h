@@ -15,6 +15,8 @@ enum MapchipData
 	START = 4
 };
 
+class PlayerBody;
+
 class Stage final
 {
 public: //シングルトン化
@@ -87,7 +89,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], int BodyStatus[8]);
+	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4]);
 	// リセット
 	void Reset();
 	// 内部データ全削除
