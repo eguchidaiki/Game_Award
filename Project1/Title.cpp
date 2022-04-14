@@ -37,6 +37,27 @@ void Title::Finalize()
 void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
+	if (Input::isKeyTrigger(DIK_1))
+	{
+		stage->LoadStage("./Resources/stage1.csv", playerTile);
+		player->Init();
+		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	}
+
+	if (Input::isKeyTrigger(DIK_2))
+	{
+		stage->LoadStage("./Resources/stage2.csv", playerTile);
+		player->Init();
+		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	}
+
+	if (Input::isKeyTrigger(DIK_3))
+	{
+		stage->LoadStage("./Resources/stage3.csv", playerTile);
+		player->Init();
+		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	}
+
 	player->Update(*stage);
 	PlayerBody PlayerBodyStatus[4] = {};
 
@@ -48,13 +69,38 @@ void Title::Update() {
 		player->IsLeftFold,
 		player->IsRightFold };
 
-	if (Input::isKeyTrigger(DIK_RIGHT))
-	{
-		int test = 0;
-	}
+	bool IsOpens[4] = {
+		player->IsUpOpen,
+		player->IsDownOpen,
+		player->IsLeftOpen,
+		player->IsRightOpen,
+	};
 
 	stage->Updata();
-	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds);
+	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+
+	//ステージとの連動のため開く処理はこっちでやる
+	if (player->OpenCount >= 2)
+	{
+		if (player->IsLeftOpen == true)
+		{
+			player->IsLeftOpen = false;
+		}
+		if (player->IsUpOpen == true)
+		{
+			player->IsUpOpen = false;
+		}
+		if (player->IsRightOpen == true)
+		{
+			player->IsRightOpen = false;
+		}
+		if (player->IsDownOpen == true)
+		{
+			player->IsDownOpen = false;
+		}
+		player->OpenCount = 0;
+		player->IsOpenCountStart = false;
+	}
 }
 
 //描画
