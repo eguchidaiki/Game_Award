@@ -58,6 +58,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         //更新
         Input::StartGetInputState();
 
+        if (Input::isKeyTrigger(DIK_ESCAPE))
+        {
+            break;
+        }
+
         smgr->Update();
 
         smgr->Draw();

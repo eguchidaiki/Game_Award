@@ -29,14 +29,18 @@ public: //メンバ関数
 	/// <param name="one">body_one</param>
 	/// <param name="two">body_two</param>
 	/// <param name="three">body_three</param>
-	void bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type);
+	void bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
 	void bodysetup(const unsigned char foldCount[4]);
 
+	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
-
+	//押し出し処理(使ってない)
 	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
-
+	//各体・顔の落下判定
 	bool IsFall();
+	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
+	void SetBodyStatus(PlayerBody* arrangement, int size);
+
 public: //メンバ変数
 	//床の高さ
 	float FloorHeight;
@@ -64,7 +68,7 @@ public: //メンバ変数
 	bool IsDownFold;
 
 	//移動速度
-	float SideMoveSpeed;
+	float SideMoveSpeed = 3.0f;
 
 	//ジャンプ
 	bool IsJump;
@@ -95,9 +99,13 @@ public: //メンバ変数
 	//下に体があるかどうか
 	bool IsDownBody;
 
+	//開くまでに数フレーム空ける用
+	int OpenCount = 0;
+
 	//足
 	PlayerFoot leg;
 
 	//描画用スプライト
 	Sprite PlayerSprite;
+	Sprite PlayerSpriteAction;
 };
