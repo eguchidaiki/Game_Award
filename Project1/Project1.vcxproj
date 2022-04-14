@@ -162,7 +162,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerBody.cpp" />
     <ClCompile Include="PlayerFoot.cpp" />
-    <ClCompile Include="Raki_Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Stage.cpp" />
@@ -170,18 +169,6 @@
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="BasicVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
     <FxCompile Include="Resources\Shaders\mpEffectPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
@@ -232,30 +219,27 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Basic.hlsli" />
     <None Include="Resources\Shaders\mpShaderHeader.hlsli" />
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli" />
     <None Include="Resources\Shaders\Sprite.hlsli" />
+    <None Include="Resources\stage\stage1.csv" />
+    <None Include="Resources\stage\stage2.csv" />
+    <None Include="Resources\stage\stage3.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="Colors.h" />
     <ClInclude Include="Easing.h" />
-    <ClInclude Include="Emitter.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="General.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="LoadFile.h" />
-    <ClInclude Include="Particle.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="PlayerFoot.h" />
-    <ClInclude Include="Raki_Camera.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="testParticle.h" />
-    <ClInclude Include="test_LayHitCheck.h" />
     <ClInclude Include="Title.h" />
   </ItemGroup>
   <ItemGroup>
@@ -267,7 +251,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="engine.ico" />
+    <Image Include="Resources\backSin.png" />
+    <Image Include="Resources\block.png" />
+    <Image Include="Resources\goal.png" />
+    <Image Include="Resources\player.png" />
+    <Image Include="Resources\playerBody02.png" />
+    <Image Include="Resources\playerLegs.png" />
+    <Image Include="Resources\playerSub.png" />
+    <Image Include="Resources\stage_enpty.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{2d7d4fd8-b565-45e6-ab91-2b181e55fa14}</UniqueIdentifier>
-    </Filter>
     <Filter Include="App">
       <UniqueIdentifier>{4929d392-8a34-4f4c-9659-d8a790d4c56b}</UniqueIdentifier>
     </Filter>
@@ -24,12 +21,6 @@
     </Filter>
     <Filter Include="App\SceneManager">
       <UniqueIdentifier>{8b475cfe-bd12-4f5e-8d61-e4e0867240cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Utility">
-      <UniqueIdentifier>{7844a2a8-3e17-49f6-aadd-481c074d81c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Particle">
-      <UniqueIdentifier>{f93d3483-c9ca-4a33-ad9c-547fe055e693}</UniqueIdentifier>
     </Filter>
     <Filter Include="リソース ファイル\hlsl">
       <UniqueIdentifier>{a6aed411-17e5-4956-9d7f-7791515c3cfd}</UniqueIdentifier>
@@ -43,14 +34,18 @@
     <Filter Include="リソース ファイル\hlsl\Particle">
       <UniqueIdentifier>{2886e826-dede-4a4f-a88e-eda490946fef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Basic">
-      <UniqueIdentifier>{0924d464-474a-4d5b-9f85-a62b2e591306}</UniqueIdentifier>
+    <Filter Include="Player">
+      <UniqueIdentifier>{95539aba-081d-4144-ab1e-22fd5a6b1565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{8980e8de-2ee8-4e2f-88cd-d9e06b37502c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\ステージ">
+      <UniqueIdentifier>{ba93e0c3-5f54-4db1-b2d2-95228e4d2f34}</UniqueIdentifier>
+      <Extensions>csv</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Raki_Camera.cpp">
-      <Filter>Engine\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="BaseScene.cpp">
       <Filter>App\SceneManager</Filter>
     </ClCompile>
@@ -69,35 +64,29 @@
     <ClCompile Include="main.cpp">
       <Filter>App</Filter>
     </ClCompile>
-    <ClCompile Include="testParticle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="LoadFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerBody.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerFoot.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBody.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFoot.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="testParticle.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
     <ClCompile Include="Easing.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicPS.hlsl">
-      <Filter>Engine\Basic</Filter>
-    </FxCompile>
-    <FxCompile Include="BasicVS.hlsl">
-      <Filter>Engine\Basic</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
     </FxCompile>
@@ -124,9 +113,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Basic.hlsli">
-      <Filter>Engine\Basic</Filter>
-    </None>
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli">
       <Filter>リソース ファイル\hlsl\Particle</Filter>
     </None>
@@ -136,14 +122,17 @@
     <None Include="Resources\Shaders\Sprite.hlsli">
       <Filter>リソース ファイル\hlsl\Sprite</Filter>
     </None>
+    <None Include="Resources\stage\stage1.csv">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage2.csv">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage3.csv">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test_LayHitCheck.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Raki_Camera.h">
-      <Filter>Engine\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="BaseScene.h">
       <Filter>App\SceneManager</Filter>
     </ClInclude>
@@ -162,42 +151,54 @@
     <ClInclude Include="Task.h">
       <Filter>App\SceneManager</Filter>
     </ClInclude>
-    <ClInclude Include="testParticle.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="General.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadFile.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerBody.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerFoot.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Player</Filter>
     </ClInclude>
-    <ClInclude Include="Stage.h">
-      <Filter>ソース ファイル</Filter>
+    <ClInclude Include="General.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Colors.h">
-      <Filter>ソース ファイル</Filter>
+    <ClInclude Include="testParticle.h">
+      <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="Easing.h">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Emitter.h">
-      <Filter>ソース ファイル</Filter>
+    <ClInclude Include="Stage.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFile.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="engine.ico">
+    <Image Include="Resources\backSin.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\block.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\goal.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\player.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\playerBody02.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\playerLegs.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\playerSub.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="Resources\stage_enpty.png">
       <Filter>リソース ファイル</Filter>
     </Image>
   </ItemGroup>

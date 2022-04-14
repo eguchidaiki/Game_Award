@@ -11,7 +11,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-	stage->LoadStage("./Resources/stage1.csv", playerTile);
+	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
 	player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 
@@ -39,21 +39,21 @@ void Title::Update() {
 
 	if (Input::isKeyTrigger(DIK_1))
 	{
-		stage->LoadStage("./Resources/stage1.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 
 	if (Input::isKeyTrigger(DIK_2))
 	{
-		stage->LoadStage("./Resources/stage2.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 
 	if (Input::isKeyTrigger(DIK_3))
 	{
-		stage->LoadStage("./Resources/stage3.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
