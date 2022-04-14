@@ -37,7 +37,7 @@ Stage::Stage() :
 	initStageData{}
 {
 	Init();
-	Particle->Create();
+	this->Particle = ParticleManager::Create();
 }
 
 Stage::~Stage()
