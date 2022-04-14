@@ -37,6 +37,7 @@ Stage::Stage() :
 	initStageData{}
 {
 	Init();
+	Particle->Create();
 }
 
 Stage::~Stage()
@@ -711,18 +712,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				for (int i = 0; i < 50; i++)
-				{
-					//位置設定
-					float xpos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
-					float ypos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
-
-					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
-				}
+				CreateParticle(i, moveStageData);
 
 				isAct = true;
 
@@ -778,18 +768,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				for (int i = 0; i < 50; i++)
-				{
-					//位置設定
-					float xpos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
-					float ypos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
-
-					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
-				}
+				CreateParticle(i, moveStageData);
 
 				isAct = true;
 
@@ -845,18 +824,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				for (int i = 0; i < 50; i++)
-				{
-					//位置設定
-					float xpos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
-					float ypos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
-
-					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
-				}
+				CreateParticle(i, moveStageData);
 
 				isAct = true;
 
@@ -912,18 +880,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				for (int i = 0; i < 50; i++)
-				{
-					//位置設定
-					float xpos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
-					float ypos = NY_random::floatrand_sl(
-						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
-						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
-
-					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
-				}
+				CreateParticle(i, moveStageData);
 
 				isAct = true;
 
@@ -1083,6 +1040,22 @@ bool Stage::GetPositionTile(RVector3 center, int i, int j)
 	else
 	{
 		return false;
+	}
+}
+
+void Stage::CreateParticle(int StageDataNum, int StageTileDataNum)
+{
+	for (int a = 0; a < 50; a++)
+	{
+		//位置設定
+		float xpos = NY_random::floatrand_sl(
+			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX + stageData[StageDataNum].stageTileData[StageTileDataNum].width) * blockSize,
+			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX * blockSize);
+		float ypos = NY_random::floatrand_sl(
+			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
+			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize);
+
+		this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
 	}
 }
 
