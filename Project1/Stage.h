@@ -3,6 +3,7 @@
 #include <RVector.h>
 #include "Easing.h"
 #include "Sprite.h"
+#include "ParticleManager.h"
 
 /*メモリが大きくなりすぎる懸念がある箇所はchar型にしています*/
 
@@ -16,6 +17,22 @@ enum MapchipData
 };
 
 class PlayerBody;
+
+class ParticleSingle : ParticlePrototype
+{
+public:
+	//開始位置保存用
+	RVector3 spos;
+
+	ParticleSingle(RVector3 start)
+	{
+		Init();
+	}
+
+	void Init();
+	void Update();
+	ParticlePrototype* clone(RVector3 start);
+};
 
 class Stage final
 {
@@ -60,7 +77,7 @@ public: //サブクラス
 		std::vector<char> stageOffsetX;
 		std::vector<char> stageOffsetY;
 	};
-
+	
 public: //定数
 	static const int blockSize;
 	static const int halfBlockSize;
@@ -89,7 +106,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4]);
+	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
 	// リセット
 	void Reset();
 	// 内部データ全削除
@@ -154,4 +171,8 @@ private: //メンバ変数
 	Sprite MapchipSpriteBlock;
 	Sprite MapchipSpriteEnpty;
 	Sprite MapchipSpriteGoal;
+
+	ParticleManager* Particle;
+
+	bool IsParticleTrigger;
 };

@@ -4,6 +4,7 @@
 #include "Colors.h"
 #include <Raki_Input.h>
 #include "PlayerBody.h"
+#include "NY_random.h"
 
 #define EF (-1) //Error Function
 
@@ -613,26 +614,26 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4])
+int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
 	unsigned char direction = -1;
 	static size_t onPlayerStageTile = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
 
-	if (IsFolds[0])
+	if (IsFolds[0] || IsOpens[0])
 	{
 		direction = BodyType::up;
 	}
-	else if (IsFolds[1])
+	else if (IsFolds[1] || IsOpens[1])
 	{
 		direction = BodyType::down;
 	}
-	else if (IsFolds[2])
+	else if (IsFolds[2] || IsOpens[2])
 	{
 		direction = BodyType::left;
 	}
-	else if (IsFolds[3])
+	else if (IsFolds[3] || IsOpens[3])
 	{
 		direction = BodyType::right;
 	}
@@ -685,7 +686,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[0].IsActivate == true && BodyStatus[0].IsOpen == true)
+					if (BodyStatus[0].IsActivate == true && OpenCount == 2 && IsOpens[0] == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -708,6 +709,19 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
 						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
+				}
+
+				for (int i = 0; i < 50; i++)
+				{
+					//位置設定
+					float xpos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
+					float ypos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
+
+					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
 				}
 
 				isAct = true;
@@ -739,7 +753,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[1].IsActivate == true && BodyStatus[1].IsOpen == true)
+					if (BodyStatus[1].IsActivate == true && OpenCount == 2 && IsOpens[1] == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -762,6 +776,19 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
 						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
+				}
+
+				for (int i = 0; i < 50; i++)
+				{
+					//位置設定
+					float xpos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
+					float ypos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
+
+					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
 				}
 
 				isAct = true;
@@ -793,7 +820,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[2].IsActivate == true && BodyStatus[2].IsFold == false && BodyStatus[2].Overlap == 0)
+					if (BodyStatus[2].IsActivate == true && OpenCount == 2 && IsOpens[2] == true)
 					{
 						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -816,6 +843,19 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
 						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
+				}
+
+				for (int i = 0; i < 50; i++)
+				{
+					//位置設定
+					float xpos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
+					float ypos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
+
+					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
 				}
 
 				isAct = true;
@@ -847,7 +887,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[3].IsActivate == true && BodyStatus[3].IsFold == false && BodyStatus[3].Overlap == 0)
+					if (BodyStatus[3].IsActivate == true && OpenCount == 2 && IsOpens[3] == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -872,6 +912,19 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
+				for (int i = 0; i < 50; i++)
+				{
+					//位置設定
+					float xpos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetX * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetX + stageData[i].stageTileData[moveStageData].width) * blockSize);
+					float ypos = NY_random::floatrand_sl(
+						stageData[i].stageTileData[moveStageData].offsetY * blockSize,
+						(stageData[i].stageTileData[moveStageData].offsetY + stageData[i].stageTileData[moveStageData].height) * blockSize);
+
+					this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
+				}
+
 				isAct = true;
 
 				break;
@@ -894,6 +947,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 			break;
 		}
 	}
+
+
 
 	return 0;
 }
@@ -1420,4 +1475,32 @@ int Stage::SearchTopStageTile()
 	}
 
 	return 0;
+}
+
+void ParticleSingle::Init()
+{
+	//開始位置
+	pos = spos;
+
+	//終了フレーム
+	endFrame = 60;
+
+	//速度設定
+	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
+	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
+	float zvel = NY_random::floatrand_sl(3.0f, -3.0f);
+
+	vel = RVector3(xvel, yvel, zvel);
+}
+
+void ParticleSingle::Update()
+{
+	//毎フレーム加算
+	pos += vel;
+}
+
+ParticlePrototype* ParticleSingle::clone(RVector3 start)
+{
+	return new ParticleSingle(start);
+	//return nullptr;
 }

@@ -34,3 +34,5 @@
 *.app
 
 .vs/Game_Award/v16/
+.vs/
+*.wav

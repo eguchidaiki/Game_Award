@@ -317,9 +317,40 @@ void Player::Update(Stage& stage)
 	}
 
 	//開く
-	if (Input::isKeyTrigger(DIK_SPACE))
+
+	if (Input::isKeyTrigger(DIK_LEFT) && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
 	{
-		/*if (Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
+		OpenCount = 0;
+		IsOpenCountStart = true;
+		IsLeftOpen = true;
+	}
+	if (Input::isKeyTrigger(DIK_UP) && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+	{
+		OpenCount = 0;
+		IsOpenCountStart = true;
+		IsUpOpen = true;
+	}
+	if (Input::isKeyTrigger(DIK_RIGHT) && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+	{
+		OpenCount = 0;
+		IsOpenCountStart = true;
+		IsRightOpen = true;
+	}
+	if (Input::isKeyTrigger(DIK_DOWN) && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+	{
+		OpenCount = 0;
+		IsOpenCountStart = true;
+		IsDownOpen = true;
+	}
+
+	if (IsOpenCountStart == true)
+	{
+		OpenCount++;
+	}
+
+	if (OpenCount >= 2)
+	{
+		if (IsLeftOpen == true)
 		{
 			Body_One.Ease.addTime = 0.1f;
 			Body_One.Ease.maxTime = 1.2f;
@@ -342,8 +373,9 @@ void Player::Update(Stage& stage)
 			{
 				Body_Four.Overlap--;
 			}
+			//IsLeftOpen = false;
 		}
-		else if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+		if (IsUpOpen == true)
 		{
 			Body_Two.Ease.addTime = 0.1f;
 			Body_Two.Ease.maxTime = 1.2f;
@@ -366,8 +398,9 @@ void Player::Update(Stage& stage)
 			{
 				Body_Four.Overlap--;
 			}
+			//IsUpOpen = false;
 		}
-		else if (Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+		if (IsRightOpen == true)
 		{
 			Body_Three.Ease.addTime = 0.1f;
 			Body_Three.Ease.maxTime = 1.2f;
@@ -390,22 +423,19 @@ void Player::Update(Stage& stage)
 			{
 				Body_Four.Overlap--;
 			}
+			//IsRightOpen = false;
 		}
-		else if (Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+		if (IsDownOpen == true)
 		{
-			Body_Four.Ease.addTime = 0.1f;
-			Body_Four.Ease.maxTime = 1.2f;
-			Body_Four.Ease.timeRate = 0.0f;
+			Body_One.Ease.addTime = 0.1f;
+			Body_One.Ease.maxTime = 1.2f;
+			Body_One.Ease.timeRate = 0.0f;
 
-			Body_Four.Ease.isMove = true;
-			Body_Four.IsFold = false;
-			Body_Four.IsOpen = true;
-			Body_Four.IsAction = true;
+			Body_One.Ease.isMove = true;
+			Body_One.IsFold = false;
+			Body_One.IsOpen = true;
+			Body_One.IsAction = true;
 
-			if (Body_One.IsActivate == true && Body_One.IsFold == true)
-			{
-				Body_One.Overlap--;
-			}
 			if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 			{
 				Body_Two.Overlap--;
@@ -414,208 +444,12 @@ void Player::Update(Stage& stage)
 			{
 				Body_Three.Overlap--;
 			}
+			if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
+			{
+				Body_Four.Overlap--;
+			}
+			//IsDownOpen = false;
 		}
-	}
-
-	/*体のスライド
-	////左にスライド
-	//if (Input::isKeyTrigger(DIK_Z) && Body_One.BodyDistance < 2 && Body_One.IsAction == false && Body_Three.FoldCount < 2)
-	//{
-	//	if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-	//	{
-	//		if (Body_One.Body_Type == BodyType::right)
-	//		{
-	//			Body_One.Overlap = 0;
-	//			Body_One.setslide(-1, 2);
-	//			Body_Three.BodyDistance = 1;
-	//			Body_Three.setslide(-1, 1);
-	//		}
-	//		if (Body_One.Body_Type == BodyType::left && Body_One.BodyDistance == 1 && Body_Three.IsFold == false)
-	//		{
-	//			if (Body_One.IsFold == true)
-	//			{
-	//				Body_Three.Overlap = 1;
-	//				Body_One.BodyDistance = 2;
-	//				Body_One.setslide(-1, 1);
-	//				Body_Three.setslide(-1, 2);
-
-	//				if (Body_Two.IsFold == true)
-	//				{
-	//					Body_Two.Overlap = 0;
-	//				}
-	//			}
-	//			else
-	//			{
-	//				Body_One.BodyDistance = 2;
-	//				Body_One.setslide(-1, 1);
-	//				Body_Three.setslide(-1, 2);
-	//			}
-	//		}
-	//	}
-	//	else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::right && Body_Three.IsFold == false && Body_Three.IsAction == false)
-	//	{
-	//		Body_Three.setslide(-1, 2);
-	//	}
-	//	else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::right && Body_One.IsFold == false)
-	//	{
-	//		Body_One.setslide(-1, 2);
-	//	}
-	//}
-	////右にスライド
-	//if (Input::isKeyTrigger(DIK_X) && Body_Three.BodyDistance < 2 && Body_Three.IsAction == false && Body_One.FoldCount < 2)
-	//{
-	//	if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-	//	{
-	//		if (Body_Three.Body_Type == BodyType::left)
-	//		{
-	//			Body_Three.Overlap = 0;
-	//			Body_Three.setslide(1, 2);
-	//			Body_One.BodyDistance = 1;
-	//			Body_One.setslide(1, 1);
-	//		}
-	//		if (Body_Three.Body_Type == BodyType::right && Body_Three.BodyDistance == 1 && Body_One.IsFold == false)
-	//		{
-	//			if (Body_Three.IsFold == true)
-	//			{
-	//				Body_One.Overlap = 1;
-	//				Body_Three.BodyDistance = 2;
-	//				Body_Three.setslide(1, 1);
-	//				Body_One.setslide(1, 2);
-
-	//				if (Body_Two.IsFold == true)
-	//				{
-	//					Body_Two.Overlap = 0;
-	//				}
-	//			}
-	//			else
-	//			{
-	//				Body_Three.BodyDistance = 2;
-	//				Body_Three.setslide(1, 1);
-	//				Body_One.setslide(1, 2);
-	//			}
-	//		}
-	//	}
-	//	else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::left && Body_One.IsFold == false && Body_One.IsAction == false)
-	//	{
-	//		Body_One.setslide(1, 2);
-	//	}
-	//	else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::left && Body_Three.IsFold == false)
-	//	{
-	//		Body_Three.setslide(1, 2);
-	//	}
-	//}
-	////上下のスライド
-	//if (Input::isKeyTrigger(DIK_C) && Body_Two.IsFold == false && Body_Two.IsAction == false && Body_Two.IsActivate == true)
-	//{
-	//	if (Body_Two.Body_Type == BodyType::up)
-	//	{
-	//		Body_Two.setslide(1, 2);
-	//	}
-	//	else
-	//	{
-	//		Body_Two.setslide(-1, 2);
-	//	}*/
-	}
-
-	if (Input::isKeyTrigger(DIK_LEFT) && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
-	{
-		Body_One.Ease.addTime = 0.1f;
-		Body_One.Ease.maxTime = 1.2f;
-		Body_One.Ease.timeRate = 0.0f;
-
-		Body_One.Ease.isMove = true;
-		Body_One.IsFold = false;
-		Body_One.IsOpen = true;
-		Body_One.IsAction = true;
-
-		if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-		{
-			Body_Two.Overlap--;
-		}
-		if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-		{
-			Body_Three.Overlap--;
-		}
-		if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-		{
-			Body_Four.Overlap--;
-		}
-		OpenCount = 0;
-	}
-	if (Input::isKeyTrigger(DIK_UP) && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
-	{
-		Body_Two.Ease.addTime = 0.1f;
-		Body_Two.Ease.maxTime = 1.2f;
-		Body_Two.Ease.timeRate = 0.0f;
-
-		Body_Two.Ease.isMove = true;
-		Body_Two.IsFold = false;
-		Body_Two.IsOpen = true;
-		Body_Two.IsAction = true;
-
-		if (Body_One.IsActivate == true && Body_One.IsFold == true)
-		{
-			Body_One.Overlap--;
-		}
-		if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-		{
-			Body_Three.Overlap--;
-		}
-		if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-		{
-			Body_Four.Overlap--;
-		}
-		OpenCount = 0;
-	}
-	if (Input::isKeyTrigger(DIK_RIGHT) && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
-	{
-		Body_Three.Ease.addTime = 0.1f;
-		Body_Three.Ease.maxTime = 1.2f;
-		Body_Three.Ease.timeRate = 0.0f;
-
-		Body_Three.Ease.isMove = true;
-		Body_Three.IsFold = false;
-		Body_Three.IsOpen = true;
-		Body_Three.IsAction = true;
-
-		if (Body_One.IsActivate == true && Body_One.IsFold == true)
-		{
-			Body_One.Overlap--;
-		}
-		if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-		{
-			Body_Two.Overlap--;
-		}
-		if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-		{
-			Body_Four.Overlap--;
-		}
-		OpenCount = 0;
-	}
-	if (Input::isKeyTrigger(DIK_DOWN) && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
-	{
-		Body_One.Ease.addTime = 0.1f;
-		Body_One.Ease.maxTime = 1.2f;
-		Body_One.Ease.timeRate = 0.0f;
-
-		Body_One.Ease.isMove = true;
-		Body_One.IsFold = false;
-		Body_One.IsOpen = true;
-		Body_One.IsAction = true;
-
-		if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-		{
-			Body_Two.Overlap--;
-		}
-		if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-		{
-			Body_Three.Overlap--;
-		}
-		if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-		{
-			Body_Four.Overlap--;
-		}
-		OpenCount = 0;
 	}
 
 	if (Body_Four.IsActivate == true && Body_Four.Body_Type == down && Body_Four.IsFold == false)
