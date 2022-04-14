@@ -122,11 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>C:\K020G1188\Award_2\RakiEngine_Library;C:\K020G1188\Award_2\DirectXTex</AdditionalIncludeDirectories>
-=======
       <AdditionalIncludeDirectories>$(SolutionDir)RakiEngine_Library;$(SolutionDir)DirectXtex</AdditionalIncludeDirectories>
->>>>>>> e24cf14275644d3e8cc8ca229697939ca691d206
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -145,11 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>C:\K020G1188\Award_2\RakiEngine_Library;C:\K020G1188\Award_2\DirectXTex</AdditionalIncludeDirectories>
-=======
       <AdditionalIncludeDirectories>$(SolutionDir)RakiEngine_Library;$(SolutionDir)DirectXtex</AdditionalIncludeDirectories>
->>>>>>> e24cf14275644d3e8cc8ca229697939ca691d206
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
