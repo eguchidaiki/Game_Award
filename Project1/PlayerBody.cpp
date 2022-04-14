@@ -3,6 +3,7 @@
 #include "PlayerBody.h"
 #include "InputManger.h"
 #include "Colors.h"
+#include "Stage.h"
 
 const float PlayerBody::BodySize = 50.0f;
 const float PlayerBody::HalfBodySize = BodySize / 2.0f;
@@ -73,7 +74,7 @@ void PlayerBody::Update(RVector3& center)
 	//�J���Ă���r��
 	if (IsFold == false && IsOpen == true && IsAction == true && IsSlide == false)
 	{
-		Ease.addTime += Ease.maxTime / 20.0f;
+		Ease.addTime += Ease.maxTime / 60.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
 		if (Body_Type == BodyType::left)
@@ -228,7 +229,7 @@ void PlayerBody::Update(RVector3& center)
 	//折っている途中
 	if (IsFold == true && IsOpen == false && IsAction == true && IsSlide == false)
 	{
-		Ease.addTime += Ease.maxTime / 20.0f;
+		Ease.addTime += Ease.maxTime / 60.0f;
 		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
 
 		if (Body_Type == BodyType::left)
@@ -484,7 +485,16 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
 			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
 
-		BodySprite.DrawSprite(BodyStartPos.x + offsetX, BodyStartPos.y + offsetY);
+		if (IsFold == true)
+		{
+			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+		}
+		else
+		{
+			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+		}
 	}
 
 	BodySprite.Draw();
