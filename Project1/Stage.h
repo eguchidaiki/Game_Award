@@ -15,6 +15,8 @@ enum MapchipData
 	START = 4
 };
 
+class PlayerBody;
+
 class Stage final
 {
 public: //シングルトン化
@@ -26,22 +28,6 @@ private:
 	Stage operator=(const Stage&) = delete;
 
 public: //サブクラス
-	struct MapChipSprite
-	{
-		Sprite MapchipSprite;
-
-		void init(UINT* handle)
-		{
-			MapchipSprite.Create(*handle);
-		}
-
-		void draw(float left, float up)
-		{
-			MapchipSprite.DrawSprite(left, up);
-			MapchipSprite.Draw();
-		}
-	};
-
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
@@ -60,8 +46,6 @@ public: //サブクラス
 		std::vector<RVector3> startPos = {};
 		std::vector<RVector3> endPos = {};
 		std::vector<RVector3> easePos = {};
-
-		std::vector<MapChipSprite> Mapchips = {};
 
 		bool isTop = true;
 	};
@@ -105,7 +89,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4]);
+	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4]);
 	// リセット
 	void Reset();
 	// 内部データ全削除
@@ -166,4 +150,8 @@ private: //メンバ変数
 	UINT BlockHandle;
 	UINT EnptyHandle;
 	UINT GoalHandle;
+
+	Sprite MapchipSpriteBlock;
+	Sprite MapchipSpriteEnpty;
+	Sprite MapchipSpriteGoal;
 };
