@@ -67,6 +67,18 @@ public: //メンバ変数
 	bool IsRightFold;
 	bool IsDownFold;
 
+	//どの方向を折るか(4方向)
+	bool IsLeftOpen;
+	bool IsUpOpen;
+	bool IsRightOpen;
+	bool IsDownOpen;
+
+	//開くまでに数フレーム空ける用
+	int OpenCount = 0;
+
+	//カウントを始めるかどうか
+	bool IsOpenCountStart = false;
+
 	//移動速度
 	float SideMoveSpeed = 3.0f;
 
@@ -98,9 +110,6 @@ public: //メンバ変数
 
 	//下に体があるかどうか
 	bool IsDownBody;
-
-	//開くまでに数フレーム空ける用
-	int OpenCount = 0;
 
 	//足
 	PlayerFoot leg;
