@@ -537,50 +537,6 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	fclose(fileHandle);
 
-	//ステージスプライトの生成
-	for (i = 0; i < stageData.size(); i++)
-	{
-		for (j = 0; j < stageData[i].stageTileData.size(); j++)
-		{
-			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
-			{
-				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
-				{
-					mapchipPos = y * stageData[i].stageTileData[j].width + x;
-
-					stageData[i].stageTileData[j].drawLeftUp[mapchipPos].x = static_cast<float>(x + stageData[i].stageTileData[j].offsetX) * blockSize;
-					stageData[i].stageTileData[j].drawLeftUp[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY) * blockSize;
-
-					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
-					{
-					case MapchipData::EMPTY_STAGE:
-					{
-						continue;
-						break;
-					}
-					case MapchipData::BLOCK:
-					{
-						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&BlockHandle);
-						break;
-					}
-					case MapchipData::GOAL:
-					{
-						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&GoalHandle);
-						break;
-					}
-					case MapchipData::NONE:
-					case MapchipData::START:
-					default:
-					{
-						stageData[i].stageTileData[j].Mapchips[mapchipPos].init(&EnptyHandle);
-						break;
-					}
-					}
-				}
-			}
-		}
-	}
-
 	// オフセット値の計算
 	for (i = 0; i < stageData.size(); i++)
 	{
