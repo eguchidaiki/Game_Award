@@ -54,8 +54,8 @@ public: //サブクラス
 		std::vector<RVector3> drawLeftUp = {};
 		std::vector<RVector3> drawRightDown = {};
 		size_t size = 1;
-		unsigned char width = 1;
-		unsigned char height = 1;
+		size_t width = 1;
+		size_t height = 1;
 		unsigned char direction = 0;
 		bool isFold = false;
 
@@ -71,8 +71,8 @@ public: //サブクラス
 		char* stageTile = nullptr;
 		char offsetX = 0;
 		char offsetY = 0;
-		unsigned char width = 1;
-		unsigned char height = 1;
+		size_t width = 1;
+		size_t height = 1;
 		std::vector<StageTileData> stageTileData;
 		std::vector<char> stageOffsetX;
 		std::vector<char> stageOffsetY;
@@ -119,31 +119,49 @@ public: //メンバ関数
 	// プレイヤーの折れる回数の初期状態を取得
 	static void GetInitFoldCount(unsigned char foldCount[4]);
 	// ステージタイルのデータを取得
-	inline StageTileData* GetStageTileData(const short& stageNumber, const short& stageTileNumber);
+	inline StageTileData* GetStageTileData(const size_t& stageNumber, const size_t& stageTileNumber);
 	// ステージのデータを取得
-	inline StageData* GetStageData(const short& stageNumber);
+	inline StageData* GetStageData(const size_t& stageNumber);
 	// 全ステージのデータを取得
 	inline StageData* GetAllStageData();
 	// Stagedataのサイズを取得
-	size_t GetStageDataSize();
+	inline size_t GetStageDataSize() { return stageData.size(); }
 	// Stagetiledataのサイズを取得
-	size_t GetStageTileDataSize(int i);
+	inline size_t GetStageTileDataSize(const size_t& stageNumber)
+	{
+		return stageData[stageNumber].stageTileData.size();
+	}
 	// ステージの横幅を取得
-	char GetStageWidth(int i);
+	inline size_t GetStageWidth(const size_t& stageNumber) { return stageData[stageNumber].width; }
 	// ステージの縦幅を取得
-	char GetStageHeight(int i);
-	// 任意のStageTileの高さを取得
-	char GetStageTileHeight(int i, int j);
+	inline size_t GetStageHeight(const size_t& stageNumber) { return stageData[stageNumber].height; }
 	// 任意のStageTileの幅を取得
-	char GetStageTileWidth(int i, int j);
+	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].width;
+	}
+	// 任意のStageTileの高さを取得
+	inline size_t GetStageTileHeight(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].height;
+	}
 	// 任意の場所のマップチップ情報を取得
-	char GetStageMapchip(int i, int j, int mapchipPos);
+	inline char GetStageMapchip(const size_t& stageNumber, const size_t& stageTileNumber, int mapchipPos)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].mapchip[mapchipPos];
+	}
 	// 任意の座標からどのStageTileにいるかを取得
 	bool GetPositionTile(RVector3 center, int i, int j);
 	// ステージタイルのX軸のオフセットを返す
-	int GetStageTileOffsetX(int i, int j);
+	inline char GetStageTileOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+	}
 	// ステージタイルのY軸のオフセットを返す
-	int GetStageTileOffsetY(int i, int j);
+	inline char GetStageTileOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+	}
 	//任意の方向に特定のマップチップがあるかどうか
 	bool IsNeighberMapchip(int i, int j, int MapchipPos, MapchipData mapchipData);
 

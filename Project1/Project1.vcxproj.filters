@@ -43,9 +43,6 @@
     <Filter Include="リソース ファイル\hlsl\Particle">
       <UniqueIdentifier>{2886e826-dede-4a4f-a88e-eda490946fef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\hlsl\SmartDraw">
-      <UniqueIdentifier>{c3e8d480-a305-4663-b7c4-27452c99cbee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Basic">
       <UniqueIdentifier>{0924d464-474a-4d5b-9f85-a62b2e591306}</UniqueIdentifier>
     </Filter>
