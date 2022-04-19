@@ -801,7 +801,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
 						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0Ui64;
 						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
 						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
@@ -1038,19 +1038,19 @@ bool Stage::GetPositionTile(RVector3 center, int i, int j)
 	}
 }
 
-void Stage::CreateParticle(int StageDataNum, int StageTileDataNum)
+void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)
 {
 	for (int a = 0; a < 50; a++)
 	{
 		//位置設定
 		float xpos = NY_random::floatrand_sl(
-			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX + stageData[StageDataNum].stageTileData[StageTileDataNum].width) * blockSize,
-			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX * blockSize);
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX + stageData[StageDataNum].stageTileData[StageTileDataNum].width) * blockSize,
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX * blockSize));
 		float ypos = NY_random::floatrand_sl(
-			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
-			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize);
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
-		this->Particle->Prototype_Add(1, { xpos,ypos,0.0f });
+		this->Particle->Prototype_Add(1, { xpos, ypos, 0.0f });
 	}
 }
 

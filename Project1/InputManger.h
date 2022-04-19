@@ -10,7 +10,20 @@ private: //シングルトン化
 	~InputManger() {}
 	InputManger operator=(const InputManger&) = delete;
 
+public: //サブクラス
+	enum StickDirection
+	{
+		NONE,  //どの方向にも傾いていない
+		LEFT,  //左に傾いている
+		UP,    //上に傾いている
+		RIGHT, //右に傾いている
+		DOWN   //下に傾いている
+	};
+
 public: //静的メンバ関数
+	// 更新
+	static void Update();
+
 	// 終了
 	static bool Escape();
 	// 終了(押した瞬間の判定)

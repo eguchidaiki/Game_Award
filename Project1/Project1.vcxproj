@@ -157,6 +157,7 @@
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="goalParticle.cpp" />
     <ClCompile Include="InputManger.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="LoadFile.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Easing.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="General.h" />
+    <ClInclude Include="goalParticle.h" />
     <ClInclude Include="InputManger.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="LoadFile.h" />

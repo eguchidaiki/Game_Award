@@ -58,7 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         if (rakiWinApp->ProcessMessage()) { break; }
 
         //更新
-        Input::StartGetInputState();
+        InputManger::Update();
 
         if (InputManger::Escape())
         {
