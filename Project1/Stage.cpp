@@ -1417,7 +1417,7 @@ void ParticleSingle::Init()
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float zvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
-	vel = RVector3(xvel, yvel, zvel);
+	vel = RVector3(xvel, yvel, 0.0f);
 }
 
 void ParticleSingle::Update()
