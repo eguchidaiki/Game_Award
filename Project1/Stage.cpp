@@ -36,7 +36,6 @@ Stage::Stage() :
 	initStageData{}
 {
 	Init();
-	this->Particle = ParticleManager::Create();
 }
 
 Stage::~Stage()
@@ -53,6 +52,10 @@ void Stage::Init()
 	MapchipSpriteBlock.Create(BlockHandle);
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
+	
+	this->Particlemanager = ParticleManager::Create();
+	FoldParticle = new ParticleSingle({ 0,0,0 });
+	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
 void Stage::Updata()
@@ -61,6 +64,8 @@ void Stage::Updata()
 	static int posY = 0;
 
 	EaseingUpdate();
+
+	Particlemanager->Prototype_Update();
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -393,6 +398,8 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
+
+	Particlemanager->Draw(EnptyHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -711,7 +718,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -766,7 +772,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -821,7 +826,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -876,7 +880,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -887,6 +890,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				break;
 			}
 			}
+
+			CreateParticle(i, moveStageData);
 
 			if (isAct)
 			{
@@ -899,8 +904,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 			break;
 		}
 	}
-
-
 
 	return 0;
 }
@@ -1050,7 +1053,8 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
-		this->Particle->Prototype_Add(1, { xpos, ypos, 0.0f });
+		RVector3 world_startpos= RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
+		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }
 
@@ -1413,7 +1417,9 @@ void ParticleSingle::Init()
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float zvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
-	vel = RVector3(xvel, yvel, zvel);
+	vel = RVector3(xvel, yvel, 0.0f);
+
+	scale = 5.0f;
 }
 
 void ParticleSingle::Update()

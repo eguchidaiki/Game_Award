@@ -18,7 +18,7 @@ enum MapchipData
 
 class PlayerBody;
 
-class ParticleSingle : ParticlePrototype
+class ParticleSingle : public ParticlePrototype
 {
 public:
 	//開始位置保存用
@@ -77,7 +77,7 @@ public: //サブクラス
 		std::vector<char> stageOffsetX;
 		std::vector<char> stageOffsetY;
 	};
-	
+
 public: //定数
 	static const int blockSize;
 	static const int halfBlockSize;
@@ -190,7 +190,9 @@ private: //メンバ変数
 	Sprite MapchipSpriteEnpty;
 	Sprite MapchipSpriteGoal;
 
-	ParticleManager* Particle;
+	ParticleManager* Particlemanager;
 
 	bool IsParticleTrigger;
+
+	ParticleSingle* FoldParticle;
 };

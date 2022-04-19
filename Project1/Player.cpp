@@ -78,6 +78,16 @@ void Player::Init()
 
 void Player::Update(Stage& stage)
 {
+	if (Input::isMouseClickTrigger(0))
+	{
+		PressPos = Input::getMousePos();
+	}
+
+	if (Input::isMouseClicked(0))
+	{
+		ReleasePos = Input::getMousePos();
+	}
+
 	//左右移動
 	if (InputManger::Right() && Player_IsAction == false)
 	{
@@ -574,16 +584,6 @@ void Player::Draw(int offsetX, int offsetY)
 	PlayerSpriteAction.Draw();
 
 #pragma region debug
-	//DrawFormatString(0, 0, WHITE, "AD:左右移動");
-	//DrawFormatString(0, 20, WHITE, "W:ジャンプ");
-	//DrawFormatString(0, 40, WHITE, "←↑→:折る");
-	//DrawFormatString(0, 60, WHITE, "SPACE:開く");
-	//DrawFormatString(0, 120, WHITE, "%f", CenterPosition.y);
-	//DrawFormatString(0, 140, WHITE, "%f", leg.FootLeftUpPosition.y);
-	//DrawFormatString(0, 160, WHITE, "%f", static_cast<double>(leg.FootLeftUpPosition.y) - static_cast<double>(CenterPosition.y));
-	//DrawFormatString(0, 180, WHITE, "fall:%d", IsFaceFall);
-	//DrawFormatString(0, 200, WHITE, "isleft:%d", IsLeft);
-	//DrawFormatString(0, 220, WHITE, "isright:%d", IsRight);
 	if (IsGoal == true)
 	{
 		//DrawFormatString(300, 100, YELLOW, "GOAL");
