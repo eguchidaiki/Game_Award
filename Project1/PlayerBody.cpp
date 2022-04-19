@@ -2,7 +2,6 @@
 
 #include "PlayerBody.h"
 #include "InputManger.h"
-#include "Colors.h"
 #include "Stage.h"
 
 const float PlayerBody::BodySize = 50.0f;
@@ -31,7 +30,7 @@ PlayerBody::PlayerBody() :
 	BodyDistance(1),
 	Ease{}
 {
-	BodyColor = WHITE;
+	//BodyColor = WHITE;
 	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
 
 	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");

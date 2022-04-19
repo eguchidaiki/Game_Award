@@ -1,5 +1,5 @@
 #pragma once
-#include "Input.h"
+#include "Raki_Input.h"
 
 // “ü—Í‚ğ‚Ü‚Æ‚ß‚½ƒNƒ‰ƒX
 class InputManger final

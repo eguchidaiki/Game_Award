@@ -1,7 +1,6 @@
 #include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
-#include "Colors.h"
 #include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"

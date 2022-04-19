@@ -8,6 +8,8 @@
 #include "SceneManager.h"
 #include "Raki_imguiMgr.h"
 
+#include "InputManger.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -58,7 +60,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         //更新
         Input::StartGetInputState();
 
-        if (Input::isKeyTrigger(DIK_ESCAPE))
+        if (InputManger::Escape())
         {
             break;
         }
