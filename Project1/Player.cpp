@@ -85,14 +85,43 @@ void Player::Init()
 
 void Player::Update(Stage& stage)
 {
+	//マウス左ボタンを押したときの座標
 	if (Input::isMouseClickTrigger(0))
 	{
 		PressPos = Input::getMousePos();
 	}
 
+	//マウス左ボタンを離したときの座標
 	if (Input::isMouseClicked(0))
 	{
 		ReleasePos = Input::getMousePos();
+	}
+
+	if (ReleasePos.x != 0.0f &&
+		ReleasePos.y != 0.0f &&
+		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
+	{
+		IsWalk = true;
+	}
+
+	if (IsWalk == true)
+	{
+		if (PressPos.x < CenterPosition.x && IsWalk == true)
+		{
+			CenterPosition.x -= SideMoveSpeed;
+			IsLeft = true;
+			IsRight = false;
+		}
+		else if (PressPos.x > CenterPosition.x && IsWalk == true)
+		{
+			CenterPosition.x += SideMoveSpeed;
+			IsLeft = false;
+			IsRight = true;
+		}
+		else
+		{
+			IsWalk = false;
+		}
 	}
 
 	//左右移動

@@ -52,6 +52,9 @@ public: //メンバ変数
 	bool IsLeft;
 	bool IsRight;
 
+	//歩くかどうか
+	bool IsWalk = false;
+
 	//体(折るほう)
 	PlayerBody Body_One;
 	PlayerBody Body_Two;
@@ -119,6 +122,6 @@ public: //メンバ変数
 	Sprite PlayerSpriteAction;
 
 	//マウスのクリック座標
-	XMFLOAT2 PressPos;
-	XMFLOAT2 ReleasePos;
+	XMFLOAT2 PressPos = { 0,0 };
+	XMFLOAT2 ReleasePos = { 0,0 };
 };
