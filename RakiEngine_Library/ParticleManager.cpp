@@ -219,38 +219,24 @@ void ParticleManager::Add(ParticleGrainState pgState)
 
 void ParticleManager::Prototype_Set(ParticlePrototype *proto)
 {
-	prototype_ = proto;
+	prototype_.reset(proto);
 }
 
 void ParticleManager::Prototype_Add(int addCount, RVector3 startPos)
 {
 	for (int i = 0; i < addCount; i++) {
 		//uniqueポインタで動的生成
-		ParticlePrototype *newp = prototype_->clone(startPos);
-
-		pplist.emplace_front(newp);
+		std::unique_ptr<ParticlePrototype> newp(prototype_->clone(startPos));
+		pplist.emplace_front(std::move(newp));
 	}
 }
 
 void ParticleManager::Prototype_Update()
 {
-	////寿命切れパーティクルを消去
-	//pplist.erase(std::find_if(pplist.begin(), pplist.end(),
-	//	[](std::unique_ptr<ParticlePrototype> &p) {return p.get()->nowFrame >= p.get()->endFrame; }));
-	//pplist.shrink_to_fit();
-	////全パーティクル更新処理実行
-	//for (std::vector<std::unique_ptr<ParticlePrototype>>::iterator itr = pplist.begin();
-	//	itr != pplist.end(); itr++) {
-	//	(*itr)->nowFrame++;
-	//	(*itr)->Update();
-	//}
 
-   	std::erase_if(pplist, [](std::unique_ptr<ParticlePrototype> &p) {
-		return p->nowFrame >= p->endFrame; });
-
-	//pplist.remove_if([](std::unique_ptr<ParticlePrototype> &p) {
-	//	return p->nowFrame >= p->endFrame;
-	//	});
+	pplist.remove_if([](std::unique_ptr<ParticlePrototype> &p) {
+		return p->nowFrame >= p->endFrame;
+		});
 
 	//バッファデータ転送
 	int vcount = 0;
@@ -261,6 +247,7 @@ void ParticleManager::Prototype_Update()
 		for (std::forward_list<std::unique_ptr<ParticlePrototype>>::iterator it = pplist.begin();
 			it != pplist.end();
 			it++) {
+			(*it)->nowFrame++;
 			(*it)->Update();
 			// 座標
 			vertMap->pos = (*it)->pos;

@@ -16,6 +16,7 @@ struct ParticleGrainState
 {
 private:
 	using XMFLOAT4 = DirectX::XMFLOAT4;
+
 public:
 
 	//起点
@@ -102,7 +103,9 @@ class ParticlePrototype : public Particle
 {
 public:
 	ParticlePrototype() {};
-	~ParticlePrototype() {};
+	~ParticlePrototype() {
+		
+	};
 	//初期化
 	virtual void Init() = 0;
 	//更新
@@ -207,7 +210,7 @@ private:
 
 
 	//パーティクルプロトタイプ
-	ParticlePrototype *prototype_;
+	std::unique_ptr<ParticlePrototype> prototype_;
 	//パーティクルプロトタイプコンテナ
 	std::forward_list<std::unique_ptr<ParticlePrototype>> pplist;
 
