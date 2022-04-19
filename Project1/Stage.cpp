@@ -712,7 +712,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
+				//CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -767,7 +767,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
+				//CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -822,7 +822,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
+				//CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
@@ -877,7 +877,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 					}
 				}
 
-				CreateParticle(i, moveStageData);
+				//CreateParticle(i, moveStageData);
 				isAct = true;
 
 				break;
