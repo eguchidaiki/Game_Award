@@ -328,8 +328,6 @@ void ParticleManager::Prototype_Draw(UINT drawTexNum)
 	cmd->DrawInstanced(drawNum, 1, 0, 0);
 }
 
-
-
 void ParticleManager::InitializeGraphicsPipeline() {
 
 	result = S_FALSE;

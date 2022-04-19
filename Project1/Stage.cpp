@@ -255,8 +255,6 @@ void Stage::Draw(int offsetX, int offsetY)
 
 	//SetHierarchyAndColumn();
 
-	Particlemanager->Draw(EnptyHandle);
-
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -401,6 +399,8 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
+
+	Particlemanager->Draw(EnptyHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -1054,7 +1054,8 @@ void Stage::CreateParticle(int StageDataNum, int StageTileDataNum)
 			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
 			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize);
 
-		this->Particlemanager->Prototype_Add(1, { xpos,ypos,0.0f });
+		RVector3 world_startpos= RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
+		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }
 
@@ -1418,6 +1419,8 @@ void ParticleSingle::Init()
 	float zvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
 	vel = RVector3(xvel, yvel, 0.0f);
+
+	scale = 5.0f;
 }
 
 void ParticleSingle::Update()
