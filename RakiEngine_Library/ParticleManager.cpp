@@ -10,7 +10,7 @@
 
 const int ParticleManager::MAX_VERTEX;
 
-const DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4 &lhs, const DirectX::XMFLOAT4 &rhs) {
+const DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
 	XMFLOAT4 result;
 	result.x = lhs.x + rhs.x;
 	result.y = lhs.y + rhs.y;
@@ -19,14 +19,14 @@ const DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4 &lhs, const DirectX::X
 	return result;
 }
 
-static void operator+=(DirectX::XMFLOAT4 &lhs, const DirectX::XMFLOAT4 &rhs) {
+static void operator+=(DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	lhs.z += rhs.z;
 	lhs.w += rhs.w;
 }
 
-const DirectX::XMFLOAT4 operator-(DirectX::XMFLOAT4 &lhs, const DirectX::XMFLOAT4 &rhs) {
+const DirectX::XMFLOAT4 operator-(DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
 	XMFLOAT4 result;
 	result.x = lhs.x - rhs.x;
 	result.y = lhs.y - rhs.y;
@@ -35,7 +35,7 @@ const DirectX::XMFLOAT4 operator-(DirectX::XMFLOAT4 &lhs, const DirectX::XMFLOAT
 	return result;
 }
 
-const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4 &lhs, const float a) {
+const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& lhs, const float a) {
 	XMFLOAT4 result;
 	result.x = lhs.x / a;
 	result.y = lhs.y / a;
@@ -44,7 +44,7 @@ const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4 &lhs, const float a) {
 	return result;
 }
 
-const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4 &lhs, const float a) {
+const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const float a) {
 	XMFLOAT4 result;
 	result.x = lhs.x * a;
 	result.y = lhs.y * a;
@@ -54,10 +54,10 @@ const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4 &lhs, const float a) {
 }
 
 
-ParticleManager *ParticleManager::Create() {
+ParticleManager* ParticleManager::Create() {
 
 	//パーティクルマネージャー生成
-	ParticleManager *pm = new ParticleManager(
+	ParticleManager* pm = new ParticleManager(
 		Raki_DX12B::Get()->GetDevice(),
 		Raki_DX12B::Get()->GetGCommandList()
 	);
@@ -98,7 +98,7 @@ void ParticleManager::Initialize() {
 void ParticleManager::Update() {
 
 	//寿命が切れたパーティクルを削除
-	grains.remove_if([](Particle &p) {return p.nowFrame >= p.endFrame; });
+	grains.remove_if([](Particle& p) {return p.nowFrame >= p.endFrame; });
 
 	//全パーティクル更新
 	for (std::forward_list<Particle>::iterator itr = grains.begin();
@@ -128,8 +128,8 @@ void ParticleManager::Update() {
 
 	//頂点バッファデータ転送
 	int vcount = 0;
-	PVertex *vertMap = nullptr;
-	result = vertbuff->Map(0, nullptr, (void **)&vertMap);
+	PVertex* vertMap = nullptr;
+	result = vertbuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		// パーティクルの情報を1つずつ反映
 		for (std::forward_list<Particle>::iterator it = grains.begin();
@@ -151,8 +151,8 @@ void ParticleManager::Update() {
 	}
 
 	//定数バッファデータ転送
-	ConstBufferData *constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void **)&constMap);
+	ConstBufferData* constMap = nullptr;
+	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (result == S_OK) {
 		//ビュープロジェクション行列
 		constMap->mat = camera->GetMatrixViewProjection();
@@ -187,7 +187,7 @@ void ParticleManager::Draw(UINT drawTexNum)
 	cmd->IASetVertexBuffers(0, 1, &vbview);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
 	cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 定数バッファビューをセット
@@ -201,13 +201,13 @@ void ParticleManager::Draw(UINT drawTexNum)
 	cmd->DrawInstanced(drawNum, 1, 0, 0);
 }
 
-void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, 
+void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc,
 	float startScale, float endScale, XMFLOAT4 s_color, XMFLOAT4 e_color)
 {
 	//要素追加
 	grains.emplace_front();
 	//追加した要素の参照
-	Particle &p = grains.front();
+	Particle& p = grains.front();
 	p.pos = pos;			//初期位置
 	p.vel = vel;			//速度
 	p.acc = acc;			//加速度
@@ -218,7 +218,7 @@ void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc,
 	p.e_color = e_color;
 }
 
-void ParticleManager::Prototype_Set(ParticlePrototype *proto)
+void ParticleManager::Prototype_Set(ParticlePrototype* proto)
 {
 	prototype_ = proto;
 }
@@ -227,7 +227,7 @@ void ParticleManager::Prototype_Add(int addCount, RVector3 startPos)
 {
 	for (int i = 0; i < addCount; i++) {
 		//uniqueポインタで動的生成
-		ParticlePrototype *newp = prototype_->clone(startPos);
+		ParticlePrototype* newp = prototype_->clone(startPos);
 
 		pplist.emplace_front(newp);
 	}
@@ -246,7 +246,7 @@ void ParticleManager::Prototype_Update()
 	//	(*itr)->Update();
 	//}
 
-   	std::erase_if(pplist, [](std::unique_ptr<ParticlePrototype> &p) {
+	std::erase_if(pplist, [](std::unique_ptr<ParticlePrototype>& p) {
 		return p->nowFrame >= p->endFrame; });
 
 	//pplist.remove_if([](std::unique_ptr<ParticlePrototype> &p) {
@@ -255,13 +255,12 @@ void ParticleManager::Prototype_Update()
 
 	//バッファデータ転送
 	int vcount = 0;
-	PVertex *vertMap = nullptr;
-	result = vertbuff->Map(0, nullptr, (void **)&vertMap);
+	PVertex* vertMap = nullptr;
+	result = vertbuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
 		// パーティクルの情報を1つずつ反映
 		for (std::forward_list<std::unique_ptr<ParticlePrototype>>::iterator it = pplist.begin();
-			it != pplist.end();
-			it++) {
+			it != pplist.end(); it++) {
 			(*it)->Update();
 			// 座標
 			vertMap->pos = (*it)->pos;
@@ -279,8 +278,8 @@ void ParticleManager::Prototype_Update()
 	}
 
 	//定数バッファデータ転送
-	ConstBufferData *constMap = nullptr;
-	result = constBuff->Map(0, nullptr, (void **)&constMap);
+	ConstBufferData* constMap = nullptr;
+	result = constBuff->Map(0, nullptr, (void**)&constMap);
 	if (result == S_OK) {
 		//ビュープロジェクション行列
 		constMap->mat = camera->GetMatrixViewProjection();
@@ -315,7 +314,7 @@ void ParticleManager::Prototype_Draw(UINT drawTexNum)
 	cmd->IASetVertexBuffers(0, 1, &vbview);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
+	ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
 	cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 定数バッファビューをセット
@@ -353,7 +352,7 @@ void ParticleManager::InitializeGraphicsPipeline() {
 		std::string errstr;
 		errstr.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char *)errorBlob->GetBufferPointer(),
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
@@ -376,7 +375,7 @@ void ParticleManager::InitializeGraphicsPipeline() {
 		std::string errstr;
 		errstr.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char *)errorBlob->GetBufferPointer(),
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
@@ -399,7 +398,7 @@ void ParticleManager::InitializeGraphicsPipeline() {
 		std::string errstr;
 		errstr.resize(errorBlob->GetBufferSize());
 
-		std::copy_n((char *)errorBlob->GetBufferPointer(),
+		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			errstr.begin());
 		errstr += "\n";
