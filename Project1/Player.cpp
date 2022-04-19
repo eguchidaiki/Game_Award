@@ -85,6 +85,16 @@ void Player::Init()
 
 void Player::Update(Stage& stage)
 {
+	if (Input::isMouseClickTrigger(0))
+	{
+		PressPos = Input::getMousePos();
+	}
+
+	if (Input::isMouseClicked(0))
+	{
+		ReleasePos = Input::getMousePos();
+	}
+
 	//¶‰EˆÚ“®
 	if (Input::isKey(DIK_D) && Player_IsAction == false)
 	{
