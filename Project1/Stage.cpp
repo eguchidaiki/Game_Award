@@ -14,10 +14,10 @@ container.shrink_to_fit();
 
 namespace
 {
-	static size_t i = 0, j = 0; //for•¶‚Ìƒ‹[ƒvƒJƒEƒ“ƒ^
-	static size_t x = 0, y = 0; //ƒ}ƒbƒvƒ`ƒbƒvã‚ÌÀ•W
+	static size_t i = 0, j = 0; //foræ–‡ã®ãƒ«ãƒ¼ãƒ—ã‚«ã‚¦ãƒ³ã‚¿
+	static size_t x = 0, y = 0; //ãƒãƒƒãƒ—ãƒãƒƒãƒ—ä¸Šã®åº§æ¨™
 
-	static size_t mapchipPos = 0; //ƒ}ƒbƒvƒ`ƒbƒv‚Ì—v‘f”Ô†
+	static size_t mapchipPos = 0; //ãƒãƒƒãƒ—ãƒãƒƒãƒ—ã®è¦ç´ ç•ªå·
 }
 
 const int Stage::blockSize = 60;
@@ -301,7 +301,7 @@ void Stage::Draw(int offsetX, int offsetY)
 			}
 		}
 
-		// ‚Â‚È‚¬–Ú
+		// ã¤ãªãç›®
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			static char sideStageTile = 0;
@@ -413,7 +413,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	if (LoadFile::LoadCSV((char*)initFoldCount, sizeof(initFoldCount) / sizeof(initFoldCount[0]), fileHandle, endCharacter) == EF)
 	{
-		// ŠÖ”¸”s
+		// é–¢æ•°å¤±æ•—
 		return EF;
 	}
 
@@ -428,7 +428,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	if (LoadFile::LoadCSV(&stageCount, 1, fileHandle, endCharacter) == EF)
 	{
-		// ŠÖ”¸”s
+		// é–¢æ•°å¤±æ•—
 		return EF;
 	}
 
@@ -441,18 +441,18 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 		if (LoadFile::LoadCSV(tilePos, sizeof(tilePos) / sizeof(tilePos[0]), fileHandle, INT_MIN) == EF)
 		{
-			// ŠÖ”¸”s
+			// é–¢æ•°å¤±æ•—
 			return EF;
 		}
 		if (LoadFile::LoadCSV(size, sizeof(size) / sizeof(size[0]), fileHandle, INT_MIN) == EF)
 		{
-			// ŠÖ”¸”s
+			// é–¢æ•°å¤±æ•—
 			return EF;
 		}
 
 		if (size[0] <= 0 || size[1] <= 0)
 		{
-			// ˆê‚ÂˆÈã‚Ì’l‚ªŠÔˆá‚Á‚Ä‚é
+			// ä¸€ã¤ä»¥ä¸Šã®å€¤ãŒé–“é•ã£ã¦ã‚‹
 			return EF;
 		}
 
@@ -465,7 +465,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 		if (LoadFile::LoadCSV(stageData[i].stageTile, static_cast<size_t>(stageData[i].width * stageData[i].height), fileHandle, endCharacter))
 		{
-			// ŠÖ”¸”s
+			// é–¢æ•°å¤±æ•—
 			return EF;
 		}
 	}
@@ -486,18 +486,18 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 			if (LoadFile::LoadCSV(tilePos, sizeof(tilePos) / sizeof(tilePos[0]), fileHandle, INT_MIN) == EF)
 			{
-				// ŠÖ”¸”s
+				// é–¢æ•°å¤±æ•—
 				return EF;
 			}
 			if (LoadFile::LoadCSV(size, sizeof(size) / sizeof(size[0]), fileHandle, INT_MIN) == EF)
 			{
-				// ŠÖ”¸”s
+				// é–¢æ•°å¤±æ•—
 				return EF;
 			}
 
 			if (size[0] <= 0 || size[1] <= 0)
 			{
-				// ˆê‚ÂˆÈã‚Ì’l‚ªŠÔˆá‚Á‚Ä‚é
+				// ä¸€ã¤ä»¥ä¸Šã®å€¤ãŒé–“é•ã£ã¦ã‚‹
 				return EF;
 			}
 
@@ -522,7 +522,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 			if (stageData[i].stageTileData[lastIndex].mapchip == nullptr)
 			{
-				// ŠÖ”¸”s
+				// é–¢æ•°å¤±æ•—
 				return EF;
 			}
 
@@ -530,7 +530,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				stageData[i].stageTileData[lastIndex].width *
 				stageData[i].stageTileData[lastIndex].height, fileHandle, endCharacter) != 0)
 			{
-				// ŠÖ”¸”s
+				// é–¢æ•°å¤±æ•—
 				return EF;
 			}
 		}
@@ -538,7 +538,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	fclose(fileHandle);
 
-	// ƒIƒtƒZƒbƒg’l‚ÌŒvZ
+	// ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã®è¨ˆç®—
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -563,7 +563,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
-			// ƒvƒŒƒCƒ„[‚ÌŠJnˆÊ’u‚Ì’Tõ
+			// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é–‹å§‹ä½ç½®ã®æ¢ç´¢
 			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
 			{
 				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
@@ -596,7 +596,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	if (end == false)
 	{
-		// ŠJnˆÊ’u‚ª–³‚¢
+		// é–‹å§‹ä½ç½®ãŒç„¡ã„
 		return EF;
 	}
 
@@ -662,7 +662,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 			switch (direction)
 			{
-			case BodyType::up: //ã“ü—Í
+			case BodyType::up: //ä¸Šå…¥åŠ›
 			{
 				if (onPlayerStageTile / stageData[i].width <= 0)
 				{
@@ -713,12 +713,11 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 
 				CreateParticle(i, moveStageData);
-
 				isAct = true;
 
 				break;
 			}
-			case BodyType::down: //‰º“ü—Í
+			case BodyType::down: //ä¸‹å…¥åŠ›
 			{
 				if (onPlayerStageTile / stageData[i].width >= static_cast<size_t>(stageData[i].height - 1))
 				{
@@ -769,12 +768,11 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 
 				CreateParticle(i, moveStageData);
-
 				isAct = true;
 
 				break;
 			}
-			case BodyType::left: //¶“ü—Í
+			case BodyType::left: //å·¦å…¥åŠ›
 			{
 				if (onPlayerStageTile % stageData[i].width <= 0)
 				{
@@ -825,12 +823,11 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 
 				CreateParticle(i, moveStageData);
-
 				isAct = true;
 
 				break;
 			}
-			case BodyType::right: //‰E“ü—Í
+			case BodyType::right: //å³å…¥åŠ›
 			{
 				if (onPlayerStageTile % stageData[i].width >= static_cast<size_t>(stageData[i].width - 1))
 				{
@@ -881,7 +878,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 
 				CreateParticle(i, moveStageData);
-
 				isAct = true;
 
 				break;
@@ -1047,7 +1043,7 @@ void Stage::CreateParticle(int StageDataNum, int StageTileDataNum)
 {
 	for (int a = 0; a < 50; a++)
 	{
-		//ˆÊ’uİ’è
+		//ä½ç½®è¨­å®š
 		float xpos = NY_random::floatrand_sl(
 			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX + stageData[StageDataNum].stageTileData[StageTileDataNum].width) * blockSize,
 			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX * blockSize);
@@ -1367,7 +1363,7 @@ void Stage::EaseingUpdate()
 
 			if (stageData[i].stageTileData[j].stageEase.timeRate >= 1.0f)
 			{
-				if (stageData[i].stageTileData[j].stageEase.splineIndex < 3 - 2)
+				if (stageData[i].stageTileData[j].stageEase.splineIndex < 3Ui64 - 2Ui64)
 				{
 					stageData[i].stageTileData[j].stageEase.splineIndex++;
 					stageData[i].stageTileData[j].stageEase.timeRate = 0.0f;
@@ -1386,7 +1382,7 @@ void Stage::EaseingUpdate()
 
 int Stage::SearchTopStageTile()
 {
-	std::vector<RVector3> topStageTile; //x‚Ì’l‚ÉstageData‚Ì—v‘f”Ô†Ay‚Ì’l‚ÉstageData[i].stageData‚Ì—v‘f”Ô†‚ğŠi”[‚·‚é
+	std::vector<RVector3> topStageTile; //xã®å€¤ã«stageDataã®è¦ç´ ç•ªå·ã€yã®å€¤ã«stageData[i].stageDataã®è¦ç´ ç•ªå·ã‚’æ ¼ç´ã™ã‚‹
 	static bool isTop = false;
 
 	for (i = 0; i < stageData.size(); i++)
@@ -1407,13 +1403,13 @@ int Stage::SearchTopStageTile()
 
 void ParticleSingle::Init()
 {
-	//ŠJnˆÊ’u
+	//é–‹å§‹ä½ç½®
 	pos = spos;
 
-	//I—¹ƒtƒŒ[ƒ€
+	//çµ‚äº†ãƒ•ãƒ¬ãƒ¼ãƒ 
 	endFrame = 60;
 
-	//‘¬“xİ’è
+	//é€Ÿåº¦è¨­å®š
 	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float zvel = NY_random::floatrand_sl(3.0f, -3.0f);
@@ -1423,7 +1419,7 @@ void ParticleSingle::Init()
 
 void ParticleSingle::Update()
 {
-	//–ˆƒtƒŒ[ƒ€‰ÁZ
+	//æ¯ãƒ•ãƒ¬ãƒ¼ãƒ åŠ ç®—
 	pos += vel;
 }
 
