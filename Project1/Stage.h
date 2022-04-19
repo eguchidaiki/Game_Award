@@ -18,7 +18,7 @@ enum MapchipData
 
 class PlayerBody;
 
-class ParticleSingle : ParticlePrototype
+class ParticleSingle : public ParticlePrototype
 {
 public:
 	//開始位置保存用
@@ -77,7 +77,7 @@ public: //サブクラス
 		std::vector<char> stageOffsetX;
 		std::vector<char> stageOffsetY;
 	};
-	
+
 public: //定数
 	static const int blockSize;
 	static const int halfBlockSize;
@@ -162,8 +162,8 @@ public: //メンバ関数
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 	}
-	//任意の方向に特定のマップチップがあるかどうか
-	bool IsNeighberMapchip(int i, int j, int MapchipPos, MapchipData mapchipData);
+	//パーティクル生成
+	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 
 private:
 	// ステージを折る
@@ -190,7 +190,9 @@ private: //メンバ変数
 	Sprite MapchipSpriteEnpty;
 	Sprite MapchipSpriteGoal;
 
-	ParticleManager* Particle;
+	ParticleManager* Particlemanager;
 
 	bool IsParticleTrigger;
+
+	ParticleSingle* FoldParticle;
 };

@@ -45,7 +45,7 @@ public: //メンバ変数
 	//床の高さ
 	float FloorHeight;
 
-	//体の構成要素
+	//顔の中心座標
 	RVector3 CenterPosition;
 
 	//向いている方向
@@ -117,4 +117,8 @@ public: //メンバ変数
 	//描画用スプライト
 	Sprite PlayerSprite;
 	Sprite PlayerSpriteAction;
+
+	//マウスのクリック座標
+	XMFLOAT2 PressPos;
+	XMFLOAT2 ReleasePos;
 };

@@ -116,7 +116,7 @@ public: //メンバ変数
 	Easing Ease;
 
 	//体の色
-	int BodyColor;
+	//int BodyColor;
 
 	//画像ハンドル
 	UINT Bodyhandle;
