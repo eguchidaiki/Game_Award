@@ -164,6 +164,8 @@ public: //メンバ関数
 	}
 	//任意の方向に特定のマップチップがあるかどうか
 	bool IsNeighberMapchip(int i, int j, int MapchipPos, MapchipData mapchipData);
+	//パーティクル生成
+	void CreateParticle(int StageDataNum, int StageTileDataNum);
 
 private:
 	// ステージを折る
