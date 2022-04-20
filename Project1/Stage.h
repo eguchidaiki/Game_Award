@@ -18,20 +18,22 @@ enum MapchipData
 
 class PlayerBody;
 
+//パーティクル派生クラス
 class ParticleSingle : public ParticlePrototype
 {
 public:
 	//開始位置保存用
 	RVector3 spos;
 
-	ParticleSingle(RVector3 start)
+	ParticleSingle()
 	{
 		Init();
 	}
+	~ParticleSingle();
 
-	void Init();
-	void Update();
-	ParticlePrototype* clone(RVector3 start);
+	void Init() override;
+	void Update() override;
+	ParticlePrototype* clone(RVector3 start) override;
 };
 
 class Stage final
@@ -192,9 +194,7 @@ private: //メンバ変数
 	Sprite MapchipSpriteEnpty;
 	Sprite MapchipSpriteGoal;
 
-	ParticleManager* Particlemanager;
-
 	bool IsParticleTrigger;
-
-	ParticleSingle* FoldParticle;
+	ParticleManager* Particlemanager = ParticleManager::Create();
+	ParticleSingle* FoldParticle = new ParticleSingle();
 };

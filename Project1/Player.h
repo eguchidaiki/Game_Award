@@ -19,7 +19,7 @@ public: //ƒƒ“ƒoŠÖ”
 	// ‰Šú‰»
 	void Init();
 	// XV
-	void Update(Stage& stage);
+	void Update(Stage& stage, int offsetX, int offsetY);
 	// •`‰æ
 	void Draw(int offsetX, int offsetY);
 
