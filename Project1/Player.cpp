@@ -1014,14 +1014,14 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	int down_mapchip_tile;
 
 	//反転したマップチップたち
-	char* ReverseMapchips = nullptr;
+	char ReverseMapchips[25] = { 0 };
 
 	//折れるかどうか(プレイヤーの中心座標)
 	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, ReverseMapchips);
 
 	char test = 'a';
 
-	ReverseMapchips = &test;
+	//ReverseMapchips = &test;
 
 	//playerの中心座標
 	if (CenterPositionFold == -1)

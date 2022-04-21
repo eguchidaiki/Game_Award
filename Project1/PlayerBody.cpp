@@ -809,7 +809,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	//マップチップの座標
 	int mapchipPos = 0;
 
-	char* mapchip = nullptr;
+	char mapchip[25] = { 0 };
 
 	//設定用の値
 	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, mapchip);

@@ -1070,7 +1070,10 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 			}
 		}
 
-		returnMapchip = reverseMapchip;
+		for (int k = 0; k < 25; k++)
+		{
+			returnMapchip[k] = reverseMapchip[k];
+		}
 
 		if (stageData[onPlayerStageData].stageTileData[moveStageData].isFold)
 		{
