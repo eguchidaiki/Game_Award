@@ -109,6 +109,15 @@ public: //メンバ関数
 
 	// ステージを折る・開く
 	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
+
+	/// <summary>
+	/// ステージがどう折れるかの予測
+	/// </summary>
+	/// <param name="playerPos"> プレイヤーの座標 </param>
+	/// <param name="direction"> 折りたい方向 </param>
+	/// <param name="returnMapchip"> マップチップ(出力) </param>
+	/// <returns> 0で折れる、1で開ける、-1で失敗 </returns>
+	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char* returnMapchip);
 	// リセット
 	void Reset();
 	// 内部データ全削除
@@ -183,6 +192,8 @@ private:
 private: //メンバ変数
 	std::vector<StageData> stageData;
 	std::vector<StageData> initStageData;
+
+	char* reverseMapchip;
 
 	UINT BlockHandle;
 	UINT EnptyHandle;
