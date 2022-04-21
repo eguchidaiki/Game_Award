@@ -3,6 +3,7 @@
 #include "PlayerBody.h"
 #include "InputManger.h"
 #include "Stage.h"
+#include "Player.h"
 
 const float PlayerBody::BodySize = 50.0f;
 const float PlayerBody::HalfBodySize = BodySize / 2.0f;
@@ -750,7 +751,6 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	if (FallCount > 0)
 	{
 		BodyIsFall = false;
-		//FallSpeed = 0.0f;
 	}
 	else
 	{
@@ -758,55 +758,94 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	}
 }
 
-void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, BodyType extrudetype, bool& isfall, bool& isjump, bool& iscolide)
+bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 {
-	switch (extrudetype)
+	//体の四辺
+	float BodyLeft;
+	float BodyRight;
+	float BodyUp;
+	float BodyDown;
+
+	int ReverseLeftCount = 0;
+	int ReverseUpCount = 0;
+	int ReverseRightCount = 0;
+	int ReverseDownCount = 0;
+
+	//StartPosとEndPosの位置関係によって上下左右の設定を変える
+	if (BodyStartPos.x < BodyEndPos.x)
 	{
-	case BodyType::left:
-		if (center->x - extrudepos.x < extrudedis)
+		BodyLeft = BodyStartPos.x;
+		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+	}
+	else
+	{
+		BodyLeft = BodyEndPos.x;
+		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+	}
+
+	if (BodyStartPos.y < BodyEndPos.y)
+	{
+		BodyUp = BodyStartPos.y;
+		BodyDown = BodyStartPos.y + ((BodySize + 8) - 1.0f);
+	}
+	else
+	{
+		BodyUp = BodyEndPos.y;
+		BodyDown = BodyEndPos.y + ((BodySize + 8) - 1.0f);
+	}
+
+	int CanFoldCount = 0;
+
+	char* mapchip = nullptr;
+
+	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (size_t j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
-			center->x = extrudepos.x + extrudedis;
-			iscolide = true;
+			for (size_t y = 0; y < stage.GetStageTileHeight(i, j); y++)
+			{
+				for (size_t x = 0; x < stage.GetStageTileWidth(i, j); x++)
+				{
+					size_t mapchipPos = y * stage.GetStageTileWidth(i, j) + x;
+
+					stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, mapchip);
+
+					//左上
+					if (stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, mapchip) == 0)
+					{
+						CanFoldCount++;
+					}
+
+					//左下
+					if (stage.FoldSimulation(RVector3(BodyLeft, BodyDown, 0.0f), direction, mapchip) == 0)
+					{
+						CanFoldCount++;
+					}
+
+					//右上
+					if (stage.FoldSimulation(RVector3(BodyRight, BodyUp, 0.0f), direction, mapchip) == 0)
+					{
+						CanFoldCount++;
+					}
+
+					//右下
+					if (stage.FoldSimulation(RVector3(BodyRight, BodyDown, 0.0f), direction, mapchip) == 0)
+					{
+						CanFoldCount++;
+					}
+				}
+			}
 		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	case BodyType::right:
-		if (extrudepos.x - center->x < extrudedis)
-		{
-			center->x = extrudepos.x - extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	case BodyType::up:
-		if (center->y - extrudepos.y < extrudedis)
-		{
-			center->y = extrudepos.y + extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	case BodyType::down:
-		if (extrudepos.y - center->y < extrudedis)
-		{
-			center->y = extrudepos.y - extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	default:
-		break;
+	}
+
+	IsReverse = (BodyType)direction;
+
+	if (CanFoldCount >= 300)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }

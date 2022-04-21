@@ -5,6 +5,7 @@
 #include "Sprite.h"
 
 class Stage;
+class Player;
 
 enum BodyType
 {
@@ -53,13 +54,10 @@ public: //メンバ関数
 	void IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
 
 	/// <summary>
-	/// 押し出し処理
+	/// 反転したタイルと体の四隅の判定
 	/// </summary>
-	/// <param name="center">押し出される側の座標</param>
-	/// <param name="extrudepos">押し出す側の座標</param>
-	/// <param name="extrudedis">押し出す距離</param>
-	/// <param name="extrudetype">どの方向"から"押し出すか</param>
-	void Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, BodyType extrudetype, bool& isfall, bool& isjump, bool& iscolide);
+	/// <param name="stage">ステージデータ</param>
+	bool IsReverseHitBody(Stage& stage, const unsigned char& direction);
 
 public: //メンバ変数
 	//有効化フラグ
@@ -99,6 +97,10 @@ public: //メンバ変数
 	bool IsHitUp;
 	bool IsHitRight;
 	bool IsHitDown;
+
+	//反転したタイルとの当たり判定
+	BodyType IsReverse;
+	bool IsCanFold;
 
 	//body別落下判定
 	bool BodyIsFall;
