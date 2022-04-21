@@ -911,7 +911,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 	return 0;
 }
 
-int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char* returnMapchip)
+int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip)
 {
 	static size_t onPlayerStageData = 0;
 	static size_t moveStageTile = 0;
@@ -1024,7 +1024,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 			}
 			default:
 			{
-				returnMapchip = reverseMapchip;
+				*returnMapchip = reverseMapchip;
 
 				return EF;
 				break;
@@ -1070,7 +1070,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 			}
 		}
 
-		returnMapchip = reverseMapchip;
+		*returnMapchip = reverseMapchip;
 
 		if (stageData[onPlayerStageData].stageTileData[moveStageData].isFold)
 		{
@@ -1083,7 +1083,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	}
 	else
 	{
-		returnMapchip = reverseMapchip;
+		*returnMapchip = reverseMapchip;
 
 		// 折れる物が無い
 		return EF;

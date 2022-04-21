@@ -117,7 +117,7 @@ public: //メンバ関数
 	/// <param name="direction"> 折りたい方向 </param>
 	/// <param name="returnMapchip"> マップチップ(出力) </param>
 	/// <returns> 0で折れる、1で開ける、-1で失敗 </returns>
-	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char* returnMapchip);
+	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip);
 	// リセット
 	void Reset();
 	// 内部データ全削除
