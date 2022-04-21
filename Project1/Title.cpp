@@ -37,23 +37,30 @@ void Title::Finalize()
 void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
+#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
-
 	if (Input::isKeyTrigger(DIK_2))
 	{
 		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
-
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
+		player->Init();
+		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	}
+#endif // _DEBUG
+
+	if (Input::isKeyTrigger(DIK_R))
+	{
+		stage->Reset();
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
