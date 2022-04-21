@@ -4,6 +4,7 @@
 #include <RVector.h>
 #include <TexManager.h>
 #include "Sprite.h"
+#include "goalParticle.h"
 
 class Player final
 {
@@ -121,4 +122,7 @@ public: //メンバ変数
 	//マウスのクリック座標
 	XMFLOAT2 PressPos;
 	XMFLOAT2 ReleasePos;
+
+	// ゴールのパーティクル
+	GoalParticle goalParticle;
 };
