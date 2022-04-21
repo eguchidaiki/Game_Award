@@ -3,6 +3,7 @@
 #include "PlayerBody.h"
 #include "InputManger.h"
 #include "Stage.h"
+#include "Player.h"
 
 const float PlayerBody::BodySize = 50.0f;
 const float PlayerBody::HalfBodySize = BodySize / 2.0f;
@@ -750,63 +751,9 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	if (FallCount > 0)
 	{
 		BodyIsFall = false;
-		//FallSpeed = 0.0f;
 	}
 	else
 	{
 		BodyIsFall = true;
-	}
-}
-
-void PlayerBody::Extrude(RVector3* center, RVector3 extrudepos, float extrudedis, BodyType extrudetype, bool& isfall, bool& isjump, bool& iscolide)
-{
-	switch (extrudetype)
-	{
-	case BodyType::left:
-		if (center->x - extrudepos.x < extrudedis)
-		{
-			center->x = extrudepos.x + extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	case BodyType::right:
-		if (extrudepos.x - center->x < extrudedis)
-		{
-			center->x = extrudepos.x - extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	case BodyType::up:
-		if (center->y - extrudepos.y < extrudedis)
-		{
-			center->y = extrudepos.y + extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	case BodyType::down:
-		if (extrudepos.y - center->y < extrudedis)
-		{
-			center->y = extrudepos.y - extrudedis;
-			iscolide = true;
-		}
-		else
-		{
-			iscolide = false;
-		}
-		break;
-	default:
-		break;
 	}
 }

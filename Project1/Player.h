@@ -35,8 +35,6 @@ public: //メンバ関数
 
 	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
-	//押し出し処理(使ってない)
-	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
 	//各体・顔の落下判定
 	bool IsFall();
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
@@ -75,7 +73,13 @@ public: //メンバ変数
 	bool IsRightFold;
 	bool IsDownFold;
 
-	//どの方向を折るか(4方向)
+	//反転したステージとの当たり判定
+	bool IsReverseLeft;
+	bool IsReverseUp;
+	bool IsReverseRight;
+	bool IsReverseDown;
+
+	//どの方向を開くか(4方向)
 	bool IsLeftOpen;
 	bool IsUpOpen;
 	bool IsRightOpen;

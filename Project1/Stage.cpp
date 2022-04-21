@@ -56,8 +56,8 @@ void Stage::Init()
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
 
-	
-	
+
+
 	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
@@ -397,13 +397,13 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
+	Particlemanager->Prototype_Draw(EnptyHandle);
+
+	SpriteManager::Get()->SetCommonBeginDraw();
+
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
-
-	Raki_DX12B::Get()->ClearDepthBuffer();
-
-	//Particlemanager->Prototype_Draw(BlockHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -1227,7 +1227,7 @@ bool Stage::GetPositionTile(RVector3 center, int i, int j)
 
 void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)
 {
-	for (int a = 0; a < 50; a++)
+	for (int a = 0; a < 40; a++)
 	{
 		//位置設定
 		float xpos = NY_random::floatrand_sl(
@@ -1237,7 +1237,7 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
-		RVector3 world_startpos= RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
+		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
 		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }
@@ -1591,7 +1591,7 @@ void ParticleSingle::Init()
 	pos = spos;
 
 	//終了フレーム
-	endFrame = 60;
+	endFrame = 40;
 
 	//速度設定
 	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
@@ -1599,13 +1599,15 @@ void ParticleSingle::Init()
 
 	vel = RVector3(xvel, yvel, 0);
 
+	acc = RVector3(0.9, 0.9, 0);
+
 	scale = 3.0f;
 }
 
 void ParticleSingle::Update()
 {
 	//毎フレーム加算
-	vel += acc;
+	vel *= acc;
 	pos += vel;
 }
 

@@ -230,9 +230,16 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	}
 	IsHitPlayerBody(stage);
 
-
+	//折る入力
 	if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	{
+		for (int i = 0; i < stage.GetStageDataSize(); i++)
+		{
+			for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+			{
+				
+			}
+		}
 		Player_IsAction = true;
 		IsLeftFold = true;
 		leg.Set();
@@ -400,8 +407,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		leg.IsFootUp = false;
 	}
 
-	//開く
-
+	//開く入力
 	if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
 	{
 		OpenCount = 0;
@@ -926,59 +932,6 @@ void Player::IsHitPlayerBody(Stage& stage)
 		IsFaceFall = true;
 	}
 
-}
-
-void Player::ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType)
-{
-	switch (ExtrudeType)
-	{
-	case BodyType::left:
-		if (CenterPosition.x - ExtrudePos.x < ExtrudeDis)
-		{
-			CenterPosition.x = ExtrudePos.x + ExtrudeDis;
-			IsColide = true;
-		}
-		else
-		{
-			IsColide = false;
-		}
-		break;
-	case BodyType::right:
-		if (ExtrudePos.x - CenterPosition.x < ExtrudeDis)
-		{
-			CenterPosition.x = ExtrudePos.x - ExtrudeDis;
-			IsColide = true;
-		}
-		else
-		{
-			IsColide = false;
-		}
-		break;
-	case BodyType::up:
-		if (CenterPosition.y - ExtrudePos.y < ExtrudeDis)
-		{
-			CenterPosition.y = ExtrudePos.y + ExtrudeDis;
-			IsColide = true;
-		}
-		else
-		{
-			IsColide = false;
-		}
-		break;
-	case BodyType::down:
-		if (ExtrudePos.y - CenterPosition.y < ExtrudeDis)
-		{
-			CenterPosition.y = ExtrudePos.y - ExtrudeDis;
-			IsColide = true;
-		}
-		else
-		{
-			IsColide = false;
-		}
-		break;
-	default:
-		break;
-	}
 }
 
 bool Player::IsFall()
