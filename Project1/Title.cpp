@@ -117,6 +117,7 @@ void Title::Draw() {
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
+	Raki_DX12B::Get()->ClearDepthBuffer();
 	player->Draw(drawOffsetX, drawOffsetY);
 	stage->Draw(drawOffsetX, drawOffsetY);
 

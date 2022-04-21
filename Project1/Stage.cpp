@@ -4,6 +4,7 @@
 #include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
+#include <Raki_DX12B.h>
 
 #define EF (-1) //Error Function
 
@@ -52,6 +53,8 @@ void Stage::Init()
 	MapchipSpriteBlock.Create(BlockHandle);
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
+
+	
 	
 	this->Particlemanager->Prototype_Set(FoldParticle);
 }
@@ -396,6 +399,8 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
+
+	Raki_DX12B::Get()->ClearDepthBuffer();
 
 	Particlemanager->Prototype_Draw(BlockHandle);
 }
