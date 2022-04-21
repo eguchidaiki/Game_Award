@@ -4,6 +4,7 @@
 #include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
+#include <Raki_DX12B.h>
 
 #define EF (-1) //Error Function
 
@@ -54,9 +55,9 @@ void Stage::Init()
 	MapchipSpriteBlock.Create(BlockHandle);
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
+
 	
-	this->Particlemanager = ParticleManager::Create();
-	FoldParticle = new ParticleSingle({ 0,0,0 });
+	
 	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
@@ -400,7 +401,9 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
 
-	Particlemanager->Draw(EnptyHandle);
+	Raki_DX12B::Get()->ClearDepthBuffer();
+
+	Particlemanager->Prototype_Draw(BlockHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -1584,6 +1587,7 @@ int Stage::SearchTopStageTile()
 void ParticleSingle::Init()
 {
 	//開始位置
+	spos = RVector3(0, 0, 0);
 	pos = spos;
 
 	//終了フレーム
@@ -1592,9 +1596,10 @@ void ParticleSingle::Init()
 	//速度設定
 	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
-	float zvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
-	vel = RVector3(xvel, yvel, 0.0f);
+	vel = RVector3(0, 1, 0);
+
+	acc = RVector3(0, 0.1f, 0);
 
 	scale = 5.0f;
 }
@@ -1602,11 +1607,11 @@ void ParticleSingle::Init()
 void ParticleSingle::Update()
 {
 	//毎フレーム加算
+	vel += acc;
 	pos += vel;
 }
 
 ParticlePrototype* ParticleSingle::clone(RVector3 start)
 {
-	return new ParticleSingle(start);
-	//return nullptr;
+	return new ParticleSingle();
 }

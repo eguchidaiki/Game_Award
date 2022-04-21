@@ -58,7 +58,7 @@ void Title::Update() {
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 
-	player->Update(*stage);
+	player->Update(*stage, drawOffsetX, drawOffsetY);
 	PlayerBody PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus, 4);
@@ -117,8 +117,9 @@ void Title::Draw() {
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
-	stage->Draw(drawOffsetX, drawOffsetY);
+	Raki_DX12B::Get()->ClearDepthBuffer();
 	player->Draw(drawOffsetX, drawOffsetY);
+	stage->Draw(drawOffsetX, drawOffsetY);
 
 	//•`‰æI—¹
 	Raki_DX12B::Get()->CloseDraw();

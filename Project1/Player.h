@@ -8,7 +8,7 @@
 
 class Player final
 {
-public: //ƒVƒ“ƒOƒ‹ƒgƒ“‰»
+public: //ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³åŒ–
 	static Player* Get();
 private:
 	Player();
@@ -16,16 +16,16 @@ private:
 	~Player();
 	Player operator=(const Player&) = delete;
 
-public: //ƒƒ“ƒoŠÖ”
-	// ‰Šú‰»
+public: //ãƒ¡ãƒ³ãƒé–¢æ•°
+	// åˆæœŸåŒ–
 	void Init();
-	// XV
-	void Update(Stage& stage);
-	// •`‰æ
+	// æ›´æ–°
+	void Update(Stage& stage, int offsetX, int offsetY);
+	// æç”»
 	void Draw(int offsetX, int offsetY);
 
 	/// <summary>
-	/// ‚Ç‚Ì‘Ì‚ğ—LŒø‰»‚·‚é‚©
+	/// ã©ã®ä½“ã‚’æœ‰åŠ¹åŒ–ã™ã‚‹ã‹
 	/// </summary>
 	/// <param name="one">body_one</param>
 	/// <param name="two">body_two</param>
@@ -33,96 +33,104 @@ public: //ƒƒ“ƒoŠÖ”
 	void bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
 	void bodysetup(const unsigned char foldCount[4]);
 
-	//Šç‚Ì“–‚½‚è”»’è
+	//é¡”ã®å½“ãŸã‚Šåˆ¤å®š
 	void IsHitPlayerBody(Stage& stage);
-	//‰Ÿ‚µo‚µˆ—(g‚Á‚Ä‚È‚¢)
+	//æŠ¼ã—å‡ºã—å‡¦ç†(ä½¿ã£ã¦ãªã„)
 	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
-	//Še‘ÌEŠç‚Ì—‰º”»’è
+	//å„ä½“ãƒ»é¡”ã®è½ä¸‹åˆ¤å®š
 	bool IsFall();
-	//Še‘Ì‚Ìó‘Ô‚ğ”z—ñ‚ÉƒZƒbƒg(ƒZƒbƒg‚·‚é‡”Ô‚Ístage.FoldAndOpen‚Ì”»’è‡)
+	//å„ä½“ã®çŠ¶æ…‹ã‚’é…åˆ—ã«ã‚»ãƒƒãƒˆ(ã‚»ãƒƒãƒˆã™ã‚‹é †ç•ªã¯stage.FoldAndOpenã®åˆ¤å®šé †)
 	void SetBodyStatus(PlayerBody* arrangement, int size);
 
-public: //ƒƒ“ƒo•Ï”
-	//°‚Ì‚‚³
+public: //ãƒ¡ãƒ³ãƒå¤‰æ•°
+	//åºŠã®é«˜ã•
 	float FloorHeight;
 
-	//Šç‚Ì’†SÀ•W
+	//é¡”ã®ä¸­å¿ƒåº§æ¨™
 	RVector3 CenterPosition;
 
-	//Œü‚¢‚Ä‚¢‚é•ûŒü
+	//å‘ã„ã¦ã„ã‚‹æ–¹å‘
 	bool IsLeft;
 	bool IsRight;
 
-	//‘Ì(Ü‚é‚Ù‚¤)
+	//æ­©ãã‹ã©ã†ã‹
+	bool IsWalk = false;
+
+	//ä½“(æŠ˜ã‚‹ã»ã†)
 	PlayerBody Body_One;
 	PlayerBody Body_Two;
 	PlayerBody Body_Three;
 	PlayerBody Body_Four;
 
-	//body_two‚ğ—Dæ“I‚ÉŠJ‚­‚©
+	//body_twoã‚’å„ªå…ˆçš„ã«é–‹ãã‹
 	bool IsOpenTwo;
 
-	//‚Ç‚Ì•ûŒü‚ğÜ‚é‚©(4•ûŒü)
+	//ã©ã®æ–¹å‘ã‚’æŠ˜ã‚‹ã‹(4æ–¹å‘)
 	bool IsLeftFold;
 	bool IsUpFold;
 	bool IsRightFold;
 	bool IsDownFold;
 
-	//‚Ç‚Ì•ûŒü‚ğÜ‚é‚©(4•ûŒü)
+	//ã©ã®æ–¹å‘ã‚’æŠ˜ã‚‹ã‹(4æ–¹å‘)
 	bool IsLeftOpen;
 	bool IsUpOpen;
 	bool IsRightOpen;
 	bool IsDownOpen;
 
-	//ŠJ‚­‚Ü‚Å‚É”ƒtƒŒ[ƒ€‹ó‚¯‚é—p
+	//é–‹ãã¾ã§ã«æ•°ãƒ•ãƒ¬ãƒ¼ãƒ ç©ºã‘ã‚‹ç”¨
 	int OpenCount = 0;
 
-	//ƒJƒEƒ“ƒg‚ğn‚ß‚é‚©‚Ç‚¤‚©
+	//ã‚«ã‚¦ãƒ³ãƒˆã‚’å§‹ã‚ã‚‹ã‹ã©ã†ã‹
 	bool IsOpenCountStart = false;
 
-	//ˆÚ“®‘¬“x
+	//ç§»å‹•é€Ÿåº¦
 	float SideMoveSpeed = 3.0f;
 
-	//ƒWƒƒƒ“ƒv
+	//ã‚¸ãƒ£ãƒ³ãƒ—
 	bool IsJump;
 	float JumpSpeed;
 	float FallSpeed;
 
-	//—‰º”»’è(Šç‚Ì‚İ
+	//è½ä¸‹åˆ¤å®š(é¡”ã®ã¿
 	bool IsFaceFall;
 
-	//‘Ì‚ÆŠç‚·‚×‚Ä‚ğl—¶‚µ‚½—‰º”»’è
+	//ä½“ã¨é¡”ã™ã¹ã¦ã‚’è€ƒæ…®ã—ãŸè½ä¸‹åˆ¤å®š
 	bool IsAllFall;
 
-	//—‰º’†EƒWƒƒƒ“ƒv’†‚ÉƒWƒƒƒ“ƒv“ü—Í‚ª“ü‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	//è½ä¸‹ä¸­ãƒ»ã‚¸ãƒ£ãƒ³ãƒ—ä¸­ã«ã‚¸ãƒ£ãƒ³ãƒ—å…¥åŠ›ãŒå…¥ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsInputjump;
 
-	//‚Ç‚ê‚©ˆê‚Â‚Å‚à‘Ì‚ğ“®‚©‚µ‚Ä‚¢‚½‚çtrue
+	//ã©ã‚Œã‹ä¸€ã¤ã§ã‚‚ä½“ã‚’å‹•ã‹ã—ã¦ã„ãŸã‚‰true
 	bool Player_IsAction;
 
-	//‰æ‘œƒnƒ“ƒhƒ‹(Šç)
+	//ç”»åƒãƒãƒ³ãƒ‰ãƒ«(é¡”)
 	UINT FaceHandle[2];
 
-	//ƒS[ƒ‹‚ÉG‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	//ã‚´ãƒ¼ãƒ«ã«è§¦ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsGoal;
 
-	//ƒuƒƒbƒN‚É“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	//ãƒ–ãƒ­ãƒƒã‚¯ã«å½“ãŸã£ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsColide;
 
-	//‰º‚É‘Ì‚ª‚ ‚é‚©‚Ç‚¤‚©
+	//ä¸‹ã«ä½“ãŒã‚ã‚‹ã‹ã©ã†ã‹
 	bool IsDownBody;
 
-	//‘«
+	//è¶³
 	PlayerFoot leg;
 
-	//•`‰æ—pƒXƒvƒ‰ƒCƒg
+	//æç”»ç”¨ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	Sprite PlayerSprite;
 	Sprite PlayerSpriteAction;
 
-	//ƒ}ƒEƒX‚ÌƒNƒŠƒbƒNÀ•W
+	//ãƒã‚¦ã‚¹ã®ã‚¯ãƒªãƒƒã‚¯åº§æ¨™
+
+	XMFLOAT2 PressPos = { 0,0 };
+	XMFLOAT2 ReleasePos = { 0,0 };
+
 	XMFLOAT2 PressPos;
 	XMFLOAT2 ReleasePos;
 
-	// ƒS[ƒ‹‚Ìƒp[ƒeƒBƒNƒ‹
+	// ã‚´ãƒ¼ãƒ«ã®ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	GoalParticle goalParticle;
+
 };
