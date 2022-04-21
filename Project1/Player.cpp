@@ -40,7 +40,8 @@ Player::Player() :
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
-	leg{}
+	leg{},
+	goalParticle{}
 {
 	Init();
 
@@ -485,6 +486,12 @@ void Player::Update(Stage& stage)
 		Body_Four.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Four.Update(CenterPosition);
 	}
+
+	if (IsGoal)
+	{
+		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	}
+	goalParticle.Update();
 }
 
 void Player::Draw(int offsetX, int offsetY)
@@ -594,6 +601,8 @@ void Player::Draw(int offsetX, int offsetY)
 	}
 
 #pragma endregion
+
+	goalParticle.Draw();
 }
 
 void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
