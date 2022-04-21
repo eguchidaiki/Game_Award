@@ -397,13 +397,13 @@ void Stage::Draw(int offsetX, int offsetY)
 
 	Raki_DX12B::Get()->ClearDepthBuffer();
 
-	Particlemanager->Prototype_Draw(ParticleHandle);
-
 	SpriteManager::Get()->SetCommonBeginDraw();
 
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
+
+	Particlemanager->Prototype_Draw(ParticleHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
