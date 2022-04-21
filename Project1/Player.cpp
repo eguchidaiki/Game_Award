@@ -89,16 +89,16 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	if (Input::isMouseClickTrigger(0))
 	{
 		PressPos = Input::getMousePos();
-		PressPos.x += offsetX;
-		PressPos.y += offsetY;
+		PressPos.x -= offsetX;
+		PressPos.y -= offsetY;
 	}
 
 	//マウス左ボタンを離したときの座標
 	if (Input::isMouseClicked(0))
 	{
 		ReleasePos = Input::getMousePos();
-		ReleasePos.x += offsetX;
-		ReleasePos.y += offsetY;
+		ReleasePos.x -= offsetX;
+		ReleasePos.y -= offsetY;
 	}
 
 	if (ReleasePos.x != 0.0f &&
@@ -141,15 +141,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//左右移動
 	if (Input::isKey(DIK_D) && Player_IsAction == false)
 	{
-		CenterPosition.x += SideMoveSpeed;
+		/*CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
-		IsRight = true;
+		IsRight = true;*/
 	}
 	if (Input::isKey(DIK_A) && Player_IsAction == false)
 	{
-		CenterPosition.x -= SideMoveSpeed;
+		/*CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
-		IsRight = false;
+		IsRight = false;*/
 	}
 
 	//ジャンプ入力できるかどうか
