@@ -39,6 +39,12 @@ public: //メンバ関数
 	bool IsFall();
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
 	void SetBodyStatus(PlayerBody* arrangement, int size);
+	//反転したタイルと顔の四隅との判定
+	bool IsReverseHitFace(Stage& stage, const unsigned char& direction);
+	//任意の方向に折れるかどうか
+	bool IsDirectionFoldAll(Stage& stage, BodyType foldtype);
+	//有効化されている体の数を取得
+	int ActivateBodyCount();
 
 public: //メンバ変数
 	//床の高さ
@@ -72,12 +78,6 @@ public: //メンバ変数
 	bool IsUpFold;
 	bool IsRightFold;
 	bool IsDownFold;
-
-	//反転したステージとの当たり判定
-	bool IsReverseLeft;
-	bool IsReverseUp;
-	bool IsReverseRight;
-	bool IsReverseDown;
 
 	//どの方向を開くか(4方向)
 	bool IsLeftOpen;

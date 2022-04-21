@@ -53,6 +53,12 @@ public: //メンバ関数
 	/// <returns></returns>
 	void IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
 
+	/// <summary>
+	/// 反転したタイルと体の四隅の判定
+	/// </summary>
+	/// <param name="stage">ステージデータ</param>
+	bool IsReverseHitBody(Stage& stage, const unsigned char& direction);
+
 public: //メンバ変数
 	//有効化フラグ
 	bool IsActivate;
@@ -91,6 +97,10 @@ public: //メンバ変数
 	bool IsHitUp;
 	bool IsHitRight;
 	bool IsHitDown;
+
+	//反転したタイルとの当たり判定
+	BodyType IsReverse;
+	bool IsCanFold;
 
 	//body別落下判定
 	bool BodyIsFall;

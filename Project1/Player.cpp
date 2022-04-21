@@ -233,34 +233,39 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//折る入力
 	if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	{
-		for (int i = 0; i < stage.GetStageDataSize(); i++)
+		if (IsDirectionFoldAll(stage, BodyType::left))
 		{
-			for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
-			{
-				
-			}
+			Player_IsAction = true;
+			IsLeftFold = true;
+			leg.Set();
 		}
-		Player_IsAction = true;
-		IsLeftFold = true;
-		leg.Set();
 	}
 	if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	{
-		Player_IsAction = true;
-		IsUpFold = true;
-		leg.Set();
+		if (IsDirectionFoldAll(stage, BodyType::up))
+		{
+			Player_IsAction = true;
+			IsUpFold = true;
+			leg.Set();
+		}
 	}
 	if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	{
-		Player_IsAction = true;
-		IsRightFold = true;
-		leg.Set();
+		if (IsDirectionFoldAll(stage, BodyType::right))
+		{
+			Player_IsAction = true;
+			IsRightFold = true;
+			leg.Set();
+		}
 	}
 	if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	{
-		Player_IsAction = true;
-		IsDownFold = true;
-		leg.Set();
+		if (IsDirectionFoldAll(stage, BodyType::down))
+		{
+			Player_IsAction = true;
+			IsDownFold = true;
+			leg.Set();
+		}
 	}
 
 	//足を上げ終わったら折る
@@ -925,13 +930,11 @@ void Player::IsHitPlayerBody(Stage& stage)
 	if (FallCount > 0)
 	{
 		IsFaceFall = false;
-		//FallSpeed = 0.0f;
 	}
 	else
 	{
 		IsFaceFall = true;
 	}
-
 }
 
 bool Player::IsFall()
@@ -975,4 +978,160 @@ void Player::SetBodyStatus(PlayerBody* arrangement, int size)
 	arrangement[1] = Body_Four;
 	arrangement[2] = Body_One;
 	arrangement[3] = Body_Three;
+}
+
+bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
+{
+	//顔の四辺
+	float BodyLeft;
+	float BodyRight;
+	float BodyUp;
+	float BodyDown;
+
+	BodyLeft = CenterPosition.x - 25;
+	BodyRight = CenterPosition.x + 25;
+	BodyUp = CenterPosition.y - 25;
+	BodyDown = CenterPosition.y + 25;
+
+	//上下左右(プレイヤーの顔)
+	int left_mapchip = (int)(BodyLeft - stage.offset.x) / 60;
+	int up_mapchip = (int)(BodyUp - stage.offset.y) / 60;
+	int right_mapchip = (int)(BodyRight - stage.offset.x) / 60;
+	int down_mapchip = (int)(BodyDown - stage.offset.y) / 60;
+
+	//タイル内のマップチップ座標
+	int left_mapchip_tile;
+	int up_mapchip_tile;
+	int right_mapchip_tile;
+	int down_mapchip_tile;
+
+	//反転したマップチップたち
+	char* ReverseMapchips = nullptr;
+
+	//折れるかどうか(プレイヤーの中心座標)
+	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, ReverseMapchips);
+
+	//playerの中心座標
+	if (CenterPositionFold == -1)
+	{
+		return false;
+	}
+
+	//マップチップの場所(25個)
+	int MapchipPos = 0;
+
+	//反転したブロックマップチップと顔の四隅との判定
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			//左上
+			if (stage.GetPositionTile({ CenterPosition.x - 25,CenterPosition.y - 30,0.0f }, i, j))
+			{
+				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
+
+				MapchipPos = (up_mapchip_tile)*stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
+
+				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				{
+					return false;
+				}
+			}
+			//左下
+			if (stage.GetPositionTile({ CenterPosition.x - 25,CenterPosition.y + 33,0.0f }, i, j))
+			{
+				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+
+				MapchipPos = (down_mapchip_tile)*stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
+
+				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				{
+					return false;
+				}
+			}
+			//右上
+			if (stage.GetPositionTile({ CenterPosition.x + 25,CenterPosition.y - 30,0.0f }, i, j))
+			{
+				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
+
+				MapchipPos = (up_mapchip_tile)*stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+
+				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				{
+					return false;
+				}
+			}
+			//右下
+			if (stage.GetPositionTile({ CenterPosition.x + 25,CenterPosition.y + 33,0.0f }, i, j))
+			{
+				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+
+				MapchipPos = (down_mapchip_tile)*stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+
+				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				{
+					return false;
+				}
+			}
+		}
+	}
+
+	return true;
+}
+
+bool Player::IsDirectionFoldAll(Stage& stage, BodyType foldtype)
+{
+	int BodyCanFoldCount = 0;
+
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(stage, foldtype) == true)
+	{
+		BodyCanFoldCount++;
+	}
+
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(stage, foldtype) == true)
+	{
+		BodyCanFoldCount++;
+	}
+
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(stage, foldtype) == true)
+	{
+		BodyCanFoldCount++;
+	}
+
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(stage, foldtype) == true)
+	{
+		BodyCanFoldCount++;
+	}
+
+	bool test = IsReverseHitFace(stage, foldtype);
+
+	return false;
+}
+
+int Player::ActivateBodyCount()
+{
+	int count = 0;
+
+	if (Body_One.IsActivate == true)
+	{
+		count++;
+	}
+	if (Body_Two.IsActivate == true)
+	{
+		count++;
+	}
+	if (Body_Three.IsActivate == true)
+	{
+		count++;
+	}
+	if (Body_Four.IsActivate == true)
+	{
+		count++;
+	}
+
+	return count;
 }
