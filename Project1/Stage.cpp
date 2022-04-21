@@ -4,6 +4,7 @@
 #include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
+#include <Raki_DX12B.h>
 
 #define EF (-1) //Error Function
 
@@ -48,11 +49,12 @@ void Stage::Init()
 	BlockHandle = TexManager::LoadTexture("Resources/block.png");
 	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
 	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
-	ParticleHandle = TexManager::LoadTexture("Resources/playerSub.png");
 
 	MapchipSpriteBlock.Create(BlockHandle);
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
+
+	
 	
 	this->Particlemanager->Prototype_Set(FoldParticle);
 }
@@ -398,7 +400,9 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
 
-	//Particlemanager->Prototype_Draw(ParticleHandle);
+	Raki_DX12B::Get()->ClearDepthBuffer();
+
+	Particlemanager->Prototype_Draw(BlockHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])

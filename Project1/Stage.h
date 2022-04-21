@@ -188,8 +188,6 @@ private: //ƒƒ“ƒo•Ï”
 	UINT EnptyHandle;
 	UINT GoalHandle;
 
-	UINT ParticleHandle;
-
 	Sprite MapchipSpriteBlock;
 	Sprite MapchipSpriteEnpty;
 	Sprite MapchipSpriteGoal;
