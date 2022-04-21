@@ -26,6 +26,8 @@ PlayerBody::PlayerBody() :
 	IsHitUp(false),
 	IsHitRight(false),
 	IsHitDown(false),
+	IsReverse{},
+	IsCanFold{},
 	BodyIsFall(false),
 	SlideDis(),
 	Overlap(0),
@@ -810,7 +812,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	//マップチップの座標
 	int mapchipPos = 0;
 
-	char* mapchip = nullptr;
+	char* mapchip = { 0 };
 
 	//設定用の値
 	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, &mapchip);
