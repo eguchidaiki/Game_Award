@@ -397,7 +397,7 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	Particlemanager->Prototype_Draw(EnptyHandle);
+	//Particlemanager->Prototype_Draw(EnptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 

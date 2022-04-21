@@ -101,7 +101,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		ReleasePos.y != 0.0f &&
 		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
 	{
-		IsWalk = true;
+		//IsWalk = true;
 	}
 	/*else
 	{
@@ -172,15 +172,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//左右移動
 	if (InputManger::Right() && Player_IsAction == false)
 	{
-		/*CenterPosition.x += SideMoveSpeed;
+		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
-		IsRight = true;*/
+		IsRight = true;
 	}
 	if (InputManger::Left() && Player_IsAction == false)
 	{
-		/*CenterPosition.x -= SideMoveSpeed;
+		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
-		IsRight = false;*/
+		IsRight = false;
 	}
 
 	//ジャンプ入力できるかどうか
@@ -1019,10 +1019,6 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	//折れるかどうか(プレイヤーの中心座標)
 	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, ReverseMapchips);
 
-	char test = 'a';
-
-	//ReverseMapchips = &test;
-
 	//playerの中心座標
 	if (CenterPositionFold == -1)
 	{
@@ -1099,29 +1095,33 @@ bool Player::IsDirectionFoldAll(Stage& stage, BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(stage, foldtype) == true)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(stage, foldtype) == false)
+	{
+		BodyCanFoldCount++;
+	}
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(stage, foldtype) == false)
+	{
+		BodyCanFoldCount++;
+	}
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(stage, foldtype) == false)
+	{
+		BodyCanFoldCount++;
+	}
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(stage, foldtype) == false)
 	{
 		BodyCanFoldCount++;
 	}
 
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(stage, foldtype) == true)
+	bool ReverseHitFace = IsReverseHitFace(stage, foldtype);
+
+	if (ReverseHitFace == true && BodyCanFoldCount <= 0)
 	{
-		BodyCanFoldCount++;
+		return true;
 	}
-
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(stage, foldtype) == true)
+	else
 	{
-		BodyCanFoldCount++;
+		return false;
 	}
-
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(stage, foldtype) == true)
-	{
-		BodyCanFoldCount++;
-	}
-
-	bool test = IsReverseHitFace(stage, foldtype);
-
-	return false;
 }
 
 int Player::ActivateBodyCount()
