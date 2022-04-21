@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Stage.h"
 #include "InputManger.h"
+#include "Raki_imguiMgr.h"
 
 namespace
 {
@@ -569,7 +570,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	if (IsGoal)
 	{
-		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
 	goalParticle.Update();
 }
@@ -683,6 +684,10 @@ void Player::Draw(int offsetX, int offsetY)
 #pragma endregion
 
 	goalParticle.Draw();
+
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 0.0f);
+	ImGui::Text("IsGoal:%d", IsGoal);
+	ImguiMgr::Get()->EndDrawImgui();
 }
 
 void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
