@@ -89,16 +89,16 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	if (Input::isMouseClickTrigger(0))
 	{
 		PressPos = Input::getMousePos();
-		PressPos.x += offsetX;
-		PressPos.y += offsetY;
+		PressPos.x -= offsetX;
+		PressPos.y -= offsetY;
 	}
 
 	//マウス左ボタンを離したときの座標
 	if (Input::isMouseClicked(0))
 	{
 		ReleasePos = Input::getMousePos();
-		ReleasePos.x += offsetX;
-		ReleasePos.y += offsetY;
+		ReleasePos.x -= offsetX;
+		ReleasePos.y -= offsetY;
 	}
 
 	if (ReleasePos.x != 0.0f &&
@@ -106,33 +106,29 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
 	{
 		IsWalk = true;
+		IsClick = true;
+	}
+
+	if (PressPos.x <= CenterPosition.x && IsWalk == true)
+	{
+		CenterPosition.x -= SideMoveSpeed;
+		IsLeft = true;
+		IsRight = false;
+	}
+	else if (PressPos.x >= CenterPosition.x && IsWalk == true)
+	{
+		CenterPosition.x += SideMoveSpeed;
+		IsLeft = false;
+		IsRight = true;
 	}
 
 	if (IsWalk == true)
 	{
-		if (PressPos.x < CenterPosition.x)
+		if (IsLeft == true && CenterPosition.x - SideMoveSpeed <= PressPos.x)
 		{
-			CenterPosition.x -= SideMoveSpeed;
-			IsLeft = true;
-			IsRight = false;
-
-			if (CenterPosition.x - SideMoveSpeed * 2 < PressPos.x)
-			{
-				IsWalk = false;
-			}
+			IsWalk = false;
 		}
-		else if (PressPos.x > CenterPosition.x)
-		{
-			CenterPosition.x += SideMoveSpeed;
-			IsLeft = false;
-			IsRight = true;
-
-			if (CenterPosition.x + SideMoveSpeed * 2 > PressPos.x)
-			{
-				IsWalk = false;
-			}
-		}
-		else
+		if (IsRight == true && CenterPosition.x + SideMoveSpeed >= PressPos.x)
 		{
 			IsWalk = false;
 		}
@@ -141,15 +137,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//左右移動
 	if (Input::isKey(DIK_D) && Player_IsAction == false)
 	{
-		CenterPosition.x += SideMoveSpeed;
+		/*CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
-		IsRight = true;
+		IsRight = true;*/
 	}
 	if (Input::isKey(DIK_A) && Player_IsAction == false)
 	{
-		CenterPosition.x -= SideMoveSpeed;
+		/*CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
-		IsRight = false;
+		IsRight = false;*/
 	}
 
 	//ジャンプ入力できるかどうか
