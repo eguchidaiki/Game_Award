@@ -1,7 +1,7 @@
 #include <Raki_Input.h>
 #include "Player.h"
 #include "Stage.h"
-//#include "Colors.h"
+#include "InputManger.h"
 
 namespace
 {
@@ -40,7 +40,8 @@ Player::Player() :
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
-	leg{}
+	leg{},
+	goalParticle{}
 {
 	Init();
 
@@ -67,16 +68,9 @@ void Player::Init()
 	IsColide = false;
 
 	Body_One.Init(CenterPosition, BodyType::left);
-	//Body_One.BodyColor = YELLOW;
-
 	Body_Two.Init(CenterPosition, BodyType::up);
-	//Body_Two.BodyColor = GREEN;
-
 	Body_Three.Init(CenterPosition, BodyType::right);
-	//Body_Three.BodyColor = MAGENTA;
-
 	Body_Four.Init(CenterPosition, BodyType::down);
-	//Body_Four.BodyColor = MAGENTA;
 
 	leg.Init();
 	IsLeft = true;
@@ -139,13 +133,13 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	}
 
 	//左右移動
-	if (Input::isKey(DIK_D) && Player_IsAction == false)
+	if (InputManger::Right() && Player_IsAction == false)
 	{
 		/*CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
 		IsRight = true;*/
 	}
-	if (Input::isKey(DIK_A) && Player_IsAction == false)
+	if (InputManger::Left() && Player_IsAction == false)
 	{
 		/*CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
@@ -164,7 +158,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	}
 
 	//ジャンプ
-	if (Input::isKeyTrigger(DIK_W) && IsInputjump == true)
+	if (InputManger::UpTrigger() && IsInputjump == true)
 	{
 		IsJump = true;
 		FallSpeed = -5.6f;
@@ -200,25 +194,25 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	IsHitPlayerBody(stage);
 
 
-	if (Input::isKeyTrigger(DIK_LEFT) && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
+	if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsLeftFold = true;
 		leg.Set();
 	}
-	if (Input::isKeyTrigger(DIK_UP) && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
+	if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsUpFold = true;
 		leg.Set();
 	}
-	if (Input::isKeyTrigger(DIK_RIGHT) && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
+	if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsRightFold = true;
 		leg.Set();
 	}
-	if (Input::isKeyTrigger(DIK_DOWN) && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
+	if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsDownFold = true;
@@ -371,25 +365,25 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	//開く
 
-	if (Input::isKeyTrigger(DIK_LEFT) && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
+	if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 	}
-	if (Input::isKeyTrigger(DIK_UP) && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 	}
-	if (Input::isKeyTrigger(DIK_RIGHT) && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+	if (InputManger::SubRightTrigger() && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 	}
-	if (Input::isKeyTrigger(DIK_DOWN) && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+	if (InputManger::SubDownTrigger() && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -535,6 +529,12 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		Body_Four.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Four.Update(CenterPosition);
 	}
+
+	if (IsGoal)
+	{
+		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	}
+	goalParticle.Update();
 }
 
 void Player::Draw(int offsetX, int offsetY)
@@ -644,6 +644,8 @@ void Player::Draw(int offsetX, int offsetY)
 	}
 
 #pragma endregion
+
+	goalParticle.Draw();
 }
 
 void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
