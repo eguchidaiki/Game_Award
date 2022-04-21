@@ -102,7 +102,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		ReleasePos.y != 0.0f &&
 		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
 	{
-		IsWalk = true;
+		//IsWalk = true;
 	}
 	/*else
 	{
@@ -173,15 +173,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//左右移動
 	if (InputManger::Right() && Player_IsAction == false)
 	{
-		/*CenterPosition.x += SideMoveSpeed;
+		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
-		IsRight = true;*/
+		IsRight = true;
 	}
 	if (InputManger::Left() && Player_IsAction == false)
 	{
-		/*CenterPosition.x -= SideMoveSpeed;
+		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
-		IsRight = false;*/
+		IsRight = false;
 	}
 
 	//ジャンプ入力できるかどうか
@@ -198,8 +198,8 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//ジャンプ
 	if (InputManger::UpTrigger() && IsInputjump == true)
 	{
-		//IsJump = true;
-		//FallSpeed = -5.6f;
+		IsJump = true;
+		FallSpeed = -5.6f;
 	}
 
 	if (IsJump == true)
@@ -420,7 +420,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 	}
-	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenTwo == true)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -630,7 +630,7 @@ void Player::Draw(int offsetX, int offsetY)
 #pragma region BodyDraw
 
 #pragma region body_draw
-  
+
 	if (Body_One.Overlap == 2)
 	{
 		Body_One.Draw(offsetX, offsetY);
@@ -829,6 +829,21 @@ void Player::IsHitPlayerBody(Stage& stage)
 						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
 					}
 				}
+				if (up_mapchip_tile > 0)
+				{
+					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
+					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					{
+						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+						{
+							IsOpenTwo = false;
+						}
+					}
+					else
+					{
+						IsOpenTwo = true;
+					}
+				}
 			}
 			//左下
 			if (stage.GetPositionTile({ CenterPosition.x - 25,CenterPosition.y + 33,0.0f }, i, j))
@@ -874,6 +889,22 @@ void Player::IsHitPlayerBody(Stage& stage)
 						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
 					}
 				}
+				if (up_mapchip_tile > 0)
+				{
+					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					{
+						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+						{
+							IsOpenTwo = false;
+						}
+					}
+					else
+					{
+						IsOpenTwo = true;
+					}
+				}
+
 			}
 			//右下
 			if (stage.GetPositionTile({ CenterPosition.x + 25,CenterPosition.y + 33,0.0f }, i, j))
@@ -1019,14 +1050,10 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	int down_mapchip_tile;
 
 	//反転したマップチップたち
-	char* ReverseMapchips = nullptr;
+	char ReverseMapchips[25] = { 0 };
 
 	//折れるかどうか(プレイヤーの中心座標)
 	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, ReverseMapchips);
-
-	char test = 'a';
-
-	ReverseMapchips = &test;
 
 	//playerの中心座標
 	if (CenterPositionFold == -1)
@@ -1104,29 +1131,33 @@ bool Player::IsDirectionFoldAll(Stage& stage, BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(stage, foldtype) == true)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(stage, foldtype) == false)
+	{
+		BodyCanFoldCount++;
+	}
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(stage, foldtype) == false)
+	{
+		BodyCanFoldCount++;
+	}
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(stage, foldtype) == false)
+	{
+		BodyCanFoldCount++;
+	}
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(stage, foldtype) == false)
 	{
 		BodyCanFoldCount++;
 	}
 
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(stage, foldtype) == true)
+	bool ReverseHitFace = IsReverseHitFace(stage, foldtype);
+
+	if (ReverseHitFace == true && BodyCanFoldCount <= 0)
 	{
-		BodyCanFoldCount++;
+		return true;
 	}
-
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(stage, foldtype) == true)
+	else
 	{
-		BodyCanFoldCount++;
+		return false;
 	}
-
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(stage, foldtype) == true)
-	{
-		BodyCanFoldCount++;
-	}
-
-	bool test = IsReverseHitFace(stage, foldtype);
-
-	return false;
 }
 
 int Player::ActivateBodyCount()
