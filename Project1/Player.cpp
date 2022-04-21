@@ -614,7 +614,7 @@ void Player::Draw(int offsetX, int offsetY)
 			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
 
-#pragma region 重なっている枚数ごとに順番に描画
+#pragma region BodyDraw
 	if (Body_One.Overlap == 2)
 	{
 		Body_One.Draw(offsetX, offsetY);
@@ -665,7 +665,7 @@ void Player::Draw(int offsetX, int offsetY)
 	{
 		Body_Four.Draw(offsetX, offsetY);
 	}
-#pragma endregion 重なっている枚数ごとに順番に描画
+#pragma endregion
 
 	PlayerSprite.Draw();
 	PlayerSpriteAction.Draw();
