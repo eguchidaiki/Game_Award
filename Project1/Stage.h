@@ -197,5 +197,4 @@ private: //ƒƒ“ƒo•Ï”
 	bool IsParticleTrigger;
 	ParticleManager* Particlemanager = ParticleManager::Create();
 	ParticleSingle* FoldParticle = new ParticleSingle();
-	UINT ParticleHandle;
 };

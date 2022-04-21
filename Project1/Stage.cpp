@@ -5,7 +5,6 @@
 #include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
-#include <Raki_DX12B.h>
 
 #define EF (-1) //Error Function
 
@@ -50,12 +49,11 @@ void Stage::Init()
 	BlockHandle = TexManager::LoadTexture("Resources/block.png");
 	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
 	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
-	ParticleHandle = TexManager::LoadTexture("Resources/playerSub.png");
 
 	MapchipSpriteBlock.Create(BlockHandle);
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
-
+	
 	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
@@ -243,6 +241,7 @@ void Stage::Updata()
 			}
 		}
 	}
+
 }
 
 void Stage::Draw(int offsetX, int offsetY)
@@ -395,15 +394,11 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	Raki_DX12B::Get()->ClearDepthBuffer();
-
-	Particlemanager->Prototype_Draw(ParticleHandle);
-
-	SpriteManager::Get()->SetCommonBeginDraw();
-
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
+
+	Particlemanager->Prototype_Draw(BlockHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -1057,7 +1052,7 @@ void Stage::CreateParticle(int StageDataNum, int StageTileDataNum)
 			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
 			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize);
 
-		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
+		RVector3 world_startpos= RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
 		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }
