@@ -85,6 +85,12 @@
     <ClCompile Include="Easing.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
+    <ClCompile Include="InputManger.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="goalParticle.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
@@ -109,6 +115,9 @@
       <Filter>リソース ファイル\hlsl\Sprite</Filter>
     </FxCompile>
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
+      <Filter>リソース ファイル\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteGS.hlsl">
       <Filter>リソース ファイル\hlsl\Sprite</Filter>
     </FxCompile>
   </ItemGroup>
@@ -174,6 +183,12 @@
     </ClInclude>
     <ClInclude Include="LoadFile.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManger.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="goalParticle.h">
+      <Filter>Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

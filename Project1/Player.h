@@ -55,10 +55,6 @@ public: //メンバ変数
 	//歩くかどうか
 	bool IsWalk = false;
 
-	//クリック判定
-	bool IsClick = false;
-	int TurnCount = 0;
-
 	//体(折るほう)
 	PlayerBody Body_One;
 	PlayerBody Body_Two;

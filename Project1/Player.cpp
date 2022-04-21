@@ -1,7 +1,7 @@
 #include <Raki_Input.h>
 #include "Player.h"
 #include "Stage.h"
-//#include "Colors.h"
+#include "InputManger.h"
 
 namespace
 {
@@ -67,16 +67,9 @@ void Player::Init()
 	IsColide = false;
 
 	Body_One.Init(CenterPosition, BodyType::left);
-	//Body_One.BodyColor = YELLOW;
-
 	Body_Two.Init(CenterPosition, BodyType::up);
-	//Body_Two.BodyColor = GREEN;
-
 	Body_Three.Init(CenterPosition, BodyType::right);
-	//Body_Three.BodyColor = MAGENTA;
-
 	Body_Four.Init(CenterPosition, BodyType::down);
-	//Body_Four.BodyColor = MAGENTA;
 
 	leg.Init();
 	IsLeft = true;
@@ -89,16 +82,16 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	if (Input::isMouseClickTrigger(0))
 	{
 		PressPos = Input::getMousePos();
-		PressPos.x -= offsetX;
-		PressPos.y -= offsetY;
+		PressPos.x += offsetX;
+		PressPos.y += offsetY;
 	}
 
 	//マウス左ボタンを離したときの座標
 	if (Input::isMouseClicked(0))
 	{
 		ReleasePos = Input::getMousePos();
-		ReleasePos.x -= offsetX;
-		ReleasePos.y -= offsetY;
+		ReleasePos.x += offsetX;
+		ReleasePos.y += offsetY;
 	}
 
 	if (ReleasePos.x != 0.0f &&
@@ -106,46 +99,50 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
 	{
 		IsWalk = true;
-		IsClick = true;
-	}
-
-	if (PressPos.x <= CenterPosition.x && IsWalk == true)
-	{
-		CenterPosition.x -= SideMoveSpeed;
-		IsLeft = true;
-		IsRight = false;
-	}
-	else if (PressPos.x >= CenterPosition.x && IsWalk == true)
-	{
-		CenterPosition.x += SideMoveSpeed;
-		IsLeft = false;
-		IsRight = true;
 	}
 
 	if (IsWalk == true)
 	{
-		if (IsLeft == true && CenterPosition.x - SideMoveSpeed <= PressPos.x)
+		if (PressPos.x < CenterPosition.x)
 		{
-			IsWalk = false;
+			CenterPosition.x -= SideMoveSpeed;
+			IsLeft = true;
+			IsRight = false;
+
+			if (CenterPosition.x - SideMoveSpeed * 2 < PressPos.x)
+			{
+				IsWalk = false;
+			}
 		}
-		if (IsRight == true && CenterPosition.x + SideMoveSpeed >= PressPos.x)
+		else if (PressPos.x > CenterPosition.x)
+		{
+			CenterPosition.x += SideMoveSpeed;
+			IsLeft = false;
+			IsRight = true;
+
+			if (CenterPosition.x + SideMoveSpeed * 2 > PressPos.x)
+			{
+				IsWalk = false;
+			}
+		}
+		else
 		{
 			IsWalk = false;
 		}
 	}
 
 	//左右移動
-	if (Input::isKey(DIK_D) && Player_IsAction == false)
+	if (InputManger::Right() && Player_IsAction == false)
 	{
-		/*CenterPosition.x += SideMoveSpeed;
+		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
-		IsRight = true;*/
+		IsRight = true;
 	}
-	if (Input::isKey(DIK_A) && Player_IsAction == false)
+	if (InputManger::Left() && Player_IsAction == false)
 	{
-		/*CenterPosition.x -= SideMoveSpeed;
+		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
-		IsRight = false;*/
+		IsRight = false;
 	}
 
 	//ジャンプ入力できるかどうか
@@ -160,7 +157,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	}
 
 	//ジャンプ
-	if (Input::isKeyTrigger(DIK_W) && IsInputjump == true)
+	if (InputManger::UpTrigger() && IsInputjump == true)
 	{
 		IsJump = true;
 		FallSpeed = -5.6f;
@@ -196,25 +193,25 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	IsHitPlayerBody(stage);
 
 
-	if (Input::isKeyTrigger(DIK_LEFT) && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
+	if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsLeftFold = true;
 		leg.Set();
 	}
-	if (Input::isKeyTrigger(DIK_UP) && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
+	if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsUpFold = true;
 		leg.Set();
 	}
-	if (Input::isKeyTrigger(DIK_RIGHT) && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
+	if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsRightFold = true;
 		leg.Set();
 	}
-	if (Input::isKeyTrigger(DIK_DOWN) && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
+	if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	{
 		Player_IsAction = true;
 		IsDownFold = true;
@@ -367,25 +364,25 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	//開く
 
-	if (Input::isKeyTrigger(DIK_LEFT) && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
+	if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 	}
-	if (Input::isKeyTrigger(DIK_UP) && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 	}
-	if (Input::isKeyTrigger(DIK_RIGHT) && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+	if (InputManger::SubRightTrigger() && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 	}
-	if (Input::isKeyTrigger(DIK_DOWN) && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+	if (InputManger::SubDownTrigger() && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;

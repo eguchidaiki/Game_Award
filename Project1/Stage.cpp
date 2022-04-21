@@ -1,11 +1,9 @@
 #include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
-#include "Colors.h"
 #include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
-#include <Raki_DX12B.h>
 
 #define EF (-1) //Error Function
 
@@ -50,12 +48,11 @@ void Stage::Init()
 	BlockHandle = TexManager::LoadTexture("Resources/block.png");
 	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
 	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
-	ParticleHandle = TexManager::LoadTexture("Resources/playerSub.png");
 
 	MapchipSpriteBlock.Create(BlockHandle);
 	MapchipSpriteEnpty.Create(EnptyHandle);
 	MapchipSpriteGoal.Create(GoalHandle);
-
+	
 	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
@@ -243,6 +240,7 @@ void Stage::Updata()
 			}
 		}
 	}
+
 }
 
 void Stage::Draw(int offsetX, int offsetY)
@@ -395,15 +393,11 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	Raki_DX12B::Get()->ClearDepthBuffer();
-
-	SpriteManager::Get()->SetCommonBeginDraw();
-
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEnpty.Draw();
 
-	Particlemanager->Prototype_Draw(ParticleHandle);
+	Particlemanager->Prototype_Draw(BlockHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -810,7 +804,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
 						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0Ui64;
 						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
 						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
@@ -1045,19 +1039,19 @@ bool Stage::GetPositionTile(RVector3 center, int i, int j)
 	}
 }
 
-void Stage::CreateParticle(int StageDataNum, int StageTileDataNum)
+void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)
 {
 	for (int a = 0; a < 50; a++)
 	{
 		//位置設定
 		float xpos = NY_random::floatrand_sl(
-			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX + stageData[StageDataNum].stageTileData[StageTileDataNum].width) * blockSize,
-			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX * blockSize);
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX + stageData[StageDataNum].stageTileData[StageTileDataNum].width) * blockSize,
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetX * blockSize));
 		float ypos = NY_random::floatrand_sl(
-			(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
-			stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize);
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY + stageData[StageDataNum].stageTileData[StageTileDataNum].height) * blockSize,
+			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
-		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
+		RVector3 world_startpos= RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
 		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }

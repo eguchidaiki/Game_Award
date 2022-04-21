@@ -164,10 +164,8 @@ public: //メンバ関数
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 	}
-	//任意の方向に特定のマップチップがあるかどうか
-	bool IsNeighberMapchip(int i, int j, int MapchipPos, MapchipData mapchipData);
 	//パーティクル生成
-	void CreateParticle(int StageDataNum, int StageTileDataNum);
+	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 
 private:
 	// ステージを折る
@@ -197,5 +195,4 @@ private: //メンバ変数
 	bool IsParticleTrigger;
 	ParticleManager* Particlemanager = ParticleManager::Create();
 	ParticleSingle* FoldParticle = new ParticleSingle();
-	UINT ParticleHandle;
 };
