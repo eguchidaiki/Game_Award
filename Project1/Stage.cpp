@@ -402,7 +402,7 @@ void Stage::Draw(int offsetX, int offsetY)
 
 	Raki_DX12B::Get()->ClearDepthBuffer();
 
-	Particlemanager->Prototype_Draw(BlockHandle);
+	//Particlemanager->Prototype_Draw(BlockHandle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -1420,11 +1420,9 @@ void ParticleSingle::Init()
 	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
-	vel = RVector3(0, 1, 0);
+	vel = RVector3(xvel, yvel, 0);
 
-	acc = RVector3(0, 0.1f, 0);
-
-	scale = 5.0f;
+	scale = 3.0f;
 }
 
 void ParticleSingle::Update()

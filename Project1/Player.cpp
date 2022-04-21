@@ -94,12 +94,49 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		ReleasePos.y -= offsetY;
 	}
 
+	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
+
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
 	{
 		IsWalk = true;
 	}
+	/*else
+	{
+		IsDragFold = true;
+
+		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
+		{
+			if (DragDis.x > 0)
+			{
+				Player_IsAction = true;
+				IsLeftFold = true;
+				leg.Set();
+			}
+			else if (DragDis.x < 0)
+			{
+				Player_IsAction = true;
+				IsRightFold = true;
+				leg.Set();
+			}
+		}
+		else
+		{
+			if (DragDis.y > 0)
+			{
+				Player_IsAction = true;
+				IsUpFold = true;
+				leg.Set();
+			}
+			else if (DragDis.y < 0)
+			{
+				Player_IsAction = true;
+				IsDownFold = true;
+				leg.Set();
+			}
+		}
+	}*/
 
 	if (IsWalk == true)
 	{
@@ -159,8 +196,8 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//ƒWƒƒƒ“ƒv
 	if (InputManger::UpTrigger() && IsInputjump == true)
 	{
-		IsJump = true;
-		FallSpeed = -5.6f;
+		//IsJump = true;
+		//FallSpeed = -5.6f;
 	}
 
 	if (IsJump == true)

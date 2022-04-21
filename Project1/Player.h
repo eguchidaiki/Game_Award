@@ -55,6 +55,10 @@ public: //メンバ変数
 	//歩くかどうか
 	bool IsWalk = false;
 
+	//マウスドラッグで折るかどうか
+	bool IsDragFold = false;
+	XMFLOAT2 DragDis = {};
+
 	//体(折るほう)
 	PlayerBody Body_One;
 	PlayerBody Body_Two;
