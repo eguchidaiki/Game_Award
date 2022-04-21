@@ -197,8 +197,8 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//ジャンプ
 	if (InputManger::UpTrigger() && IsInputjump == true)
 	{
-		//IsJump = true;
-		//FallSpeed = -5.6f;
+		IsJump = true;
+		FallSpeed = -5.6f;
 	}
 
 	if (IsJump == true)
@@ -419,7 +419,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 	}
-	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenTwo == true)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -629,7 +629,7 @@ void Player::Draw(int offsetX, int offsetY)
 #pragma region BodyDraw
 
 #pragma region body_draw
-  
+
 	if (Body_One.Overlap == 2)
 	{
 		Body_One.Draw(offsetX, offsetY);
@@ -824,6 +824,21 @@ void Player::IsHitPlayerBody(Stage& stage)
 						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
 					}
 				}
+				if (up_mapchip_tile > 0)
+				{
+					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
+					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					{
+						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+						{
+							IsOpenTwo = false;
+						}
+					}
+					else
+					{
+						IsOpenTwo = true;
+					}
+				}
 			}
 			//左下
 			if (stage.GetPositionTile({ CenterPosition.x - 25,CenterPosition.y + 33,0.0f }, i, j))
@@ -869,6 +884,22 @@ void Player::IsHitPlayerBody(Stage& stage)
 						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
 					}
 				}
+				if (up_mapchip_tile > 0)
+				{
+					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					{
+						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+						{
+							IsOpenTwo = false;
+						}
+					}
+					else
+					{
+						IsOpenTwo = true;
+					}
+				}
+
 			}
 			//右下
 			if (stage.GetPositionTile({ CenterPosition.x + 25,CenterPosition.y + 33,0.0f }, i, j))
