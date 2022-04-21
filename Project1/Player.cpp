@@ -1024,6 +1024,10 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	//折れるかどうか(プレイヤーの中心座標)
 	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, ReverseMapchips);
 
+	char test = 'a';
+
+	ReverseMapchips = &test;
+
 	//playerの中心座標
 	if (CenterPositionFold == -1)
 	{
