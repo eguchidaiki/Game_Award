@@ -65,23 +65,23 @@ class Particle {
 
 public:
 	//座標
-	RVector3 pos;
+	RVector3 pos = { 0.0f,0.0f,0.0f };
 	//速度
-	RVector3 vel;
+	RVector3 vel = { 0,0,0 };
 	//加速度
-	RVector3 acc;
+	RVector3 acc = { 0,0,0 };
 	//色
-	XMFLOAT4 color;
+	XMFLOAT4 color = { 1,1,1,1 };
 	//スケーリング
-	float scale;
+	float scale = 1.0f;
 	//回転
-	float rot;
+	float rot = 0;
 	//初期値
-	XMFLOAT4 s_color = {};
+	XMFLOAT4 s_color = { 1,1,1,1 };
 	float s_scale = 1.0f;
 	float s_rotation = 0.0f;
 	// 最終値
-	XMFLOAT4 e_color = {};
+	XMFLOAT4 e_color = { 1,1,1,1 };
 	float e_scale = 0.0f;
 	float e_rotation = 0.0f;
 	// 現在フレーム

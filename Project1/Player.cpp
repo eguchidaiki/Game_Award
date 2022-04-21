@@ -79,7 +79,7 @@ void Player::Init()
 
 void Player::Update(Stage& stage, int offsetX, int offsetY)
 {
-	//ƒ}ƒEƒX¶ƒ{ƒ^ƒ“‚ğ‰Ÿ‚µ‚½‚Æ‚«‚ÌÀ•W
+	//ãƒã‚¦ã‚¹å·¦ãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã¨ãã®åº§æ¨™
 	if (Input::isMouseClickTrigger(0))
 	{
 		PressPos = Input::getMousePos();
@@ -87,7 +87,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		PressPos.y -= offsetY;
 	}
 
-	//ƒ}ƒEƒX¶ƒ{ƒ^ƒ“‚ğ—£‚µ‚½‚Æ‚«‚ÌÀ•W
+	//ãƒã‚¦ã‚¹å·¦ãƒœã‚¿ãƒ³ã‚’é›¢ã—ãŸã¨ãã®åº§æ¨™
 	if (Input::isMouseClicked(0))
 	{
 		ReleasePos = Input::getMousePos();
@@ -95,12 +95,49 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		ReleasePos.y -= offsetY;
 	}
 
+	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
+
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
 	{
 		IsWalk = true;
 	}
+	/*else
+	{
+		IsDragFold = true;
+
+		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
+		{
+			if (DragDis.x > 0)
+			{
+				Player_IsAction = true;
+				IsLeftFold = true;
+				leg.Set();
+			}
+			else if (DragDis.x < 0)
+			{
+				Player_IsAction = true;
+				IsRightFold = true;
+				leg.Set();
+			}
+		}
+		else
+		{
+			if (DragDis.y > 0)
+			{
+				Player_IsAction = true;
+				IsUpFold = true;
+				leg.Set();
+			}
+			else if (DragDis.y < 0)
+			{
+				Player_IsAction = true;
+				IsDownFold = true;
+				leg.Set();
+			}
+		}
+	}*/
 
 	if (IsWalk == true)
 	{
@@ -132,7 +169,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		}
 	}
 
-	//¶‰EˆÚ“®
+	//å·¦å³ç§»å‹•
 	if (InputManger::Right() && Player_IsAction == false)
 	{
 		/*CenterPosition.x += SideMoveSpeed;
@@ -146,7 +183,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		IsRight = false;*/
 	}
 
-	//ƒWƒƒƒ“ƒv“ü—Í‚Å‚«‚é‚©‚Ç‚¤‚©
+	//ã‚¸ãƒ£ãƒ³ãƒ—å…¥åŠ›ã§ãã‚‹ã‹ã©ã†ã‹
 	if (IsJump == false && IsFall() == false)
 	{
 		IsInputjump = true;
@@ -157,11 +194,11 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		IsInputjump = false;
 	}
 
-	//ƒWƒƒƒ“ƒv
+	//ã‚¸ãƒ£ãƒ³ãƒ—
 	if (InputManger::UpTrigger() && IsInputjump == true)
 	{
-		IsJump = true;
-		FallSpeed = -5.6f;
+		//IsJump = true;
+		//FallSpeed = -5.6f;
 	}
 
 	if (IsJump == true)
@@ -178,7 +215,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		}
 	}
 
-	//—‰º”»’è
+	//è½ä¸‹åˆ¤å®š
 	if (IsJump == false && IsAllFall == true && Player_IsAction == false)
 	{
 		if (FallSpeed < 5.2)
@@ -219,7 +256,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		leg.Set();
 	}
 
-	//‘«‚ğã‚°I‚í‚Á‚½‚çÜ‚é
+	//è¶³ã‚’ä¸Šã’çµ‚ã‚ã£ãŸã‚‰æŠ˜ã‚‹
 	if (leg.FootIsAction == false)
 	{
 		if (IsLeftFold == true)
@@ -230,7 +267,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 				Body_One.Ease.maxTime = 1.2f;
 				Body_One.Ease.timeRate = 0.0f;
 
-				//Ü‚é
+				//æŠ˜ã‚‹
 				if (Body_One.IsFold == false && Body_One.IsOpen == true && Body_One.IsAction == false)
 				{
 					Body_One.Ease.isMove = true;
@@ -262,7 +299,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 				Body_Two.Ease.maxTime = 1.2f;
 				Body_Two.Ease.timeRate = 0.0f;
 
-				//Ü‚é
+				//æŠ˜ã‚‹
 				if (Body_Two.IsFold == false && Body_Two.IsOpen == true && Body_Two.IsAction == false)
 				{
 					Body_Two.Ease.isMove = true;
@@ -294,7 +331,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 				Body_Three.Ease.maxTime = 1.2f;
 				Body_Three.Ease.timeRate = 0.0f;
 
-				//Ü‚é
+				//æŠ˜ã‚‹
 				if (Body_Three.IsFold == false && Body_Three.IsOpen == true && Body_Three.IsAction == false)
 				{
 					Body_Three.Ease.isMove = true;
@@ -326,7 +363,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 				Body_Four.Ease.maxTime = 1.2f;
 				Body_Four.Ease.timeRate = 0.0f;
 
-				//Ü‚é
+				//æŠ˜ã‚‹
 				if (Body_Four.IsFold == false && Body_Four.IsOpen == true && Body_Four.IsAction == false)
 				{
 					Body_Four.Ease.isMove = true;
@@ -352,7 +389,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		}
 	}
 
-	//PlayerIsaction‚ÌfalseğŒ
+	//PlayerIsactionã®falseæ¡ä»¶
 	if (leg.FootIsAction == false &&
 		Body_One.IsAction == false &&
 		Body_Two.IsAction == false &&
@@ -363,7 +400,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		leg.IsFootUp = false;
 	}
 
-	//ŠJ‚­
+	//é–‹ã
 
 	if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
 	{
@@ -577,7 +614,7 @@ void Player::Draw(int offsetX, int offsetY)
 			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
 
-#pragma region d‚È‚Á‚Ä‚¢‚é–‡”‚²‚Æ‚É‡”Ô‚É•`‰æ
+#pragma region é‡ãªã£ã¦ã„ã‚‹æšæ•°ã”ã¨ã«é †ç•ªã«æç”»
 	if (Body_One.Overlap == 2)
 	{
 		Body_One.Draw(offsetX, offsetY);
@@ -628,7 +665,7 @@ void Player::Draw(int offsetX, int offsetY)
 	{
 		Body_Four.Draw(offsetX, offsetY);
 	}
-#pragma endregion d‚È‚Á‚Ä‚¢‚é–‡”‚²‚Æ‚É‡”Ô‚É•`‰æ
+#pragma endregion é‡ãªã£ã¦ã„ã‚‹æšæ•°ã”ã¨ã«é †ç•ªã«æç”»
 
 	PlayerSprite.Draw();
 	PlayerSpriteAction.Draw();
@@ -706,29 +743,29 @@ void Player::bodysetup(const unsigned char foldCount[4])
 
 void Player::IsHitPlayerBody(Stage& stage)
 {
-	//ƒXƒe[ƒW‚Ì”
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã®æ•°
 	size_t i = 0;
-	//ƒ^ƒCƒ‹‚Ì”
+	//ã‚¿ã‚¤ãƒ«ã®æ•°
 	size_t j = 0;
 
-	//ã‰º¶‰E(ƒvƒŒƒCƒ„[‚ÌŠç)
+	//ä¸Šä¸‹å·¦å³(ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®é¡”)
 	int left_mapchip = (int)((CenterPosition.x - 25) - stage.offset.x) / 60;
 	int up_mapchip = (int)((CenterPosition.y - 25) - stage.offset.y) / 60;
 	int right_mapchip = (int)((CenterPosition.x + 25) - stage.offset.x) / 60;
 	int down_mapchip = (int)((CenterPosition.y + 33) - stage.offset.y) / 60;
 
-	//ƒ^ƒCƒ‹“à‚Ìƒ}ƒbƒvƒ`ƒbƒvÀ•W
+	//ã‚¿ã‚¤ãƒ«å†…ã®ãƒãƒƒãƒ—ãƒãƒƒãƒ—åº§æ¨™
 	int left_mapchip_tile;
 	int up_mapchip_tile;
 	int right_mapchip_tile;
 	int down_mapchip_tile;
-	//ƒ}ƒbƒvƒ`ƒbƒv‚ÌêŠ(‹¤’Ê)
+	//ãƒãƒƒãƒ—ãƒãƒƒãƒ—ã®å ´æ‰€(å…±é€š)
 	int MapchipPos = 0;
 
-	//ƒ}ƒbƒvƒ`ƒbƒv‚ÌêŠ(ƒS[ƒ‹—p)
+	//ãƒãƒƒãƒ—ãƒãƒƒãƒ—ã®å ´æ‰€(ã‚´ãƒ¼ãƒ«ç”¨)
 	int MapchipPos_Goal[3];
 
-	//‰Ÿ‚µo‚·•ûŒü‚ğŒˆ‚ß‚é‚½‚ß‚Ì‹——£
+	//æŠ¼ã—å‡ºã™æ–¹å‘ã‚’æ±ºã‚ã‚‹ãŸã‚ã®è·é›¢
 	float BuriedX = 0;
 	float BuriedY = 0;
 
@@ -747,7 +784,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 	{
 		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
-			//¶ã
+			//å·¦ä¸Š
 			if (stage.GetPositionTile({ CenterPosition.x - 25,CenterPosition.y - 30,0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
@@ -769,7 +806,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					}
 				}
 			}
-			//¶‰º
+			//å·¦ä¸‹
 			if (stage.GetPositionTile({ CenterPosition.x - 25,CenterPosition.y + 33,0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
@@ -792,7 +829,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					}
 				}
 			}
-			//‰Eã
+			//å³ä¸Š
 			if (stage.GetPositionTile({ CenterPosition.x + 25,CenterPosition.y - 30,0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
@@ -814,7 +851,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					}
 				}
 			}
-			//‰E‰º
+			//å³ä¸‹
 			if (stage.GetPositionTile({ CenterPosition.x + 25,CenterPosition.y + 33,0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
@@ -838,7 +875,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 				}
 			}
 
-			//ƒS[ƒ‹”»’è
+			//ã‚´ãƒ¼ãƒ«åˆ¤å®š
 			if (stage.GetPositionTile(CenterPosition, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
@@ -846,7 +883,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
 
-				//¶ã
+				//å·¦ä¸Š
 				MapchipPos = up_mapchip_tile * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
 				MapchipPos_Goal[0] = up_mapchip_tile * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
 				MapchipPos_Goal[1] = down_mapchip_tile * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
@@ -856,17 +893,17 @@ void Player::IsHitPlayerBody(Stage& stage)
 				{
 					IsGoal = true;
 				}
-				//‰Eã
+				//å³ä¸Š
 				else if (stage.GetStageMapchip(i, j, MapchipPos_Goal[0]) == MapchipData::GOAL)
 				{
 					IsGoal = true;
 				}
-				//¶‰º
+				//å·¦ä¸‹
 				else if (stage.GetStageMapchip(i, j, MapchipPos_Goal[1]) == MapchipData::GOAL)
 				{
 					IsGoal = true;
 				}
-				//‰E‰º
+				//å³ä¸‹
 				else if (stage.GetStageMapchip(i, j, MapchipPos_Goal[2]) == MapchipData::GOAL)
 				{
 					IsGoal = true;
