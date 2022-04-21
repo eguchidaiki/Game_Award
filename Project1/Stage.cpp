@@ -1,4 +1,4 @@
-#include "Stage.h"
+﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
 #include <Raki_Input.h>
@@ -947,7 +947,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 				}
 
 				moveStageTile = stageData[i].stageTileData[j].stageNumber - stageData[i].width;
-				moveStageData = stageData[i].stageTile[moveStageTile] - 1;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile < 0 ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -968,7 +968,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 				}
 
 				moveStageTile = stageData[i].stageTileData[j].stageNumber + stageData[i].width;
-				moveStageData = stageData[i].stageTile[moveStageTile] - 1;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -988,8 +988,8 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 					break;
 				}
 
-				moveStageTile = stageData[i].stageTileData[j].stageNumber - 1;
-				moveStageData = stageData[i].stageTile[moveStageTile] - 1;
+				moveStageTile = static_cast<size_t>(stageData[i].stageTileData[j].stageNumber) - 1;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile < 0 ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -1009,8 +1009,8 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 					break;
 				}
 
-				moveStageTile = stageData[i].stageTileData[j].stageNumber + 1;
-				moveStageData = stageData[i].stageTile[moveStageTile] - 1;
+				moveStageTile = static_cast<size_t>(stageData[i].stageTileData[j].stageNumber) + 1;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
