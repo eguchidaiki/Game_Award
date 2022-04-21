@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "PlayerBody.h"
 #include "PlayerFoot.h"
 #include <RVector.h>
@@ -25,7 +25,11 @@ public: //メンバ関数
 	void Draw(int offsetX, int offsetY);
 
 	/// <summary>
+
 	/// どの体を有効化するか
+
+	/// どの体を有効にするか
+
 	/// </summary>
 	/// <param name="one">body_one</param>
 	/// <param name="two">body_two</param>
@@ -35,6 +39,8 @@ public: //メンバ関数
 
 	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
+	//押し出し処理(使ってない)
+	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
 	//各体・顔の落下判定
 	bool IsFall();
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
@@ -99,7 +105,8 @@ public: //メンバ変数
 	float JumpSpeed;
 	float FallSpeed;
 
-	//落下判定(顔のみ
+
+	//落下判定(顔のみ)
 	bool IsFaceFall;
 
 	//体と顔すべてを考慮した落下判定
@@ -134,7 +141,7 @@ public: //メンバ変数
 	XMFLOAT2 PressPos = { 0,0 };
 	XMFLOAT2 ReleasePos = { 0,0 };
 
-	//ゴール時のパーティクル
+	// ゴールパーティクル
 	GoalParticle goalParticle;
 
 };

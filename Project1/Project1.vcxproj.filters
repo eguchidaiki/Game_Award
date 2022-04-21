@@ -90,6 +90,7 @@
     </ClCompile>
     <ClCompile Include="goalParticle.cpp">
       <Filter>ソース ファイル</Filter>
+      <Filter>Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +190,7 @@
     </ClInclude>
     <ClInclude Include="goalParticle.h">
       <Filter>ヘッダー ファイル</Filter>
+      <Filter>Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

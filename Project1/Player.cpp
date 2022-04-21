@@ -1,4 +1,4 @@
-#include <Raki_Input.h>
+﻿#include <Raki_Input.h>
 #include "Player.h"
 #include "Stage.h"
 #include "InputManger.h"
@@ -625,7 +625,11 @@ void Player::Draw(int offsetX, int offsetY)
 			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
 
+
 #pragma region BodyDraw
+
+#pragma region body_draw
+  
 	if (Body_One.Overlap == 2)
 	{
 		Body_One.Draw(offsetX, offsetY);
@@ -676,7 +680,11 @@ void Player::Draw(int offsetX, int offsetY)
 	{
 		Body_Four.Draw(offsetX, offsetY);
 	}
+
 #pragma endregion
+
+#pragma endregion //body_draw
+
 
 	PlayerSprite.Draw();
 	PlayerSpriteAction.Draw();
@@ -725,12 +733,12 @@ void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool thre
 
 void Player::bodysetup(const unsigned char foldCount[4])
 {
-	static int bodyTile[3] = { 0 };
+	static int bodyTile[4] = { 0 };
 	static size_t j = 0;
 
 	j = 0;
 
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < sizeof(bodyTile) / sizeof(bodyTile[0]); i++)
 	{
 		bodyTile[i] = -1;
 
@@ -774,7 +782,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 	int MapchipPos = 0;
 
 	//マップチップの場所(ゴール用)
-	int MapchipPos_Goal[3];
+	int MapchipPos_Goal[3] = { 0 };
 
 	//押し出す方向を決めるための距離
 	float BuriedX = 0;
