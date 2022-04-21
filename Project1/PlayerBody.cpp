@@ -4,6 +4,7 @@
 #include "InputManger.h"
 #include "Stage.h"
 #include "Player.h"
+#include <memory>
 
 const float PlayerBody::BodySize = 50.0f;
 const float PlayerBody::HalfBodySize = BodySize / 2.0f;
@@ -25,6 +26,8 @@ PlayerBody::PlayerBody() :
 	IsHitUp(false),
 	IsHitRight(false),
 	IsHitDown(false),
+	IsReverse{},
+	IsCanFold{},
 	BodyIsFall(false),
 	SlideDis(),
 	Overlap(0),
@@ -809,10 +812,10 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	//マップチップの座標
 	int mapchipPos = 0;
 
-	char mapchip[25] = { 0 };
+	char* mapchip = { 0 };
 
 	//設定用の値
-	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, mapchip);
+	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, &mapchip);
 
 	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
 	{

@@ -1,4 +1,5 @@
 #include "goalParticle.h"
+#include "NY_random.h"
 
 GoalParticle::ParticleClass::ParticleClass()
 {
@@ -30,22 +31,34 @@ GoalParticle::~GoalParticle()
 {
 }
 
-void GoalParticle::Init(ParticleGrainState pgState)
+void GoalParticle::Init(ParticleGrainState* pgState, const float spawnRange, const size_t& spawnCount)
 {
-	particleManager->Add(pgState);
+	for (size_t i = 0; i < spawnCount; i++)
+	{
+		pgState->position.x += NY_random::floatrand_sl(-spawnRange, +spawnRange);
+		pgState->position.y += NY_random::floatrand_sl(-spawnRange, +spawnRange);
+		pgState->position.z += NY_random::floatrand_sl(-spawnRange, +spawnRange);
+		particleManager->Add(*pgState);
+	}
 }
 
-void GoalParticle::Init(RVector3 pos, RVector3 vel, RVector3 accel, XMFLOAT4 color, float scale, int aliveTime)
+void GoalParticle::Init(const RVector3& pos, const float spawnRange, const size_t& spawnCount, const RVector3& vel, const RVector3& accel, const int aliveTime, const XMFLOAT4& color, const float scale)
 {
-	static ParticleGrainState pgState{};
-	pgState.position = pos;
-	pgState.vel = vel;
-	pgState.acc = accel;
-	pgState.color_start = color;
-	pgState.color_end = color;
-	pgState.scale_start = scale;
-	pgState.scale_end = scale;
-	particleManager->Add(pgState);
+	for (size_t i = 0; i < spawnCount; i++)
+	{
+		static ParticleGrainState pgState{};
+		pgState.position.x = pos.x + NY_random::floatrand_sl(+spawnRange, -spawnRange);
+		pgState.position.y = pos.y + NY_random::floatrand_sl(+spawnRange, -spawnRange);
+		pgState.position.z = pos.z + NY_random::floatrand_sl(+spawnRange, -spawnRange);
+		pgState.vel = vel;
+		pgState.acc = accel;
+		pgState.color_start = color;
+		pgState.color_end = color;
+		pgState.scale_start = scale;
+		pgState.scale_end = scale;
+		pgState.aliveTime = aliveTime;
+		particleManager->Add(pgState);
+	}
 }
 
 void GoalParticle::Create()

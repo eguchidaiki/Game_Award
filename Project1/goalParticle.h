@@ -24,8 +24,9 @@ public: //ÉÅÉìÉoä÷êî
 	GoalParticle();
 	~GoalParticle();
 
-	void Init(ParticleGrainState pgState);
-	void Init(RVector3 pos, RVector3 vel, RVector3 accel, XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, float scale = 1.0f, int aliveTime = 60);
+	void Init(ParticleGrainState* pgState, const float spawnRange, const size_t& spawnCount);
+	void Init(const RVector3& pos, const float spawnRange, const size_t& spawnCount,
+		const RVector3& vel, const RVector3& accel, const int aliveTime = 60, const XMFLOAT4& color = { 1.0f, 1.0f, 1.0f, 1.0f }, const float scale = 1.0f);
 	void Create();
 	void Update();
 	void Draw();
