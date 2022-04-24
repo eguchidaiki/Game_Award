@@ -34,6 +34,15 @@ public: //メンバ関数
 	// 描画
 	void Draw(int offsetX, int offsetY);
 
+	//折る
+	void Body_Fold(RVector3& center);
+
+	//開く
+	void Body_Open(RVector3& center);
+
+	//スライド
+	void Body_Slide(RVector3& center);
+
 	/// <summary>
 	/// 体を有効化した時の設定
 	/// </summary>
