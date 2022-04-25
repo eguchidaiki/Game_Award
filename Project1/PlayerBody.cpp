@@ -74,161 +74,37 @@ void PlayerBody::Init(RVector3 position, BodyType number)
 
 void PlayerBody::Update(RVector3& center)
 {
-	//�J���Ă���r��
-	if (IsFold == false && IsOpen == true && IsAction == true && IsSlide == false)
+	Body_Open(center);
+
+	Body_Fold(center);
+
+	Body_Slide(center);
+}
+
+void PlayerBody::Draw(int offsetX, int offsetY)
+{
+	if (IsActivate == true)
 	{
-		Ease.addTime += Ease.maxTime / 60.0f;
-		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
+		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
 
-		if (Body_Type == BodyType::left)
+		if (IsFold == true)
 		{
-			if (FoldCount == 1)
-			{
-				BodyEndPos = { center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
-				BodyStartPos.x = Ease.easeOut(BodyEndPos.x + BodySize, BodyEndPos.x - BodySize, Ease.timeRate);
-				BodyStartPos.y = BodyEndPos.y - BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
-			}
-			else if (FoldCount == 2)
-			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
-				BodyEndPos.x = Ease.easeOut(BodyStartPos.x + BodySize, BodyStartPos.x - BodySize, Ease.timeRate);
-				BodyEndPos.y = BodyStartPos.y + BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
-			}
+			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 		}
-		if (Body_Type == BodyType::up)
+		else
 		{
-			BodyEndPos = { center.x + 25.0f, center.y - 25.0f, 0.0f };
-			BodyStartPos.y = Ease.easeOut(BodyEndPos.y + BodySize, BodyEndPos.y - BodySize, Ease.timeRate);
-			BodyStartPos.x = BodyEndPos.x - BodySize;
-			if (Ease.timeRate < 0.5)
-			{
-				BodyCenterPos.y = BodyEndPos.y + (BodyStartPos.y - BodyEndPos.y) / 2;
-			}
-			else
-			{
-				BodyCenterPos.y = BodyStartPos.y + (BodyEndPos.y - BodyStartPos.y) / 2;
-			}
-		}
-		if (Body_Type == BodyType::right)
-		{
-			if (FoldCount == 1)
-			{
-				BodyStartPos = { center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
-				BodyEndPos.x = Ease.easeOut(BodyStartPos.x - BodySize, BodyStartPos.x + BodySize, Ease.timeRate);
-				BodyEndPos.y = BodyStartPos.y + BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
-			}
-			else if (FoldCount == 2)
-			{
-				BodyEndPos = { center.x + 25,center.y + 25 ,0.0f };
-				BodyStartPos.x = Ease.easeOut(BodyEndPos.x - BodySize, BodyEndPos.x + BodySize, Ease.timeRate);
-				BodyStartPos.y = BodyEndPos.y - BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
-			}
-		}
-		if (Body_Type == BodyType::down)
-		{
-			BodyStartPos = { center.x - 25.0f, center.y + 25.0f, 0.0f };
-			BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
-			BodyEndPos.x = BodyStartPos.x + BodySize;
-			BodyCenterPos.x = BodyStartPos.x + BodySize / 2;
-			if (Ease.timeRate < 0.5)
-			{
-				BodyCenterPos.y = BodyEndPos.y + (BodyStartPos.y - BodyEndPos.y) / 2;
-			}
-			else
-			{
-				BodyCenterPos.y = BodyStartPos.y + (BodyEndPos.y - BodyStartPos.y) / 2;
-			}
-		}
-
-		if (Ease.timeRate >= 1.0f)
-		{
-			Ease.isMove = false;
-			IsAction = false;
-			FoldCount--;
+			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 		}
 	}
-	//開いた後
-	if (IsFold == false && IsOpen == true && IsAction == false)
-	{
-		if (Body_Type == BodyType::left)
-		{
-			if (FoldCount == 0)
-			{
-				BodyStartPos = { center.x - (25 + BodyDistance * BodySize),center.y - 25,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize,0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y + 30,0.0f };
-			}
-			else if (FoldCount == 1)
-			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
-				BodyEndPos = { BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f };
-				BodyCenterPos = { BodyStartPos.x - 30,BodyStartPos.y + 30 ,0.0f };
-				IsFold = true;
-				IsOpen = false;
-			}
-		}
-		if (Body_Type == BodyType::up)
-		{
-			BodyStartPos = { center.x - 25.0f,center.y - 75.0f,0.0f };
-			BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y + 30,0.0f };
-		}
-		if (Body_Type == BodyType::right)
-		{
-			if (FoldCount == 0)
-			{
-				BodyStartPos = { center.x + (25 + (BodyDistance - 1) * BodySize),center.y - 25,0.0f };
-				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y + 30 ,0.0f };
-			}
-			else if (FoldCount == 1)
-			{
-				BodyEndPos = { center.x + 25,center.y + 25,0.0f };
-				BodyStartPos = { BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f };
-				BodyCenterPos = { BodyEndPos.x + 30,BodyEndPos.y - 30,0.0f };
-				IsFold = true;
-				IsOpen = false;
-			}
-		}
-		if (Body_Type == BodyType::down)
-		{
-			BodyStartPos = { center.x - 25,center.y + 25 ,0.0f };
-			BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y + 30 ,0.0f };
-		}
-	}
+
+	BodySprite.Draw();
+}
+
+void PlayerBody::Body_Fold(RVector3& center)
+{
 	//折っている途中
 	if (IsFold == true && IsOpen == false && IsAction == true && IsSlide == false)
 	{
@@ -242,42 +118,27 @@ void PlayerBody::Update(RVector3& center)
 				BodyEndPos = { center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
 				BodyStartPos.x = Ease.easeOut(BodyEndPos.x - BodySize, BodyEndPos.x + BodySize, Ease.timeRate);
 				BodyStartPos.y = BodyEndPos.y - BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
 			}
 			else if (FoldCount == 1)
 			{
 				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
 				BodyEndPos.x = Ease.easeOut(BodyStartPos.x - BodySize, BodyStartPos.x + BodySize, Ease.timeRate);
 				BodyEndPos.y = BodyStartPos.y + BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
 			}
 		}
 		if (Body_Type == BodyType::up)
 		{
-			BodyEndPos = { center.x + 25.0f, center.y - 25.0f, 0.0f };
-			BodyStartPos.y = Ease.easeOut(BodyEndPos.y - BodySize, BodyEndPos.y + BodySize, Ease.timeRate);
-			BodyStartPos.x = BodyEndPos.x - BodySize;
-			if (Ease.timeRate < 0.5)
+			if (FoldCount == 0)
 			{
-				BodyCenterPos.y = BodyStartPos.y + (BodyEndPos.y - BodyStartPos.y) / 2;
+				BodyEndPos = { center.x + 25.0f, center.y - static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyStartPos.y = Ease.easeOut(BodyEndPos.y - BodySize, BodyEndPos.y + BodySize, Ease.timeRate);
+				BodyStartPos.x = BodyEndPos.x - BodySize;
 			}
-			else
+			else if (FoldCount == 1)
 			{
-				BodyCenterPos.y = BodyEndPos.y + (BodyStartPos.y - BodyEndPos.y) / 2;
+				BodyStartPos = { center.x - 25.0f, center.y - 25, 0.0f };
+				BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
+				BodyEndPos.x = BodyStartPos.x + BodySize;
 			}
 		}
 		if (Body_Type == BodyType::right)
@@ -287,42 +148,27 @@ void PlayerBody::Update(RVector3& center)
 				BodyStartPos = { center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
 				BodyEndPos.x = Ease.easeOut(BodyStartPos.x + BodySize, BodyStartPos.x - BodySize, Ease.timeRate);
 				BodyEndPos.y = BodyStartPos.y + BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
 			}
 			else if (FoldCount == 1)
 			{
 				BodyEndPos = { center.x + 25,center.y + 25 ,0.0f };
 				BodyStartPos.x = Ease.easeOut(BodyEndPos.x + BodySize, BodyEndPos.x - BodySize, Ease.timeRate);
 				BodyStartPos.y = BodyEndPos.y - BodySize;
-				if (Ease.timeRate < 0.5)
-				{
-					BodyCenterPos.x = BodyEndPos.x + (BodyStartPos.x - BodyEndPos.x) / 2;
-				}
-				else
-				{
-					BodyCenterPos.x = BodyStartPos.x + (BodyEndPos.x - BodyStartPos.x) / 2;
-				}
 			}
 		}
 		if (Body_Type == BodyType::down)
 		{
-			BodyStartPos = { center.x - 25.0f, center.y + 25.0f, 0.0f };
-			BodyEndPos.y = Ease.easeOut(BodyStartPos.y + BodySize, BodyStartPos.y - BodySize, Ease.timeRate);
-			BodyEndPos.x = BodyStartPos.x + BodySize;
-			if (Ease.timeRate < 0.5)
+			if (FoldCount == 0)
 			{
-				BodyCenterPos.y = BodyStartPos.y + (BodyEndPos.y - BodyStartPos.y) / 2;
+				BodyStartPos = { center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyEndPos.y = Ease.easeOut(BodyStartPos.y + BodySize, BodyStartPos.y - BodySize, Ease.timeRate);
+				BodyEndPos.x = BodyStartPos.x + BodySize;
 			}
-			else
+			else if (FoldCount == 1)
 			{
-				BodyCenterPos.y = BodyEndPos.y + (BodyStartPos.y - BodyEndPos.y) / 2;
+				BodyEndPos = { center.x + 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyStartPos.y = Ease.easeOut(BodyEndPos.y + BodySize, BodyEndPos.y - BodySize, Ease.timeRate);
+				BodyStartPos.x = BodyStartPos.x + BodySize;
 			}
 		}
 
@@ -342,20 +188,25 @@ void PlayerBody::Update(RVector3& center)
 			{
 				BodyEndPos = { center.x - (25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
 				BodyStartPos = { BodyEndPos.x + 50, BodyEndPos.y - BodySize ,0.0f };
-				BodyCenterPos = { BodyEndPos.x + 30, BodyEndPos.y - 30 ,0.0f };
 			}
 			else if (FoldCount == 2)
 			{
 				BodyStartPos = { center.x - 25,center.y - 25,0.0f };
 				BodyEndPos = { BodyStartPos.x + BodySize, BodyStartPos.y + BodySize ,0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30, BodyStartPos.y + 30 ,0.0f };
 			}
 		}
 		else if (Body_Type == BodyType::up)
 		{
-			BodyStartPos = { center.x - 25,center.y + 25 ,0.0f };
-			BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y - 30 ,0.0f };
+			if (FoldCount == 1)
+			{
+				BodyStartPos = { center.x - 25,center.y + (25 + BodySize * (BodyDistance - 1)) ,0.0f };
+				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
+			}
+			else if (FoldCount == 2)
+			{
+				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
+				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize ,0.0f };
+			}
 		}
 		else if (Body_Type == BodyType::right)
 		{
@@ -363,23 +214,174 @@ void PlayerBody::Update(RVector3& center)
 			{
 				BodyStartPos = { center.x + (25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
 				BodyEndPos = { BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f };
-				BodyCenterPos = { BodyStartPos.x - 30,BodyStartPos.y + 30 ,0.0f };
 			}
 			else if (FoldCount == 2)
 			{
 				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
 				BodyEndPos = { BodyStartPos.x + BodySize, BodyStartPos.y + BodySize ,0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30, BodyStartPos.y + 30 ,0.0f };
 			}
 		}
 		else if (Body_Type == BodyType::down)
 		{
-			BodyStartPos = { center.x - 25,center.y + 25 ,0.0f };
-			BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30,BodyStartPos.y - 30 ,0.0f };
+			if (FoldCount == 1)
+			{
+				BodyStartPos = { center.x - 25,center.y + (25 + BodySize * (BodyDistance - 1)) ,0.0f };
+				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
+			}
+			else if (FoldCount == 2)
+			{
+				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
+				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize ,0.0f };
+			}
 		}
 	}
+}
 
+void PlayerBody::Body_Open(RVector3& center)
+{
+	//開いている途中
+	if (IsFold == false && IsOpen == true && IsAction == true && IsSlide == false)
+	{
+		Ease.addTime += Ease.maxTime / 60.0f;
+		Ease.timeRate = min(Ease.addTime / Ease.maxTime, 1.0f);
+
+		if (Body_Type == BodyType::left)
+		{
+			if (FoldCount == 1)
+			{
+				BodyEndPos = { center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
+				BodyStartPos.x = Ease.easeOut(BodyEndPos.x + BodySize, BodyEndPos.x - BodySize, Ease.timeRate);
+				BodyStartPos.y = BodyEndPos.y - BodySize;
+			}
+			else if (FoldCount == 2)
+			{
+				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
+				BodyEndPos.x = Ease.easeOut(BodyStartPos.x + BodySize, BodyStartPos.x - BodySize, Ease.timeRate);
+				BodyEndPos.y = BodyStartPos.y + BodySize;
+			}
+		}
+		if (Body_Type == BodyType::up)
+		{
+			if (FoldCount == 1)
+			{
+				BodyEndPos = { center.x + 25.0f, center.y - static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyStartPos.y = Ease.easeOut(BodyEndPos.y + BodySize, BodyEndPos.y - BodySize, Ease.timeRate);
+				BodyStartPos.x = BodyEndPos.x - BodySize;
+			}
+			else if (FoldCount == 2)
+			{
+				BodyStartPos = { center.x - 25.0f, center.y - 25.0f, 0.0f };
+				BodyEndPos.y = Ease.easeOut(BodyStartPos.y + BodySize, BodyStartPos.y - BodySize, Ease.timeRate);
+				BodyEndPos.x = BodyEndPos.x - BodySize;
+			}
+		}
+		if (Body_Type == BodyType::right)
+		{
+			if (FoldCount == 1)
+			{
+				BodyStartPos = { center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
+				BodyEndPos.x = Ease.easeOut(BodyStartPos.x - BodySize, BodyStartPos.x + BodySize, Ease.timeRate);
+				BodyEndPos.y = BodyStartPos.y + BodySize;
+			}
+			else if (FoldCount == 2)
+			{
+				BodyEndPos = { center.x + 25,center.y + 25 ,0.0f };
+				BodyStartPos.x = Ease.easeOut(BodyEndPos.x - BodySize, BodyEndPos.x + BodySize, Ease.timeRate);
+				BodyStartPos.y = BodyEndPos.y - BodySize;
+			}
+		}
+		if (Body_Type == BodyType::down)
+		{
+			if (FoldCount == 1)
+			{
+				BodyStartPos = { center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
+				BodyEndPos.x = BodyStartPos.x + BodySize;
+				BodyCenterPos.x = BodyStartPos.x + BodySize / 2;
+			}
+			else if (FoldCount == 2)
+			{
+				BodyEndPos = { center.x + 25.0f, center.y + 25, 0.0f };
+				BodyStartPos.y = Ease.easeOut(BodyEndPos.y - BodySize, BodyEndPos.y + BodySize, Ease.timeRate);
+				BodyStartPos.x = BodyEndPos.x - BodySize;
+			}
+		}
+
+		if (Ease.timeRate >= 1.0f)
+		{
+			Ease.isMove = false;
+			IsAction = false;
+			FoldCount--;
+		}
+	}
+	//開いた後
+	if (IsFold == false && IsOpen == true && IsAction == false)
+	{
+		if (Body_Type == BodyType::left)
+		{
+			if (FoldCount == 0)
+			{
+				BodyStartPos = { center.x - (25 + BodyDistance * BodySize),center.y - 25,0.0f };
+				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize,0.0f };
+			}
+			else if (FoldCount == 1)
+			{
+				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
+				BodyEndPos = { BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f };
+				IsFold = true;
+				IsOpen = false;
+			}
+		}
+		if (Body_Type == BodyType::up)
+		{
+			if (FoldCount == 0)
+			{
+				BodyStartPos = { center.x - 25.0f,center.y - (25 + BodyDistance * BodySize),0.0f };
+				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f };
+			}
+			else if (FoldCount == 1)
+			{
+				BodyStartPos = { center.x - 25.0f,center.y - 25.0f,0.0f };
+				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f };
+				IsFold = true;
+				IsOpen = false;
+			}
+		}
+		if (Body_Type == BodyType::right)
+		{
+			if (FoldCount == 0)
+			{
+				BodyStartPos = { center.x + (25 + (BodyDistance - 1) * BodySize),center.y - 25,0.0f };
+				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
+			}
+			else if (FoldCount == 1)
+			{
+				BodyEndPos = { center.x + 25,center.y + 25,0.0f };
+				BodyStartPos = { BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f };
+				IsFold = true;
+				IsOpen = false;
+			}
+		}
+		if (Body_Type == BodyType::down)
+		{
+			if (FoldCount == 0)
+			{
+				BodyStartPos = { center.x - 25,center.y + (25 + (BodyDistance - 1) * BodySize) ,0.0f };
+				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
+			}
+			else if (FoldCount == 1)
+			{
+				BodyEndPos = { center.x + 25,center.y + 25,0.0f };
+				BodyStartPos = { BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f };
+				IsFold = true;
+				IsOpen = false;
+			}
+		}
+	}
+}
+
+void PlayerBody::Body_Slide(RVector3& center)
+{
 	//体のスライド
 	//顔を挟むとなり移動
 	if (IsSlide == true && Ease.isMove == true && SlideDis == 2)
@@ -391,25 +393,21 @@ void PlayerBody::Update(RVector3& center)
 		{
 			BodyStartPos = { Ease.easeOut(center.x - 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f };
 			BodyEndPos = { BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
 		else if (Body_Type == BodyType::right)
 		{
 			BodyStartPos = { Ease.easeOut(center.x + 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f };
 			BodyEndPos = { BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
 		else if (Body_Type == BodyType::up)
 		{
 			BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y - 75, center.y + 25, Ease.timeRate), 0.0f };
 			BodyEndPos = { center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
 		else if (Body_Type == BodyType::down)
 		{
 			BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 25, center.y - 75, Ease.timeRate), 0.0f };
 			BodyEndPos = { center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f };
-			BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30.0f, 0.0f };
 		}
 
 		if (Ease.timeRate >= 1.0f)
@@ -448,12 +446,22 @@ void PlayerBody::Update(RVector3& center)
 			if (SlidePat == -1)
 			{
 				BodyEndPos = { Ease.easeOut(center.x - 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f };
-				BodyCenterPos = { BodyEndPos.x - 30.0f, BodyEndPos.y + 30, 0.0f };
 			}
 			else
 			{
 				BodyEndPos = { Ease.easeOut(center.x - 75, center.x - 25, Ease.timeRate), center.y - 25.0f, 0.0f };
-				BodyCenterPos = { BodyEndPos.x - 30.0f, BodyEndPos.y + 30, 0.0f };
+			}
+			BodyStartPos = { BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f };
+		}
+		else if (Body_Type == BodyType::up)
+		{
+			if (SlidePat == -1)
+			{
+				BodyEndPos = { center.x - 25.0f, Ease.easeOut(center.y - 25, center.y - 75, Ease.timeRate), 0.0f };
+			}
+			else
+			{
+				BodyEndPos = { center.x - 25.0f, Ease.easeOut(center.y - 75, center.y - 25, Ease.timeRate), 0.0f };
 			}
 			BodyStartPos = { BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f };
 		}
@@ -471,6 +479,18 @@ void PlayerBody::Update(RVector3& center)
 			}
 			BodyEndPos = { BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f };
 		}
+		else if (Body_Type == BodyType::down)
+		{
+			if (SlidePat == -1)
+			{
+				BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 75, center.y + 25, Ease.timeRate), 0.0f };
+			}
+			else
+			{
+				BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 25, center.y + 75, Ease.timeRate), 0.0f };
+			}
+			BodyEndPos = { BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f };
+		}
 
 		if (Ease.timeRate >= 1.0f)
 		{
@@ -479,28 +499,6 @@ void PlayerBody::Update(RVector3& center)
 			IsSlide = false;
 		}
 	}
-}
-
-void PlayerBody::Draw(int offsetX, int offsetY)
-{
-	if (IsActivate == true)
-	{
-		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
-
-		if (IsFold == true)
-		{
-			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
-		}
-		else
-		{
-			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
-		}
-	}
-
-	BodySprite.Draw();
 }
 
 void PlayerBody::setactivate(RVector3 center)

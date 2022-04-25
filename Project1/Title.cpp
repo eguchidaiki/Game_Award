@@ -46,13 +46,13 @@ void Title::Update() {
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
-		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 	if (Input::isKeyTrigger(DIK_3))
 	{
-		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
 		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}

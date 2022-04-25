@@ -24,12 +24,20 @@ public: //メンバ関数
 	// 描画
 	void Draw(int offsetX, int offsetY);
 
+	//キー操作
+	//移動
+	void Key_Move();
+	//折る・開く
+	void Key_FoldOpen(Stage& stage);
+
+	//マウス操作
+	//移動
+	void Mouse_Move(int offsetX, int offsetY);
+	//折る・開く
+	void Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage);
+
 	/// <summary>
-
 	/// どの体を有効化するか
-
-	/// どの体を有効にするか
-
 	/// </summary>
 	/// <param name="one">body_one</param>
 	/// <param name="two">body_two</param>
@@ -77,7 +85,7 @@ public: //メンバ変数
 	PlayerBody Body_Four;
 
 	//body_twoを優先的に開くか
-	bool IsOpenTwo;
+	bool IsOpenUp;
 
 	//どの方向を折るか(4方向)
 	bool IsLeftFold;
