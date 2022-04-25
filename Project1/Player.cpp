@@ -23,7 +23,7 @@ Player::Player() :
 	Body_Two{},
 	Body_Three{},
 	Body_Four{},
-	IsOpenTwo(true),
+	IsOpenUp(true),
 	IsLeftFold(),
 	IsUpFold(),
 	IsRightFold(),
@@ -80,7 +80,7 @@ void Player::Init()
 void Player::Update(Stage& stage, int offsetX, int offsetY)
 {
 	//マウス操作
-	//Mouse_Move(offsetX, offsetY);
+	Mouse_Move(offsetX, offsetY);
 
 	//キー操作
 	Key_Move();
@@ -117,6 +117,8 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//折る・開く入力
 	//キー
 	Key_FoldOpen(stage);
+
+	Mouse_FoldOpen(offsetX, offsetY, stage);
 
 	//足を上げ終わったら折る
 	if (leg.FootIsAction == false)
@@ -615,7 +617,7 @@ void Player::Key_FoldOpen(Stage& stage)
 		IsLeftOpen = true;
 		return;
 	}
-	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenTwo == true)
+	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenUp == true)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -647,6 +649,10 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 		PressPos.x -= offsetX;
 		PressPos.y -= offsetY;
 	}
+	else
+	{
+		//PressPos = { 0,0 };
+	}
 
 	//マウス左ボタンを離したときの座標
 	if (Input::isMouseClicked(0))
@@ -654,6 +660,10 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 		ReleasePos = Input::getMousePos();
 		ReleasePos.x -= offsetX;
 		ReleasePos.y -= offsetY;
+	}
+	else
+	{
+		//PressPos = { 0,0 };
 	}
 
 	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
@@ -664,41 +674,6 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	{
 		IsWalk = true;
 	}
-	/*else
-	{
-		IsDragFold = true;
-
-		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
-		{
-			if (DragDis.x > 0)
-			{
-				Player_IsAction = true;
-				IsLeftFold = true;
-				leg.Set();
-			}
-			else if (DragDis.x < 0)
-			{
-				Player_IsAction = true;
-				IsRightFold = true;
-				leg.Set();
-			}
-		}
-		else
-		{
-			if (DragDis.y > 0)
-			{
-				Player_IsAction = true;
-				IsUpFold = true;
-				leg.Set();
-			}
-			else if (DragDis.y < 0)
-			{
-				Player_IsAction = true;
-				IsDownFold = true;
-				leg.Set();
-			}
-		}
-	}*/
 
 	if (IsWalk == true)
 	{
@@ -731,8 +706,91 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	}
 }
 
-void Player::Mouse_FoldOpen(int offsetX, int offsetY)
+void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 {
+	if (ReleasePos.x != 0.0f &&
+		ReleasePos.y != 0.0f &&
+		fabs(ReleasePos.x - PressPos.x) > 30 && fabs(ReleasePos.y - PressPos.y) > 30)
+	{
+		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
+		{
+			if (DragDis.x > 0)
+			{
+				if (IsDirectionFoldAll(stage, BodyType::left)
+					&& Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
+				{
+					Player_IsAction = true;
+					IsLeftFold = true;
+					leg.Set();
+					return;
+				}
+				if (Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+				{
+					OpenCount = 0;
+					IsOpenCountStart = true;
+					IsRightOpen = true;
+					return;
+				}
+			}
+			else
+			{
+				if (IsDirectionFoldAll(stage, BodyType::right)
+					&& Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
+				{
+					Player_IsAction = true;
+					IsRightFold = true;
+					leg.Set();
+					return;
+				}
+				if (Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
+				{
+					OpenCount = 0;
+					IsOpenCountStart = true;
+					IsLeftOpen = true;
+					return;
+				}
+			}
+		}
+		else
+		{
+			if (DragDis.y > 0)
+			{
+				if (IsDirectionFoldAll(stage, BodyType::up)
+					&& Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
+				{
+					Player_IsAction = true;
+					IsUpFold = true;
+					leg.Set();
+					return;
+				}
+				if (Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+				{
+					OpenCount = 0;
+					IsOpenCountStart = true;
+					IsDownOpen = true;
+					return;
+				}
+			}
+			else
+			{
+				if (IsDirectionFoldAll(stage, BodyType::down)
+					&& Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
+				{
+					Player_IsAction = true;
+					IsDownFold = true;
+					leg.Set();
+					return;
+				}
+				if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenUp == true)
+				{
+					OpenCount = 0;
+					IsOpenCountStart = true;
+					IsUpOpen = true;
+					return;
+				}
+			}
+		}
+	}
 }
 
 void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
@@ -862,12 +920,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 					{
 						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
 						{
-							IsOpenTwo = false;
+							IsOpenUp = false;
 						}
 					}
 					else
 					{
-						IsOpenTwo = true;
+						IsOpenUp = true;
 					}
 				}
 			}
@@ -922,12 +980,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 					{
 						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
 						{
-							IsOpenTwo = false;
+							IsOpenUp = false;
 						}
 					}
 					else
 					{
-						IsOpenTwo = true;
+						IsOpenUp = true;
 					}
 				}
 

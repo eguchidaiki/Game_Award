@@ -34,7 +34,7 @@ public: //メンバ関数
 	//移動
 	void Mouse_Move(int offsetX, int offsetY);
 	//折る・開く
-	void Mouse_FoldOpen(int offsetX, int offsetY);
+	void Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage);
 
 	/// <summary>
 	/// どの体を有効化するか
@@ -85,7 +85,7 @@ public: //メンバ変数
 	PlayerBody Body_Four;
 
 	//body_twoを優先的に開くか
-	bool IsOpenTwo;
+	bool IsOpenUp;
 
 	//どの方向を折るか(4方向)
 	bool IsLeftFold;
