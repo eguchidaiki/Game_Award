@@ -141,15 +141,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 					{
-						Body_Two.Overlap++;
+						Body_Two.AfterBodyFoldCount++;
 					}
 					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 					{
-						Body_Three.Overlap++;
+						Body_Three.AfterBodyFoldCount++;
 					}
 					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 					{
-						Body_Four.Overlap++;
+						Body_Four.AfterBodyFoldCount++;
 					}
 				}
 			}
@@ -173,15 +173,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 					if (Body_One.IsActivate == true && Body_One.IsFold == true)
 					{
-						Body_One.Overlap++;
+						Body_One.AfterBodyFoldCount++;
 					}
 					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 					{
-						Body_Three.Overlap++;
+						Body_Three.AfterBodyFoldCount++;
 					}
 					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 					{
-						Body_Four.Overlap++;
+						Body_Four.AfterBodyFoldCount++;
 					}
 				}
 			}
@@ -205,15 +205,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 					if (Body_One.IsActivate == true && Body_One.IsFold == true)
 					{
-						Body_One.Overlap++;
+						Body_One.AfterBodyFoldCount++;
 					}
 					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 					{
-						Body_Two.Overlap++;
+						Body_Two.AfterBodyFoldCount++;
 					}
 					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 					{
-						Body_Four.Overlap++;
+						Body_Four.AfterBodyFoldCount++;
 					}
 				}
 			}
@@ -237,15 +237,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 					if (Body_One.IsActivate == true && Body_One.IsFold == true)
 					{
-						Body_One.Overlap++;
+						Body_One.AfterBodyFoldCount++;
 					}
 					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 					{
-						Body_Two.Overlap++;
+						Body_Two.AfterBodyFoldCount++;
 					}
 					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 					{
-						Body_Three.Overlap++;
+						Body_Three.AfterBodyFoldCount++;
 					}
 				}
 			}
@@ -284,15 +284,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 			if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 			{
-				Body_Two.Overlap--;
+				Body_Two.AfterBodyFoldCount--;
 			}
 			if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 			{
-				Body_Three.Overlap--;
+				Body_Three.AfterBodyFoldCount--;
 			}
 			if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 			{
-				Body_Four.Overlap--;
+				Body_Four.AfterBodyFoldCount--;
 			}
 			//IsLeftOpen = false;
 		}
@@ -309,15 +309,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 			if (Body_One.IsActivate == true && Body_One.IsFold == true)
 			{
-				Body_One.Overlap--;
+				Body_One.AfterBodyFoldCount--;
 			}
 			if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 			{
-				Body_Three.Overlap--;
+				Body_Three.AfterBodyFoldCount--;
 			}
 			if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 			{
-				Body_Four.Overlap--;
+				Body_Four.AfterBodyFoldCount--;
 			}
 			//IsUpOpen = false;
 		}
@@ -334,15 +334,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 			if (Body_One.IsActivate == true && Body_One.IsFold == true)
 			{
-				Body_One.Overlap--;
+				Body_One.AfterBodyFoldCount--;
 			}
 			if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 			{
-				Body_Two.Overlap--;
+				Body_Two.AfterBodyFoldCount--;
 			}
 			if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 			{
-				Body_Four.Overlap--;
+				Body_Four.AfterBodyFoldCount--;
 			}
 			//IsRightOpen = false;
 		}
@@ -359,15 +359,15 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 			if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
 			{
-				Body_Two.Overlap--;
+				Body_Two.AfterBodyFoldCount--;
 			}
 			if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 			{
-				Body_Three.Overlap--;
+				Body_Three.AfterBodyFoldCount--;
 			}
 			if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 			{
-				Body_Four.Overlap--;
+				Body_Four.AfterBodyFoldCount--;
 			}
 			//IsDownOpen = false;
 		}
@@ -456,53 +456,53 @@ void Player::Draw(int offsetX, int offsetY)
 
 #pragma region body_draw
 
-	if (Body_One.Overlap == 2)
+	if (Body_One.AfterBodyFoldCount == 2)
 	{
 		Body_One.Draw(offsetX, offsetY);
 	}
-	if (Body_Two.Overlap == 2)
+	if (Body_Two.AfterBodyFoldCount == 2)
 	{
 		Body_Two.Draw(offsetX, offsetY);
 	}
-	if (Body_Three.Overlap == 2)
+	if (Body_Three.AfterBodyFoldCount == 2)
 	{
 		Body_Three.Draw(offsetX, offsetY);
 	}
-	if (Body_Four.Overlap == 2)
+	if (Body_Four.AfterBodyFoldCount == 2)
 	{
 		Body_Four.Draw(offsetX, offsetY);
 	}
 
-	if (Body_One.Overlap == 1)
+	if (Body_One.AfterBodyFoldCount == 1)
 	{
 		Body_One.Draw(offsetX, offsetY);
 	}
-	if (Body_Two.Overlap == 1)
+	if (Body_Two.AfterBodyFoldCount == 1)
 	{
 		Body_Two.Draw(offsetX, offsetY);
 	}
-	if (Body_Three.Overlap == 1)
+	if (Body_Three.AfterBodyFoldCount == 1)
 	{
 		Body_Three.Draw(offsetX, offsetY);
 	}
-	if (Body_Four.Overlap == 1)
+	if (Body_Four.AfterBodyFoldCount == 1)
 	{
 		Body_Four.Draw(offsetX, offsetY);
 	}
 
-	if (Body_One.Overlap == 0)
+	if (Body_One.AfterBodyFoldCount == 0)
 	{
 		Body_One.Draw(offsetX, offsetY);
 	}
-	if (Body_Two.Overlap == 0)
+	if (Body_Two.AfterBodyFoldCount == 0)
 	{
 		Body_Two.Draw(offsetX, offsetY);
 	}
-	if (Body_Three.Overlap == 0)
+	if (Body_Three.AfterBodyFoldCount == 0)
 	{
 		Body_Three.Draw(offsetX, offsetY);
 	}
-	if (Body_Four.Overlap == 0)
+	if (Body_Four.AfterBodyFoldCount == 0)
 	{
 		Body_Four.Draw(offsetX, offsetY);
 	}
@@ -577,6 +577,13 @@ void Player::Key_FoldOpen(Stage& stage)
 			leg.Set();
 			return;
 		}
+		if (IsBodysFold(BodyType::left))
+		{
+			Player_IsAction = true;
+			IsLeftFold = true;
+			leg.Set();
+			return;
+		}
 	}
 	if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	{
@@ -584,6 +591,13 @@ void Player::Key_FoldOpen(Stage& stage)
 		{
 			Player_IsAction = true;
 			IsUpFold = true;
+			leg.Set();
+			return;
+		}
+		if (IsBodysFold(BodyType::up))
+		{
+			Player_IsAction = true;
+			IsLeftFold = true;
 			leg.Set();
 			return;
 		}
@@ -597,6 +611,13 @@ void Player::Key_FoldOpen(Stage& stage)
 			leg.Set();
 			return;
 		}
+		if (IsBodysFold(BodyType::right))
+		{
+			Player_IsAction = true;
+			IsLeftFold = true;
+			leg.Set();
+			return;
+		}
 	}
 	if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	{
@@ -607,36 +628,108 @@ void Player::Key_FoldOpen(Stage& stage)
 			leg.Set();
 			return;
 		}
+		if (IsBodysFold(BodyType::down))
+		{
+			Player_IsAction = true;
+			IsLeftFold = true;
+			leg.Set();
+			return;
+		}
 	}
 
 	//開く入力
-	if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
+	if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.AfterBodyFoldCount == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 		return;
+		if (IsBodysOpen(BodyType::left))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsLeftOpen = true;
+			return;
+		}
 	}
-	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenUp == true)
+	if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0 && IsOpenUp == true)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 		return;
+		if (IsBodysOpen(BodyType::up))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsUpOpen = true;
+			return;
+		}
 	}
-	if (InputManger::SubRightTrigger() && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+	if (InputManger::SubRightTrigger() && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.AfterBodyFoldCount == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 		return;
+		if (IsBodysOpen(BodyType::right))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsRightOpen = true;
+			return;
+		}
 	}
-	if (InputManger::SubDownTrigger() && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+	if (InputManger::SubDownTrigger() && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.AfterBodyFoldCount == 0)
 	{
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsDownOpen = true;
 		return;
+		if (IsBodysOpen(BodyType::down))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsDownOpen = true;
+			return;
+		}
+	}
+}
+
+void Player::Key_Slide()
+{
+	if (Input::isKeyTrigger(DIK_Z))
+	{
+
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		if (Bodys[i].IsActivate == true)
+		{
+			switch (Bodys[i].Body_Type)
+			{
+			case BodyType::left:
+			{
+				if (Bodys[i].BodyDistance == 1)
+				{
+
+				}
+				break;
+			}
+			case BodyType::up:
+			{
+				break;
+			}
+			case BodyType::right:
+			{
+				break;
+			}
+			case BodyType::down:
+			{
+				break;
+			}
+			}
+		}
 	}
 }
 
@@ -649,9 +742,11 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 		PressPos.x -= offsetX;
 		PressPos.y -= offsetY;
 	}
-	else
+
+	//マウスを押している間はカウントを進める
+	if (Input::isMouseClicking(0))
 	{
-		//PressPos = { 0,0 };
+		PressCount++;
 	}
 
 	//マウス左ボタンを離したときの座標
@@ -661,21 +756,20 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 		ReleasePos.x -= offsetX;
 		ReleasePos.y -= offsetY;
 	}
-	else
-	{
-		//PressPos = { 0,0 };
-	}
 
 	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
 
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
-		fabs(ReleasePos.x - PressPos.x) < 30 && fabs(ReleasePos.y - PressPos.y) < 30)
+		PressCount != 0 &&
+		PressCount < 5 &&
+		Input::isMouseClicked(0))
 	{
 		IsWalk = true;
+		PressCount = 0;
 	}
 
-	if (IsWalk == true)
+	if (IsWalk == true && Player_IsAction == false)
 	{
 		if (PressPos.x < CenterPosition.x)
 		{
@@ -710,7 +804,8 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
-		fabs(ReleasePos.x - PressPos.x) > 30 && fabs(ReleasePos.y - PressPos.y) > 30)
+		PressCount != 0 &&
+		PressCount >= 5)
 	{
 		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
 		{
@@ -724,7 +819,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.Overlap == 0)
+				if (Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.AfterBodyFoldCount == 0)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -742,7 +837,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.Overlap == 0)
+				if (Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.AfterBodyFoldCount == 0)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -763,7 +858,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.Overlap == 0)
+				if (Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.AfterBodyFoldCount == 0)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -781,7 +876,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0 && IsOpenUp == true)
+				if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0 && IsOpenUp == true)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -799,23 +894,43 @@ void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool thre
 	{
 		Body_One.IsActivate = true;
 		Body_One.Body_Type = one_type;
+		Bodys[0].IsActivate = true;
+		Bodys[0].Body_Type = one_type;
 	}
 
 	if (two == true)
 	{
 		Body_Two.IsActivate = true;
 		Body_Two.Body_Type = two_type;
+		Bodys[1].IsActivate = true;
+		Bodys[1].Body_Type = one_type;
 	}
 
 	if (three == true)
 	{
 		Body_Three.IsActivate = true;
 		Body_Three.Body_Type = three_type;
+		Bodys[2].IsActivate = true;
+		Bodys[2].Body_Type = one_type;
+	}
+
+	if (four == true)
+	{
+		Body_Four.IsActivate = true;
+		Body_Four.Body_Type = four_type;
+		Bodys[3].IsActivate = true;
+		Bodys[3].Body_Type = one_type;
 	}
 
 	Body_One.setactivate(CenterPosition);
 	Body_Two.setactivate(CenterPosition);
 	Body_Three.setactivate(CenterPosition);
+	Body_Four.setactivate(CenterPosition);
+
+	for (int i = 0; i < 4; i++)
+	{
+		Bodys[i].setactivate(CenterPosition);
+	}
 
 	CenterPosition.y += 1;
 }
@@ -918,7 +1033,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
 					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 					{
-						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0)
 						{
 							IsOpenUp = false;
 						}
@@ -978,7 +1093,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
 					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 					{
-						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.Overlap == 0)
+						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0)
 						{
 							IsOpenUp = false;
 						}
@@ -1234,6 +1349,14 @@ bool Player::IsDirectionFoldAll(Stage& stage, BodyType foldtype)
 
 	bool ReverseHitFace = IsReverseHitFace(stage, foldtype);
 
+	for (int i = 0; i < 4; i++)
+	{
+		if (Bodys[i].IsActivate == true && Bodys[i].IsReverseHitBody(stage, foldtype) == false)
+		{
+
+		}
+	}
+
 	if (ReverseHitFace == true && BodyCanFoldCount <= 0)
 	{
 		return true;
@@ -1266,4 +1389,33 @@ int Player::ActivateBodyCount()
 	}
 
 	return count;
+}
+
+bool Player::IsBodysFold(BodyType FoldType)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (Bodys[i].IsActivate == true &&
+			Bodys[i].Body_Type == FoldType &&
+			Bodys[i].IsOpen == true)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Player::IsBodysOpen(BodyType OpenType)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		if (Bodys[i].IsActivate == true &&
+			Bodys[i].Body_Type == OpenType &&
+			Bodys[i].IsFold == true &&
+			Bodys[i].AfterBodyFoldCount <= 0)
+		{
+			return true;
+		}
+	}
+	return false;
 }

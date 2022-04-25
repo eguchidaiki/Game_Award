@@ -13,7 +13,6 @@ PlayerBody::PlayerBody() :
 	Body_Type(),
 	BodyStartPos{},
 	BodyEndPos{},
-	BodyCenterPos{},
 	SlideStartPos{},
 	IsFold(false),
 	IsOpen(true),
@@ -27,7 +26,7 @@ PlayerBody::PlayerBody() :
 	IsHitDown(false),
 	BodyIsFall(false),
 	SlideDis(),
-	Overlap(0),
+	AfterBodyFoldCount(0),
 	BodyDistance(1),
 	Ease{}
 {
@@ -294,7 +293,6 @@ void PlayerBody::Body_Open(RVector3& center)
 				BodyStartPos = { center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
 				BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
 				BodyEndPos.x = BodyStartPos.x + BodySize;
-				BodyCenterPos.x = BodyStartPos.x + BodySize / 2;
 			}
 			else if (FoldCount == 2)
 			{
@@ -467,12 +465,10 @@ void PlayerBody::Body_Slide(RVector3& center)
 			if (SlidePat == -1)
 			{
 				BodyStartPos = { Ease.easeOut(center.x + 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30, 0.0f };
 			}
 			else
 			{
 				BodyStartPos = { Ease.easeOut(center.x + 25, center.x + 75, Ease.timeRate), center.y - 30.0f, 0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30, 0.0f };
 			}
 			BodyEndPos = { BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f };
 		}
@@ -506,7 +502,7 @@ void PlayerBody::setactivate(RVector3 center)
 		IsOpen = true;
 		IsSlide = false;
 		BodyDistance = 1;
-		Overlap = 0;
+		AfterBodyFoldCount = 0;
 		FoldCount = 0;
 
 		if (Body_Type == BodyType::left)

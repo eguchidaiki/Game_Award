@@ -29,6 +29,8 @@ public: //メンバ関数
 	void Key_Move();
 	//折る・開く
 	void Key_FoldOpen(Stage& stage);
+	//スライド
+	void Key_Slide();
 
 	//マウス操作
 	//移動
@@ -47,8 +49,6 @@ public: //メンバ関数
 
 	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
-	//押し出し処理(使ってない)
-	void ExtrudePlayer(RVector3 ExtrudePos, float ExtrudeDis, BodyType ExtrudeType);
 	//各体・顔の落下判定
 	bool IsFall();
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
@@ -59,6 +59,10 @@ public: //メンバ関数
 	bool IsDirectionFoldAll(Stage& stage, BodyType foldtype);
 	//有効化されている体の数を取得
 	int ActivateBodyCount();
+	//Body配列の中で指定した方向に折れる体があるかどうか
+	bool IsBodysFold(BodyType FoldType);
+	//Body配列の中で指定した方向に開ける体があるかどうか
+	bool IsBodysOpen(BodyType OpenType);
 
 public: //メンバ変数
 	//床の高さ
@@ -78,13 +82,18 @@ public: //メンバ変数
 	bool IsDragFold = false;
 	XMFLOAT2 DragDis = {};
 
+	//マウスを押している間のカウント
+	int PressCount = 0;
+
 	//体(折るほう)
 	PlayerBody Body_One;
 	PlayerBody Body_Two;
 	PlayerBody Body_Three;
 	PlayerBody Body_Four;
 
-	//body_twoを優先的に開くか
+	PlayerBody Bodys[4];
+
+	//上がふさがっていないか
 	bool IsOpenUp;
 
 	//どの方向を折るか(4方向)
