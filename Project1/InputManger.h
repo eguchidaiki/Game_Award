@@ -54,40 +54,47 @@ public: //静的メンバ関数
 	static bool RightTrigger();
 	// 右(離した瞬間の判定)
 	static bool RightReturn();
-	// 上
+	// 上(サブ)
 	static bool SubUp();
-	// 上(押した瞬間の判定)
+	// 上(サブ)(押した瞬間の判定)
 	static bool SubUpTrigger();
-	// 上(離した瞬間の判定)
+	// 上(サブ)(離した瞬間の判定)
 	static bool SubUpReturn();
-	// 下
+	// 下(サブ)
 	static bool SubDown();
-	// 下(押した瞬間の判定)
+	// 下(サブ)(押した瞬間の判定)
 	static bool SubDownTrigger();
-	// 下(離した瞬間の判定)
+	// 下(サブ)(離した瞬間の判定)
 	static bool SubDownReturn();
-	// 左
+	// 左(サブ)
 	static bool SubLeft();
-	// 左(押した瞬間の判定)
+	// 左(サブ)(押した瞬間の判定)
 	static bool SubLeftTrigger();
-	// 左(離した瞬間の判定)
+	// 左(サブ)(離した瞬間の判定)
 	static bool SubLeftReturn();
-	// 右
+	// 右(サブ)
 	static bool SubRight();
-	// 右(押した瞬間の判定)
+	// 右(サブ)(押した瞬間の判定)
 	static bool SubRightTrigger();
-	// 右(離した瞬間の判定)
+	// 右(サブ)(離した瞬間の判定)
 	static bool SubRightReturn();
+	// 決定
+	static bool Decision();
+	// 決定(押した瞬間の判定)
+	static bool DecisionTrigger();
+	// 決定(離した瞬間の判定)
+	static bool DecisionReturn();
+	// キャンセル
+	static bool Cancel();
+	// キャンセル(押した瞬間の判定)
+	static bool CancelTrigger();
+	// キャンセル(離した瞬間の判定)
+	static bool CancelReturn();
+	/*以下キーボードオンリー*/
 	// リセット
 	static bool Reset();
 	// リセット(押した瞬間の判定)
 	static bool ResetTrigger();
 	// リセット(離した瞬間の判定)
 	static bool ResetReturn();
-	// アクション1
-	static bool Act1();
-	// アクション1(押した瞬間の判定)
-	static bool Act1Trigger();
-	// アクション1(離した瞬間の判定)
-	static bool Act1Return();
 };

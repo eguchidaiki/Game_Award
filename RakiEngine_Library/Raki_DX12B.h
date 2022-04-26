@@ -31,7 +31,7 @@ private: // エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	Raki_DX12B() {};
-	~Raki_DX12B();
+	~Raki_DX12B() {};
 
 public:
 	//--------------------メンバ関数--------------------//

@@ -15,6 +15,7 @@ public: //ƒƒ“ƒoŠÖ”
 	void Set();
 	void Update(RVector3& FaceCenterPos, bool IsDownBody, int BodyDis);
 	void Draw(int offsetX, int offsetY, bool isleft, bool isright);
+	void Create();
 
 public: //ƒƒ“ƒo•Ï”
 	RVector3 FootLeftUpPosition;

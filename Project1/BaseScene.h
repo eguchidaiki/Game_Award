@@ -21,7 +21,7 @@ protected:
 
 public:
     BaseScene(ISceneChanger *changer);
-    BaseScene() {};
+    //BaseScene() {};
     virtual ~BaseScene() {
 
     }

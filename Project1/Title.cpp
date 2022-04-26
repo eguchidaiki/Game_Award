@@ -11,6 +11,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
+	stage->Create();
 	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
 	player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
@@ -66,9 +67,9 @@ void Title::Update() {
 	}
 
 	player->Update(*stage, drawOffsetX, drawOffsetY);
-	PlayerBody PlayerBodyStatus[4] = {};
+	bool PlayerBodyStatus[4] = {};
 
-	player->SetBodyStatus(PlayerBodyStatus, 4);
+	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = { 
 		player->IsUpFold,

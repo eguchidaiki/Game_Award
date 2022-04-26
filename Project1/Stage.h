@@ -98,6 +98,8 @@ public: //メンバ関数
 	void Updata();
 	// 描画
 	void Draw(int offsetX, int offsetY);
+	// 生成
+	void Create();
 
 	/// <summary>
 	/// ステージファイルの読み込み
@@ -108,7 +110,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
+	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
 
 	/// <summary>
 	/// ステージがどう折れるかの予測
@@ -196,14 +198,14 @@ private: //メンバ変数
 	char* reverseMapchip;
 
 	UINT BlockHandle;
-	UINT EnptyHandle;
+	UINT EmptyHandle;
 	UINT GoalHandle;
 
 	Sprite MapchipSpriteBlock;
-	Sprite MapchipSpriteEnpty;
+	Sprite MapchipSpriteEmpty;
 	Sprite MapchipSpriteGoal;
 
 	bool IsParticleTrigger;
-	ParticleManager* Particlemanager = ParticleManager::Create();
-	ParticleSingle* FoldParticle = new ParticleSingle();
+	ParticleManager* particleManager;
+	ParticleSingle* FoldParticle;
 };

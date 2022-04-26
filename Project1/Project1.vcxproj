@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActFlag.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -239,6 +240,7 @@
     <None Include="Resources\stage\stage3.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActFlag.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="GameScene.h" />

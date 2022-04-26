@@ -44,13 +44,6 @@ Player::Player() :
 	leg{},
 	goalParticle{}
 {
-	Init();
-
-	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
-	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
-
-	PlayerSprite.Create(FaceHandle[0]);
-	PlayerSpriteAction.Create(FaceHandle[1]);
 }
 
 Player::~Player()
@@ -59,6 +52,7 @@ Player::~Player()
 
 void Player::Init()
 {
+	Create();
 	CenterPosition.x = static_cast<float>(Stage::GetStartPlayerPosX() * Stage::blockSize + Stage::blockSize / 2);
 	CenterPosition.y = static_cast<float>(Stage::GetStartPlayerPosY() * Stage::blockSize + Stage::blockSize / 2);
 
@@ -68,14 +62,22 @@ void Player::Init()
 	Player_IsAction = false;
 	IsColide = false;
 
+	Body_One.Create();
+	Body_Two.Create();
+	Body_Three.Create();
+	Body_Four.Create();
+
 	Body_One.Init(CenterPosition, BodyType::left);
 	Body_Two.Init(CenterPosition, BodyType::up);
 	Body_Three.Init(CenterPosition, BodyType::right);
 	Body_Four.Init(CenterPosition, BodyType::down);
 
+	leg.Create();
 	leg.Init();
 	IsLeft = true;
 	IsRight = false;
+
+	goalParticle.Create();
 }
 
 void Player::Update(Stage& stage, int offsetX, int offsetY)
@@ -533,6 +535,21 @@ void Player::Draw(int offsetX, int offsetY)
 	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 0.0f);
 	ImGui::Text("IsGoal:%d", IsGoal);
 	ImguiMgr::Get()->EndDrawImgui();
+}
+
+void Player::Create()
+{
+	if (PlayerSprite.spdata->size.x * PlayerSprite.spdata->size.y == 0)
+	{
+		FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
+		PlayerSprite.Create(FaceHandle[0]);
+	}
+
+	if (PlayerSpriteAction.spdata->size.x * PlayerSpriteAction.spdata->size.y == 0)
+	{
+		FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
+		PlayerSpriteAction.Create(FaceHandle[1]);
+	}
 }
 
 void Player::Key_Move()
@@ -1105,12 +1122,12 @@ bool Player::IsFall()
 	}
 }
 
-void Player::SetBodyStatus(PlayerBody* arrangement, int size)
+void Player::SetBodyStatus(bool arrangement[4])
 {
-	arrangement[0] = Body_Two;
-	arrangement[1] = Body_Four;
-	arrangement[2] = Body_One;
-	arrangement[3] = Body_Three;
+	arrangement[0] = Body_Two.IsActivate;
+	arrangement[1] = Body_Four.IsActivate;
+	arrangement[2] = Body_One.IsActivate;
+	arrangement[3] = Body_Three.IsActivate;
 }
 
 bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)

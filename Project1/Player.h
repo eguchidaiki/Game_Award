@@ -23,6 +23,8 @@ public: //メンバ関数
 	void Update(Stage& stage, int offsetX, int offsetY);
 	// 描画
 	void Draw(int offsetX, int offsetY);
+	// 生成
+	void Create();
 
 	//キー操作
 	//移動
@@ -52,7 +54,7 @@ public: //メンバ関数
 	//各体・顔の落下判定
 	bool IsFall();
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
-	void SetBodyStatus(PlayerBody* arrangement, int size);
+	void SetBodyStatus(bool arrangement[4]);
 	//反転したタイルと顔の四隅との判定
 	bool IsReverseHitFace(Stage& stage, const unsigned char& direction);
 	//任意の方向に折れるかどうか

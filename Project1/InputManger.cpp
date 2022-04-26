@@ -1,5 +1,14 @@
 #include "InputManger.h"
 
+namespace
+{
+	static char decisionKey = DIK_RETURN; //決定キー
+	static char cancelKey = DIK_BACK;     //キャンセルキー
+
+	static XPAD_INPUT_CODE decisionXpad = XPAD_BUTTON_B; //決定ボタン
+	static XPAD_INPUT_CODE cancelXpad = XPAD_BUTTON_A;   //キャンセルボタン
+}
+
 void InputManger::Update()
 {
 	Input::StartGetInputState();
@@ -140,6 +149,36 @@ bool InputManger::SubRightReturn()
 	return Input::isKeyReleased(DIK_RIGHT) || Input::isXpadButtonPushed(XPAD_BUTTON_B);
 }
 
+bool InputManger::Decision()
+{
+	return Input::isKey(decisionKey) || Input::isXpadButtonPushing(decisionXpad);
+}
+
+bool InputManger::DecisionTrigger()
+{
+	return Input::isKeyTrigger(decisionKey) || Input::isXpadButtonPushing(decisionXpad);
+}
+
+bool InputManger::DecisionReturn()
+{
+	return Input::isKeyReleased(decisionKey) || Input::isXpadButtonPushing(decisionXpad);
+}
+
+bool InputManger::Cancel()
+{
+	return Input::isKey(cancelKey) || Input::isXpadButtonPushing(cancelXpad);
+}
+
+bool InputManger::CancelTrigger()
+{
+	return Input::isKeyTrigger(cancelKey) || Input::isXpadButtonPushing(cancelXpad);
+}
+
+bool InputManger::CancelReturn()
+{
+	return Input::isKeyReleased(cancelKey) || Input::isXpadButtonPushing(cancelXpad);
+}
+
 bool InputManger::Reset()
 {
 	return Input::isKey(DIK_R);
@@ -153,19 +192,4 @@ bool InputManger::ResetTrigger()
 bool InputManger::ResetReturn()
 {
 	return Input::isKeyReleased(DIK_R);
-}
-
-bool InputManger::Act1()
-{
-	return Input::isKey(DIK_SPACE) || Input::isXpadButtonPushing(XPAD_BUTTON_A);
-}
-
-bool InputManger::Act1Trigger()
-{
-	return Input::isKeyTrigger(DIK_SPACE) || Input::isXpadButtonPushing(XPAD_BUTTON_A);
-}
-
-bool InputManger::Act1Return()
-{
-	return Input::isKeyReleased(DIK_SPACE) || Input::isXpadButtonPushing(XPAD_BUTTON_A);
 }

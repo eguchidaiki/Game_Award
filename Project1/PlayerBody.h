@@ -24,15 +24,17 @@ public: //’è”
 
 public: //ƒƒ“ƒoŠÖ”
 	PlayerBody();
+	PlayerBody(const PlayerBody&);
 	~PlayerBody();
 
 	// ‰Šú‰»
 	void Init(RVector3 position, BodyType number);
 	// XV
 	void Update(RVector3& center);
-	/// <summary>
 	// •`‰æ
 	void Draw(int offsetX, int offsetY);
+	// ¶¬
+	void Create();
 
 	//Ü‚é
 	void Body_Fold(RVector3& center);
