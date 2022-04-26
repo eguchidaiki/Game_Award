@@ -43,7 +43,6 @@ void main(
 		// ビュープロジェクション変換
         element.svpos = mul(mat, element.svpos);
         element.uv = uv_array[i];
-        
         //色情報はそのまま
         element.color = input[0].color;
         output.Append(element);
