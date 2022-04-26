@@ -1,7 +1,6 @@
 ﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
-#include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
 #include <Raki_DX12B.h>
@@ -36,7 +35,16 @@ Stage* Stage::Get()
 Stage::Stage() :
 	stageData{},
 	initStageData{},
-	reverseMapchip(nullptr)
+	reverseMapchip(nullptr),
+	BlockHandle(0),
+	EmptyHandle(0),
+	GoalHandle(0),
+	MapchipSpriteBlock{},
+	MapchipSpriteEmpty{},
+	MapchipSpriteGoal{},
+	IsParticleTrigger(false),
+	particleManager(nullptr),
+	FoldParticle(new ParticleSingle())
 {
 	Init();
 }
@@ -48,17 +56,6 @@ Stage::~Stage()
 
 void Stage::Init()
 {
-	BlockHandle = TexManager::LoadTexture("Resources/block.png");
-	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
-	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
-
-	MapchipSpriteBlock.Create(BlockHandle);
-	MapchipSpriteEnpty.Create(EnptyHandle);
-	MapchipSpriteGoal.Create(GoalHandle);
-
-
-
-	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
 void Stage::Updata()
@@ -68,7 +65,7 @@ void Stage::Updata()
 
 	EaseingUpdate();
 
-	Particlemanager->Prototype_Update();
+	particleManager->Prototype_Update();
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -294,14 +291,9 @@ void Stage::Draw(int offsetX, int offsetY)
 					case MapchipData::START:
 					default:
 					{
-						MapchipSpriteEnpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						MapchipSpriteEmpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
-					}
-
-					if (j == 2)
-					{
-						int test = 0;
 					}
 				}
 			}
@@ -397,13 +389,40 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	//Particlemanager->Prototype_Draw(EnptyHandle);
+	//particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
-	MapchipSpriteEnpty.Draw();
+	MapchipSpriteEmpty.Draw();
+}
+
+void Stage::Create()
+{
+	if (MapchipSpriteBlock.spdata.size.x * MapchipSpriteBlock.spdata.size.y == 0)
+	{
+		BlockHandle = TexManager::LoadTexture("Resources/block.png");
+		MapchipSpriteBlock.Create(BlockHandle);
+	}
+
+	if (MapchipSpriteEmpty.spdata.size.x * MapchipSpriteEmpty.spdata.size.y == 0)
+	{
+		EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
+		MapchipSpriteEmpty.Create(EmptyHandle);
+	}
+
+	if (MapchipSpriteGoal.spdata.size.x * MapchipSpriteGoal.spdata.size.y == 0)
+	{
+		GoalHandle = TexManager::LoadTexture("Resources/goal.png");
+		MapchipSpriteGoal.Create(GoalHandle);
+	}
+
+	if (particleManager == nullptr)
+	{
+		particleManager = ParticleManager::Create();
+		particleManager->Prototype_Set(FoldParticle);
+	}
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -1238,7 +1257,7 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
 		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
-		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
+		this->particleManager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }
 
@@ -1597,9 +1616,9 @@ void ParticleSingle::Init()
 	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
-	vel = RVector3(xvel, yvel, 0);
+	vel = RVector3(xvel, yvel, 0.0f);
 
-	acc = RVector3(0.9, 0.9, 0);
+	acc = RVector3(0.9f, 0.9f, 0.0f);
 
 	scale = 3.0f;
 }

@@ -24,7 +24,6 @@ ParticlePrototype* GoalParticle::ParticleClass::clone(RVector3 start)
 
 GoalParticle::GoalParticle()
 {
-	Create();
 }
 
 GoalParticle::~GoalParticle()
@@ -63,8 +62,11 @@ void GoalParticle::Init(const RVector3& pos, const float spawnRange, const size_
 
 void GoalParticle::Create()
 {
-	particleHandle = TexManager::LoadTexture("./Resources/GoalParticle.png");
-	particleSprite.Create(particleHandle);
+	if (particleSprite.spdata.size.x * particleSprite.spdata.size.y == 0)
+	{
+		particleHandle = TexManager::LoadTexture("./Resources/GoalParticle.png");
+		particleSprite.Create(particleHandle);
+	}
 
 	particleManager = ParticleManager::Create();
 	//particleManager->Prototype_Set(new GoalParticle::ParticleClass());

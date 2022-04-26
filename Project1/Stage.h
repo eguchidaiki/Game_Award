@@ -98,6 +98,8 @@ public: //メンバ関数
 	void Updata();
 	// 描画
 	void Draw(int offsetX, int offsetY);
+	// 生成
+	void Create();
 
 	/// <summary>
 	/// ステージファイルの読み込み
@@ -196,14 +198,14 @@ private: //メンバ変数
 	char* reverseMapchip;
 
 	UINT BlockHandle;
-	UINT EnptyHandle;
+	UINT EmptyHandle;
 	UINT GoalHandle;
 
 	Sprite MapchipSpriteBlock;
-	Sprite MapchipSpriteEnpty;
+	Sprite MapchipSpriteEmpty;
 	Sprite MapchipSpriteGoal;
 
 	bool IsParticleTrigger;
-	ParticleManager* Particlemanager = ParticleManager::Create();
-	ParticleSingle* FoldParticle = new ParticleSingle();
+	ParticleManager* particleManager;
+	ParticleSingle* FoldParticle;
 };

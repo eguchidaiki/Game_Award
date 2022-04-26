@@ -11,6 +11,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
+	stage->Create();
 	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
 	player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);

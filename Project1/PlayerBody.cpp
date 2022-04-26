@@ -34,11 +34,6 @@ PlayerBody::PlayerBody() :
 	BodyDistance(1),
 	Ease{}
 {
-	//BodyColor = WHITE;
-	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
-
-	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
-	BodySprite.Create(Bodyhandle);
 }
 
 PlayerBody::~PlayerBody()
@@ -100,7 +95,16 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	BodySprite.Draw();
+	//BodySprite.Draw();
+}
+
+void PlayerBody::Create()
+{
+	if (BodySprite.spdata.size.x * BodySprite.spdata.size.y == 0)
+	{
+		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
+		BodySprite.Create(Bodyhandle);
+	}
 }
 
 void PlayerBody::Body_Fold(RVector3& center)

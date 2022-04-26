@@ -23,6 +23,8 @@ public: //メンバ関数
 	void Update(Stage& stage, int offsetX, int offsetY);
 	// 描画
 	void Draw(int offsetX, int offsetY);
+	// 生成
+	void Create();
 
 	//キー操作
 	//移動

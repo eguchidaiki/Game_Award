@@ -8,9 +8,6 @@ PlayerFoot::PlayerFoot() :
 	FootHandle(-1)
 {
 	Init();
-	FootHandle = TexManager::LoadTexture("./Resources/playerLegs.png");
-
-	FootSprite.Create(FootHandle);
 }
 
 PlayerFoot::~PlayerFoot()
@@ -19,7 +16,6 @@ PlayerFoot::~PlayerFoot()
 
 void PlayerFoot::Init()
 {
-	//FootHandle = LoadGraph("./Resources/playerLegs/playerLegs.png");
 }
 
 void PlayerFoot::Set()
@@ -73,4 +69,13 @@ void PlayerFoot::Draw(int offsetX, int offsetY, bool isleft, bool isright)
 	}
 
 	FootSprite.Draw();
+}
+
+void PlayerFoot::Create()
+{
+	if (FootSprite.spdata.size.x * FootSprite.spdata.size.y == 0)
+	{
+		FootHandle = TexManager::LoadTexture("./Resources/playerLegs.png");
+		FootSprite.Create(FootHandle);
+	}
 }
