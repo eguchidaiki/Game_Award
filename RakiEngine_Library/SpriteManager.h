@@ -26,6 +26,7 @@ typedef struct SpriteInstance
 {
 	XMMATRIX worldmat;	//ワールド変換行列
 	XMFLOAT2 drawsize;	//縦横幅
+	XMFLOAT4 uvOffset;	//uv値
 };
 
 //定数バッファデータ構造体
@@ -64,23 +65,25 @@ typedef struct SpriteData
 
 	XMFLOAT4 color = { 1.0f,1.0f,1.0f,1.0f };
 
+	//uvオフセットコンテナ
+	std::vector<XMFLOAT4> uvOffsets;
+
+	SpriteData()
+	{
+
+	}
+	~SpriteData(){
+		insWorldMatrixes.clear();
+		insWorldMatrixes.shrink_to_fit();
+	}
+
 }SPData;
 
 //スプライト共通管理クラス
 //Winmainでのspritemanagerの実体は1つのみ作ること！
-
-//仕様
-/*
-	DrawSprite()の引数にSpriteクラスのインスタンスを取り込むことで描画
-*/
-
-//スプライト用テクスチャの最大読み込み数
-const int MAX_TEX_NUM = 512;
-
 class SpriteManager
 {
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
 
 private:
 	//スプライト用グラフィックスパイプラインセット
@@ -107,7 +110,6 @@ public:
 	//共通ビューポート行列
 	XMMATRIX matViewport{};
 
-
 	void CreateSpriteManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd, int window_w, int window_h);
 	//スプライトのグラフィックスパイプラインを生成
 	void CreateSpritePipeline();
@@ -121,6 +123,7 @@ public:
 		static SpriteManager mgr;
 		return &mgr;
 	}
+
 	//描画に必要なポインタ
 	ID3D12Device *dev;
 	ID3D12GraphicsCommandList *cmd;

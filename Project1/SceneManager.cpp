@@ -8,10 +8,8 @@
 
 SceneManager::SceneManager() :mNextScene(eScene_None) {
 
-    //各シーンのインスタンス生成
-    titleScene = (BaseScene *) new Title(this);
-
-    nowScene = titleScene;
+    //初回軌道するシーンはここで定義
+    nowScene = (BaseScene*)new Title(this);
     Initialize();
 }
 
@@ -23,20 +21,24 @@ void SceneManager::Initialize()
 
 void SceneManager::Finalize()
 {
-    nowScene->Finalize();
+    //シーンの終了
+    delete nowScene;
 }
 
 void SceneManager::Update()
 {
     if (mNextScene != eScene_None) {    //次のシーンがセットされていたら
-        nowScene->Finalize();//現在のシーンの終了処理を実行
-        
+        delete nowScene;//現在のシーンの終了処理を実行
         switch (mNextScene) {       //シーンによって処理を分岐
         case eScene_Title:        //次の画面がメニューなら
-            nowScene = titleScene;
+            nowScene = (BaseScene*)new Title(this);
             break;//以下略
         case eScene_Game:
+            nowScene = (BaseScene*)new GameScene(this);
             break;
+            // ----- シーンを追加するときは、上のようにenumに定義した定数で分岐させて、nowSceneに該当シーンをnewで生成すること ----- //
+
+
         }
         mNextScene = eScene_None;    //次のシーン情報をクリア
         nowScene->Initialize();    //シーンを初期化
