@@ -1,4 +1,4 @@
-#include "Sprite.h"
+﻿#include "Sprite.h"
 #include "NY_Camera.h"
 
 #include "TexManager.h"
@@ -17,7 +17,7 @@ Sprite::~Sprite()
 
 void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool adjustResourceFlag, uvAnimData *animData)
 {
-	HRESULT result;
+    HRESULT result;
 
 
     if (animData != nullptr) {
@@ -42,10 +42,10 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
     //�A���J�[�|�C���g�̃R�s�[
     spdata->anchorPoint = anchor;
 
-	//���_�f�[�^�S�̂̃T�C�Y = ���_�f�[�^����̃T�C�Y * ���_�f�[�^�̗v�f��
-	UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 1);
+    //���_�f�[�^�S�̂̃T�C�Y = ���_�f�[�^����̃T�C�Y * ���_�f�[�^�̗v�f��
+    UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 1);
 
-	//���_�o�b�t�@����
+    //���_�o�b�t�@����
     D3D12_HEAP_PROPERTIES heapprop{}; //�q�[�v�ݒ�
     heapprop.Type = D3D12_HEAP_TYPE_UPLOAD; //GPU�ւ̓]���p
     D3D12_RESOURCE_DESC resdesc{}; //���\�[�X�ݒ�

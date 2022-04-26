@@ -62,7 +62,7 @@ void GoalParticle::Init(const RVector3& pos, const float spawnRange, const size_
 
 void GoalParticle::Create()
 {
-	if (particleSprite.spdata.size.x * particleSprite.spdata.size.y == 0)
+	if (particleSprite.spdata->size.x * particleSprite.spdata->size.y == 0)
 	{
 		particleHandle = TexManager::LoadTexture("./Resources/GoalParticle.png");
 		particleSprite.Create(particleHandle);

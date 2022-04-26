@@ -67,9 +67,9 @@ void Title::Update() {
 	}
 
 	player->Update(*stage, drawOffsetX, drawOffsetY);
-	PlayerBody PlayerBodyStatus[4] = {};
+	bool PlayerBodyStatus[4] = {};
 
-	player->SetBodyStatus(PlayerBodyStatus, 4);
+	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = { 
 		player->IsUpFold,

@@ -73,7 +73,7 @@ void PlayerFoot::Draw(int offsetX, int offsetY, bool isleft, bool isright)
 
 void PlayerFoot::Create()
 {
-	if (FootSprite.spdata.size.x * FootSprite.spdata.size.y == 0)
+	if (FootSprite.spdata->size.x * FootSprite.spdata->size.y == 0)
 	{
 		FootHandle = TexManager::LoadTexture("./Resources/playerLegs.png");
 		FootSprite.Create(FootHandle);

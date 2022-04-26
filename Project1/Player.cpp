@@ -539,13 +539,13 @@ void Player::Draw(int offsetX, int offsetY)
 
 void Player::Create()
 {
-	if (PlayerSprite.spdata.size.x * PlayerSprite.spdata.size.y == 0)
+	if (PlayerSprite.spdata->size.x * PlayerSprite.spdata->size.y == 0)
 	{
 		FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
 		PlayerSprite.Create(FaceHandle[0]);
 	}
 
-	if (PlayerSpriteAction.spdata.size.x * PlayerSpriteAction.spdata.size.y == 0)
+	if (PlayerSpriteAction.spdata->size.x * PlayerSpriteAction.spdata->size.y == 0)
 	{
 		FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
@@ -1122,12 +1122,12 @@ bool Player::IsFall()
 	}
 }
 
-void Player::SetBodyStatus(PlayerBody* arrangement, int size)
+void Player::SetBodyStatus(bool arrangement[4])
 {
-	arrangement[0] = Body_Two;
-	arrangement[1] = Body_Four;
-	arrangement[2] = Body_One;
-	arrangement[3] = Body_Three;
+	arrangement[0] = Body_Two.IsActivate;
+	arrangement[1] = Body_Four.IsActivate;
+	arrangement[2] = Body_One.IsActivate;
+	arrangement[3] = Body_Three.IsActivate;
 }
 
 bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)

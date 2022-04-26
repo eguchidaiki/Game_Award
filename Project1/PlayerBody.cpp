@@ -36,6 +36,10 @@ PlayerBody::PlayerBody() :
 {
 }
 
+PlayerBody::PlayerBody(const PlayerBody&)
+{
+}
+
 PlayerBody::~PlayerBody()
 {
 }
@@ -100,7 +104,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 
 void PlayerBody::Create()
 {
-	if (BodySprite.spdata.size.x * BodySprite.spdata.size.y == 0)
+	if (BodySprite.spdata->size.x * BodySprite.spdata->size.y == 0)
 	{
 		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
 		BodySprite.Create(Bodyhandle);
