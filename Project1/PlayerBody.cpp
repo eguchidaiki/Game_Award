@@ -14,7 +14,6 @@ PlayerBody::PlayerBody() :
 	Body_Type(),
 	BodyStartPos{},
 	BodyEndPos{},
-	BodyCenterPos{},
 	SlideStartPos{},
 	IsFold(false),
 	IsOpen(true),
@@ -30,7 +29,7 @@ PlayerBody::PlayerBody() :
 	IsCanFold{},
 	BodyIsFall(false),
 	SlideDis(),
-	Overlap(0),
+	AfterBodyFoldCount(0),
 	BodyDistance(1),
 	Ease{}
 {
@@ -84,22 +83,11 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 {
 	if (IsActivate == true)
 	{
-		/*DrawExtendGraph(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY, Bodyhandle, true);*/
+		BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 
-		if (IsFold == true)
-		{
-			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
-		}
-		else
-		{
-			BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
-		}
+		BodySprite.Draw();
 	}
-
-	//BodySprite.Draw();
 }
 
 void PlayerBody::Create()
@@ -305,7 +293,6 @@ void PlayerBody::Body_Open(RVector3& center)
 				BodyStartPos = { center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
 				BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
 				BodyEndPos.x = BodyStartPos.x + BodySize;
-				BodyCenterPos.x = BodyStartPos.x + BodySize / 2;
 			}
 			else if (FoldCount == 2)
 			{
@@ -478,12 +465,10 @@ void PlayerBody::Body_Slide(RVector3& center)
 			if (SlidePat == -1)
 			{
 				BodyStartPos = { Ease.easeOut(center.x + 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30, 0.0f };
 			}
 			else
 			{
 				BodyStartPos = { Ease.easeOut(center.x + 25, center.x + 75, Ease.timeRate), center.y - 30.0f, 0.0f };
-				BodyCenterPos = { BodyStartPos.x + 30.0f, BodyStartPos.y + 30, 0.0f };
 			}
 			BodyEndPos = { BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f };
 		}
@@ -511,15 +496,15 @@ void PlayerBody::Body_Slide(RVector3& center)
 
 void PlayerBody::setactivate(RVector3 center)
 {
+	IsFold = false;
+	IsOpen = true;
+	IsSlide = false;
+	BodyDistance = 1;
+	AfterBodyFoldCount = 0;
+	FoldCount = 0;
+
 	if (IsActivate == true)
 	{
-		IsFold = false;
-		IsOpen = true;
-		IsSlide = false;
-		BodyDistance = 1;
-		Overlap = 0;
-		FoldCount = 0;
-
 		if (Body_Type == BodyType::left)
 		{
 			BodyStartPos = { center.x - 90.0f, center.y - 30.0f, 0.0f };
@@ -662,6 +647,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
+							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
 						}
 					}
@@ -690,6 +676,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
+							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
 						}
 					}
@@ -721,6 +708,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							Player::Get()->IsWalk = false;
 							IsHitRight = true;
 						}
 					}
@@ -749,6 +737,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							Player::Get()->IsWalk = false;
 							IsHitRight = true;
 						}
 					}
@@ -822,6 +811,11 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 	//設定用の値
 	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, &mapchip);
+
+	if (SettingMapchip == -1)
+	{
+		//return false;
+	}
 
 	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
 	{
