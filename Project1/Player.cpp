@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Stage.h"
 #include "InputManger.h"
+#include "Raki_imguiMgr.h"
 
 namespace
 {
@@ -967,7 +968,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	if (IsGoal)
 	{
-		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
 	goalParticle.Update();
 }
@@ -1089,6 +1090,10 @@ void Player::Draw(int offsetX, int offsetY)
 #pragma endregion
 
 	goalParticle.Draw();
+
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 0.0f);
+	ImGui::Text("IsGoal:%d", IsGoal);
+	ImguiMgr::Get()->EndDrawImgui();
 }
 
 void Player::Key_Move()
@@ -1952,10 +1957,10 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	int down_mapchip_tile;
 
 	//反転したマップチップたち
-	char ReverseMapchips[25] = { 0 };
+	char* ReverseMapchips = { 0 };
 
 	//折れるかどうか(プレイヤーの中心座標)
-	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, ReverseMapchips);
+	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, &ReverseMapchips);
 
 	//playerの中心座標
 	if (CenterPositionFold == -1)
