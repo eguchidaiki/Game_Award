@@ -33,9 +33,6 @@ PlayerBody::PlayerBody() :
 	BodyDistance(1),
 	Ease{}
 {
-	//BodyColor = WHITE;
-	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
-
 	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
 	BodySprite.Create(Bodyhandle);
 }
@@ -871,6 +868,11 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 		}
+	}
+
+	if(this->Body_Type == direction)
+	{
+		return true;
 	}
 
 	return true;

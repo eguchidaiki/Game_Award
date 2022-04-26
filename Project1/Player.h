@@ -55,20 +55,28 @@ public: //メンバ関数
 
 	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
+
 	//各体・顔の落下判定
 	bool IsFall();
+
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
 	void SetBodyStatus(PlayerBody* arrangement, int size);
+
 	//反転したタイルと顔の四隅との判定
 	bool IsReverseHitFace(Stage& stage, const unsigned char& direction);
+
 	//任意の方向に折れるかどうか
 	bool IsDirectionFoldAll(Stage& stage, BodyType foldtype);
+
 	//有効化されている体の数を取得
 	int ActivateBodyCount();
+
 	//Body配列の中で指定した方向に折れる体があるかどうか
 	bool IsBodysFold(BodyType FoldType);
+
 	//Body配列の中で指定した方向に開ける体があるかどうか
 	bool IsBodysOpen(BodyType OpenType);
+
 	//顔の下に体があるかどうか
 	void IsdownBody();
 

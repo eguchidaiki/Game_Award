@@ -2411,11 +2411,6 @@ bool Player::IsDirectionFoldAll(Stage& stage, BodyType foldtype)
 
 	bool ReverseHitFace = IsReverseHitFace(stage, foldtype);
 
-	for (int i = 0; i < 4; i++)
-	{
-
-	}
-
 	if (ReverseHitFace == true && BodyCanFoldCount <= 0)
 	{
 		return true;
