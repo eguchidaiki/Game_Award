@@ -496,15 +496,15 @@ void PlayerBody::Body_Slide(RVector3& center)
 
 void PlayerBody::setactivate(RVector3 center)
 {
+	IsFold = false;
+	IsOpen = true;
+	IsSlide = false;
+	BodyDistance = 1;
+	AfterBodyFoldCount = 0;
+	FoldCount = 0;
+
 	if (IsActivate == true)
 	{
-		IsFold = false;
-		IsOpen = true;
-		IsSlide = false;
-		BodyDistance = 1;
-		AfterBodyFoldCount = 0;
-		FoldCount = 0;
-
 		if (Body_Type == BodyType::left)
 		{
 			BodyStartPos = { center.x - 90.0f, center.y - 30.0f, 0.0f };
@@ -807,6 +807,11 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 	//設定用の値
 	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, mapchip);
+
+	if (SettingMapchip == -1)
+	{
+		//return false;
+	}
 
 	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
 	{

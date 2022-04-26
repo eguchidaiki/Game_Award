@@ -91,7 +91,7 @@ public: //メンバ変数
 	PlayerBody Body_Three;
 	PlayerBody Body_Four;
 
-	PlayerBody Bodys[4];
+	//PlayerBody Bodys[4];
 
 	//上がふさがっていないか
 	bool IsOpenUp;
