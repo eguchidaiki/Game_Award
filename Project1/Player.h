@@ -47,6 +47,12 @@ public: //メンバ関数
 	void bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
 	void bodysetup(const unsigned char foldCount[4]);
 
+	//折る
+	void Fold();
+
+	//開く
+	void Open();
+
 	//顔の当たり判定
 	void IsHitPlayerBody(Stage& stage);
 	//各体・顔の落下判定
@@ -94,7 +100,7 @@ public: //メンバ変数
 	//PlayerBody Bodys[4];
 
 	//上がふさがっていないか
-	bool IsOpenUp;
+	bool IsUpBlocked;
 
 	//どの方向を折るか(4方向)
 	bool IsLeftFold;

@@ -650,6 +650,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
+							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
 						}
 					}
@@ -678,6 +679,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
+							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
 						}
 					}
@@ -709,6 +711,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							Player::Get()->IsWalk = false;
 							IsHitRight = true;
 						}
 					}
@@ -737,6 +740,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							Player::Get()->IsWalk = false;
 							IsHitRight = true;
 						}
 					}
