@@ -33,8 +33,10 @@ PlayerBody::PlayerBody() :
 	BodyDistance(1),
 	Ease{}
 {
-	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
-	BodySprite.Create(Bodyhandle);
+}
+
+PlayerBody::PlayerBody(const PlayerBody&)
+{
 }
 
 PlayerBody::~PlayerBody()
@@ -86,7 +88,15 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 
 		BodySprite.Draw();
 	}
-	return;
+}
+
+void PlayerBody::Create()
+{
+	if (BodySprite.spdata->size.x * BodySprite.spdata->size.y == 0)
+	{
+		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
+		BodySprite.Create(Bodyhandle);
+	}
 }
 
 void PlayerBody::Body_Fold(RVector3& center)

@@ -7,6 +7,7 @@
 class GameScene : public BaseScene {
 public:
     GameScene::GameScene(ISceneChanger *changer);
+    ~GameScene() {}
     void Initialize() override;    //初期化処理をオーバーライド。
     //void Finalize() override;        //終了処理をオーバーライド。
     void Update() override;        //更新処理をオーバーライド。

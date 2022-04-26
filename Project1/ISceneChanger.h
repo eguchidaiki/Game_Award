@@ -1,7 +1,13 @@
 #pragma once
+
+
+//シーン番号定義
 typedef enum {
     eScene_Title,   //タイトル画面
     eScene_Game,    //ゲーム画面
+    // ----- シーン追加時はここにシーン番号の宣言をすること！ ----- //
+
+
     eScene_None,    //無し
 } eScene;
 

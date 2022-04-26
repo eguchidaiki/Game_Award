@@ -20,22 +20,15 @@
 class SceneManager : public ISceneChanger ,Task
 {
 private:
-    //各シーンインスタンス
-	BaseScene *titleScene;
-    BaseScene *gameScene;
-
+    //シーンのポインタ
     BaseScene *nowScene;
-
-	eScene mNextScene;    //次のシーン管理変数
+    //次のシーン管理変数
+	eScene mNextScene;
 
 public:
     //コンスタラクタ
     SceneManager();
     ~SceneManager() {
-        delete titleScene;
-        titleScene = nullptr;
-        delete gameScene;
-        gameScene = nullptr;
     }
     void Initialize() override;//初期化
     void Finalize() override;//終了処理

@@ -8,9 +8,7 @@
 using namespace Microsoft::WRL;
 
 /// <summary>
-/// 各シーンの基底クラス、各シーンはこれを継承することで実装
-/// <para>基底クラスはメンバ変数として、RakiDX12、NY_Object3DManager、SpriteManagerを持つ</para>
-/// <para>これにより、派生先でObject3D、Spriteのインスタンスを使用したり、Managerの機能を使用可能</para>
+/// 各シーンの基底クラス、各シーンはこれを継承することで実装すること
 /// </summary>
 class BaseScene : public Task {
 
@@ -18,17 +16,15 @@ class BaseScene : public Task {
 
 protected:
     
-    ISceneChanger *mSceneChanger = nullptr;    //クラス所有元にシーン切り替えを伝えるインターフェイス
+    ISceneChanger *mSceneChanger;    //クラス所有元にシーン切り替えを伝えるインターフェイス
     //static Raki_DX12B *dx12b;        //Raki_DX12Bクラスのポインタ、派生先でも基本1つしか使わないのでstaticに
 
 public:
     BaseScene(ISceneChanger *changer);
-    BaseScene() {};
+    //BaseScene() {};
     virtual ~BaseScene() {
 
     }
-
-
 
     virtual void Initialize() override {}    //初期化処理をオーバーライド。
     virtual void Finalize() override {}        //終了処理をオーバーライド。
