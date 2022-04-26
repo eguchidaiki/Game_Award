@@ -69,6 +69,8 @@ public: //メンバ関数
 	bool IsBodysFold(BodyType FoldType);
 	//Body配列の中で指定した方向に開ける体があるかどうか
 	bool IsBodysOpen(BodyType OpenType);
+	//顔の下に体があるかどうか
+	void IsdownBody();
 
 public: //メンバ変数
 	//床の高さ
