@@ -406,11 +406,17 @@ void Stage::Create()
 		MapchipSpriteBlock.Create(BlockHandle);
 	}
 
+	BlockHandle = TexManager::LoadTexture("Resources/block.png");
+	MapchipSpriteBlock.Create(BlockHandle);
+
 	if (MapchipSpriteEmpty.spdata->size.x * MapchipSpriteEmpty.spdata->size.y == 0)
 	{
 		EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
 		MapchipSpriteEmpty.Create(EmptyHandle);
 	}
+
+	EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
+	MapchipSpriteEmpty.Create(EmptyHandle);
 
 	if (MapchipSpriteGoal.spdata->size.x * MapchipSpriteGoal.spdata->size.y == 0)
 	{
@@ -418,11 +424,17 @@ void Stage::Create()
 		MapchipSpriteGoal.Create(GoalHandle);
 	}
 
+	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
+	MapchipSpriteGoal.Create(GoalHandle);
+
 	if (particleManager == nullptr)
 	{
 		particleManager = ParticleManager::Create();
 		particleManager->Prototype_Set(FoldParticle);
 	}
+
+	particleManager = ParticleManager::Create();
+	particleManager->Prototype_Set(FoldParticle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])

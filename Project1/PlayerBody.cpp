@@ -97,6 +97,9 @@ void PlayerBody::Create()
 		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
 		BodySprite.Create(Bodyhandle);
 	}
+
+	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
+	BodySprite.Create(Bodyhandle);
 }
 
 void PlayerBody::Body_Fold(RVector3& center)
@@ -817,6 +820,8 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 		//return false;
 	}
 
+	int BlockCount = 0;
+
 	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
 	{
 		for (size_t j = 0; j < stage.GetStageTileDataSize(i); j++)
@@ -832,7 +837,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 				if (mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 			//左下
@@ -846,7 +851,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 				if (mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 			//右上
@@ -860,7 +865,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 				if (mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 			//右下
@@ -874,7 +879,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 				if (mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 		}
@@ -883,6 +888,11 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	if(this->Body_Type == direction)
 	{
 		return true;
+	}
+
+	if (BlockCount > 0)
+	{
+		return false;
 	}
 
 	return true;

@@ -55,7 +55,7 @@ bool ActFlag::Jump()
 
 bool ActFlag::FoldUp()
 {
-	isFold = InputManger::SubUpTrigger() && player->Body_Two.IsActivate && player->Body_Two.IsFold && player->Body_Two.Overlap == 0;
+	isFold = InputManger::SubUpTrigger() && player->Body_Two.IsActivate && player->Body_Two.IsFold && player->Body_Two.AfterBodyFoldCount == 0;
 	//if (isFold)
 	//{
 	//    isFold = InputManger::SubUpTrigger();
@@ -66,7 +66,7 @@ bool ActFlag::FoldUp()
 
 bool ActFlag::FoldDown()
 {
-	isFold = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.Overlap == 0;
+	isFold = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.AfterBodyFoldCount == 0;
 	//if (isFold)
 	//{
 	//    isFold = InputManger::SubDownTrigger();
@@ -77,7 +77,7 @@ bool ActFlag::FoldDown()
 
 bool ActFlag::FoldLeft()
 {
-	isFold = InputManger::SubLeftTrigger() && player->Body_One.IsActivate && player->Body_One.IsFold && player->Body_One.Overlap == 0;
+	isFold = InputManger::SubLeftTrigger() && player->Body_One.IsActivate && player->Body_One.IsFold && player->Body_One.AfterBodyFoldCount == 0;
 	//if (isFold)
 	//{
 	//    isFold = InputManger::SubLeftTrigger();
@@ -99,7 +99,7 @@ bool ActFlag::FoldRight()
 bool ActFlag::OpenUp()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubUpTrigger() && player->Body_Two.IsActivate && player->Body_Two.IsFold && player->Body_Two.Overlap == 0;
+	isOpen = InputManger::SubUpTrigger() && player->Body_Two.IsActivate && player->Body_Two.IsFold && player->Body_Two.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//    isOpen = InputManger::SubUpTrigger();
@@ -111,7 +111,7 @@ bool ActFlag::OpenUp()
 bool ActFlag::OpenDown()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.Overlap == 0;
+	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//    isOpen = InputManger::SubDownTrigger();
@@ -123,7 +123,7 @@ bool ActFlag::OpenDown()
 bool ActFlag::OpenLeft()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubLeftTrigger() && player->Body_One.IsActivate && player->Body_One.IsFold && player->Body_One.Overlap == 0;
+	isOpen = InputManger::SubLeftTrigger() && player->Body_One.IsActivate && player->Body_One.IsFold && player->Body_One.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//    isOpen = InputManger::SubLeftTrigger();
@@ -135,7 +135,7 @@ bool ActFlag::OpenLeft()
 bool ActFlag::OpenRight()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.Overlap == 0;
+	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//	isOpen = InputManger::SubRightTrigger();
