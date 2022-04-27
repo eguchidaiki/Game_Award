@@ -36,10 +36,6 @@ PlayerBody::PlayerBody() :
 {
 }
 
-PlayerBody::PlayerBody(const PlayerBody&)
-{
-}
-
 PlayerBody::~PlayerBody()
 {
 }
@@ -98,13 +94,17 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 				static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 		}
 	}
+	else
+	{
+		return;
+	}
 
-	//BodySprite.Draw();
+	BodySprite.Draw();
 }
 
 void PlayerBody::Create()
 {
-	if (BodySprite.spdata->size.x * BodySprite.spdata->size.y == 0)
+	if ((BodySprite.spdata->size.x <= 0) || (BodySprite.spdata->size.y <= 0))
 	{
 		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
 		BodySprite.Create(Bodyhandle);

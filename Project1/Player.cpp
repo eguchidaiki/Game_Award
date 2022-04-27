@@ -539,13 +539,13 @@ void Player::Draw(int offsetX, int offsetY)
 
 void Player::Create()
 {
-	if (PlayerSprite.spdata->size.x * PlayerSprite.spdata->size.y == 0)
+	if ((PlayerSprite.spdata->size.x <= 0) || (PlayerSprite.spdata->size.y <= 0))
 	{
 		FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
 		PlayerSprite.Create(FaceHandle[0]);
 	}
 
-	if (PlayerSpriteAction.spdata->size.x * PlayerSpriteAction.spdata->size.y == 0)
+	if ((PlayerSpriteAction.spdata->size.x <= 0) || (PlayerSpriteAction.spdata->size.y <= 0))
 	{
 		FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);

@@ -24,7 +24,6 @@ public: //’è”
 
 public: //ƒƒ“ƒoŠÖ”
 	PlayerBody();
-	PlayerBody(const PlayerBody&);
 	~PlayerBody();
 
 	// ‰Šú‰»

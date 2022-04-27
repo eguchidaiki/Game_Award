@@ -197,10 +197,12 @@ private: //メンバ変数
 
 	char* reverseMapchip;
 
+	UINT FoldHandle;  //折り目の画像ハンドル
 	UINT BlockHandle;
 	UINT EmptyHandle;
 	UINT GoalHandle;
 
+	Sprite FoldSprite; //折り目のスプライト
 	Sprite MapchipSpriteBlock;
 	Sprite MapchipSpriteEmpty;
 	Sprite MapchipSpriteGoal;
