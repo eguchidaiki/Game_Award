@@ -774,6 +774,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				{
 					Player_IsAction = true;
 					IsUpFold = true;
+					IsWalk = false;
 					leg.Set();
 					return;
 				}
@@ -782,6 +783,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					OpenCount = 0;
 					IsOpenCountStart = true;
 					IsDownOpen = true;
+					IsWalk = false;
 					return;
 				}
 			}
@@ -792,6 +794,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				{
 					Player_IsAction = true;
 					IsDownFold = true;
+					IsWalk = false;
 					leg.Set();
 					return;
 				}
@@ -800,6 +803,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					OpenCount = 0;
 					IsOpenCountStart = true;
 					IsUpOpen = true;
+					IsWalk = false;
 					return;
 				}
 			}

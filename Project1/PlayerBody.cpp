@@ -887,6 +887,12 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 		}
 	}
 
+	if (this->Body_Type == BodyType::down &&
+		direction == BodyType::down)
+	{
+
+	}
+
 	if (this->Body_Type == direction)
 	{
 		return true;

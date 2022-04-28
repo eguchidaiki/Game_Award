@@ -42,7 +42,7 @@ public:
     Stage *stage = Stage::Get();
 
 
-    const int drawOffsetX = 320, drawOffsetY = 0;
+    const int drawOffsetX = 320, drawOffsetY = 45;
 
 };
 
