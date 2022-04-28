@@ -301,11 +301,6 @@ void Player::Create()
 		FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
 	}
-
-	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
-	PlayerSprite.Create(FaceHandle[0]);
-	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
-	PlayerSpriteAction.Create(FaceHandle[1]);
 }
 
 void Player::Key_Move()
@@ -779,6 +774,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				{
 					Player_IsAction = true;
 					IsUpFold = true;
+					IsWalk = false;
 					leg.Set();
 					return;
 				}
@@ -787,6 +783,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					OpenCount = 0;
 					IsOpenCountStart = true;
 					IsDownOpen = true;
+					IsWalk = false;
 					return;
 				}
 			}
@@ -797,6 +794,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				{
 					Player_IsAction = true;
 					IsDownFold = true;
+					IsWalk = false;
 					leg.Set();
 					return;
 				}
@@ -805,6 +803,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					OpenCount = 0;
 					IsOpenCountStart = true;
 					IsUpOpen = true;
+					IsWalk = false;
 					return;
 				}
 			}
@@ -812,39 +811,27 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 	}
 }
 
-void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
+void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
 {
-	if (one == true)
-	{
-		Body_One.IsActivate = true;
-		Body_One.Body_Type = one_type;
-		//Bodys[0].IsActivate = true;
-		//Bodys[0].Body_Type = one_type;
-	}
+	Body_One.IsActivate = one;
+	Body_One.Body_Type = one_type;
+	//Bodys[0].IsActivate = true;
+	//Bodys[0].Body_Type = one_type;
 
-	if (two == true)
-	{
-		Body_Two.IsActivate = true;
-		Body_Two.Body_Type = two_type;
-		//Bodys[1].IsActivate = true;
-		//Bodys[1].Body_Type = one_type;
-	}
+	Body_Two.IsActivate = two;
+	Body_Two.Body_Type = two_type;
+	//Bodys[1].IsActivate = true;
+	//Bodys[1].Body_Type = one_type;
 
-	if (three == true)
-	{
-		Body_Three.IsActivate = true;
-		Body_Three.Body_Type = three_type;
-		//Bodys[2].IsActivate = true;
-		//Bodys[2].Body_Type = one_type;
-	}
+	Body_Three.IsActivate = three;
+	Body_Three.Body_Type = three_type;
+	//Bodys[2].IsActivate = true;
+	//Bodys[2].Body_Type = one_type;
 
-	if (four == true)
-	{
-		Body_Four.IsActivate = true;
-		Body_Four.Body_Type = four_type;
-		//Bodys[3].IsActivate = true;
-		//Bodys[3].Body_Type = one_type;
-	}
+	Body_Four.IsActivate = four;
+	Body_Four.Body_Type = four_type;
+	//Bodys[3].IsActivate = true;
+	//Bodys[3].Body_Type = one_type;
 
 	Body_One.setactivate(CenterPosition);
 	Body_Two.setactivate(CenterPosition);
@@ -859,7 +846,7 @@ void Player::bodysetup(bool one, int one_type, bool two, int two_type, bool thre
 	CenterPosition.y += 1;
 }
 
-void Player::bodysetup(const unsigned char foldCount[4])
+void Player::BodySetUp(const unsigned char foldCount[4])
 {
 	static int bodyTile[4] = { 0 };
 	static size_t j = 0;
@@ -881,7 +868,7 @@ void Player::bodysetup(const unsigned char foldCount[4])
 		}
 	}
 
-	bodysetup(
+	BodySetUp(
 		bodyTile[0] != -1, bodyTile[0],
 		bodyTile[1] != -1, bodyTile[1],
 		bodyTile[2] != -1, bodyTile[2],
@@ -2074,13 +2061,13 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 	int FallCount = 0;
 
-	if (CenterPosition.x - 30 <= stage.offset.x)
+	if (CenterPosition.x - 25 <= stage.offset.x)
 	{
-		CenterPosition.x = 30;
+		CenterPosition.x = 25;
 	}
-	if (CenterPosition.y - 30 <= stage.offset.y)
+	if (CenterPosition.y - 25 <= stage.offset.y)
 	{
-		CenterPosition.y = 30;
+		CenterPosition.y = 25;
 	}
 
 	for (i = 0; i < stage.GetStageDataSize(); i++)

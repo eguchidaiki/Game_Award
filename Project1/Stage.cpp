@@ -409,7 +409,7 @@ void Stage::Create()
 
 	if ((MapchipSpriteEmpty.spdata->size.x <= 0) || (MapchipSpriteEmpty.spdata->size.y <= 0))
 	{
-		EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
+		EmptyHandle = TexManager::LoadTexture("Resources/stage_empty.png");
 		MapchipSpriteEmpty.Create(EmptyHandle);
 	}
 
@@ -430,9 +430,6 @@ void Stage::Create()
 		particleManager = ParticleManager::Create();
 		particleManager->Prototype_Set(FoldParticle);
 	}
-
-	particleManager = ParticleManager::Create();
-	particleManager->Prototype_Set(FoldParticle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
