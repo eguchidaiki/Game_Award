@@ -430,6 +430,9 @@ void Stage::Create()
 		particleManager = ParticleManager::Create();
 		particleManager->Prototype_Set(FoldParticle);
 	}
+
+	particleManager = ParticleManager::Create();
+	particleManager->Prototype_Set(FoldParticle);
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])

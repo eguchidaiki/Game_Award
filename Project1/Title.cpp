@@ -16,6 +16,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	player->Init();
 	player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 
+	//BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 }

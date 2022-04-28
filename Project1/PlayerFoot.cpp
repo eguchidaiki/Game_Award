@@ -73,4 +73,7 @@ void PlayerFoot::Create()
 		FootHandle = TexManager::LoadTexture("./Resources/playerLegs.png");
 		FootSprite.Create(FootHandle);
 	}
+
+	FootHandle = TexManager::LoadTexture("./Resources/playerLegs.png");
+	FootSprite.Create(FootHandle);
 }

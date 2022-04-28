@@ -301,6 +301,11 @@ void Player::Create()
 		FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
 	}
+
+	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
+	PlayerSprite.Create(FaceHandle[0]);
+	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
+	PlayerSpriteAction.Create(FaceHandle[1]);
 }
 
 void Player::Key_Move()

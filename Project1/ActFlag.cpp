@@ -3,15 +3,15 @@
 #include "Player.h"
 #include "Stage.h"
 
-namespace //ŠÖ”ŠÔ‚ÌŽó‚¯“n‚µ‚Í•K—v–³‚¢‚ª•Ï”–¼‚ª“¯‚¶•¨
+namespace //é–¢æ•°é–“ã®å—ã‘æ¸¡ã—ã¯å¿…è¦ç„¡ã„ãŒå¤‰æ•°åãŒåŒã˜ç‰©
 {
-	/*ŠeŽíƒtƒ‰ƒO*/
-	static bool isFold = false; //Ü‚ê‚é‚©‚Ç‚¤‚©
-	static bool isOpen = false; //ŠJ‚¯‚é‚©‚Ç‚¤‚©
+	/*å„ç¨®ãƒ•ãƒ©ã‚°*/
+	static bool isFold = false; //æŠ˜ã‚Œã‚‹ã‹ã©ã†ã‹
+	static bool isOpen = false; //é–‹ã‘ã‚‹ã‹ã©ã†ã‹
 
-	/*ƒtƒ‰ƒOˆÈŠO*/
-	static Player* player = Player::Get(); //ƒvƒŒƒCƒ„[
-	static Stage* stage = Stage::Get();    //ƒXƒe[ƒW
+	/*ãƒ•ãƒ©ã‚°ä»¥å¤–*/
+	static Player* player = Player::Get(); //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+	static Stage* stage = Stage::Get();    //ã‚¹ãƒ†ãƒ¼ã‚¸
 }
 
 bool ActFlag::isMouse = false;
@@ -57,6 +57,7 @@ bool ActFlag::Jump()
 
 bool ActFlag::FoldUp()
 {
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isFold = InputManger::SubUpTrigger() && player->Player_IsAction == false &&
 		player->Body_Two.IsActivate && player->Body_Two.IsFold == false;
 	//if (isFold)
@@ -69,6 +70,7 @@ bool ActFlag::FoldUp()
 
 bool ActFlag::FoldDown()
 {
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isFold = InputManger::SubDownTrigger() && player->Player_IsAction == false &&
 		player->Body_Four.IsActivate && player->Body_Four.IsFold == false;
 	//if (isFold)
@@ -81,6 +83,7 @@ bool ActFlag::FoldDown()
 
 bool ActFlag::FoldLeft()
 {
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isFold = InputManger::SubLeftTrigger() && player->Player_IsAction == false &&
 		player->Body_One.IsActivate && player->Body_One.IsFold == false;
 	//if (isFold)
@@ -93,6 +96,7 @@ bool ActFlag::FoldLeft()
 
 bool ActFlag::FoldRight()
 {
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isFold = InputManger::SubRightTrigger() && player->Player_IsAction == false &&
 		player->Body_Three.IsActivate && player->Body_Three.IsFold == false;
 	//if (isFold)
@@ -105,7 +109,7 @@ bool ActFlag::FoldRight()
 
 bool ActFlag::OpenUp()
 {
-	// ƒL[ƒ{[ƒh&ƒRƒ“ƒgƒ[ƒ‰[“ü—Í
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isOpen = InputManger::SubUpTrigger() && player->Body_Two.IsActivate &&
 		player->Body_Two.IsFold && player->Body_Two.AfterBodyFoldCount == 0 && player->IsUpBlocked;
 	//if (isOpen)
@@ -118,7 +122,7 @@ bool ActFlag::OpenUp()
 
 bool ActFlag::OpenDown()
 {
-	// ƒL[ƒ{[ƒh&ƒRƒ“ƒgƒ[ƒ‰[“ü—Í
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate &&
 		player->Body_Four.IsFold && player->Body_Four.AfterBodyFoldCount == 0;
 	//if (isOpen)
@@ -131,7 +135,7 @@ bool ActFlag::OpenDown()
 
 bool ActFlag::OpenLeft()
 {
-	// ƒL[ƒ{[ƒh&ƒRƒ“ƒgƒ[ƒ‰[“ü—Í
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isOpen = InputManger::SubLeftTrigger() && player->Body_One.IsActivate &&
 		player->Body_One.IsFold && player->Body_One.AfterBodyFoldCount == 0;
 	//if (isOpen)
@@ -144,7 +148,7 @@ bool ActFlag::OpenLeft()
 
 bool ActFlag::OpenRight()
 {
-	// ƒL[ƒ{[ƒh&ƒRƒ“ƒgƒ[ƒ‰[“ü—Í
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰&ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å…¥åŠ›
 	isOpen = InputManger::SubDownTrigger() && player->Body_Three.IsActivate &&
 		player->Body_Three.IsFold && player->Body_Three.AfterBodyFoldCount == 0;
 	//if (isOpen)
