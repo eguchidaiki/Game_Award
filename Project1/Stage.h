@@ -125,7 +125,7 @@ public: //メンバ関数
 	/// <returns> 0で折れる、1で開ける、-1で失敗 </returns>
 	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip);
 	// リセット
-	void Reset();
+	void Reset(unsigned char foldCount[4]);
 	// 内部データ全削除
 	void DataClear();
 

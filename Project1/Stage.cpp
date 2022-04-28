@@ -23,7 +23,7 @@ namespace
 const int Stage::blockSize = 60;
 const int Stage::halfBlockSize = Stage::blockSize / 2;
 const int Stage::lineWidth = 5;
-const int Stage::foldLineCount = 1;
+const int Stage::foldLineCount = 2;
 const XMFLOAT4 Stage::lineColor[2] = {
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
 	{ 0.5f, 0.5f, 0.5f, 1.0f }
@@ -1171,7 +1171,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	return 0;
 }
 
-void Stage::Reset()
+void Stage::Reset(unsigned char foldCount[4])
 {
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -1192,6 +1192,8 @@ void Stage::Reset()
 			stageData[i].stageTileData[j].isFold = false;
 		}
 	}
+
+	GetInitFoldCount(foldCount);
 }
 
 void Stage::DataClear()
