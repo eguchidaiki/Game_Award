@@ -82,9 +82,6 @@ public: //メンバ変数
 	//体の座標(初期状態：右下)
 	RVector3 BodyEndPos;
 
-	//体の中心座標
-	RVector3 BodyCenterPos;
-
 	//スライドの開始座標
 	RVector3 SlideStartPos;
 
@@ -118,17 +115,14 @@ public: //メンバ変数
 	//スライドする距離
 	int SlideDis;
 
-	//上に重なっている噛みの数
-	int Overlap;
+	//この体より後にほかの体を折った数
+	int AfterBodyFoldCount;
 
 	//本体からどれだけ離れているか(左右専用)
 	int BodyDistance;
 
 	//イージング
 	Easing Ease;
-
-	//体の色
-	//int BodyColor;
 
 	//画像ハンドル
 	UINT Bodyhandle;

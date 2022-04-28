@@ -14,6 +14,8 @@ namespace //関数間の受け渡しは必要無いが変数名が同じ物
 	static Stage* stage = Stage::Get();    //ステージ
 }
 
+bool ActFlag::isMouse = false;
+
 ActFlag* ActFlag::Get()
 {
 	static ActFlag ins{};
@@ -55,7 +57,8 @@ bool ActFlag::Jump()
 
 bool ActFlag::FoldUp()
 {
-	isFold = InputManger::SubUpTrigger() && player->Body_Two.IsActivate && player->Body_Two.IsFold && player->Body_Two.Overlap == 0;
+	isFold = InputManger::SubUpTrigger() && player->Player_IsAction == false &&
+		player->Body_Two.IsActivate && player->Body_Two.IsFold == false;
 	//if (isFold)
 	//{
 	//    isFold = InputManger::SubUpTrigger();
@@ -66,7 +69,8 @@ bool ActFlag::FoldUp()
 
 bool ActFlag::FoldDown()
 {
-	isFold = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.Overlap == 0;
+	isFold = InputManger::SubDownTrigger() && player->Player_IsAction == false &&
+		player->Body_Four.IsActivate && player->Body_Four.IsFold == false;
 	//if (isFold)
 	//{
 	//    isFold = InputManger::SubDownTrigger();
@@ -77,7 +81,8 @@ bool ActFlag::FoldDown()
 
 bool ActFlag::FoldLeft()
 {
-	isFold = InputManger::SubLeftTrigger() && player->Body_One.IsActivate && player->Body_One.IsFold && player->Body_One.Overlap == 0;
+	isFold = InputManger::SubLeftTrigger() && player->Player_IsAction == false &&
+		player->Body_One.IsActivate && player->Body_One.IsFold == false;
 	//if (isFold)
 	//{
 	//    isFold = InputManger::SubLeftTrigger();
@@ -88,10 +93,12 @@ bool ActFlag::FoldLeft()
 
 bool ActFlag::FoldRight()
 {
-	if (isFold)
-	{
-		isFold = InputManger::SubRightTrigger();
-	}
+	isFold = InputManger::SubRightTrigger() && player->Player_IsAction == false &&
+		player->Body_Three.IsActivate && player->Body_Three.IsFold == false;
+	//if (isFold)
+	//{
+	//	isFold = InputManger::SubRightTrigger();
+	//}
 
 	return isFold;
 }
@@ -99,7 +106,8 @@ bool ActFlag::FoldRight()
 bool ActFlag::OpenUp()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubUpTrigger() && player->Body_Two.IsActivate && player->Body_Two.IsFold && player->Body_Two.Overlap == 0;
+	isOpen = InputManger::SubUpTrigger() && player->Body_Two.IsActivate &&
+		player->Body_Two.IsFold && player->Body_Two.AfterBodyFoldCount == 0 && player->IsUpBlocked;
 	//if (isOpen)
 	//{
 	//    isOpen = InputManger::SubUpTrigger();
@@ -111,7 +119,8 @@ bool ActFlag::OpenUp()
 bool ActFlag::OpenDown()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.Overlap == 0;
+	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate &&
+		player->Body_Four.IsFold && player->Body_Four.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//    isOpen = InputManger::SubDownTrigger();
@@ -123,7 +132,8 @@ bool ActFlag::OpenDown()
 bool ActFlag::OpenLeft()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubLeftTrigger() && player->Body_One.IsActivate && player->Body_One.IsFold && player->Body_One.Overlap == 0;
+	isOpen = InputManger::SubLeftTrigger() && player->Body_One.IsActivate &&
+		player->Body_One.IsFold && player->Body_One.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//    isOpen = InputManger::SubLeftTrigger();
@@ -135,7 +145,8 @@ bool ActFlag::OpenLeft()
 bool ActFlag::OpenRight()
 {
 	// キーボード&コントローラー入力
-	isOpen = InputManger::SubDownTrigger() && player->Body_Four.IsActivate && player->Body_Four.IsFold && player->Body_Four.Overlap == 0;
+	isOpen = InputManger::SubDownTrigger() && player->Body_Three.IsActivate &&
+		player->Body_Three.IsFold && player->Body_Three.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
 	//	isOpen = InputManger::SubRightTrigger();

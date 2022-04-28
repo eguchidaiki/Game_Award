@@ -5,6 +5,8 @@
 #include "Sprite.h"
 #include<RVector.h>
 
+class PlayerBody;
+
 class PlayerFoot
 {
 public: //ƒƒ“ƒoŠÖ”
@@ -13,7 +15,7 @@ public: //ƒƒ“ƒoŠÖ”
 
 	void Init();
 	void Set();
-	void Update(RVector3& FaceCenterPos, bool IsDownBody, int BodyDis);
+	void Update(RVector3& DownPos, bool IsDownBody, int BodyDis);
 	void Draw(int offsetX, int offsetY, bool isleft, bool isright);
 	void Create();
 
