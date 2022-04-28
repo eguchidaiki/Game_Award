@@ -277,15 +277,13 @@ void Player::Draw(int offsetX, int offsetY)
 	PlayerSprite.Draw();
 	PlayerSpriteAction.Draw();
 
-#pragma region debug
-
-#pragma endregion
-
 	//goalParticle.Draw();
 
+#ifdef _DEBUG
 	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 0.0f);
 	ImGui::Text("IsGoal:%d", IsGoal);
 	ImguiMgr::Get()->EndDrawImgui();
+#endif // _DEBUG
 }
 
 void Player::Create()
