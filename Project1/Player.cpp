@@ -301,11 +301,6 @@ void Player::Create()
 		FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
 	}
-
-	FaceHandle[0] = TexManager::LoadTexture("Resources/player.png");
-	PlayerSprite.Create(FaceHandle[0]);
-	FaceHandle[1] = TexManager::LoadTexture("Resources/playerBody02.png");
-	PlayerSpriteAction.Create(FaceHandle[1]);
 }
 
 void Player::Key_Move()
@@ -2074,13 +2069,13 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 	int FallCount = 0;
 
-	if (CenterPosition.x - 30 <= stage.offset.x)
+	if (CenterPosition.x - 25 <= stage.offset.x)
 	{
-		CenterPosition.x = 30;
+		CenterPosition.x = 25;
 	}
-	if (CenterPosition.y - 30 <= stage.offset.y)
+	if (CenterPosition.y - 25 <= stage.offset.y)
 	{
-		CenterPosition.y = 30;
+		CenterPosition.y = 25;
 	}
 
 	for (i = 0; i < stage.GetStageDataSize(); i++)
