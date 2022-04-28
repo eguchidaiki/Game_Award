@@ -177,12 +177,14 @@ public: //メンバ関数
 	}
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
-
 private:
 	// ステージを折る
 	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
 	// ステージを開く
 	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageTile, const size_t& moveStageData);
+
+	// 枠線の描画
+	int FlameDraw(const unsigned char direction, int offsetX, int offsetY);
 
 	// イージングの初期化
 	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);

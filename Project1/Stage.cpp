@@ -299,7 +299,7 @@ void Stage::Draw(int offsetX, int offsetY)
 			}
 		}
 
-		// 折り目の描画
+		// 折り目・枠線の描画
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			static char sideStageTile = 0;
@@ -324,6 +324,14 @@ void Stage::Draw(int offsetX, int offsetY)
 						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
+				else
+				{
+					FlameDraw(BodyType::left, offsetX, offsetY);
+				}
+			}
+			else
+			{
+				FlameDraw(BodyType::left, offsetX, offsetY);
 			}
 			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
@@ -1412,6 +1420,52 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	stageData[onPlayerStage].stageTileData[moveStageData].direction = direction + 1 + 2;
 	stageData[onPlayerStage].stageTileData[moveStageData].isFold = false;
 	playerTile[direction]++;
+
+	return 0;
+}
+
+int Stage::FlameDraw(const unsigned char direction, int offsetX, int offsetY)
+{
+	static int posX = 0, posY = 0;
+	static XMFLOAT2 pos1 = {}, pos2 = {};
+
+	switch (direction)
+	{
+	case BodyType::up:
+	{
+		break;
+	}
+	case BodyType::down:
+	{
+		break;
+	}
+	case BodyType::left:
+	{
+		posX = 0 + stageData[i].stageTileData[j].offsetX;
+		posY = 0 + stageData[i].stageTileData[j].offsetX;
+
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize + blockSize * 1 / 4;
+		pos2.x = posX * blockSize;
+		pos2.y = (posY + 1) * blockSize;
+		break;
+	}
+	case BodyType::right:
+	{
+		break;
+	}
+	default:
+	{
+		return 1;
+		break;
+	}
+	}
+	pos1.x += static_cast<float>(offsetX);
+	pos1.y += static_cast<float>(offsetY);
+	pos2.x += static_cast<float>(offsetX);
+	pos2.y += static_cast<float>(offsetY);
+
+	FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 
 	return 0;
 }
