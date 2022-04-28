@@ -81,8 +81,12 @@ public: //サブクラス
 	};
 
 public: //定数
-	static const int blockSize;
-	static const int halfBlockSize;
+	static const int blockSize;     //ブロックの大きさ
+	static const int halfBlockSize; //ブロックの半分の大きさ
+
+	static const int lineWidth;         //線の太さ
+	static const int foldLineCount;     //折れ目の間隔
+	static const XMFLOAT4 lineColor[2]; //線の色
 
 	RVector3 offset = { 0,0,0 };
 
