@@ -105,7 +105,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	//落下判定
 	if (IsJump == false && IsAllFall == true && Player_IsAction == false)
 	{
-		if (FallSpeed < 5.2)
+		if (FallSpeed < 5.0)
 		{
 			FallSpeed += 0.2f;
 		}
@@ -277,8 +277,8 @@ void Player::Draw(int offsetX, int offsetY)
 	PlayerSprite.Draw();
 	PlayerSpriteAction.Draw();
 
-	//goalParticle.Draw();
-
+	//goalParticle.Draw()
+  
 #ifdef _DEBUG
 	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 0.0f);
 	ImGui::Text("IsGoal:%d", IsGoal);
@@ -680,7 +680,7 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
-		PressCount < 10 &&
+		PressCount < 15 &&
 		Input::isMouseClicked(0))
 	{
 		IsWalk = true;
@@ -721,22 +721,24 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
-		PressCount >= 10 &&
+		PressCount >= 15 &&
 		Input::isMouseClicked(0))
 	{
 		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
 		{
 			if (DragDis.x > 0)
 			{
-				if (IsDirectionFoldAll(stage, BodyType::left)
-					&& Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
+				if (IsDirectionFoldAll(stage, BodyType::left))
 				{
 					Player_IsAction = true;
 					IsLeftFold = true;
 					leg.Set();
 					return;
 				}
-				if (Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.AfterBodyFoldCount == 0)
+				if (Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right ||
+					Body_One.IsActivate == true && Body_One.IsFold == true &&
+					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -746,15 +748,17 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 			else
 			{
-				if (IsDirectionFoldAll(stage, BodyType::right)
-					&& Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
+				if (IsDirectionFoldAll(stage, BodyType::right))
 				{
 					Player_IsAction = true;
 					IsRightFold = true;
 					leg.Set();
 					return;
 				}
-				if (Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.AfterBodyFoldCount == 0)
+				if (Body_One.IsActivate == true && Body_One.IsFold == true &&
+					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
+					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -767,8 +771,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 		{
 			if (DragDis.y > 0)
 			{
-				if (IsDirectionFoldAll(stage, BodyType::up)
-					&& Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
+				if (IsDirectionFoldAll(stage, BodyType::up))
 				{
 					Player_IsAction = true;
 					IsUpFold = true;
@@ -776,7 +779,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.AfterBodyFoldCount == 0)
+				if (Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
+					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -787,8 +793,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 			else
 			{
-				if (IsDirectionFoldAll(stage, BodyType::down)
-					&& Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
+				if (IsDirectionFoldAll(stage, BodyType::down))
 				{
 					Player_IsAction = true;
 					IsDownFold = true;
@@ -796,7 +801,11 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0 && IsUpBlocked == true)
+				if (Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
+					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up &&
+					IsUpBlocked == true)
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -2286,10 +2295,10 @@ bool Player::IsFall()
 
 void Player::SetBodyStatus(bool arrangement[4])
 {
-	arrangement[0] = Body_Two.IsActivate;
-	arrangement[1] = Body_Four.IsActivate;
-	arrangement[2] = Body_One.IsActivate;
-	arrangement[3] = Body_Three.IsActivate;
+	arrangement[0] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[1] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[2] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
+	arrangement[3] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
 }
 
 bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
