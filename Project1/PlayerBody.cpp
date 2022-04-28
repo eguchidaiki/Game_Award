@@ -814,7 +814,12 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 	if (SettingMapchip == -1)
 	{
-		//return false;
+		return false;
+	}
+
+	if (this->Body_Type == direction)
+	{
+		return true;
 	}
 
 	int BlockCount = 0;
