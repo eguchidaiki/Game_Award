@@ -835,7 +835,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
 						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0Ui64;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
 						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
 						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
@@ -942,9 +942,9 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	static size_t onPlayerStageData = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
-	static bool isFold = false; //折れる物があるかどうか
+	bool isFold = false; //折れる物があるかどうか
 
-	isFold = false;
+	//isFold = false;
 
 	for (i = 0; i < stageData.size(); i++)
 	{
