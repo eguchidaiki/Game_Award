@@ -305,7 +305,7 @@ void Stage::Draw(int offsetX, int offsetY)
 			static char sideStageTile = 0;
 			static char sideStageData = 0;
 
-			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) - 1 >= 0)
+			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) - 1 >= 0)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber - 1;
 
@@ -326,14 +326,14 @@ void Stage::Draw(int offsetX, int offsetY)
 				}
 				else
 				{
-					FlameDraw(BodyType::left, offsetX, offsetY);
+					FlameDraw(i, j, BodyType::left, offsetX, offsetY);
 				}
 			}
 			else
 			{
-				FlameDraw(BodyType::left, offsetX, offsetY);
+				FlameDraw(i, j, BodyType::left, offsetX, offsetY);
 			}
-			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
+			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + 1;
 
@@ -352,8 +352,16 @@ void Stage::Draw(int offsetX, int offsetY)
 						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
+				else
+				{
+					FlameDraw(i, j, BodyType::right, offsetX, offsetY);
+				}
 			}
-			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
+			else
+			{
+				FlameDraw(i, j, BodyType::right, offsetX, offsetY);
+			}
+			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber - static_cast<char>(stageData[i].width);
 				sideStageData = stageData[i].stageTile[sideStageTile];
@@ -373,8 +381,16 @@ void Stage::Draw(int offsetX, int offsetY)
 						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
+				else
+				{
+					FlameDraw(i, j, BodyType::up, offsetX, offsetY);
+				}
 			}
-			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
+			else
+			{
+				FlameDraw(i, j, BodyType::up, offsetX, offsetY);
+			}
+			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + static_cast<char>(stageData[i].width);
 
@@ -393,6 +409,14 @@ void Stage::Draw(int offsetX, int offsetY)
 						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
+				else
+				{
+					FlameDraw(i, j, BodyType::down, offsetX, offsetY);
+				}
+			}
+			else
+			{
+				FlameDraw(i, j, BodyType::down, offsetX, offsetY);
 			}
 		}
 	}
@@ -1424,7 +1448,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	return 0;
 }
 
-int Stage::FlameDraw(const unsigned char direction, int offsetX, int offsetY)
+int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction, int offsetX, int offsetY)
 {
 	static int posX = 0, posY = 0;
 	static XMFLOAT2 pos1 = {}, pos2 = {};
@@ -1433,25 +1457,50 @@ int Stage::FlameDraw(const unsigned char direction, int offsetX, int offsetY)
 	{
 	case BodyType::up:
 	{
+		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = (posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
+		pos2.y = posY * blockSize + blockSize * 1 / 4;
+
 		break;
 	}
 	case BodyType::down:
 	{
+		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+		posY = stageData[stageNumber].stageTileData[stageTileNumber].height + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = (posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
+		pos2.y = posY * blockSize - blockSize * 1 / 4;
+
 		break;
 	}
 	case BodyType::left:
 	{
-		posX = 0 + stageData[i].stageTileData[j].offsetX;
-		posY = 0 + stageData[i].stageTileData[j].offsetX;
+		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 
 		pos1.x = posX * blockSize;
-		pos1.y = posY * blockSize + blockSize * 1 / 4;
-		pos2.x = posX * blockSize;
-		pos2.y = (posY + 1) * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = posX * blockSize + blockSize * 1 / 4;
+		pos2.y = (posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
+
 		break;
 	}
 	case BodyType::right:
 	{
+		posX = stageData[i].stageTileData[j].width + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = posX * blockSize - blockSize * 1 / 4;
+		pos2.y = (posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
+
 		break;
 	}
 	default:
