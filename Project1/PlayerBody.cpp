@@ -97,9 +97,6 @@ void PlayerBody::Create()
 		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
 		BodySprite.Create(Bodyhandle);
 	}
-
-	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
-	BodySprite.Create(Bodyhandle);
 }
 
 void PlayerBody::Body_Fold(RVector3& center)
@@ -817,7 +814,12 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 	if (SettingMapchip == -1)
 	{
-		//return false;
+		return false;
+	}
+
+	if (this->Body_Type == direction)
+	{
+		return true;
 	}
 
 	int BlockCount = 0;
@@ -883,6 +885,12 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 		}
+	}
+
+	if (this->Body_Type == BodyType::down &&
+		direction == BodyType::down)
+	{
+
 	}
 
 	if (this->Body_Type == direction)
