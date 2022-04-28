@@ -1,7 +1,6 @@
 ﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
-#include <Raki_Input.h>
 #include "PlayerBody.h"
 #include "NY_random.h"
 #include <Raki_DX12B.h>
@@ -36,7 +35,18 @@ Stage* Stage::Get()
 Stage::Stage() :
 	stageData{},
 	initStageData{},
-	reverseMapchip(nullptr)
+	reverseMapchip(nullptr),
+	FoldHandle(0),
+	BlockHandle(0),
+	EmptyHandle(0),
+	GoalHandle(0),
+	FoldSprite{},
+	MapchipSpriteBlock{},
+	MapchipSpriteEmpty{},
+	MapchipSpriteGoal{},
+	IsParticleTrigger(false),
+	particleManager(nullptr),
+	FoldParticle(new ParticleSingle())
 {
 	Init();
 }
@@ -48,17 +58,6 @@ Stage::~Stage()
 
 void Stage::Init()
 {
-	BlockHandle = TexManager::LoadTexture("Resources/block.png");
-	EnptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
-	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
-
-	MapchipSpriteBlock.Create(BlockHandle);
-	MapchipSpriteEnpty.Create(EnptyHandle);
-	MapchipSpriteGoal.Create(GoalHandle);
-
-
-
-	this->Particlemanager->Prototype_Set(FoldParticle);
 }
 
 void Stage::Updata()
@@ -68,7 +67,7 @@ void Stage::Updata()
 
 	EaseingUpdate();
 
-	Particlemanager->Prototype_Update();
+	particleManager->Prototype_Update();
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -254,8 +253,6 @@ void Stage::Draw(int offsetX, int offsetY)
 
 	static RVector3 pos1, pos2;
 
-	//SetHierarchyAndColumn();
-
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -294,26 +291,21 @@ void Stage::Draw(int offsetX, int offsetY)
 					case MapchipData::START:
 					default:
 					{
-						MapchipSpriteEnpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						MapchipSpriteEmpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
-					}
-
-					if (j == 2)
-					{
-						int test = 0;
 					}
 				}
 			}
 		}
 
-		// つなぎ目
+		// 折り目の描画
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			static char sideStageTile = 0;
 			static char sideStageData = 0;
 
-			if ((stageData[i].stageTileData[j].stageNumber % stageData[i].width) - 1 >= 0)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) - 1 >= 0)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber - 1;
 
@@ -329,11 +321,11 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
-			if ((stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + 1;
 
@@ -349,11 +341,11 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
-			if (static_cast<int>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber - static_cast<char>(stageData[i].width);
 				sideStageData = stageData[i].stageTile[sideStageTile];
@@ -370,11 +362,11 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
-			if ((stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + static_cast<char>(stageData[i].width);
 
@@ -390,20 +382,54 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 						pos2.y = static_cast<float>((posY + 1) * blockSize + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
 		}
 	}
 
-	//Particlemanager->Prototype_Draw(EnptyHandle);
+	//particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
-	MapchipSpriteEnpty.Draw();
+	MapchipSpriteEmpty.Draw();
+	FoldSprite.Draw();
+}
+
+void Stage::Create()
+{
+	if ((MapchipSpriteBlock.spdata->size.x <= 0) || (MapchipSpriteBlock.spdata->size.y <= 0))
+	{
+		BlockHandle = TexManager::LoadTexture("Resources/block.png");
+		MapchipSpriteBlock.Create(BlockHandle);
+	}
+
+	if ((MapchipSpriteEmpty.spdata->size.x <= 0) || (MapchipSpriteEmpty.spdata->size.y <= 0))
+	{
+		EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
+		MapchipSpriteEmpty.Create(EmptyHandle);
+	}
+
+	if ((MapchipSpriteGoal.spdata->size.x <= 0) || (MapchipSpriteGoal.spdata->size.y <= 0))
+	{
+		GoalHandle = TexManager::LoadTexture("Resources/goal.png");
+		MapchipSpriteGoal.Create(GoalHandle);
+	}
+
+	if ((FoldSprite.spdata->size.x <= 0) || (FoldSprite.spdata->size.y <= 0))
+	{
+		FoldHandle = TexManager::LoadTexture("Resources/WhitePixle.png");
+		FoldSprite.Create(FoldHandle);
+	}
+
+	if (particleManager == nullptr)
+	{
+		particleManager = ParticleManager::Create();
+		particleManager->Prototype_Set(FoldParticle);
+	}
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -625,7 +651,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], PlayerBody BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
+int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
 	unsigned char direction = -1;
 	static size_t onPlayerStageTile = 0;
@@ -696,7 +722,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[0].IsActivate == true && OpenCount == 2 && IsOpens[0] == true)
+					if (BodyStatus[0] == true && OpenCount == 2 && IsOpens[0] == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -709,7 +735,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 				else
 				{
-					if (BodyStatus[0].IsActivate == true && IsFootAction == false && IsFolds[0] == true)
+					if (BodyStatus[0] == true && IsFootAction == false && IsFolds[0] == true)
 					{
 						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -750,7 +776,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[1].IsActivate == true && OpenCount == 2 && IsOpens[1] == true)
+					if (BodyStatus[1] == true && OpenCount == 2 && IsOpens[1] == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -763,7 +789,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 				else
 				{
-					if (BodyStatus[1].IsActivate == true && IsFootAction == false && IsFolds[1] == true)
+					if (BodyStatus[1] == true && IsFootAction == false && IsFolds[1] == true)
 					{
 						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -804,7 +830,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[2].IsActivate == true && OpenCount == 2 && IsOpens[2] == true)
+					if (BodyStatus[2] == true && OpenCount == 2 && IsOpens[2] == true)
 					{
 						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -817,7 +843,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 				else
 				{
-					if (BodyStatus[2].IsActivate == true && IsFootAction == false && IsFolds[2] == true)
+					if (BodyStatus[2] == true && IsFootAction == false && IsFolds[2] == true)
 					{
 						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -858,7 +884,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 
 				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					if (BodyStatus[3].IsActivate == true && OpenCount == 2 && IsOpens[3] == true)
+					if (BodyStatus[3] == true && OpenCount == 2 && IsOpens[3] == true)
 					{
 						Open(playerTile, direction, i, moveStageTile, moveStageData);
 
@@ -871,7 +897,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], P
 				}
 				else
 				{
-					if (BodyStatus[3].IsActivate == true && IsFootAction == false && IsFolds[3] == true)
+					if (BodyStatus[3] == true && IsFootAction == false && IsFolds[3] == true)
 					{
 						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
 
@@ -1238,7 +1264,7 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
 		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
-		this->Particlemanager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
+		this->particleManager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
 	}
 }
 
@@ -1597,9 +1623,9 @@ void ParticleSingle::Init()
 	float xvel = NY_random::floatrand_sl(3.0f, -3.0f);
 	float yvel = NY_random::floatrand_sl(3.0f, -3.0f);
 
-	vel = RVector3(xvel, yvel, 0);
+	vel = RVector3(xvel, yvel, 0.0f);
 
-	acc = RVector3(0.9, 0.9, 0);
+	acc = RVector3(0.9f, 0.9f, 0.0f);
 
 	scale = 3.0f;
 }

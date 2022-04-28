@@ -33,11 +33,6 @@ PlayerBody::PlayerBody() :
 	BodyDistance(1),
 	Ease{}
 {
-	//BodyColor = WHITE;
-	//Bodyhandle = LoadGraph("./Resources/playerSub.png");
-
-	Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
-	BodySprite.Create(Bodyhandle);
 }
 
 PlayerBody::~PlayerBody()
@@ -89,7 +84,19 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 
 		BodySprite.Draw();
 	}
-	return;
+	else
+	{
+		return;
+	}
+}
+
+void PlayerBody::Create()
+{
+	if ((BodySprite.spdata->size.x <= 0) || (BodySprite.spdata->size.y <= 0))
+	{
+		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
+		BodySprite.Create(Bodyhandle);
+	}
 }
 
 void PlayerBody::Body_Fold(RVector3& center)
@@ -871,6 +878,11 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 		}
+	}
+
+	if(this->Body_Type == direction)
+	{
+		return true;
 	}
 
 	return true;

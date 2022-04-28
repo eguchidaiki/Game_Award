@@ -30,9 +30,10 @@ public: //メンバ関数
 	void Init(RVector3 position, BodyType number);
 	// 更新
 	void Update(RVector3& center);
-	/// <summary>
 	// 描画
 	void Draw(int offsetX, int offsetY);
+	// 生成
+	void Create();
 
 	//折る
 	void Body_Fold(RVector3& center);
@@ -122,9 +123,6 @@ public: //メンバ変数
 
 	//イージング
 	Easing Ease;
-
-	//体の色
-	//int BodyColor;
 
 	//画像ハンドル
 	UINT Bodyhandle;
