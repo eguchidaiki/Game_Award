@@ -5,11 +5,11 @@
 
 namespace //関数間の受け渡しは必要無いが変数名が同じ物
 {
-	//各種フラグ
+	/*各種フラグ*/
 	static bool isFold = false; //折れるかどうか
 	static bool isOpen = false; //開けるかどうか
 
-	//フラグ以外
+	/*フラグ以外の変数*/
 	static Player* player = Player::Get(); //プレイヤー
 	static Stage* stage = Stage::Get();    //ステージ
 }
@@ -57,7 +57,6 @@ bool ActFlag::Jump()
 
 bool ActFlag::FoldUp()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubUpTrigger() && player->Player_IsAction == false &&
 		player->Body_Two.IsActivate && player->Body_Two.IsFold == false;
 
@@ -66,7 +65,6 @@ bool ActFlag::FoldUp()
 
 bool ActFlag::FoldDown()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubDownTrigger() && player->Player_IsAction == false &&
 		player->Body_Four.IsActivate && player->Body_Four.IsFold == false;
 
@@ -75,7 +73,6 @@ bool ActFlag::FoldDown()
 
 bool ActFlag::FoldLeft()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubLeftTrigger() && player->Player_IsAction == false &&
 		player->Body_One.IsActivate && player->Body_One.IsFold == false;
 
@@ -84,7 +81,6 @@ bool ActFlag::FoldLeft()
 
 bool ActFlag::FoldRight()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubRightTrigger() && player->Player_IsAction == false &&
 		player->Body_Three.IsActivate && player->Body_Three.IsFold == false;
 
