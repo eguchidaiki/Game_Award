@@ -14,10 +14,10 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	stage->Create();
 	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
-	player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 
-	//BackHandle = TexManager::LoadTexture("Resources/background03.png");
-	BackHandle = TexManager::LoadTexture("Resources/backSin.png");
+	BackHandle = TexManager::LoadTexture("Resources/background03.png");
+	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 }
 
@@ -44,19 +44,19 @@ void Title::Update() {
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
 		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(true, BodyType::left, true, BodyType::up, false, BodyType::right, false, BodyType::down);
 	}
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 #endif // _DEBUG
 
@@ -64,7 +64,7 @@ void Title::Update() {
 	{
 		stage->Reset();
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
 
 	player->Update(*stage, drawOffsetX, drawOffsetY);
