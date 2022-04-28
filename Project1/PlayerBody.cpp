@@ -835,7 +835,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip[mapchipPos] != NULL && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
 					BlockCount++;
 				}
@@ -849,7 +849,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip[mapchipPos] != NULL && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
 					BlockCount++;
 				}
@@ -863,7 +863,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip[mapchipPos] != NULL && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
 					BlockCount++;
 				}
@@ -877,7 +877,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip[mapchipPos] != NULL && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
 					BlockCount++;
 				}
@@ -885,7 +885,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 		}
 	}
 
-	if(this->Body_Type == direction)
+	if (this->Body_Type == direction)
 	{
 		return true;
 	}
