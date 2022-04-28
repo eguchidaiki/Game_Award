@@ -36,9 +36,11 @@ Stage::Stage() :
 	stageData{},
 	initStageData{},
 	reverseMapchip(nullptr),
+	FoldHandle(0),
 	BlockHandle(0),
 	EmptyHandle(0),
 	GoalHandle(0),
+	FoldSprite{},
 	MapchipSpriteBlock{},
 	MapchipSpriteEmpty{},
 	MapchipSpriteGoal{},
@@ -251,8 +253,6 @@ void Stage::Draw(int offsetX, int offsetY)
 
 	static RVector3 pos1, pos2;
 
-	//SetHierarchyAndColumn();
-
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -299,13 +299,13 @@ void Stage::Draw(int offsetX, int offsetY)
 			}
 		}
 
-		// つなぎ目
+		// 折り目の描画
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			static char sideStageTile = 0;
 			static char sideStageData = 0;
 
-			if ((stageData[i].stageTileData[j].stageNumber % stageData[i].width) - 1 >= 0)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) - 1 >= 0)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber - 1;
 
@@ -321,11 +321,11 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
-			if ((stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + 1;
 
@@ -341,11 +341,11 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
-			if (static_cast<int>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber - static_cast<char>(stageData[i].width);
 				sideStageData = stageData[i].stageTile[sideStageTile];
@@ -362,11 +362,11 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + offsetY);
 						pos2.y = static_cast<float>(posY * blockSize + blockSize * 1 / 4 + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
-			if ((stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
+			if (static_cast<char>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + static_cast<char>(stageData[i].width);
 
@@ -382,7 +382,7 @@ void Stage::Draw(int offsetX, int offsetY)
 						pos1.y = static_cast<float>(posY * blockSize + blockSize * 3 / 4 + offsetY);
 						pos2.y = static_cast<float>((posY + 1) * blockSize + offsetY);
 
-						//DrawShape::DrawPlane(pos1, pos2, BLACK);
+						FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 					}
 				}
 			}
@@ -396,36 +396,34 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEmpty.Draw();
+	FoldSprite.Draw();
 }
 
 void Stage::Create()
 {
-	if (MapchipSpriteBlock.spdata->size.x * MapchipSpriteBlock.spdata->size.y == 0)
+	if ((MapchipSpriteBlock.spdata->size.x <= 0) || (MapchipSpriteBlock.spdata->size.y <= 0))
 	{
 		BlockHandle = TexManager::LoadTexture("Resources/block.png");
 		MapchipSpriteBlock.Create(BlockHandle);
 	}
 
-	BlockHandle = TexManager::LoadTexture("Resources/block.png");
-	MapchipSpriteBlock.Create(BlockHandle);
-
-	if (MapchipSpriteEmpty.spdata->size.x * MapchipSpriteEmpty.spdata->size.y == 0)
+	if ((MapchipSpriteEmpty.spdata->size.x <= 0) || (MapchipSpriteEmpty.spdata->size.y <= 0))
 	{
 		EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
 		MapchipSpriteEmpty.Create(EmptyHandle);
 	}
 
-	EmptyHandle = TexManager::LoadTexture("Resources/stage_enpty.png");
-	MapchipSpriteEmpty.Create(EmptyHandle);
-
-	if (MapchipSpriteGoal.spdata->size.x * MapchipSpriteGoal.spdata->size.y == 0)
+	if ((MapchipSpriteGoal.spdata->size.x <= 0) || (MapchipSpriteGoal.spdata->size.y <= 0))
 	{
 		GoalHandle = TexManager::LoadTexture("Resources/goal.png");
 		MapchipSpriteGoal.Create(GoalHandle);
 	}
 
-	GoalHandle = TexManager::LoadTexture("Resources/goal.png");
-	MapchipSpriteGoal.Create(GoalHandle);
+	if ((FoldSprite.spdata->size.x <= 0) || (FoldSprite.spdata->size.y <= 0))
+	{
+		FoldHandle = TexManager::LoadTexture("Resources/WhitePixle.png");
+		FoldSprite.Create(FoldHandle);
+	}
 
 	if (particleManager == nullptr)
 	{

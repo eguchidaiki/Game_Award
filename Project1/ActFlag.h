@@ -10,6 +10,16 @@ private:
 	~ActFlag();
 	ActFlag operator=(const ActFlag*) = delete;
 
+public: //静的メンバ関数
+	// マウスを使う場合はtrue
+	static void SetMouseFlag(bool mouseFlag = false)
+	{
+		isMouse = mouseFlag;
+	}
+
+public: //静的メンバ変数
+	static bool isMouse; //マウスを使うかどうか
+
 public: //メンバ関数
 	// 決定
 	bool Decision();
