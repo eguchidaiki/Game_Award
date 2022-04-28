@@ -9,7 +9,7 @@ namespace //関数間の受け渡しは必要無いが変数名が同じ物
 	static bool isFold = false; //折れるかどうか
 	static bool isOpen = false; //開けるかどうか
 
-	/*フラグ以外*/
+	/*フラグ以外の変数*/
 	static Player* player = Player::Get(); //プレイヤー
 	static Stage* stage = Stage::Get();    //ステージ
 }
@@ -57,12 +57,11 @@ bool ActFlag::Jump()
 
 bool ActFlag::FoldUp()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubUpTrigger() && player->Player_IsAction == false &&
 		player->Body_Two.IsActivate && player->Body_Two.IsFold == false;
 	//if (isFold)
 	//{
-	//    isFold = InputManger::SubUpTrigger();
+		//isFold = InputManger::SubUpTrigger();
 	//}
 
 	return isFold;
@@ -70,12 +69,11 @@ bool ActFlag::FoldUp()
 
 bool ActFlag::FoldDown()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubDownTrigger() && player->Player_IsAction == false &&
 		player->Body_Four.IsActivate && player->Body_Four.IsFold == false;
 	//if (isFold)
 	//{
-	//    isFold = InputManger::SubDownTrigger();
+		//isFold = InputManger::SubDownTrigger();
 	//}
 
 	return isFold;
@@ -83,12 +81,11 @@ bool ActFlag::FoldDown()
 
 bool ActFlag::FoldLeft()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubLeftTrigger() && player->Player_IsAction == false &&
 		player->Body_One.IsActivate && player->Body_One.IsFold == false;
 	//if (isFold)
 	//{
-	//    isFold = InputManger::SubLeftTrigger();
+		//isFold = InputManger::SubLeftTrigger();
 	//}
 
 	return isFold;
@@ -96,12 +93,11 @@ bool ActFlag::FoldLeft()
 
 bool ActFlag::FoldRight()
 {
-	// キーボード&コントローラー入力
 	isFold = InputManger::SubRightTrigger() && player->Player_IsAction == false &&
 		player->Body_Three.IsActivate && player->Body_Three.IsFold == false;
 	//if (isFold)
 	//{
-	//	isFold = InputManger::SubRightTrigger();
+		//isFold = InputManger::SubRightTrigger();
 	//}
 
 	return isFold;
@@ -114,7 +110,7 @@ bool ActFlag::OpenUp()
 		player->Body_Two.IsFold && player->Body_Two.AfterBodyFoldCount == 0 && player->IsUpBlocked;
 	//if (isOpen)
 	//{
-	//    isOpen = InputManger::SubUpTrigger();
+		//isOpen = InputManger::SubUpTrigger();
 	//}
 
 	return isOpen;
@@ -127,7 +123,7 @@ bool ActFlag::OpenDown()
 		player->Body_Four.IsFold && player->Body_Four.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
-	//    isOpen = InputManger::SubDownTrigger();
+		//isOpen = InputManger::SubDownTrigger();
 	//}
 
 	return isOpen;
@@ -140,7 +136,7 @@ bool ActFlag::OpenLeft()
 		player->Body_One.IsFold && player->Body_One.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
-	//    isOpen = InputManger::SubLeftTrigger();
+		//isOpen = InputManger::SubLeftTrigger();
 	//}
 
 	return isOpen;
@@ -153,7 +149,7 @@ bool ActFlag::OpenRight()
 		player->Body_Three.IsFold && player->Body_Three.AfterBodyFoldCount == 0;
 	//if (isOpen)
 	//{
-	//	isOpen = InputManger::SubRightTrigger();
+		//isOpen = InputManger::SubRightTrigger();
 	//}
 
 	return isOpen;
