@@ -62,7 +62,7 @@ void Title::Update() {
 
 	if (Input::isKeyTrigger(DIK_R))
 	{
-		stage->Reset();
+		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
