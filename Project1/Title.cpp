@@ -39,7 +39,7 @@ void Title::Finalize()
 void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-#ifdef _DEBUG
+	//#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
@@ -52,13 +52,13 @@ void Title::Update() {
 		player->Init();
 		player->BodySetUp(true, BodyType::left, true, BodyType::up, false, BodyType::right, false, BodyType::down);
 	}
+#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
-		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(true, BodyType::left, true, BodyType::up, false, BodyType::right, false, BodyType::down);
 	}
-#endif // _DEBUG
 
 	if (Input::isKeyTrigger(DIK_R))
 	{
@@ -66,13 +66,14 @@ void Title::Update() {
 		player->Init();
 		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
+#endif // _DEBUG
 
 	player->Update(*stage, drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
 
-	bool IsFolds[4] = { 
+	bool IsFolds[4] = {
 		player->IsUpFold,
 		player->IsDownFold,
 		player->IsLeftFold,
