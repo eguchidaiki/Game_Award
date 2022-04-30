@@ -2,6 +2,7 @@
 #include "Raki_imguiMgr.h"
 #include "TexManager.h"
 
+#include "InputManger.h"
 #include "NY_random.h"
 
 using namespace myImgui;
@@ -12,9 +13,9 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
-	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
+	stage->LoadStage("./Resources/stage/test.csv", playerTile);
 	player->Init();
-	player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	player->BodySetUp(playerTile);
 
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
@@ -44,30 +45,30 @@ void Title::Update() {
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 		player->Init();
-		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
 		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
 		player->Init();
-		player->BodySetUp(true, BodyType::left, true, BodyType::up, false, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
-		player->BodySetUp(true, BodyType::left, true, BodyType::up, false, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
 
-	if (Input::isKeyTrigger(DIK_R))
+#endif // _DEBUG
+
+	if (InputManger::ResetTrigger())
 	{
 		stage->Reset(playerTile);
 		player->Init();
-		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
-#endif // _DEBUG
-
 	player->Update(*stage, drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
