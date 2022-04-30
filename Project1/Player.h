@@ -82,6 +82,9 @@ public: //メンバ関数
 	//顔の下に体があるかどうか
 	void IsdownBody();
 
+	//ブロックに邪魔されずにスライドできるかどうか
+	bool IsSlideBlock(BodyType SlideType);
+
 public: //メンバ変数
 	//床の高さ
 	float FloorHeight;
@@ -125,6 +128,12 @@ public: //メンバ変数
 	bool IsUpOpen;
 	bool IsRightOpen;
 	bool IsDownOpen;
+
+	//スライドできるかどうか
+	bool IsLeftSlide;
+	bool IsUpSlide;
+	bool IsRightSlide;
+	bool IsDownSlide;
 
 	//開くまでに数フレーム空ける用
 	int OpenCount = 0;
