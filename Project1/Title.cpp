@@ -2,6 +2,7 @@
 #include "Raki_imguiMgr.h"
 #include "TexManager.h"
 
+#include "InputManger.h"
 #include "NY_random.h"
 
 using namespace myImgui;
@@ -12,11 +13,12 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
-	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
+	stage->LoadStage("./Resources/stage/test.csv", playerTile);
 	player->Init();
-	player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+	player->BodySetUp(playerTile);
 
-	BackHandle = TexManager::LoadTexture("Resources/backSin.png");
+	BackHandle = TexManager::LoadTexture("Resources/background03.png");
+	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 }
 
@@ -38,40 +40,41 @@ void Title::Finalize()
 void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-#ifdef _DEBUG
+	//#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
 		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
+#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
+
 #endif // _DEBUG
 
-	if (Input::isKeyTrigger(DIK_R))
+	if (InputManger::ResetTrigger())
 	{
-		stage->Reset();
+		stage->Reset(playerTile);
 		player->Init();
-		player->bodysetup(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
+		player->BodySetUp(playerTile);
 	}
-
 	player->Update(*stage, drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
 
-	bool IsFolds[4] = { 
+	bool IsFolds[4] = {
 		player->IsUpFold,
 		player->IsDownFold,
 		player->IsLeftFold,

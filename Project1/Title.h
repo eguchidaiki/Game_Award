@@ -3,7 +3,6 @@
 #include "ISceneChanger.h"
 #include "NY_Object3DMgr.h"
 #include "SpriteManager.h"
-#include "Raki_Input.h"
 #include "Audio.h"
 #include "../RakiEngine_Library/SpriteManager.h"
 
@@ -42,7 +41,7 @@ public:
     Stage *stage = Stage::Get();
 
 
-    const int drawOffsetX = 320, drawOffsetY = 0;
+    const int drawOffsetX = 320, drawOffsetY = 45;
 
 };
 

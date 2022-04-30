@@ -46,8 +46,8 @@ public: //メンバ関数
 	/// <param name="one">body_one</param>
 	/// <param name="two">body_two</param>
 	/// <param name="three">body_three</param>
-	void bodysetup(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
-	void bodysetup(const unsigned char foldCount[4]);
+	void BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
+	void BodySetUp(const unsigned char foldCount[4]);
 
 	//折る
 	void Fold();

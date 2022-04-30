@@ -81,8 +81,12 @@ public: //サブクラス
 	};
 
 public: //定数
-	static const int blockSize;
-	static const int halfBlockSize;
+	static const int blockSize;     //ブロックの大きさ
+	static const int halfBlockSize; //ブロックの半分の大きさ
+
+	static const int lineWidth;         //線の太さ
+	static const int foldLineCount;     //折れ目の間隔
+	static const XMFLOAT4 lineColor[2]; //線の色
 
 	RVector3 offset = { 0,0,0 };
 
@@ -121,7 +125,7 @@ public: //メンバ関数
 	/// <returns> 0で折れる、1で開ける、-1で失敗 </returns>
 	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip);
 	// リセット
-	void Reset();
+	void Reset(unsigned char foldCount[4]);
 	// 内部データ全削除
 	void DataClear();
 
@@ -177,12 +181,14 @@ public: //メンバ関数
 	}
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
-
 private:
 	// ステージを折る
 	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
 	// ステージを開く
 	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageTile, const size_t& moveStageData);
+
+	// 枠線の描画
+	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction, int offsetX, int offsetY);
 
 	// イージングの初期化
 	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);

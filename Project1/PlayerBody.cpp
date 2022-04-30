@@ -817,6 +817,13 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 		//return false;
 	}
 
+	if (this->Body_Type == direction)
+	{
+		return true;
+	}
+
+	int BlockCount = 0;
+
 	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
 	{
 		for (size_t j = 0; j < stage.GetStageTileDataSize(i); j++)
@@ -830,9 +837,9 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 			//左下
@@ -844,9 +851,9 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 			//右上
@@ -858,9 +865,9 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 			//右下
@@ -872,17 +879,22 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
-					return false;
+					BlockCount++;
 				}
 			}
 		}
 	}
 
-	if(this->Body_Type == direction)
+	if (this->Body_Type == direction)
 	{
 		return true;
+	}
+
+	if (BlockCount > 0)
+	{
+		return false;
 	}
 
 	return true;
