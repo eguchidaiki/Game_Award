@@ -3,7 +3,6 @@
 #include "ISceneChanger.h"
 #include "NY_Object3DMgr.h"
 #include "SpriteManager.h"
-#include "Raki_Input.h"
 #include "Audio.h"
 #include "../RakiEngine_Library/SpriteManager.h"
 
