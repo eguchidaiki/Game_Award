@@ -35,6 +35,8 @@ public: //メンバ関数
 	void Key_Slide();
 
 	//マウス操作
+	//入力状態
+	void Mouse_Input(int offsetX, int offsetY);
 	//移動
 	void Mouse_Move(int offsetX, int offsetY);
 	//折る・開く

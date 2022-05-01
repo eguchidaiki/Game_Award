@@ -82,6 +82,9 @@ void Player::Init()
 
 void Player::Update(Stage& stage, int offsetX, int offsetY)
 {
+	//マウス入力
+	Mouse_Input(offsetX, offsetY);
+
 	//マウス移動
 	Mouse_Move(offsetX, offsetY);
 
@@ -653,7 +656,7 @@ void Player::Key_Slide()
 	}
 }
 
-void Player::Mouse_Move(int offsetX, int offsetY)
+void Player::Mouse_Input(int offsetX, int offsetY)
 {
 	//マウス左ボタンを押したときの座標
 	if (Input::isMouseClickTrigger(0))
@@ -679,7 +682,10 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	}
 
 	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
+}
 
+void Player::Mouse_Move(int offsetX, int offsetY)
+{
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
@@ -2264,7 +2270,43 @@ void Player::IsHitPlayerBody(Stage& stage)
 		}
 	}
 
-	if (JumpCountLeft > 0 || jumpCountRight > 0)
+	bool DiagonallyUpLeft = false;
+	bool DiagonallyUpRight = false;
+
+	//進む方向の斜め上にブロックがあるかどうか
+	for (i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			if (stage.GetPositionTile({ FaceLeft - 20,FaceUp - 20,0.0f }, i, j))
+			{
+				left_mapchip_tile = (left_mapchip - 1) % stage.GetStageTileWidth(i, j);
+				up_mapchip_tile = (up_mapchip - 1) % stage.GetStageTileHeight(i, j);
+
+				MapchipPos = up_mapchip_tile * stage.GetStageTileWidth(i, j) + left_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
+					Player::Get()->IsLeft == true)
+				{
+					DiagonallyUpLeft = true;
+				}
+			}
+
+			if (stage.GetPositionTile({ FaceRight + 20,FaceUp - 20,0.0f }, i, j))
+			{
+				right_mapchip_tile = (right_mapchip + 1) % stage.GetStageTileWidth(i, j);
+				up_mapchip_tile = (up_mapchip - 1) % stage.GetStageTileHeight(i, j);
+
+				MapchipPos = up_mapchip_tile * stage.GetStageTileWidth(i, j) + right_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
+					Player::Get()->IsRight == true)
+				{
+					DiagonallyUpRight = true;
+				}
+			}
+		}
+	}
+
+	if ((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false))
 	{
 		IsJump = true;
 		FallSpeed = -5.6f;
