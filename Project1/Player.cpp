@@ -747,10 +747,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right ||
-					Body_One.IsActivate == true && Body_One.IsFold == true &&
-					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right &&
+				if (((Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
+					(Body_One.IsActivate == true && Body_One.IsFold == true &&
+						Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
 					IsMouseClickOpen(BodyType::right, stage))
 				{
 					OpenCount = 0;
@@ -768,10 +768,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_One.IsActivate == true && Body_One.IsFold == true &&
+				if ((Body_One.IsActivate == true && Body_One.IsFold == true &&
 					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
 					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
 					IsMouseClickOpen(BodyType::left, stage))
 				{
 					OpenCount = 0;
@@ -793,10 +793,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+				if ((Body_Four.IsActivate == true && Body_Four.IsFold == true &&
 					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
 					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
 					IsMouseClickOpen(BodyType::down, stage))
 				{
 					OpenCount = 0;
@@ -816,10 +816,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					leg.Set();
 					return;
 				}
-				if (Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+				if ((Body_Two.IsActivate == true && Body_Two.IsFold == true &&
 					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
 					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
 					IsUpBlocked == true && IsMouseClickOpen(BodyType::up, stage))
 				{
 					OpenCount = 0;
@@ -838,9 +838,6 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 	int PlayerStage = -1;
 	int PlayerTile = -1;
 
-	int PressStage = -1;
-	int PressTile = -1;
-
 	int ReleaseStage = -1;
 	int ReleaseTile = -1;
 
@@ -854,12 +851,6 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 				PlayerTile = j;
 			}
 
-			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j) == true)
-			{
-				PressStage = i;
-				PressTile = j;
-			}
-
 			if (stage.GetPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j) == true)
 			{
 				ReleaseStage = i;
@@ -868,22 +859,67 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 		}
 	}
 
-	if (PlayerStage != -1 && PressStage != -1 && ReleaseStage != -1)
+	float TileLeft = -1;
+	float TileRight = -1;
+	float TileUp = -1;
+	float TileDown = -1;
+
+	if (PlayerStage != -1 && ReleaseStage != -1 &&
+		PlayerStage == ReleaseStage && PlayerTile == ReleaseTile)
 	{
-		if (ReleaseStage == PlayerStage && ReleaseTile == PlayerTile)
+		switch (Direction)
 		{
-			if (Direction == BodyType::left || Direction == BodyType::right)
-			{
-				return stage.GetStageTileOffsetY(PressStage, PressTile) && stage.GetStageTileOffsetY(PlayerStage, PlayerTile);
-			}
-			if (Direction == BodyType::up || Direction == BodyType::down)
-			{
-				return stage.GetStageTileOffsetX(PressStage, PressTile) && stage.GetStageTileOffsetX(PlayerStage, PlayerTile);
-			}
+		case BodyType::left:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			break;
+		}
+		case BodyType::right:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			break;
+		}
+		case BodyType::up:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			break;
+		}
+		case BodyType::down:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
+			break;
+		}
+
 		}
 	}
+	else
+	{
+		return false;
+	}
 
-	return false;
+	if (TileLeft <= PressPos.x &&
+		TileRight >= PressPos.x &&
+		TileUp <= PressPos.y &&
+		TileDown >= PressPos.y)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
@@ -894,9 +930,6 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 	int PressStage = -1;
 	int PressTile = -1;
 
-	int ReleaseStage = -1;
-	int ReleaseTile = -1;
-
 	for (int i = 0; i < stage.GetStageDataSize(); i++)
 	{
 		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
@@ -912,31 +945,70 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 				PressStage = i;
 				PressTile = j;
 			}
-
-			if (stage.GetPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j) == true)
-			{
-				ReleaseStage = i;
-				ReleaseTile = j;
-			}
 		}
 	}
 
-	if (PlayerStage != -1 && PressStage != -1 && ReleaseStage != -1)
+	float TileLeft = -1;
+	float TileRight = -1;
+	float TileUp = -1;
+	float TileDown = -1;
+
+	if (PlayerStage != -1 && PressStage != -1 &&
+		PlayerStage == PressStage && PlayerTile == PressTile)
 	{
-		if (PressStage == PlayerStage && PressTile == PlayerTile)
+		switch (Direction)
 		{
-			if (Direction == BodyType::left || Direction == BodyType::right)
-			{
-				return stage.GetStageTileOffsetY(ReleaseStage, ReleaseTile) && stage.GetStageTileOffsetY(PlayerStage, PlayerTile);
-			}
-			else
-			{
-				return stage.GetStageTileOffsetX(ReleaseStage, ReleaseTile) && stage.GetStageTileOffsetX(PlayerStage, PlayerTile);
-			}
+		case BodyType::left:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			break;
+		}
+		case BodyType::right:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			break;
+		}
+		case BodyType::up:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			break;
+		}
+		case BodyType::down:
+		{
+			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
+			break;
+		}
+
 		}
 	}
+	else
+	{
+		false;
+	}
 
-	return false;
+	if (TileLeft <= ReleasePos.x &&
+		TileRight >= ReleasePos.x &&
+		TileUp <= ReleasePos.y &&
+		TileDown >= ReleasePos.y)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
