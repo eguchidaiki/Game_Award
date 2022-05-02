@@ -288,6 +288,9 @@ void Player::Draw(int offsetX, int offsetY)
 	ImGui::Text("PressCount:%d", PressCount);
 	ImGui::Text("IsWalk:%d", IsWalk);
 	ImGui::Text("IsJump:%d", IsJump);
+	ImGui::Text("x:%f", CenterPosition.x);
+	ImGui::Text("y:%f", CenterPosition.y);
+	ImGui::Text("z:%f", CenterPosition.z);
 	ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 }
@@ -737,7 +740,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 		{
 			if (DragDis.x > 0)
 			{
-				if (IsDirectionFoldAll(stage, BodyType::left))
+				if (IsDirectionFoldAll(stage, BodyType::left) && IsMouseClickFold(BodyType::left, stage))
 				{
 					Player_IsAction = true;
 					IsLeftFold = true;
@@ -747,7 +750,8 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				if (Body_Three.IsActivate == true && Body_Three.IsFold == true &&
 					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right ||
 					Body_One.IsActivate == true && Body_One.IsFold == true &&
-					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)
+					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right &&
+					IsMouseClickOpen(BodyType::right, stage))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -757,7 +761,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 			else
 			{
-				if (IsDirectionFoldAll(stage, BodyType::right))
+				if (IsDirectionFoldAll(stage, BodyType::right) && IsMouseClickFold(BodyType::right, stage))
 				{
 					Player_IsAction = true;
 					IsRightFold = true;
@@ -767,7 +771,8 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				if (Body_One.IsActivate == true && Body_One.IsFold == true &&
 					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
 					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left)
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left &&
+					IsMouseClickOpen(BodyType::left, stage))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -780,7 +785,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 		{
 			if (DragDis.y > 0)
 			{
-				if (IsDirectionFoldAll(stage, BodyType::up))
+				if (IsDirectionFoldAll(stage, BodyType::up) && IsMouseClickFold(BodyType::up, stage))
 				{
 					Player_IsAction = true;
 					IsUpFold = true;
@@ -791,7 +796,8 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 				if (Body_Four.IsActivate == true && Body_Four.IsFold == true &&
 					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
 					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down)
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down &&
+					IsMouseClickOpen(BodyType::down, stage))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -802,7 +808,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 			else
 			{
-				if (IsDirectionFoldAll(stage, BodyType::down))
+				if (IsDirectionFoldAll(stage, BodyType::down) && IsMouseClickFold(BodyType::down, stage))
 				{
 					Player_IsAction = true;
 					IsDownFold = true;
@@ -814,7 +820,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
 					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
 					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up &&
-					IsUpBlocked == true)
+					IsUpBlocked == true && IsMouseClickOpen(BodyType::up, stage))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -825,6 +831,112 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 		}
 	}
+}
+
+bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
+{
+	int PlayerStage = -1;
+	int PlayerTile = -1;
+
+	int PressStage = -1;
+	int PressTile = -1;
+
+	int ReleaseStage = -1;
+	int ReleaseTile = -1;
+
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			if (stage.GetPositionTile(CenterPosition, i, j) == true)
+			{
+				PlayerStage = i;
+				PlayerTile = j;
+			}
+
+			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j) == true)
+			{
+				PressStage = i;
+				PressTile = j;
+			}
+
+			if (stage.GetPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j) == true)
+			{
+				ReleaseStage = i;
+				ReleaseTile = j;
+			}
+		}
+	}
+
+	if (PlayerStage != -1 && PressStage != -1 && ReleaseStage != -1)
+	{
+		if (ReleaseStage == PlayerStage && ReleaseTile == PlayerTile)
+		{
+			if (Direction == BodyType::left || Direction == BodyType::right)
+			{
+				return stage.GetStageTileOffsetY(PressStage, PressTile) && stage.GetStageTileOffsetY(PlayerStage, PlayerTile);
+			}
+			if (Direction == BodyType::up || Direction == BodyType::down)
+			{
+				return stage.GetStageTileOffsetX(PressStage, PressTile) && stage.GetStageTileOffsetX(PlayerStage, PlayerTile);
+			}
+		}
+	}
+
+	return false;
+}
+
+bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
+{
+	int PlayerStage = -1;
+	int PlayerTile = -1;
+
+	int PressStage = -1;
+	int PressTile = -1;
+
+	int ReleaseStage = -1;
+	int ReleaseTile = -1;
+
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			if (stage.GetPositionTile(CenterPosition, i, j) == true)
+			{
+				PlayerStage = i;
+				PlayerTile = j;
+			}
+
+			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j) == true)
+			{
+				PressStage = i;
+				PressTile = j;
+			}
+
+			if (stage.GetPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j) == true)
+			{
+				ReleaseStage = i;
+				ReleaseTile = j;
+			}
+		}
+	}
+
+	if (PlayerStage != -1 && PressStage != -1 && ReleaseStage != -1)
+	{
+		if (PressStage == PlayerStage && PressTile == PlayerTile)
+		{
+			if (Direction == BodyType::left || Direction == BodyType::right)
+			{
+				return stage.GetStageTileOffsetY(ReleaseStage, ReleaseTile) && stage.GetStageTileOffsetY(PlayerStage, PlayerTile);
+			}
+			else
+			{
+				return stage.GetStageTileOffsetX(ReleaseStage, ReleaseTile) && stage.GetStageTileOffsetX(PlayerStage, PlayerTile);
+			}
+		}
+	}
+
+	return false;
 }
 
 void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)

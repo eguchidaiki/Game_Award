@@ -41,6 +41,10 @@ public: //メンバ関数
 	void Mouse_Move(int offsetX, int offsetY);
 	//折る・開く
 	void Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage);
+	//クリックした時のタイル状のマウス座標とプレイヤーのタイル状の座標を比較
+	bool IsMouseClickFold(BodyType Direction, Stage& stage);
+	bool IsMouseClickOpen(BodyType Direction, Stage& stage);
+
 
 	/// <summary>
 	/// どの体を有効化するか
