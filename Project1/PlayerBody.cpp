@@ -605,6 +605,9 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 
 	int FallCount = 0;
 
+	int JumpCountLeft = 0;
+	int jumpCountRight = 0;
+
 	if (BodyLeft < stage.offset.x)
 	{
 		center->x = stage.offset.x + (center->x - BodyLeft);
@@ -616,6 +619,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 		iscolide = true;
 	}
 
+	//体の四隅とブロックとの判定
 	for (i = 0; i < stage.GetStageDataSize(); i++)
 	{
 		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
@@ -649,6 +653,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
 							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
+							JumpCountLeft++;
 						}
 					}
 				}
@@ -676,8 +681,9 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-							Player::Get()->IsWalk = false;
+							Player::Get()->IsWalk = Player::Get()->IsWalk && Player::Get()->IsRight;
 							IsHitLeft = true;
+							JumpCountLeft++;
 						}
 					}
 				}
@@ -710,6 +716,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
 							Player::Get()->IsWalk = false;
 							IsHitRight = true;
+							jumpCountRight++;
 						}
 					}
 				}
@@ -737,12 +744,59 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
-							Player::Get()->IsWalk = false;
+							Player::Get()->IsWalk = Player::Get()->IsWalk && Player::Get()->IsLeft;
 							IsHitRight = true;
+							jumpCountRight++;
 						}
 					}
 				}
 			}
+		}
+	}
+
+	bool DiagonallyUpLeft = false;
+	bool DiagonallyUpRight = false;
+
+	//進む方向の斜め上にブロックがあるかどうか
+	for (i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			if (stage.GetPositionTile({ BodyLeft - 20,BodyUp - 20,0.0f }, i, j))
+			{
+				BodyLeft_mapchip_tile = (BodyLeft_mapchip - 1) % stage.GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage.GetStageTileHeight(i, j);
+
+				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
+					Player::Get()->IsLeft == true)
+				{
+					DiagonallyUpLeft = true;
+				}
+			}
+
+			if (stage.GetPositionTile({ BodyRight + 20,BodyUp - 20,0.0f }, i, j))
+			{
+				BodyRight_mapchip_tile = (BodyRight_mapchip + 1) % stage.GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage.GetStageTileHeight(i, j);
+
+				mapchipPos = (BodyUp_mapchip_tile)*stage.GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
+					Player::Get()->IsRight == true)
+				{
+					DiagonallyUpRight = true;
+				}
+			}
+		}
+	}
+
+	if ((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false))
+	{
+		if (Player::Get()->IsJump == false)
+		{
+			Player::Get()->IsJump = true;
+			Player::Get()->FallSpeed = -5.6f;
+			Player::Get()->IsWalk = true;
 		}
 	}
 

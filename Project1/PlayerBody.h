@@ -69,6 +69,8 @@ public: //メンバ関数
 	/// <param name="stage">ステージデータ</param>
 	bool IsReverseHitBody(Stage& stage, const unsigned char& direction);
 
+	
+
 public: //メンバ変数
 	//有効化フラグ
 	bool IsActivate;
