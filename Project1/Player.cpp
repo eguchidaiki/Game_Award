@@ -150,6 +150,27 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	IsdownBody();
 	leg.Update(CenterPosition, IsDownBody, 1);
+	if (leg.FootIsAction == false)
+	{
+		if (CenterPosition.y + 25 <= Body_Two.BodyEndPos.y && Body_Two.IsActivate)
+		{
+			if (Body_Four.IsActivate && Body_Four.IsOpen && Body_Four.BodyEndPos.y <= Body_Two.BodyEndPos.y)
+			{
+				leg.FootLeftUpPosition.x = CenterPosition.x - 30;
+				leg.FootLeftUpPosition.y = Body_Four.BodyEndPos.y;
+			}
+			else
+			{
+				leg.FootLeftUpPosition.x = CenterPosition.x - 30;
+				leg.FootLeftUpPosition.y = Body_Two.BodyEndPos.y;
+			}
+		}
+		else
+		{
+			leg.FootLeftUpPosition.x = CenterPosition.x - 30;
+			leg.FootLeftUpPosition.y = CenterPosition.y + 25;
+		}
+	}
 
 	if (Body_One.IsActivate == true)
 	{
