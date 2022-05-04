@@ -185,7 +185,7 @@ void Player::Draw(int offsetX, int offsetY)
 	leg.Draw(offsetX, offsetY, IsLeft, IsRight);
 	if (IsLeft)
 	{
-		if (Player_IsAction == true)
+		if (Player_IsAction)
 		{
 			PlayerSpriteAction.DrawExtendSprite(
 				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
@@ -203,7 +203,7 @@ void Player::Draw(int offsetX, int offsetY)
 	}
 	if (IsRight)
 	{
-		if (Player_IsAction == true)
+		if (Player_IsAction)
 		{
 			PlayerSpriteAction.DrawExtendSprite(
 				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
@@ -279,8 +279,14 @@ void Player::Draw(int offsetX, int offsetY)
 
 #pragma endregion //body_draw
 
-	PlayerSprite.Draw();
-	PlayerSpriteAction.Draw();
+	if(Player_IsAction)
+	{
+		PlayerSpriteAction.Draw();
+	}
+	else
+	{
+		PlayerSprite.Draw();
+	}
 
 	//goalParticle.Draw()
 
@@ -352,137 +358,137 @@ void Player::Key_FoldOpen(Stage& stage)
 	//折る入力
 	//if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	if (actFlag->FoldLeft())
-	{
-		if (IsDirectionFoldAll(stage, BodyType::left))
+	{ //左に折る
+		if (IsDirectionFoldAll(stage, BodyType::right))
 		{
 			Player_IsAction = true;
 			IsLeftFold = true;
 			leg.Set();
 			return;
 		}
-		if (IsBodysFold(BodyType::left))
-		{
-			Player_IsAction = true;
-			IsLeftFold = true;
-			leg.Set();
-			return;
-		}
+		//if (IsBodysFold(BodyType::left))
+		//{
+		//	Player_IsAction = true;
+		//	IsLeftFold = true;
+		//	leg.Set();
+		//	return;
+		//}
 	}
 	//if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	if (actFlag->FoldUp())
-	{
-		if (IsDirectionFoldAll(stage, BodyType::up))
+	{ //上に折る
+		if (IsDirectionFoldAll(stage, BodyType::down))
 		{
 			Player_IsAction = true;
 			IsUpFold = true;
 			leg.Set();
 			return;
 		}
-		if (IsBodysFold(BodyType::up))
-		{
-			Player_IsAction = true;
-			IsLeftFold = true;
-			leg.Set();
-			return;
-		}
+		//if (IsBodysFold(BodyType::up))
+		//{
+		//	Player_IsAction = true;
+		//	IsLeftFold = true;
+		//	leg.Set();
+		//	return;
+		//}
 	}
 	//if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	if (actFlag->FoldRight())
-	{
-		if (IsDirectionFoldAll(stage, BodyType::right))
+	{ //右に折る
+		if (IsDirectionFoldAll(stage, BodyType::left))
 		{
 			Player_IsAction = true;
 			IsRightFold = true;
 			leg.Set();
 			return;
 		}
-		if (IsBodysFold(BodyType::right))
-		{
-			Player_IsAction = true;
-			IsLeftFold = true;
-			leg.Set();
-			return;
-		}
+		//if (IsBodysFold(BodyType::right))
+		//{
+		//	Player_IsAction = true;
+		//	IsLeftFold = true;
+		//	leg.Set();
+		//	return;
+		//}
 	}
 	//if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	if (actFlag->FoldDown())
-	{
-		if (IsDirectionFoldAll(stage, BodyType::down))
+	{ //下に折る
+		if (IsDirectionFoldAll(stage, BodyType::up))
 		{
 			Player_IsAction = true;
 			IsDownFold = true;
 			leg.Set();
 			return;
 		}
-		if (IsBodysFold(BodyType::down))
-		{
-			Player_IsAction = true;
-			IsLeftFold = true;
-			leg.Set();
-			return;
-		}
+		//if (IsBodysFold(BodyType::down))
+		//{
+		//	Player_IsAction = true;
+		//	IsLeftFold = true;
+		//	leg.Set();
+		//	return;
+		//}
 	}
 
 	//開く入力
 	//if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.AfterBodyFoldCount == 0)
 	if (actFlag->OpenLeft())
-	{
+	{ //左に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 		return;
-		if (IsBodysOpen(BodyType::left))
-		{
-			OpenCount = 0;
-			IsOpenCountStart = true;
-			IsLeftOpen = true;
-			return;
-		}
+		//if (IsBodysOpen(BodyType::left))
+		//{
+		//	OpenCount = 0;
+		//	IsOpenCountStart = true;
+		//	IsLeftOpen = true;
+		//	return;
+		//}
 	}
 	//if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0 && IsUpBlocked == true)
 	if (actFlag->OpenUp())
-	{
+	{ //上に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 		return;
-		if (IsBodysOpen(BodyType::up))
-		{
-			OpenCount = 0;
-			IsOpenCountStart = true;
-			IsUpOpen = true;
-			return;
-		}
+		//if (IsBodysOpen(BodyType::up))
+		//{
+		//	OpenCount = 0;
+		//	IsOpenCountStart = true;
+		//	IsUpOpen = true;
+		//	return;
+		//}
 	}
 	//if (InputManger::SubRightTrigger() && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.AfterBodyFoldCount == 0)
 	if (actFlag->OpenRight())
-	{
+	{ //右に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 		return;
-		if (IsBodysOpen(BodyType::right))
-		{
-			OpenCount = 0;
-			IsOpenCountStart = true;
-			IsRightOpen = true;
-			return;
-		}
+		//if (IsBodysOpen(BodyType::right))
+		//{
+		//	OpenCount = 0;
+		//	IsOpenCountStart = true;
+		//	IsRightOpen = true;
+		//	return;
+		//}
 	}
 	//if (InputManger::SubDownTrigger() && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.AfterBodyFoldCount == 0)
 	if (actFlag->OpenDown())
-	{
+	{ //下に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsDownOpen = true;
 		return;
-		if (IsBodysOpen(BodyType::down))
-		{
-			OpenCount = 0;
-			IsOpenCountStart = true;
-			IsDownOpen = true;
-			return;
-		}
+		//if (IsBodysOpen(BodyType::down))
+		//{
+		//	OpenCount = 0;
+		//	IsOpenCountStart = true;
+		//	IsDownOpen = true;
+		//	return;
+		//}
 	}
 }
 
@@ -855,13 +861,13 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 	{
 		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
-			if (stage.GetPositionTile(CenterPosition, i, j) == true)
+			if (stage.IsPositionTile(CenterPosition, i, j))
 			{
 				PlayerStage = i;
 				PlayerTile = j;
 			}
 
-			if (stage.GetPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j) == true)
+			if (stage.IsPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j))
 			{
 				ReleaseStage = i;
 				ReleaseTile = j;
@@ -944,13 +950,13 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 	{
 		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
-			if (stage.GetPositionTile(CenterPosition, i, j) == true)
+			if (stage.IsPositionTile(CenterPosition, i, j))
 			{
 				PlayerStage = i;
 				PlayerTile = j;
 			}
 
-			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j) == true)
+			if (stage.IsPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
 			{
 				PressStage = i;
 				PressTile = j;
@@ -2294,7 +2300,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.GetPositionTile({ FaceLeft,CenterPosition.y - 30,0.0f }, i, j))
+			if (stage.IsPositionTile({ FaceLeft,CenterPosition.y - 30,0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
@@ -2333,7 +2339,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 				}
 			}
 			//左下
-			if (stage.GetPositionTile({ FaceLeft,FaceDown,0.0f }, i, j))
+			if (stage.IsPositionTile({ FaceLeft,FaceDown,0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
@@ -2358,7 +2364,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 				}
 			}
 			//右上
-			if (stage.GetPositionTile({ FaceRight,CenterPosition.y - 30,0.0f }, i, j))
+			if (stage.IsPositionTile({ FaceRight,CenterPosition.y - 30,0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
@@ -2398,7 +2404,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 			}
 			//右下
-			if (stage.GetPositionTile({ FaceRight,FaceDown,0.0f }, i, j))
+			if (stage.IsPositionTile({ FaceRight,FaceDown,0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
@@ -2472,7 +2478,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 	{
 		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
-			if (stage.GetPositionTile({ FaceLeft - 20,FaceUp - 20,0.0f }, i, j))
+			if (stage.IsPositionTile({ FaceLeft - 20,FaceUp - 20,0.0f }, i, j))
 			{
 				left_mapchip_tile = (left_mapchip - 1) % stage.GetStageTileWidth(i, j);
 				up_mapchip_tile = (up_mapchip - 1) % stage.GetStageTileHeight(i, j);
@@ -2485,7 +2491,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 				}
 			}
 
-			if (stage.GetPositionTile({ FaceRight + 20,FaceUp - 20,0.0f }, i, j))
+			if (stage.IsPositionTile({ FaceRight + 20,FaceUp - 20,0.0f }, i, j))
 			{
 				right_mapchip_tile = (right_mapchip + 1) % stage.GetStageTileWidth(i, j);
 				up_mapchip_tile = (up_mapchip - 1) % stage.GetStageTileHeight(i, j);

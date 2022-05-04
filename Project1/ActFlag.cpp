@@ -80,7 +80,7 @@ bool ActFlag::FoldUp()
 		return false;
 	}
 
-	// ステージ端に来たら折れる
+	// ステージをまたいだら折れる
 	isFold = false;
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -92,7 +92,7 @@ bool ActFlag::FoldUp()
 			}
 
 			if (static_cast<int>(player->CenterPosition.y) / Stage::blockSize ==
-				stage->GetStageTileOffsetY(i, j))
+				stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j) - 1)
 			{
 				isFold = true;
 				break;
@@ -121,7 +121,7 @@ bool ActFlag::FoldDown()
 		//return false;
 	}
 
-	// ステージ端に来たら折れる
+	// ステージをまたいだら折れる
 	isFold = false;
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -133,7 +133,7 @@ bool ActFlag::FoldDown()
 			}
 
 			if (static_cast<int>(player->CenterPosition.y) / Stage::blockSize ==
-				stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j))
+				stage->GetStageTileOffsetY(i, j))
 			{
 				isFold = true;
 				break;
@@ -168,7 +168,7 @@ bool ActFlag::FoldLeft()
 		return false;
 	}
 
-	// ステージ端に来たら折れる
+	// ステージをまたいだら折れる
 	isFold = false;
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -180,7 +180,7 @@ bool ActFlag::FoldLeft()
 			}
 
 			if (static_cast<int>(player->CenterPosition.x) / Stage::blockSize ==
-				stage->GetStageTileOffsetX(i, j))
+				stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j) - 1)
 			{
 				isFold = true;
 				break;
@@ -215,7 +215,7 @@ bool ActFlag::FoldRight()
 		return false;
 	}
 
-	// ステージ端に来たら折れる
+	// ステージをまたいだら折れる
 	isFold = false;
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -227,7 +227,7 @@ bool ActFlag::FoldRight()
 			}
 
 			if (static_cast<int>(player->CenterPosition.x) / Stage::blockSize ==
-				stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j))
+				stage->GetStageTileOffsetX(i, j))
 			{
 				isFold = true;
 				break;
@@ -244,7 +244,6 @@ bool ActFlag::FoldRight()
 
 bool ActFlag::OpenUp()
 {
-	// 折る処理中かどうか
 	if (player->IsUpOpen)
 	{
 		return false;
@@ -262,7 +261,7 @@ bool ActFlag::OpenUp()
 		//return false;
 	}
 
-	// ステージ端に来たら開く
+	// ステージをまたいだら開く
 	isOpen = false;
 	stage->GetPositionInitTile(player->CenterPosition, &i, &j);
 	if (i == static_cast<size_t>(-1) || j == static_cast<size_t>(-1))
@@ -271,7 +270,7 @@ bool ActFlag::OpenUp()
 	}
 
 	if (static_cast<int>(player->CenterPosition.y) / Stage::blockSize ==
-		stage->GetStageTileInitOffsetY(i, j) + stage->GetStageTileInitHeight(i, j) - 1)
+		stage->GetStageTileInitOffsetY(i, j))
 	{
 		isOpen = true;
 	}
@@ -310,7 +309,7 @@ bool ActFlag::OpenDown()
 		return false;
 	}
 
-	// ステージ端に来たら開く
+	// ステージをまたいだら開く
 	isOpen = false;
 	stage->GetPositionInitTile(player->CenterPosition, &i, &j);
 	if (i == static_cast<size_t>(-1) || j == static_cast<size_t>(-1))
@@ -319,7 +318,7 @@ bool ActFlag::OpenDown()
 	}
 
 	if (static_cast<int>(player->CenterPosition.y) / Stage::blockSize ==
-		stage->GetStageTileInitOffsetY(i, j))
+		stage->GetStageTileInitOffsetY(i, j) + stage->GetStageTileInitHeight(i, j) - 1)
 	{
 		isOpen = true;
 	}
@@ -357,8 +356,8 @@ bool ActFlag::OpenLeft()
 	{
 		return false;
 	}
-
-	// ステージ端に来たら開く
+	
+	// ステージをまたいだら開く
 	isOpen = false;
 	stage->GetPositionInitTile(player->CenterPosition, &i, &j);
 	if (i == static_cast<size_t>(-1) || j == static_cast<size_t>(-1))
@@ -367,7 +366,7 @@ bool ActFlag::OpenLeft()
 	}
 
 	if (static_cast<int>(player->CenterPosition.x) / Stage::blockSize ==
-		stage->GetStageTileInitOffsetX(i, j) + stage->GetStageTileInitWidth(i, j) - 1)
+		stage->GetStageTileInitOffsetX(i, j))
 	{
 		isOpen = true;
 	}
@@ -406,7 +405,7 @@ bool ActFlag::OpenRight()
 		return false;
 	}
 
-	// ステージ端に来たら開く
+	// ステージをまたいだら開く
 	isOpen = false;
 	stage->GetPositionInitTile(player->CenterPosition, &i, &j);
 	if (i == static_cast<size_t>(-1) || j == static_cast<size_t>(-1))
@@ -415,7 +414,7 @@ bool ActFlag::OpenRight()
 	}
 
 	if (static_cast<int>(player->CenterPosition.x) / Stage::blockSize ==
-		stage->GetStageTileInitOffsetX(i, j))
+		stage->GetStageTileInitOffsetX(i, j) + stage->GetStageTileInitWidth(i, j) - 1)
 	{
 		isOpen = true;
 	}

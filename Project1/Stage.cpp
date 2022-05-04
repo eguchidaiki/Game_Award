@@ -711,25 +711,27 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
 
+	direction = -1;
+
 	//if (IsFolds[0] || IsOpens[0])
-	if (IsFolds[0] || IsOpens[1])
-	{
-		direction = BodyType::up;
-	}
-	//else if (IsFolds[1] || IsOpens[1])
-	else if (IsFolds[1] || IsOpens[0])
+	if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
 	{
 		direction = BodyType::down;
 	}
-	//else if (IsFolds[2] || IsOpens[2])
-	else if (IsFolds[2] || IsOpens[3])
+	//else if (IsFolds[1] || IsOpens[1])
+	else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
 	{
-		direction = BodyType::left;
+		direction = BodyType::up;
 	}
-	//else if (IsFolds[3] || IsOpens[3])
-	else if (IsFolds[3] || IsOpens[2])
+	//else if (IsFolds[2] || IsOpens[2])
+	else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
 	{
 		direction = BodyType::right;
+	}
+	//else if (IsFolds[3] || IsOpens[3])
+	else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
+	{
+		direction = BodyType::left;
 	}
 
 	static bool isAct = false;
@@ -756,13 +758,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 			case BodyType::up: //上入力
 			{
-				if (onPlayerStageTile / stageData[i].width <= 0)
+				if (onPlayerStageTile / initStageData[i].width <= 0)
 				{
 					break;
 				}
 
-				moveStageTile = onPlayerStageTile - stageData[i].width;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
+				moveStageTile = onPlayerStageTile - initStageData[i].width;
+				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile < 0 ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -775,26 +777,32 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+				if (OpenCount == 2 && IsOpens[BodyType::up] == true)
 				{
-					isAct = true;
+					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					{
+						isAct = true;
+					}
 				}
-				else if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+				else if (IsFootAction == false && IsFolds[BodyType::down] == true)
 				{
-					isAct = true;
+					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					{
+						isAct = true;
+					}
 				}
 
 				break;
 			}
 			case BodyType::down: //下入力
 			{
-				if (onPlayerStageTile / stageData[i].width >= static_cast<size_t>(stageData[i].height - 1))
+				if (onPlayerStageTile / initStageData[i].width >= static_cast<size_t>(initStageData[i].height - 1))
 				{
 					break;
 				}
 
-				moveStageTile = onPlayerStageTile + stageData[i].width;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
+				moveStageTile = onPlayerStageTile + initStageData[i].width;
+				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -807,26 +815,32 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+				if (OpenCount == 2 && IsOpens[BodyType::down] == true)
 				{
-					isAct = true;
+					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					{
+						isAct = true;
+					}
 				}
-				else if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+				else if (IsFootAction == false && IsFolds[BodyType::up] == true)
 				{
-					isAct = true;
+					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					{
+						isAct = true;
+					}
 				}
 
 				break;
 			}
 			case BodyType::left: //左入力
 			{
-				if (onPlayerStageTile % stageData[i].width <= 0)
+				if (onPlayerStageTile % initStageData[i].width <= 0)
 				{
 					break;
 				}
 
 				moveStageTile = onPlayerStageTile - 1;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
+				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile < 0 ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -839,13 +853,19 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+				if (OpenCount == 2 && IsOpens[BodyType::left] == true)
 				{
-					isAct = true;
+					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					{
+						isAct = true;
+					}
 				}
-				else if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+				else if (IsFootAction == false && IsFolds[BodyType::right] == true)
 				{
-					isAct = true;
+					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					{
+						isAct = true;
+					}
 				}
 
 				break;
@@ -860,8 +880,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 				moveStageTile = onPlayerStageTile + 1;
 				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
-				if (moveStageTile >= static_cast<size_t>(initStageData[i].width * stageData[i].height) ||
-					initStageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
+				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
+					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
 				{
 					break;
 				}
@@ -871,14 +891,14 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (OpenCount == 2 && IsOpens[2] == true)
+				if (OpenCount == 2 && IsOpens[BodyType::right] == true)
 				{
 					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
 					{
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[3] == true)
+				else if (IsFootAction == false && IsFolds[BodyType::left] == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
@@ -917,9 +937,9 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	static size_t onPlayerStageData = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
-	bool isFold = false; //折れる物があるかどうか
+	static bool isFold = false; //折れる物があるかどうか
 
-	//isFold = false;
+	isFold = false;
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -1025,7 +1045,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 			}
 			default:
 			{
-				*returnMapchip = reverseMapchip;
+				*returnMapchip = nullptr;
 
 				return EF;
 				break;
@@ -1084,7 +1104,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	}
 	else
 	{
-		*returnMapchip = reverseMapchip;
+		*returnMapchip = nullptr;
 
 		// 折れる物が無い
 		return EF;
