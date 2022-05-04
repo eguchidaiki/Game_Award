@@ -35,10 +35,16 @@ public: //メンバ関数
 	void Key_Slide();
 
 	//マウス操作
+	//入力状態
+	void Mouse_Input(int offsetX, int offsetY);
 	//移動
 	void Mouse_Move(int offsetX, int offsetY);
 	//折る・開く
 	void Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage);
+	//クリックした時のタイル状のマウス座標とプレイヤーのタイル状の座標を比較
+	bool IsMouseClickFold(BodyType Direction, Stage& stage);
+	bool IsMouseClickOpen(BodyType Direction, Stage& stage);
+
 
 	/// <summary>
 	/// どの体を有効化するか
@@ -81,6 +87,9 @@ public: //メンバ関数
 
 	//顔の下に体があるかどうか
 	void IsdownBody();
+
+	//ブロックに邪魔されずにスライドできるかどうか
+	bool IsSlideBlock(BodyType SlideType);
 
 public: //メンバ変数
 	//床の高さ
@@ -125,6 +134,12 @@ public: //メンバ変数
 	bool IsUpOpen;
 	bool IsRightOpen;
 	bool IsDownOpen;
+
+	//スライドできるかどうか
+	bool IsLeftSlide;
+	bool IsUpSlide;
+	bool IsRightSlide;
+	bool IsDownSlide;
 
 	//開くまでに数フレーム空ける用
 	int OpenCount = 0;
