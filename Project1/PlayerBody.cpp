@@ -621,7 +621,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.GetPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
@@ -654,7 +654,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 			//左下
-			if (stage.GetPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
@@ -683,7 +683,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 			//右上
-			if (stage.GetPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
@@ -715,7 +715,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 			//右下
-			if (stage.GetPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
@@ -829,7 +829,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 		for (size_t j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.GetPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
@@ -843,7 +843,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//左下
-			if (stage.GetPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
@@ -857,7 +857,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//右上
-			if (stage.GetPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
@@ -871,7 +871,7 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//右下
-			if (stage.GetPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);

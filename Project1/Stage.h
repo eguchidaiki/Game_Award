@@ -129,6 +129,9 @@ public: //メンバ関数
 	// 内部データ全削除
 	void DataClear();
 
+	// 任意の座標が任意のステージタイルにいるかどうか
+	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
+
 	// プレイヤーのx軸上の開始位置を取得
 	inline static int GetStartPlayerPosX() { return startPlayerPosX; }
 	// プレイヤーのx軸上の開始位置を取得
@@ -152,23 +155,6 @@ public: //メンバ関数
 	inline size_t GetStageWidth(const size_t& stageNumber) { return stageData[stageNumber].width; }
 	// ステージの縦幅を取得
 	inline size_t GetStageHeight(const size_t& stageNumber) { return stageData[stageNumber].height; }
-	// 任意のStageTileの幅を取得
-	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
-	{
-		return stageData[stageNumber].stageTileData[stageTileNumber].width;
-	}
-	// 任意のStageTileの高さを取得
-	inline size_t GetStageTileHeight(const size_t& stageNumber, const size_t& stageTileNumber)
-	{
-		return stageData[stageNumber].stageTileData[stageTileNumber].height;
-	}
-	// 任意の場所のマップチップ情報を取得
-	inline char GetStageMapchip(const size_t& stageNumber, const size_t& stageTileNumber, int mapchipPos)
-	{
-		return stageData[stageNumber].stageTileData[stageTileNumber].mapchip[mapchipPos];
-	}
-	// 任意の座標からどのStageTileにいるかを取得
-	bool GetPositionTile(RVector3 center, int i, int j);
 	// ステージタイルのX軸のオフセットを返す
 	inline char GetStageTileOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
@@ -179,13 +165,53 @@ public: //メンバ関数
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 	}
+	// ステージタイルの幅を取得
+	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].width;
+	}
+	// ステージタイルの高さを取得
+	inline size_t GetStageTileHeight(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].height;
+	}
+	// ステージタイルのX軸のオフセットの初期値を返す
+	inline char GetStageTileInitOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return initStageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+	}
+	// ステージタイルのY軸のオフセットの初期値を返す
+	inline char GetStageTileInitOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return initStageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+	}
+	// ステージタイルの幅の初期値を取得
+	inline size_t GetStageTileInitWidth(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return initStageData[stageNumber].stageTileData[stageTileNumber].width;
+	}
+	// ステージタイルの高さの初期値を取得
+	inline size_t GetStageTileInitHeight(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return initStageData[stageNumber].stageTileData[stageTileNumber].height;
+	}
+	// 任意の場所のマップチップ情報を取得
+	inline char GetStageMapchip(const size_t& stageNumber, const size_t& stageTileNumber, int mapchipPos)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].mapchip[mapchipPos];
+	}
+	// 任意の座標からどのステージタイルにいるかを取得
+	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
+	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
 	// ステージを折る
 	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
 	// ステージを開く
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageTile, const size_t& moveStageData);
+	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile);
 
 	// 枠線の描画
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction, int offsetX, int offsetY);
