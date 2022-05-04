@@ -762,7 +762,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	{
 		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
-			if (stage.GetPositionTile({ BodyLeft - 20,BodyUp - 20,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyLeft - 20,BodyUp - 20,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = (BodyLeft_mapchip - 1) % stage.GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage.GetStageTileHeight(i, j);
@@ -775,7 +775,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 
-			if (stage.GetPositionTile({ BodyRight + 20,BodyUp - 20,0.0f }, i, j))
+			if (stage.IsPositionTile({ BodyRight + 20,BodyUp - 20,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = (BodyRight_mapchip + 1) % stage.GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage.GetStageTileHeight(i, j);
