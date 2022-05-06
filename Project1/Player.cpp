@@ -88,10 +88,10 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	Mouse_Input(offsetX, offsetY);
 
 	//マウス移動
-	//Mouse_Move(offsetX, offsetY);
+	Mouse_Move(offsetX, offsetY);
 
 	//キー移動
-	Key_Move();
+	//Key_Move();
 
 	if (IsJump == true)
 	{
@@ -123,11 +123,11 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	IsHitPlayerBody(stage);
 
 	//キー折る・開く入力
-	Key_FoldOpen(stage);
+	//Key_FoldOpen(stage);
 	//キースライド
 	//Key_Slide();
 	//マウス折る・開く入力
-	//Mouse_FoldOpen(offsetX, offsetY, stage);
+	Mouse_FoldOpen(offsetX, offsetY, stage);
 
 	Fold();
 
@@ -359,7 +359,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	if (actFlag->FoldLeft())
 	{ //左に折る
-		if (IsDirectionFoldAll(stage, BodyType::right))
+		if (IsDirectionFoldAll(stage, BodyType::left))
 		{
 			Player_IsAction = true;
 			IsLeftFold = true;
@@ -377,7 +377,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	if (actFlag->FoldUp())
 	{ //上に折る
-		if (IsDirectionFoldAll(stage, BodyType::down))
+		if (IsDirectionFoldAll(stage, BodyType::up))
 		{
 			Player_IsAction = true;
 			IsUpFold = true;
@@ -395,7 +395,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	if (actFlag->FoldRight())
 	{ //右に折る
-		if (IsDirectionFoldAll(stage, BodyType::left))
+		if (IsDirectionFoldAll(stage, BodyType::right))
 		{
 			Player_IsAction = true;
 			IsRightFold = true;
@@ -413,7 +413,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	if (actFlag->FoldDown())
 	{ //下に折る
-		if (IsDirectionFoldAll(stage, BodyType::up))
+		if (IsDirectionFoldAll(stage, BodyType::down))
 		{
 			Player_IsAction = true;
 			IsDownFold = true;

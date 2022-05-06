@@ -713,25 +713,25 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 	direction = -1;
 
-	//if (IsFolds[0] || IsOpens[0])
-	if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
-	{
-		direction = BodyType::down;
-	}
-	//else if (IsFolds[1] || IsOpens[1])
-	else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
+	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
+	if (IsFolds[BodyType::up] || IsOpens[BodyType::up])
 	{
 		direction = BodyType::up;
 	}
-	//else if (IsFolds[2] || IsOpens[2])
-	else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
+	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
+	else if (IsFolds[BodyType::down] || IsOpens[BodyType::down])
 	{
-		direction = BodyType::right;
+		direction = BodyType::down;
 	}
-	//else if (IsFolds[3] || IsOpens[3])
-	else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
+	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
+	else if (IsFolds[BodyType::left] || IsOpens[BodyType::left])
 	{
 		direction = BodyType::left;
+	}
+	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
+	else if (IsFolds[BodyType::right] || IsOpens[BodyType::right])
+	{
+		direction = BodyType::right;
 	}
 
 	static bool isAct = false;
@@ -779,12 +779,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (OpenCount == 2 && IsOpens[BodyType::up] == true)
 				{
-					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
+					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::down] == true)
+				else if (IsFootAction == false && IsFolds[BodyType::up] == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
@@ -817,12 +818,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (OpenCount == 2 && IsOpens[BodyType::down] == true)
 				{
-					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
+					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::up] == true)
+				else if (IsFootAction == false && IsFolds[BodyType::down] == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
@@ -855,12 +857,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (OpenCount == 2 && IsOpens[BodyType::left] == true)
 				{
-					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
+					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::right] == true)
+				else if (IsFootAction == false && IsFolds[BodyType::left] == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
@@ -893,12 +896,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (OpenCount == 2 && IsOpens[BodyType::right] == true)
 				{
-					if (Open(playerTile, direction, i, onPlayerStageTile) != EF)
+					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
+					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::left] == true)
+				else if (IsFootAction == false && IsFolds[BodyType::right] == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
@@ -1430,7 +1434,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	stageData[i].stageTileData[onPlayerStageTile].stageEase.addTime = 0.1f;
 	stageData[i].stageTileData[onPlayerStageTile].stageEase.maxTime = 1.2f;
 
-	EaseingInit(onPlayerStage, onPlayerStageTile, direction + 2);
+	EaseingInit(onPlayerStage, onPlayerStageTile, direction);
 
 	if (direction == BodyType::up || direction == BodyType::down)
 	{
@@ -1488,7 +1492,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	}
 
 	stageData[onPlayerStage].stageTileData[onPlayerStageTile].stageNumber = initStageData[onPlayerStage].stageTileData[onPlayerStageTile].stageNumber;
-	stageData[onPlayerStage].stageTileData[onPlayerStageTile].direction = direction + 1 + 2;
+	stageData[onPlayerStage].stageTileData[onPlayerStageTile].direction = direction + 1;
 	stageData[onPlayerStage].stageTileData[onPlayerStageTile].isFold = false;
 	playerTile[(direction + 2) % 4]++;
 
@@ -1586,8 +1590,8 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height - y - 1);
-				keepB = static_cast<float>(-stageData[onPlayerStage].stageTileData[moveStageData].offsetY +
-					stageData[onPlayerStage].stageTileData[moveStageData].height);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetY) +
+					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = keepA + keepB + 1.0f;
@@ -1603,8 +1607,8 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height - y - 1);
-				keepB = static_cast<float>(-stageData[onPlayerStage].stageTileData[moveStageData].offsetY -
-					stageData[onPlayerStage].stageTileData[moveStageData].height);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetY) -
+					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = keepA + keepB;
@@ -1620,8 +1624,8 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width - x - 1);
-				keepB = static_cast<float>(-stageData[onPlayerStage].stageTileData[moveStageData].offsetX +
-					stageData[onPlayerStage].stageTileData[moveStageData].width);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX) +
+					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB + 1.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
@@ -1638,8 +1642,8 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width - x - 1);
-				keepB = static_cast<float>(-stageData[onPlayerStage].stageTileData[moveStageData].offsetX -
-					stageData[onPlayerStage].stageTileData[moveStageData].width);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX) -
+					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
