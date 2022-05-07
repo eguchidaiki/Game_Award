@@ -323,6 +323,14 @@ void Player::Draw(int offsetX, int offsetY)
 	ImGui::Text("IsDownSlide:%d", IsDownSlide);
 	ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
+
+
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
+	ImGui::Text("Move:Click");
+	ImGui::Text("Fold&Open:Drag");
+	ImGui::Text("Slide:WASD");
+	ImguiMgr::Get()->EndDrawImgui();
+
 }
 
 void Player::Create()

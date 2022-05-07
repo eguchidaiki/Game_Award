@@ -52,7 +52,6 @@ void Title::Update() {
 		player->Init();
 		player->BodySetUp(true, BodyType::left, true, BodyType::up, false, BodyType::right, false, BodyType::down);
 	}
-#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
@@ -66,6 +65,7 @@ void Title::Update() {
 		player->Init();
 		player->BodySetUp(false, BodyType::left, true, BodyType::up, true, BodyType::right, false, BodyType::down);
 	}
+#ifdef _DEBUG
 #endif // _DEBUG
 
 	player->Update(*stage, drawOffsetX, drawOffsetY);
