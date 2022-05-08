@@ -86,7 +86,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	Mouse_Input(offsetX, offsetY);
 
 	//マウス移動
-	Mouse_Move(offsetX, offsetY);
+	Mouse_Move(offsetX, offsetY, stage);
 
 	//キー移動
 	//Key_Move();
@@ -122,9 +122,11 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	IsAroundBlock(stage);
 
 	//キー折る・開く入力
-	Key_FoldOpen(stage);
+	//Key_FoldOpen(stage);
+
 	//キースライド
-	Key_Slide();
+	//Key_Slide();
+
 	//マウス折る・開く入力
 	Mouse_FoldOpen(offsetX, offsetY, stage);
 
@@ -727,13 +729,14 @@ void Player::Mouse_Input(int offsetX, int offsetY)
 	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
 }
 
-void Player::Mouse_Move(int offsetX, int offsetY)
+void Player::Mouse_Move(int offsetX, int offsetY, Stage& stage)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
 		PressCount < 15 &&
-		Input::isMouseClicked(0))
+		Input::isMouseClicked(0) &&
+		IsPressInStage(stage))
 	{
 		IsWalk = true;
 	}
@@ -1049,6 +1052,23 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 	{
 		return false;
 	}
+}
+
+bool Player::IsPressInStage(Stage& stage)
+{
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			//左上
+			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)

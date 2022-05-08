@@ -38,12 +38,15 @@ public: //メンバ関数
 	//入力状態
 	void Mouse_Input(int offsetX, int offsetY);
 	//移動
-	void Mouse_Move(int offsetX, int offsetY);
+	void Mouse_Move(int offsetX, int offsetY, Stage& stage);
 	//折る・開く
 	void Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage);
 	//クリックした時のタイル状のマウス座標とプレイヤーのタイル状の座標を比較
 	bool IsMouseClickFold(BodyType Direction, Stage& stage);
 	bool IsMouseClickOpen(BodyType Direction, Stage& stage);
+
+	//クリックした場所がステージ内かどうか
+	bool IsPressInStage(Stage& stage);
 
 
 	/// <summary>
