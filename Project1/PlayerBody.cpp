@@ -651,9 +651,8 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
-							JumpCountLeft++;
+							JumpCountLeft += Player::Get()->IsLeft;
 						}
 					}
 				}
@@ -675,15 +674,16 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
 						IsHitDown = true;
 						FallCount++;
+						Player::Get()->IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitLeft == false)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-							Player::Get()->IsWalk = Player::Get()->IsWalk && Player::Get()->IsRight;
 							IsHitLeft = true;
-							JumpCountLeft++;
+							JumpCountLeft += Player::Get()->IsLeft;
+							Player::Get()->IsInitJump = false;
 						}
 					}
 				}
@@ -714,9 +714,8 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
-							Player::Get()->IsWalk = false;
 							IsHitRight = true;
-							jumpCountRight++;
+							jumpCountRight += Player::Get()->IsRight;
 						}
 					}
 				}
@@ -738,15 +737,15 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
 						IsHitDown = true;
 						FallCount++;
+						Player::Get()->IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitRight == false)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
-							Player::Get()->IsWalk = Player::Get()->IsWalk && Player::Get()->IsLeft;
 							IsHitRight = true;
-							jumpCountRight++;
+							jumpCountRight += Player::Get()->IsRight;
 						}
 					}
 				}
@@ -790,14 +789,12 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 		}
 	}
 
-	if ((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false))
+	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && Player::Get()->IsInitJump == false)
 	{
-		if (Player::Get()->IsJump == false)
-		{
-			Player::Get()->IsJump = true;
-			Player::Get()->FallSpeed = -5.6f;
-			Player::Get()->IsWalk = true;
-		}
+		Player::Get()->IsJump = true;
+		Player::Get()->FallSpeed = -5.6f;
+		Player::Get()->IsWalk = true;
+		Player::Get()->IsInitJump = true;
 	}
 
 	if (FallCount > 0)
@@ -812,6 +809,11 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 
 bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 {
+	if (Player::Get()->IsPressInStage(stage) == false)
+	{
+		return false;
+	}
+
 	//体の四辺
 	float BodyLeft;
 	float BodyRight;

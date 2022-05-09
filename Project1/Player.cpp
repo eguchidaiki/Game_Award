@@ -311,11 +311,12 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw()
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
 	ImGui::Text("IsGoal:%d", IsGoal);
 	ImGui::Text("PressCount:%d", PressCount);
 	ImGui::Text("IsWalk:%d", IsWalk);
 	ImGui::Text("IsJump:%d", IsJump);
+	ImGui::Text("IsInitJump:%d", IsInitJump);
 	ImGui::Text("x:%f", CenterPosition.x);
 	ImGui::Text("y:%f", CenterPosition.y);
 	ImGui::Text("z:%f", CenterPosition.z);
@@ -327,11 +328,11 @@ void Player::Draw(int offsetX, int offsetY)
 #endif // _DEBUG
 
 
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
-	ImGui::Text("Move:Click");
-	ImGui::Text("Fold&Open:Drag");
-	ImGui::Text("Slide:WASD");
-	ImguiMgr::Get()->EndDrawImgui();
+	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
+	//ImGui::Text("Move:Click");
+	//ImGui::Text("Fold&Open:Drag");
+	//ImGui::Text("Slide:WASD");
+	//ImguiMgr::Get()->EndDrawImgui();
 
 }
 
@@ -2362,8 +2363,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					else if (BuriedX < BuriedY)
 					{
 						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
-						JumpCountLeft++;
-						IsWalk = IsWalk && IsRight;
+						JumpCountLeft += IsLeft;
 					}
 				}
 				if (up_mapchip_tile > 0)
@@ -2398,12 +2398,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 					{
 						CenterPosition.y = static_cast<float>(down_mapchip * stage.blockSize) - 33.0f;
 						FallCount++;
+						IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
-						IsWalk = IsWalk && IsRight;
-						JumpCountLeft++;
+						JumpCountLeft += IsLeft;
 					}
 				}
 			}
@@ -2426,8 +2426,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 					else if (BuriedX < BuriedY)
 					{
 						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
-						IsWalk = IsWalk && IsLeft;
-						jumpCountRight++;
+						jumpCountRight += IsRight;
 					}
 				}
 				if (up_mapchip_tile > 0)
@@ -2463,12 +2462,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 					{
 						CenterPosition.y = static_cast<float>(down_mapchip * stage.blockSize) - 33.0f;
 						FallCount++;
+						IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
-						IsWalk = IsWalk && IsLeft;
-						jumpCountRight++;
+						jumpCountRight += IsRight;
 					}
 				}
 			}
@@ -2550,11 +2549,12 @@ void Player::IsHitPlayerBody(Stage& stage)
 		}
 	}
 
-	if ((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false))
+	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && IsInitJump == false)
 	{
 		IsJump = true;
 		FallSpeed = -5.6f;
 		IsWalk = true;
+		IsInitJump = true;
 	}
 
 	if (FallCount > 0)
