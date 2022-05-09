@@ -15,7 +15,7 @@ GameScene::GameScene(ISceneChanger *changer) : BaseScene(changer) {
 
 	nowState = is_Select;
 
-	selecter.Init(stage,player);
+	selecter.Init(stage, player);
 	gamemain.Init(stage, player);
 }
 
@@ -27,7 +27,6 @@ void GameScene::Initialize() {
 //XV
 void GameScene::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
-
 
 	switch (nowState)
 	{
