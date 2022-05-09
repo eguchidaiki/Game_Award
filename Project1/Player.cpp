@@ -88,7 +88,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	Mouse_Input(offsetX, offsetY);
 
 	//マウス移動
-	Mouse_Move(offsetX, offsetY);
+	Mouse_Move(offsetX, offsetY, stage);
 
 	//キー移動
 	//Key_Move();
@@ -121,11 +121,14 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 		CenterPosition.y += FallSpeed;
 	}
 	IsHitPlayerBody(stage);
+	IsAroundBlock(stage);
 
 	//キー折る・開く入力
 	//Key_FoldOpen(stage);
+
 	//キースライド
 	//Key_Slide();
+
 	//マウス折る・開く入力
 	Mouse_FoldOpen(offsetX, offsetY, stage);
 
@@ -151,26 +154,51 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	IsdownBody();
 	leg.Update(CenterPosition, IsDownBody, 1);
+	if (leg.FootIsAction == false)
+	{
+		if (CenterPosition.y + 25 <= Body_Two.BodyEndPos.y && Body_Two.IsActivate)
+		{
+			if (Body_Four.IsActivate && Body_Four.IsOpen && Body_Four.BodyEndPos.y <= Body_Two.BodyEndPos.y)
+			{
+				leg.FootLeftUpPosition.x = CenterPosition.x - 30;
+				leg.FootLeftUpPosition.y = Body_Four.BodyEndPos.y;
+			}
+			else
+			{
+				leg.FootLeftUpPosition.x = CenterPosition.x - 30;
+				leg.FootLeftUpPosition.y = Body_Two.BodyEndPos.y;
+			}
+		}
+		else
+		{
+			leg.FootLeftUpPosition.x = CenterPosition.x - 30;
+			leg.FootLeftUpPosition.y = CenterPosition.y + 25;
+		}
+	}
 
 	if (Body_One.IsActivate == true)
 	{
 		Body_One.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_One.Update(CenterPosition);
+		Body_One.IsAroundBlock(stage);
 	}
 	if (Body_Two.IsActivate == true)
 	{
 		Body_Two.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Two.Update(CenterPosition);
+		Body_Two.IsAroundBlock(stage);
 	}
 	if (Body_Three.IsActivate == true)
 	{
 		Body_Three.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Three.Update(CenterPosition);
+		Body_Three.IsAroundBlock(stage);
 	}
 	if (Body_Four.IsActivate == true)
 	{
 		Body_Four.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Four.Update(CenterPosition);
+		Body_Four.IsAroundBlock(stage);
 	}
 
 	if (IsGoal)
@@ -291,7 +319,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw()
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 30.0f);
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
 	ImGui::Text("IsGoal:%d", IsGoal);
 	ImGui::Text("PressCount:%d", PressCount);
 	ImGui::Text("IsWalk:%d", IsWalk);
@@ -299,8 +327,20 @@ void Player::Draw(int offsetX, int offsetY)
 	ImGui::Text("x:%f", CenterPosition.x);
 	ImGui::Text("y:%f", CenterPosition.y);
 	ImGui::Text("z:%f", CenterPosition.z);
+	ImGui::Text("IsLeftSlide:%d", IsLeftSlide);
+	ImGui::Text("IsRightSlide:%d", IsRightSlide);
+	ImGui::Text("IsUpSlide:%d", IsUpSlide);
+	ImGui::Text("IsDownSlide:%d", IsDownSlide);
 	ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
+
+
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
+	ImGui::Text("Move:Click");
+	ImGui::Text("Fold&Open:Drag");
+	ImGui::Text("Slide:WASD");
+	ImguiMgr::Get()->EndDrawImgui();
+
 }
 
 void Player::Create()
@@ -494,12 +534,14 @@ void Player::Key_FoldOpen(Stage& stage)
 
 void Player::Key_Slide()
 {
+	IsSlideBlock();
+
 	if (Player_IsAction == true)
 	{
 		return;
 	}
 	//左にスライド
-	if (Input::isKeyTrigger(DIK_A))
+	if (Input::isKeyTrigger(DIK_A) && IsLeftSlide)
 	{
 		if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
 		{
@@ -543,7 +585,7 @@ void Player::Key_Slide()
 	}
 
 	//右にスライド
-	if (Input::isKeyTrigger(DIK_D))
+	if (Input::isKeyTrigger(DIK_D) && IsRightSlide)
 	{
 		if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
 		{
@@ -587,7 +629,7 @@ void Player::Key_Slide()
 	}
 
 	//上にスライド
-	if (Input::isKeyTrigger(DIK_W))
+	if (Input::isKeyTrigger(DIK_W) && IsUpSlide)
 	{
 		if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
 		{
@@ -631,7 +673,7 @@ void Player::Key_Slide()
 	}
 
 	//下にスライド
-	if (Input::isKeyTrigger(DIK_S))
+	if (Input::isKeyTrigger(DIK_S) && IsDownSlide)
 	{
 		if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
 		{
@@ -703,13 +745,14 @@ void Player::Mouse_Input(int offsetX, int offsetY)
 	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
 }
 
-void Player::Mouse_Move(int offsetX, int offsetY)
+void Player::Mouse_Move(int offsetX, int offsetY, Stage& stage)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
 		PressCount < 15 &&
-		Input::isMouseClicked(0))
+		Input::isMouseClicked(0) &&
+		IsPressInStage(stage))
 	{
 		IsWalk = true;
 	}
@@ -1025,6 +1068,23 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 	{
 		return false;
 	}
+}
+
+bool Player::IsPressInStage(Stage& stage)
+{
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			//左上
+			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
@@ -2779,4 +2839,162 @@ void Player::IsdownBody()
 	}
 
 	return;
+}
+
+void Player::IsAroundBlock(Stage& stage)
+{
+	//中心座標をブロックサイズで割った数
+	int Center_X_mapchip = (int)(CenterPosition.x - stage.offset.x) / 60;
+	int Center_Y_mapchip = (int)(CenterPosition.y - stage.offset.x) / 60;
+
+	//体の四辺
+	float NextLeft = CenterPosition.x - PlayerBody::BodySize;
+	float NextRight = CenterPosition.x + PlayerBody::BodySize;
+	float NextUp = CenterPosition.y - PlayerBody::BodySize;
+	float NextDown = CenterPosition.y + PlayerBody::BodySize;
+
+	//四辺をブロックサイズで割った数
+	int NextLeft_mapchip = (int)(NextLeft - stage.offset.x) / 60;
+	int NextUp_mapchip = (int)(NextUp - stage.offset.y) / 60;
+	int NextRight_mapchip = (int)(NextRight - stage.offset.x) / 60;
+	int NextDown_mapchip = (int)(NextDown - stage.offset.y) / 60;
+
+	//タイル内のマップチップ座標
+	int X_mapchip_tile;
+	int Y_mapchip_tile;
+
+	//マップチップの座標
+	int mapchipPos = 0;
+
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			//左隣
+			if (stage.GetPositionTile({ NextLeft,CenterPosition.y,0.0 }, i, j))
+			{
+				X_mapchip_tile = NextLeft_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsLeftBlockFace = true;
+				}
+				else
+				{
+					IsLeftBlockFace = false;
+				}
+			}
+
+			//右隣
+			if (stage.GetPositionTile({ NextRight,CenterPosition.y,0.0 }, i, j))
+			{
+				X_mapchip_tile = NextRight_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsRightBlockFace = true;
+				}
+				else
+				{
+					IsRightBlockFace = false;
+				}
+			}
+
+			//上隣
+			if (stage.GetPositionTile({ CenterPosition.x,NextUp,0.0 }, i, j))
+			{
+				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextUp_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsUpBlockFace = true;
+				}
+				else
+				{
+					IsUpBlockFace = false;
+				}
+			}
+
+			//下隣
+			if (stage.GetPositionTile({ CenterPosition.x,NextDown,0.0 }, i, j))
+			{
+				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextDown_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsDownBlockFace = true;
+				}
+				else
+				{
+					IsDownBlockFace = false;
+				}
+			}
+		}
+	}
+}
+
+void Player::IsSlideBlock()
+{
+	int NextLeftCount = 0;
+	int NextRightCount = 0;
+	int NextUpCount = 0;
+	int NextDownCount = 0;
+
+	IsUpSlide = true;
+	IsDownSlide = true;
+	IsLeftSlide = true;
+	IsRightSlide = true;
+
+
+	//上方向
+	if ((Body_One.IsActivate && Body_One.IsDownBlock) || (Body_Three.IsActivate && Body_Three.IsDownBlock))
+	{
+		if (IsUpBlockFace == true ||
+			(Body_Two.IsActivate && Body_Two.IsDownBlock && Body_Two.BodyDistance == 1))
+		{
+			IsUpSlide = false;
+		}
+	}
+
+	//下方向
+	if ((Body_One.IsActivate && Body_One.IsUpBlock) || (Body_Three.IsActivate && Body_Three.IsUpBlock))
+	{
+		if (IsDownBlockFace == true ||
+			(Body_Four.IsActivate && Body_Four.IsDownBlock && Body_Four.BodyDistance == 1))
+		{
+			IsDownSlide = false;
+		}
+	}
+
+	//左方向
+	if ((Body_Two.IsActivate && Body_Two.IsRightBlock) || (Body_Four.IsActivate && Body_Four.IsRightBlock))
+	{
+		if (IsLeftBlockFace == true ||
+			(Body_One.IsActivate && Body_One.IsLeftBlock && Body_One.BodyDistance == 1))
+		{
+			IsLeftSlide = false;
+		}
+	}
+
+	//右方向
+	if ((Body_Two.IsActivate && Body_Two.IsLeftBlock) || (Body_Four.IsActivate && Body_Four.IsLeftBlock))
+	{
+		if (IsRightBlockFace == true ||
+			(Body_Three.IsActivate && Body_Three.IsRightBlock && Body_Three.BodyDistance == 1))
+		{
+			IsRightSlide = false;
+		}
+	}
 }
