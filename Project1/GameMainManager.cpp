@@ -1,52 +1,44 @@
-#include "Title.h"
-#include "Raki_imguiMgr.h"
-#include "TexManager.h"
-
+#include "GameMainManager.h"
 #include "InputManger.h"
-#include "NY_random.h"
+#include "Raki_DX12B.h"
 
-using namespace myImgui;
+GameMainManager::GameMainManager()
+{
+}
 
-Title::Title(ISceneChanger* changer) : BaseScene(changer) {
+GameMainManager::~GameMainManager()
+{
+}
 
-
-
-<<<<<<< HEAD
-	stage->Create();
-	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-	player->Init();
-	player->BodySetUp(playerTile);
+void GameMainManager::Init(Stage* stageptr, Player* playerptr)
+{
+	stage = stageptr;
+	player = playerptr;
 
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
-
-	ui.Init();
-=======
->>>>>>> origin/master
 }
 
-//åˆæœŸåŒ–
-void Title::Initialize() {
-
-
-
-
-}
-
-void Title::Finalize()
+void GameMainManager::Update()
 {
-
+	//ƒQ[ƒ€“àƒCƒ“ƒXƒ^ƒ“ƒX‚ÌXVˆ—i‚æ‚¤‚Í‰´‚ªì‚Á‚Ä‚È‚¢ƒNƒ‰ƒX‚ÌXVˆ—B‚â‚â‚±‚µ‚­‚È‚é‚©‚çƒ‰ƒbƒv‚µ‚½j
+	GameInstanceUpdate();
 }
 
-//æ›´æ–°
-void Title::Update() {
+void GameMainManager::Draw()
+{
+	GameInstanceDraw();
+}
 
-<<<<<<< HEAD
-	//---------------------ã‚²ãƒ¼ãƒ ãƒ—ãƒ¬ã‚¤ä¸­ã®å‡¦ç†-------------------------
+void GameMainManager::Finalize()
+{
+}
 
-	ui.Update();
-
+void GameMainManager::GameInstanceUpdate()
+{
+	//ŠeƒXƒe[ƒW‚Ìˆ—
+//#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
@@ -59,12 +51,15 @@ void Title::Update() {
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
+#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
+
+#endif // _DEBUG
 
 	if (InputManger::ResetTrigger())
 	{
@@ -78,23 +73,23 @@ void Title::Update() {
 	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = {
-		player->IsUpFold,
-		player->IsDownFold,
 		player->IsLeftFold,
-		player->IsRightFold
+		player->IsUpFold,
+		player->IsRightFold,
+		player->IsDownFold
 	};
 
 	bool IsOpens[4] = {
-		player->IsUpOpen,
-		player->IsDownOpen,
 		player->IsLeftOpen,
-		player->IsRightOpen
+		player->IsUpOpen,
+		player->IsRightOpen,
+		player->IsDownOpen
 	};
 
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
-	//ã‚¹ãƒ†ãƒ¼ã‚¸ã¨ã®é€£å‹•ã®ãŸã‚é–‹ãå‡¦ç†ã¯ã“ã£ã¡ã§ã‚„ã‚‹
+	//ƒXƒe[ƒW‚Æ‚Ì˜A“®‚Ì‚½‚ßŠJ‚­ˆ—‚Í‚±‚Á‚¿‚Å‚â‚é
 	if (player->OpenCount >= 2)
 	{
 		if (player->IsLeftOpen == true)
@@ -116,38 +111,15 @@ void Title::Update() {
 		player->OpenCount = 0;
 		player->IsOpenCountStart = false;
 	}
-
-	//-------------------------ã“ã“ã¾ã§---------------------------
-=======
->>>>>>> origin/master
 }
 
-//æç”»
-void Title::Draw() {
-
-<<<<<<< HEAD
-	//èƒŒæ™¯ã«å¸¸ã«ã„ã‚‹
-	Raki_DX12B::Get()->StartDrawRenderTarget();
-
-	Raki_DX12B::Get()->StartDrawBackbuffer();
-
-	// æç”»å‡¦ç†
-	//DrawGraph(0, 0, Back, true);
-	//DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
+void GameMainManager::GameInstanceDraw()
+{
+	//ŠeƒXƒe[ƒW‚Ìˆ—
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
-
-	ui.Draw();
-
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
-
-
-	//æç”»çµ‚äº†
-	Raki_DX12B::Get()->CloseDraw();
-=======
->>>>>>> origin/master
-
 }
