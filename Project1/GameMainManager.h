@@ -2,6 +2,7 @@
 
 #include "Stage.h"
 #include "Player.h"
+#include "UI.h"
 
 class GameMainManager
 {
@@ -14,6 +15,8 @@ private:
 	Sprite Back;
 	unsigned char playerTile[4] = { 0 };
 	const int drawOffsetX = 320, drawOffsetY = 45;
+
+	UI ui;
 
 public:
 	GameMainManager();

@@ -10,7 +10,9 @@ void UI::Init()
 	this->PauseUISprite.CreateSprite({ 72, 77 }, { 0.5,0.5 }, PauseHandle, false);
 	this->PauseUISprite.spdata.get()->position = { 1200.0f,650.5f,0.0f };
 
+	ResetRot = 0;
 	ResetAddRot = 1;
+	PauseRot = 0;
 	PauseAddRot = 1;
 }
 
@@ -67,12 +69,8 @@ void UI::Draw()
 {
 	SpriteManager::Get()->SetCommonBeginDraw();
 
-	//ResetUISprite.DrawExtendSprite(1066, 612, 1138, 689);
-	
 	ResetUISprite.Draw();
 
-	//PauseUISprite.DrawExtendSprite(1164, 612, 1236, 689);
-	
 	PauseUISprite.Draw();
 }
 

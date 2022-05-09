@@ -18,6 +18,8 @@ void GameMainManager::Init(Stage* stageptr, Player* playerptr)
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
+
+	ui.Init();
 }
 
 void GameMainManager::Update()
@@ -37,6 +39,8 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
+	ui.Update();
+
 	//各ステージの処理
 //#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
@@ -120,6 +124,7 @@ void GameMainManager::GameInstanceDraw()
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
+	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
 }
