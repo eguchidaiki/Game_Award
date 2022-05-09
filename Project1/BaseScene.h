@@ -18,6 +18,9 @@ protected:
     
     ISceneChanger *mSceneChanger;    //クラス所有元にシーン切り替えを伝えるインターフェイス
     //static Raki_DX12B *dx12b;        //Raki_DX12Bクラスのポインタ、派生先でも基本1つしか使わないのでstaticに
+    
+    //シーン遷移演出を実行するクラス
+
 
 public:
     BaseScene(ISceneChanger *changer);
