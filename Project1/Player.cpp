@@ -332,12 +332,6 @@ void Player::Draw(int offsetX, int offsetY)
 #endif // _DEBUG
 
 
-	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
-	//ImGui::Text("Move:Click");
-	//ImGui::Text("Fold&Open:Drag");
-	//ImGui::Text("Slide:WASD");
-	//ImguiMgr::Get()->EndDrawImgui();
-
 }
 
 void Player::Create()
@@ -2616,10 +2610,10 @@ bool Player::IsFall()
 
 void Player::SetBodyStatus(bool arrangement[4])
 {
-	arrangement[BodyType::left] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
-	arrangement[BodyType::up] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
-	arrangement[BodyType::right] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
-	arrangement[BodyType::down] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[0] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
+	arrangement[1] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
+	arrangement[2] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[3] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
 }
 
 bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)

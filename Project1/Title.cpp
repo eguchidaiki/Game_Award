@@ -20,6 +20,8 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
+
+	ui.Init();
 }
 
 //初期化
@@ -40,7 +42,10 @@ void Title::Finalize()
 void Title::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-	//#ifdef _DEBUG
+	//---------------------ゲームプレイ中の処理-------------------------
+
+	ui.Update();
+
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
@@ -60,8 +65,6 @@ void Title::Update() {
 		player->BodySetUp(playerTile);
 	}
 
-//#endif // _DEBUG
-
 	if (InputManger::ResetTrigger())
 	{
 		stage->Reset(playerTile);
@@ -74,17 +77,17 @@ void Title::Update() {
 	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = {
-		player->IsLeftFold,
 		player->IsUpFold,
-		player->IsRightFold,
-		player->IsDownFold
+		player->IsDownFold,
+		player->IsLeftFold,
+		player->IsRightFold
 	};
 
 	bool IsOpens[4] = {
-		player->IsLeftOpen,
 		player->IsUpOpen,
-		player->IsRightOpen,
-		player->IsDownOpen
+		player->IsDownOpen,
+		player->IsLeftOpen,
+		player->IsRightOpen
 	};
 
 	stage->Updata();
@@ -112,6 +115,8 @@ void Title::Update() {
 		player->OpenCount = 0;
 		player->IsOpenCountStart = false;
 	}
+
+	//-------------------------ここまで---------------------------
 }
 
 //描画
@@ -129,8 +134,12 @@ void Title::Draw() {
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
+
+	ui.Draw();
+
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
+
 
 	//描画終了
 	Raki_DX12B::Get()->CloseDraw();

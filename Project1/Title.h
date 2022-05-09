@@ -9,6 +9,7 @@
 #include "testParticle.h"
 #include "Player.h"
 #include "Stage.h"
+#include "UI.h"
 
 enum NowState {
     title,
@@ -40,6 +41,7 @@ public:
 
     Stage *stage = Stage::Get();
 
+    UI ui;
 
     const int drawOffsetX = 320, drawOffsetY = 45;
 
