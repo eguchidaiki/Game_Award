@@ -651,9 +651,8 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-							Player::Get()->IsWalk = false;
 							IsHitLeft = true;
-							JumpCountLeft++;
+							JumpCountLeft += Player::Get()->IsLeft;
 						}
 					}
 				}
@@ -675,15 +674,16 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
 						IsHitDown = true;
 						FallCount++;
+						Player::Get()->IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitLeft == false)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-							Player::Get()->IsWalk = Player::Get()->IsWalk && Player::Get()->IsRight;
 							IsHitLeft = true;
-							JumpCountLeft++;
+							JumpCountLeft += Player::Get()->IsLeft;
+							Player::Get()->IsInitJump = false;
 						}
 					}
 				}
@@ -714,9 +714,8 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
-							Player::Get()->IsWalk = false;
 							IsHitRight = true;
-							jumpCountRight++;
+							jumpCountRight += Player::Get()->IsRight;
 						}
 					}
 				}
@@ -738,15 +737,15 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 						center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
 						IsHitDown = true;
 						FallCount++;
+						Player::Get()->IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitRight == false)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
-							Player::Get()->IsWalk = Player::Get()->IsWalk && Player::Get()->IsLeft;
 							IsHitRight = true;
-							jumpCountRight++;
+							jumpCountRight += Player::Get()->IsRight;
 						}
 					}
 				}
@@ -790,14 +789,12 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 		}
 	}
 
-	if ((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false))
+	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && Player::Get()->IsInitJump == false)
 	{
-		if (Player::Get()->IsJump == false)
-		{
-			Player::Get()->IsJump = true;
-			Player::Get()->FallSpeed = -5.6f;
-			Player::Get()->IsWalk = true;
-		}
+		Player::Get()->IsJump = true;
+		Player::Get()->FallSpeed = -5.6f;
+		Player::Get()->IsWalk = true;
+		Player::Get()->IsInitJump = true;
 	}
 
 	if (FallCount > 0)
@@ -812,6 +809,11 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 
 bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 {
+	if (Player::Get()->IsPressInStage(stage) == false)
+	{
+		return false;
+	}
+
 	//体の四辺
 	float BodyLeft;
 	float BodyRight;
@@ -952,4 +954,130 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	}
 
 	return true;
+}
+
+void PlayerBody::IsAroundBlock(Stage& stage)
+{
+	//体の中心
+	RVector3 BodyCenterPos = { 0,0,0 };
+
+	//StartPosとEndPosの位置関係によって上下左右の設定を変える
+	if (BodyStartPos.x < BodyEndPos.x)
+	{
+		BodyCenterPos.x = BodyStartPos.x + HalfBodySize;
+	}
+	else
+	{
+		BodyCenterPos.x = BodyEndPos.x + HalfBodySize;
+	}
+
+	if (BodyStartPos.y < BodyEndPos.y)
+	{
+		BodyCenterPos.y = BodyStartPos.y + HalfBodySize;
+	}
+	else
+	{
+		BodyCenterPos.y = BodyEndPos.y + HalfBodySize;
+	}
+
+	//中心座標をブロックサイズで割った数
+	int Center_X_mapchip = (int)(BodyCenterPos.x - stage.offset.x) / 60;
+	int Center_Y_mapchip = (int)(BodyCenterPos.y - stage.offset.x) / 60;
+
+	//体の四辺
+	float NextLeft = BodyCenterPos.x - BodySize;
+	float NextRight = BodyCenterPos.x + BodySize;
+	float NextUp = BodyCenterPos.y - BodySize;
+	float NextDown = BodyCenterPos.y + BodySize;
+
+	//四辺をブロックサイズで割った数
+	int NextLeft_mapchip = (int)(NextLeft - stage.offset.x) / 60;
+	int NextUp_mapchip = (int)(NextUp - stage.offset.y) / 60;
+	int NextRight_mapchip = (int)(NextRight - stage.offset.x) / 60;
+	int NextDown_mapchip = (int)(NextDown - stage.offset.y) / 60;
+
+	//タイル内のマップチップ座標
+	int X_mapchip_tile;
+	int Y_mapchip_tile;
+
+	//マップチップの座標
+	int mapchipPos = 0;
+
+	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		{
+			//左隣
+			if (stage.IsPositionTile({ NextLeft,BodyCenterPos.y,0.0 }, i, j))
+			{
+				X_mapchip_tile = NextLeft_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsLeftBlock = true;
+				}
+				else
+				{
+					IsLeftBlock = false;
+				}
+			}
+
+			//右隣
+			if (stage.IsPositionTile({ NextRight,BodyCenterPos.y,0.0 }, i, j))
+			{
+				X_mapchip_tile = NextRight_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsRightBlock = true;
+				}
+				else
+				{
+					IsRightBlock = false;
+				}
+			}
+
+			//上隣
+			if (stage.IsPositionTile({ BodyCenterPos.x,NextUp,0.0 }, i, j))
+			{
+				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextUp_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsUpBlock = true;
+				}
+				else
+				{
+					IsUpBlock = false;
+				}
+			}
+
+			//下隣
+			if (stage.IsPositionTile({ BodyCenterPos.x,NextDown,0.0 }, i, j))
+			{
+				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextDown_mapchip % stage.GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				{
+					IsDownBlock = true;
+				}
+				else
+				{
+					IsDownBlock = false;
+				}
+			}
+		}
+	}
 }

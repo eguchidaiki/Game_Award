@@ -13,8 +13,9 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 
 }
 
-//‰Šú‰»
+//åˆæœŸåŒ–
 void Title::Initialize() {
+
 
 
 
@@ -25,14 +26,13 @@ void Title::Finalize()
 
 }
 
-//XV
+//æ›´æ–°
 void Title::Update() {
 
 }
 
-//•`‰æ
+//æç”»
 void Title::Draw() {
-
 
 
 }
