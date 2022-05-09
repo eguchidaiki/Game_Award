@@ -41,11 +41,6 @@ void PlayerFoot::Update(RVector3& DownPos, bool IsDownBody, int BodyDis)
 			FootIsAction = false;
 		}
 	}
-
-	if (IsFootUp == false)
-	{
-		FootLeftUpPosition = { DownPos.x - 30,DownPos.y + (IsDownBody * 50 * BodyDis) + 25,0.0f };
-	}
 }
 
 void PlayerFoot::Draw(int offsetX, int offsetY, bool isleft, bool isright)
