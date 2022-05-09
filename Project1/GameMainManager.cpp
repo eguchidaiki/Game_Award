@@ -39,7 +39,7 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update();
+	ui.Update(stage, player, playerTile);
 
 	//各ステージの処理
 //#ifdef _DEBUG
@@ -127,4 +127,17 @@ void GameMainManager::GameInstanceDraw()
 	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
+
+	ImguiMgr::Get()->StartDrawImgui("Info", 0.0f, 100.0f);
+	ImGui::Text("IsGoal:%d", player->IsGoal);
+	ImGui::Text("PressCount:%d", player->PressCount);
+	ImGui::Text("IsWalk:%d", player->IsWalk);
+	ImGui::Text("IsJump:%d", player->IsJump);
+	ImGui::Text("IsInitJump:%d", player->IsInitJump);
+	ImGui::Text("x:%f", player->CenterPosition.x);
+	ImGui::Text("y:%f", player->CenterPosition.y);
+	ImGui::Text("z:%f", player->CenterPosition.z);
+	ImGui::Text("Reset.x:%f", ui.ResetUISprite.spdata.get()->position.x);
+	ImGui::Text("Reset.y:%f", ui.ResetUISprite.spdata.get()->position.y);
+	ImguiMgr::Get()->EndDrawImgui();
 }

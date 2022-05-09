@@ -3,12 +3,10 @@
 void UI::Init()
 {
 	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton.png");
-	this->ResetUISprite.CreateSprite({ 72, 77 }, { 0.5,0.5 }, ResetHandle, false);
-	this->ResetUISprite.spdata.get()->position = { 1102.0f,650.5f,0.0f };
+	this->ResetUISprite.Create(ResetHandle);
 
 	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton.png");
-	this->PauseUISprite.CreateSprite({ 72, 77 }, { 0.5,0.5 }, PauseHandle, false);
-	this->PauseUISprite.spdata.get()->position = { 1200.0f,650.5f,0.0f };
+	this->PauseUISprite.Create(PauseHandle);
 
 	ResetRot = 0;
 	ResetAddRot = 1;
@@ -16,61 +14,48 @@ void UI::Init()
 	PauseAddRot = 1;
 }
 
-void UI::Update()
+void UI::Update(Stage* stage,Player* player,unsigned char PlayerTile[4])
 {
 	mousePos = Input::getMousePos();
 
 	IsInButton();
 
-	if (IsResetPress)
+	if (IsResetPress && Input::isMouseClickTrigger(0))
 	{
-		ResetRot += ResetAddRot;
-
-		if (ResetRot >= 30.0f && ResetAddRot > 0)
-		{
-			ResetAddRot = -1;
-		}
-		else if (ResetRot <= -30.0f && ResetAddRot < 0)
-		{
-			ResetAddRot = 1;
-		}
-	}
-	else
-	{
-		ResetRot = 0;
+		stage->Reset(PlayerTile);
+		player->Init();
+		player->BodySetUp(PlayerTile);
 	}
 
-	if (IsPausePress)
+	if (IsPausePress && Input::isMouseClickTrigger(0))
 	{
-		PauseRot += PauseAddRot;
 
-		if (PauseRot >= 30.0f && PauseAddRot > 0)
-		{
-			PauseAddRot = -1;
-		}
-		else if (PauseRot <= -30.0f && PauseAddRot < 0)
-		{
-			PauseAddRot = 1;
-		}
 	}
-	else
-	{
-		PauseRot = 0;
-	}
-
-	ResetUISprite.spdata.get()->rotation = ResetRot;
-	ResetUISprite.UpdateSprite();
-
-	PauseUISprite.spdata.get()->rotation = PauseRot;
-	PauseUISprite.UpdateSprite();
 }
 
 void UI::Draw()
 {
 	SpriteManager::Get()->SetCommonBeginDraw();
 
-	ResetUISprite.Draw();
+	if (!IsResetPress)
+	{
+		ResetUISprite.DrawExtendSprite(1066.0f, 612.0f, 1138.0f, 689.0f);
+	}
+	else
+	{
+		ResetUISprite.DrawExtendSprite(1056.0f, 602.0f, 1148.0f, 699.0f);
+	}
 
+	if (!IsPausePress)
+	{
+		PauseUISprite.DrawExtendSprite(1164.0f, 612.0f, 1236.0f, 689.0f);
+	}
+	else
+	{
+		PauseUISprite.DrawExtendSprite(1154.0f, 602.0f, 1246.0f, 699.0f);
+	}
+
+	ResetUISprite.Draw();
 	PauseUISprite.Draw();
 }
 

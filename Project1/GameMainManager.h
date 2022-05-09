@@ -3,6 +3,7 @@
 #include "Stage.h"
 #include "Player.h"
 #include "UI.h"
+#include "Raki_imguiMgr.h"
 
 class GameMainManager
 {

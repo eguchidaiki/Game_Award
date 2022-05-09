@@ -4,19 +4,21 @@
 #include "Sprite.h"
 #include <Raki_Input.h>
 #include <DirectXMath.h>
+#include "Player.h"
+#include "Stage.h"
 
 class UI
 {
 public:
     void Init();
 
-    void Update();
+    void Update(Stage* stage, Player* player, unsigned char PlayerTile[4]);
 
     void Draw();
 
     void IsInButton();
 
-private:
+//private:
     UINT ResetHandle;
     Sprite ResetUISprite;
 
