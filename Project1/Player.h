@@ -45,6 +45,9 @@ public: //メンバ関数
 	bool IsMouseClickFold(BodyType Direction);
 	bool IsMouseClickOpen(BodyType Direction);
 
+	//クリックした場所がステージ内かどうか
+	bool IsPressInStage();
+
 
 	/// <summary>
 	/// どの体を有効化するか
@@ -88,8 +91,11 @@ public: //メンバ関数
 	//顔の下に体があるかどうか
 	void IsdownBody();
 
+	//十字方向にブロックがあるかどうか
+	void IsAroundBlock();
+
 	//ブロックに邪魔されずにスライドできるかどうか
-	bool IsSlideBlock(BodyType SlideType);
+	void IsSlideBlock();
 
 public: //メンバ変数
 	//床の高さ
@@ -140,6 +146,12 @@ public: //メンバ変数
 	bool IsUpSlide;
 	bool IsRightSlide;
 	bool IsDownSlide;
+
+	//十字方向にブロックがあるかどうか
+	bool IsLeftBlockFace;
+	bool IsRightBlockFace;
+	bool IsUpBlockFace;
+	bool IsDownBlockFace;
 
 	//開くまでに数フレーム空ける用
 	int OpenCount = 0;

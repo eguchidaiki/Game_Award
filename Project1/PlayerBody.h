@@ -69,6 +69,12 @@ public: //メンバ関数
 	/// <param name="stage">ステージデータ</param>
 	bool IsReverseHitBody(const unsigned char& direction);
 
+	/// <summary>
+	/// 十字方向にブロックがあるかどうか
+	/// </summary>
+	/// <param name="stage">ステージ情報</param>
+	void IsAroundBlock();
+
 public: //メンバ変数
 	//有効化フラグ
 	bool IsActivate;
@@ -104,6 +110,12 @@ public: //メンバ変数
 	bool IsHitUp;
 	bool IsHitRight;
 	bool IsHitDown;
+
+	//十字方向にブロックがあるかどうか
+	bool IsLeftBlock;
+	bool IsRightBlock;
+	bool IsUpBlock;
+	bool IsDownBlock;
 
 	//反転したタイルとの当たり判定
 	BodyType IsReverse;

@@ -1,4 +1,4 @@
-#include "Title.h"
+ï»¿#include "Title.h"
 #include "Raki_imguiMgr.h"
 #include "TexManager.h"
 
@@ -7,13 +7,12 @@
 
 using namespace myImgui;
 
-Title::Title(ISceneChanger* changer) : BaseScene(changer) {
-
-
+Title::Title(ISceneChanger* changer) : BaseScene(changer)
+{
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
-	stage->LoadStage("./Resources/stage/test.csv", playerTile);
+	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
 	player->BodySetUp(playerTile);
 
@@ -22,10 +21,11 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	this->Back.Create(BackHandle);
 }
 
-//‰Šú‰»
-void Title::Initialize() {
+//åˆæœŸåŒ–
+void Title::Initialize()
+{
 	/// <summary>
-	/// ƒtƒB[ƒ‹ƒhŠÇ—•”‰Šú‰»
+	/// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ç®¡ç†éƒ¨åˆæœŸåŒ–
 	/// </summary>
 
 	//StageMoveParticle::Get()->Init(&cam);
@@ -36,11 +36,12 @@ void Title::Finalize()
 
 }
 
-//XV
-void Title::Update() {
+//æ›´æ–°
+void Title::Update()
+{
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-	//#ifdef _DEBUG
+#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
@@ -53,14 +54,12 @@ void Title::Update() {
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
 		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-
 #endif // _DEBUG
 
 	if (InputManger::Get()->ResetTrigger())
@@ -91,7 +90,7 @@ void Title::Update() {
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
-	//ƒXƒe[ƒW‚Æ‚Ì˜A“®‚Ì‚½‚ßŠJ‚­ˆ—‚Í‚±‚Á‚¿‚Å‚â‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã¨ã®é€£å‹•ã®ãŸã‚é–‹ãå‡¦ç†ã¯ã“ã£ã¡ã§ã‚„ã‚‹
 	if (player->OpenCount >= 2)
 	{
 		if (player->IsLeftOpen == true)
@@ -115,15 +114,16 @@ void Title::Update() {
 	}
 }
 
-//•`‰æ
-void Title::Draw() {
+//æç”»
+void Title::Draw()
+{
 
-	//”wŒi‚Éí‚É‚¢‚é
+	//èƒŒæ™¯ã«å¸¸ã«ã„ã‚‹
 	Raki_DX12B::Get()->StartDrawRenderTarget();
 
 	Raki_DX12B::Get()->StartDrawBackbuffer();
 
-	// •`‰æˆ—
+	// æç”»å‡¦ç†
 	//DrawGraph(0, 0, Back, true);
 	//DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
 	SpriteManager::Get()->SetCommonBeginDraw();
@@ -133,7 +133,7 @@ void Title::Draw() {
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
 
-	//•`‰æI—¹
+	//æç”»çµ‚äº†
 	Raki_DX12B::Get()->CloseDraw();
 
 }
