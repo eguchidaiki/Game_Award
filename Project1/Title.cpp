@@ -63,13 +63,13 @@ void Title::Update() {
 
 #endif // _DEBUG
 
-	if (InputManger::ResetTrigger())
+	if (InputManger::Get()->ResetTrigger())
 	{
 		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-	player->Update(*stage, drawOffsetX, drawOffsetY);
+	player->Update(drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);

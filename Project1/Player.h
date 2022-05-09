@@ -20,7 +20,7 @@ public: //メンバ関数
 	// 初期化
 	void Init();
 	// 更新
-	void Update(Stage& stage, int offsetX, int offsetY);
+	void Update(int offsetX, int offsetY);
 	// 描画
 	void Draw(int offsetX, int offsetY);
 	// 生成
@@ -30,7 +30,7 @@ public: //メンバ関数
 	//移動
 	void Key_Move();
 	//折る・開く
-	void Key_FoldOpen(Stage& stage);
+	void Key_FoldOpen();
 	//スライド
 	void Key_Slide();
 
@@ -40,10 +40,10 @@ public: //メンバ関数
 	//移動
 	void Mouse_Move(int offsetX, int offsetY);
 	//折る・開く
-	void Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage);
+	void Mouse_FoldOpen(int offsetX, int offsetY);
 	//クリックした時のタイル状のマウス座標とプレイヤーのタイル状の座標を比較
-	bool IsMouseClickFold(BodyType Direction, Stage& stage);
-	bool IsMouseClickOpen(BodyType Direction, Stage& stage);
+	bool IsMouseClickFold(BodyType Direction);
+	bool IsMouseClickOpen(BodyType Direction);
 
 
 	/// <summary>
@@ -62,7 +62,7 @@ public: //メンバ関数
 	void Open();
 
 	//顔の当たり判定
-	void IsHitPlayerBody(Stage& stage);
+	void IsHitPlayerBody();
 
 	//各体・顔の落下判定
 	bool IsFall();
@@ -71,10 +71,10 @@ public: //メンバ関数
 	void SetBodyStatus(bool arrangement[4]);
 
 	//反転したタイルと顔の四隅との判定
-	bool IsReverseHitFace(Stage& stage, const unsigned char& direction);
+	bool IsReverseHitFace(const unsigned char& direction);
 
 	//任意の方向に折れるかどうか
-	bool IsDirectionFoldAll(Stage& stage, BodyType foldtype);
+	bool IsDirectionFoldAll(BodyType foldtype);
 
 	//有効化されている体の数を取得
 	int ActivateBodyCount();
@@ -188,8 +188,8 @@ public: //メンバ変数
 	Sprite PlayerSpriteAction;
 
 	//マウスのクリック座標
-	XMFLOAT2 PressPos = { 0,0 };
-	XMFLOAT2 ReleasePos = { 0,0 };
+	XMFLOAT2 PressPos = {0,0};
+	XMFLOAT2 ReleasePos = {0,0};
 
 	// ゴールパーティクル
 	GoalParticle goalParticle;

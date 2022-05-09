@@ -6,6 +6,11 @@
 #include "Player.h"
 #include <memory>
 
+namespace
+{
+static Stage* stage = Stage::Get();
+}
+
 const float PlayerBody::BodySize = 50.0f;
 const float PlayerBody::HalfBodySize = BodySize / 2.0f;
 
@@ -45,22 +50,22 @@ void PlayerBody::Init(RVector3 position, BodyType number)
 
 	if (Body_Type == BodyType::left)
 	{
-		BodyStartPos = { position.x - 90.0f, position.y - 30.0f, 0.0f };
+		BodyStartPos = {position.x - 90.0f, position.y - 30.0f, 0.0f};
 	}
 	else if (Body_Type == BodyType::up)
 	{
-		BodyStartPos = { position.x - 30.0f, position.y - 90.0f, 0.0f };
+		BodyStartPos = {position.x - 30.0f, position.y - 90.0f, 0.0f};
 	}
 	else if (Body_Type == BodyType::right)
 	{
-		BodyStartPos = { position.x + 30.0f, position.y - 30.0f, 0.0f };
+		BodyStartPos = {position.x + 30.0f, position.y - 30.0f, 0.0f};
 	}
 	else if (Body_Type == BodyType::down)
 	{
-		BodyStartPos = { position.x - 30.0f, position.y + 30.0f, 0.0f };
+		BodyStartPos = {position.x - 30.0f, position.y + 30.0f, 0.0f};
 	}
 
-	BodyEndPos = { BodyStartPos.x + BodySize, BodyStartPos.y + BodySize, 0.0f };
+	BodyEndPos = {BodyStartPos.x + BodySize, BodyStartPos.y + BodySize, 0.0f};
 
 	IsOpen = true;
 	IsFold = false;
@@ -80,7 +85,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 	if (IsActivate == true)
 	{
 		BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+									static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 
 		BodySprite.Draw();
 	}
@@ -111,13 +116,13 @@ void PlayerBody::Body_Fold(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyEndPos = { center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
+				BodyEndPos = {center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f};
 				BodyStartPos.x = Ease.easeOut(BodyEndPos.x - BodySize, BodyEndPos.x + BodySize, Ease.timeRate);
 				BodyStartPos.y = BodyEndPos.y - BodySize;
 			}
 			else if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25 ,0.0f};
 				BodyEndPos.x = Ease.easeOut(BodyStartPos.x - BodySize, BodyStartPos.x + BodySize, Ease.timeRate);
 				BodyEndPos.y = BodyStartPos.y + BodySize;
 			}
@@ -126,13 +131,13 @@ void PlayerBody::Body_Fold(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyEndPos = { center.x + 25.0f, center.y - static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyEndPos = {center.x + 25.0f, center.y - static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f};
 				BodyStartPos.y = Ease.easeOut(BodyEndPos.y - BodySize, BodyEndPos.y + BodySize, Ease.timeRate);
 				BodyStartPos.x = BodyEndPos.x - BodySize;
 			}
 			else if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25.0f, center.y - 25, 0.0f };
+				BodyStartPos = {center.x - 25.0f, center.y - 25, 0.0f};
 				BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
 				BodyEndPos.x = BodyStartPos.x + BodySize;
 			}
@@ -141,13 +146,13 @@ void PlayerBody::Body_Fold(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyStartPos = { center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
+				BodyStartPos = {center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f};
 				BodyEndPos.x = Ease.easeOut(BodyStartPos.x + BodySize, BodyStartPos.x - BodySize, Ease.timeRate);
 				BodyEndPos.y = BodyStartPos.y + BodySize;
 			}
 			else if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x + 25,center.y + 25 ,0.0f };
+				BodyEndPos = {center.x + 25,center.y + 25 ,0.0f};
 				BodyStartPos.x = Ease.easeOut(BodyEndPos.x + BodySize, BodyEndPos.x - BodySize, Ease.timeRate);
 				BodyStartPos.y = BodyEndPos.y - BodySize;
 			}
@@ -156,13 +161,13 @@ void PlayerBody::Body_Fold(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyStartPos = { center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyStartPos = {center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f};
 				BodyEndPos.y = Ease.easeOut(BodyStartPos.y + BodySize, BodyStartPos.y - BodySize, Ease.timeRate);
 				BodyEndPos.x = BodyStartPos.x + BodySize;
 			}
 			else if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x + 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyEndPos = {center.x + 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f};
 				BodyStartPos.y = Ease.easeOut(BodyEndPos.y + BodySize, BodyEndPos.y - BodySize, Ease.timeRate);
 				BodyStartPos.x = BodyStartPos.x + BodySize;
 			}
@@ -182,52 +187,52 @@ void PlayerBody::Body_Fold(RVector3& center)
 		{
 			if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x - (25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
-				BodyStartPos = { BodyEndPos.x + 50, BodyEndPos.y - BodySize ,0.0f };
+				BodyEndPos = {center.x - (25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f};
+				BodyStartPos = {BodyEndPos.x + 50, BodyEndPos.y - BodySize ,0.0f};
 			}
 			else if (FoldCount == 2)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize, BodyStartPos.y + BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize, BodyStartPos.y + BodySize ,0.0f};
 			}
 		}
 		else if (Body_Type == BodyType::up)
 		{
 			if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25,center.y + (25 + BodySize * (BodyDistance - 1)) ,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y + (25 + BodySize * (BodyDistance - 1)) ,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f};
 			}
 			else if (FoldCount == 2)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25 ,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize,BodyStartPos.y + BodySize ,0.0f};
 			}
 		}
 		else if (Body_Type == BodyType::right)
 		{
 			if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x + (25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
-				BodyEndPos = { BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f };
+				BodyStartPos = {center.x + (25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f};
+				BodyEndPos = {BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f};
 			}
 			else if (FoldCount == 2)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize, BodyStartPos.y + BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25 ,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize, BodyStartPos.y + BodySize ,0.0f};
 			}
 		}
 		else if (Body_Type == BodyType::down)
 		{
 			if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25,center.y + (25 + BodySize * (BodyDistance - 1)) ,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y + (25 + BodySize * (BodyDistance - 1)) ,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize,BodyStartPos.y - BodySize ,0.0f};
 			}
 			else if (FoldCount == 2)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25 ,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize,BodyStartPos.y + BodySize ,0.0f};
 			}
 		}
 	}
@@ -245,13 +250,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f };
+				BodyEndPos = {center.x - static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y + 25 ,0.0f};
 				BodyStartPos.x = Ease.easeOut(BodyEndPos.x + BodySize, BodyEndPos.x - BodySize, Ease.timeRate);
 				BodyStartPos.y = BodyEndPos.y - BodySize;
 			}
 			else if (FoldCount == 2)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25 ,0.0f};
 				BodyEndPos.x = Ease.easeOut(BodyStartPos.x + BodySize, BodyStartPos.x - BodySize, Ease.timeRate);
 				BodyEndPos.y = BodyStartPos.y + BodySize;
 			}
@@ -260,13 +265,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x + 25.0f, center.y - static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyEndPos = {center.x + 25.0f, center.y - static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f};
 				BodyStartPos.y = Ease.easeOut(BodyEndPos.y + BodySize, BodyEndPos.y - BodySize, Ease.timeRate);
 				BodyStartPos.x = BodyEndPos.x - BodySize;
 			}
 			else if (FoldCount == 2)
 			{
-				BodyStartPos = { center.x - 25.0f, center.y - 25.0f, 0.0f };
+				BodyStartPos = {center.x - 25.0f, center.y - 25.0f, 0.0f};
 				BodyEndPos.y = Ease.easeOut(BodyStartPos.y + BodySize, BodyStartPos.y - BodySize, Ease.timeRate);
 				BodyEndPos.x = BodyEndPos.x - BodySize;
 			}
@@ -275,13 +280,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f };
+				BodyStartPos = {center.x + static_cast<float>(25 + BodySize * (BodyDistance - 1)),center.y - 25 ,0.0f};
 				BodyEndPos.x = Ease.easeOut(BodyStartPos.x - BodySize, BodyStartPos.x + BodySize, Ease.timeRate);
 				BodyEndPos.y = BodyStartPos.y + BodySize;
 			}
 			else if (FoldCount == 2)
 			{
-				BodyEndPos = { center.x + 25,center.y + 25 ,0.0f };
+				BodyEndPos = {center.x + 25,center.y + 25 ,0.0f};
 				BodyStartPos.x = Ease.easeOut(BodyEndPos.x - BodySize, BodyEndPos.x + BodySize, Ease.timeRate);
 				BodyStartPos.y = BodyEndPos.y - BodySize;
 			}
@@ -290,13 +295,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f };
+				BodyStartPos = {center.x - 25.0f, center.y + static_cast<float>(25 + BodySize * (BodyDistance - 1)), 0.0f};
 				BodyEndPos.y = Ease.easeOut(BodyStartPos.y - BodySize, BodyStartPos.y + BodySize, Ease.timeRate);
 				BodyEndPos.x = BodyStartPos.x + BodySize;
 			}
 			else if (FoldCount == 2)
 			{
-				BodyEndPos = { center.x + 25.0f, center.y + 25, 0.0f };
+				BodyEndPos = {center.x + 25.0f, center.y + 25, 0.0f};
 				BodyStartPos.y = Ease.easeOut(BodyEndPos.y - BodySize, BodyEndPos.y + BodySize, Ease.timeRate);
 				BodyStartPos.x = BodyEndPos.x - BodySize;
 			}
@@ -316,13 +321,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyStartPos = { center.x - (25 + BodyDistance * BodySize),center.y - 25,0.0f };
-				BodyEndPos = { BodyStartPos.x + BodySize,BodyStartPos.y + BodySize,0.0f };
+				BodyStartPos = {center.x - (25 + BodyDistance * BodySize),center.y - 25,0.0f};
+				BodyEndPos = {BodyStartPos.x + BodySize,BodyStartPos.y + BodySize,0.0f};
 			}
 			else if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25,center.y - 25 ,0.0f };
-				BodyEndPos = { BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f };
+				BodyStartPos = {center.x - 25,center.y - 25 ,0.0f};
+				BodyEndPos = {BodyStartPos.x - BodySize,BodyStartPos.y + BodySize ,0.0f};
 				IsFold = true;
 				IsOpen = false;
 			}
@@ -331,13 +336,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyStartPos = { center.x - 25.0f,center.y - (25 + BodyDistance * BodySize),0.0f };
-				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f };
+				BodyStartPos = {center.x - 25.0f,center.y - (25 + BodyDistance * BodySize),0.0f};
+				BodyEndPos = {BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f};
 			}
 			else if (FoldCount == 1)
 			{
-				BodyStartPos = { center.x - 25.0f,center.y - 25.0f,0.0f };
-				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f };
+				BodyStartPos = {center.x - 25.0f,center.y - 25.0f,0.0f};
+				BodyEndPos = {BodyStartPos.x + 50,BodyStartPos.y + 50,0.0f};
 				IsFold = true;
 				IsOpen = false;
 			}
@@ -346,13 +351,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyStartPos = { center.x + (25 + (BodyDistance - 1) * BodySize),center.y - 25,0.0f };
-				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
+				BodyStartPos = {center.x + (25 + (BodyDistance - 1) * BodySize),center.y - 25,0.0f};
+				BodyEndPos = {BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f};
 			}
 			else if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x + 25,center.y + 25,0.0f };
-				BodyStartPos = { BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f };
+				BodyEndPos = {center.x + 25,center.y + 25,0.0f};
+				BodyStartPos = {BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f};
 				IsFold = true;
 				IsOpen = false;
 			}
@@ -361,13 +366,13 @@ void PlayerBody::Body_Open(RVector3& center)
 		{
 			if (FoldCount == 0)
 			{
-				BodyStartPos = { center.x - 25,center.y + (25 + (BodyDistance - 1) * BodySize) ,0.0f };
-				BodyEndPos = { BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f };
+				BodyStartPos = {center.x - 25,center.y + (25 + (BodyDistance - 1) * BodySize) ,0.0f};
+				BodyEndPos = {BodyStartPos.x + 50,BodyStartPos.y + 50 ,0.0f};
 			}
 			else if (FoldCount == 1)
 			{
-				BodyEndPos = { center.x + 25,center.y + 25,0.0f };
-				BodyStartPos = { BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f };
+				BodyEndPos = {center.x + 25,center.y + 25,0.0f};
+				BodyStartPos = {BodyEndPos.x + BodySize,BodyEndPos.y - BodySize,0.0f};
 				IsFold = true;
 				IsOpen = false;
 			}
@@ -386,23 +391,23 @@ void PlayerBody::Body_Slide(RVector3& center)
 
 		if (Body_Type == BodyType::left)
 		{
-			BodyStartPos = { Ease.easeOut(center.x - 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f };
-			BodyEndPos = { BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f };
+			BodyStartPos = {Ease.easeOut(center.x - 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f};
+			BodyEndPos = {BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::right)
 		{
-			BodyStartPos = { Ease.easeOut(center.x + 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f };
-			BodyEndPos = { BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f };
+			BodyStartPos = {Ease.easeOut(center.x + 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f};
+			BodyEndPos = {BodyStartPos.x + BodySize, center.y + 25.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::up)
 		{
-			BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y - 75, center.y + 25, Ease.timeRate), 0.0f };
-			BodyEndPos = { center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f };
+			BodyStartPos = {center.x - 25.0f, Ease.easeOut(center.y - 75, center.y + 25, Ease.timeRate), 0.0f};
+			BodyEndPos = {center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f};
 		}
 		else if (Body_Type == BodyType::down)
 		{
-			BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 25, center.y - 75, Ease.timeRate), 0.0f };
-			BodyEndPos = { center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f };
+			BodyStartPos = {center.x - 25.0f, Ease.easeOut(center.y + 25, center.y - 75, Ease.timeRate), 0.0f};
+			BodyEndPos = {center.x + 25.0f, BodyStartPos.y + BodySize, 0.0f};
 		}
 
 		if (Ease.timeRate >= 1.0f)
@@ -440,49 +445,49 @@ void PlayerBody::Body_Slide(RVector3& center)
 		{
 			if (SlidePat == -1)
 			{
-				BodyEndPos = { Ease.easeOut(center.x - 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f };
+				BodyEndPos = {Ease.easeOut(center.x - 25, center.x - 75, Ease.timeRate), center.y - 25.0f, 0.0f};
 			}
 			else
 			{
-				BodyEndPos = { Ease.easeOut(center.x - 75, center.x - 25, Ease.timeRate), center.y - 25.0f, 0.0f };
+				BodyEndPos = {Ease.easeOut(center.x - 75, center.x - 25, Ease.timeRate), center.y - 25.0f, 0.0f};
 			}
-			BodyStartPos = { BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f };
+			BodyStartPos = {BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::up)
 		{
 			if (SlidePat == -1)
 			{
-				BodyEndPos = { center.x - 25.0f, Ease.easeOut(center.y - 25, center.y - 75, Ease.timeRate), 0.0f };
+				BodyEndPos = {center.x - 25.0f, Ease.easeOut(center.y - 25, center.y - 75, Ease.timeRate), 0.0f};
 			}
 			else
 			{
-				BodyEndPos = { center.x - 25.0f, Ease.easeOut(center.y - 75, center.y - 25, Ease.timeRate), 0.0f };
+				BodyEndPos = {center.x - 25.0f, Ease.easeOut(center.y - 75, center.y - 25, Ease.timeRate), 0.0f};
 			}
-			BodyStartPos = { BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f };
+			BodyStartPos = {BodyEndPos.x + static_cast<float>(100 * IsFold - BodySize), center.y + 25.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::right)
 		{
 			if (SlidePat == -1)
 			{
-				BodyStartPos = { Ease.easeOut(center.x + 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f };
+				BodyStartPos = {Ease.easeOut(center.x + 75, center.x + 25, Ease.timeRate), center.y - 25.0f, 0.0f};
 			}
 			else
 			{
-				BodyStartPos = { Ease.easeOut(center.x + 25, center.x + 75, Ease.timeRate), center.y - 30.0f, 0.0f };
+				BodyStartPos = {Ease.easeOut(center.x + 25, center.x + 75, Ease.timeRate), center.y - 30.0f, 0.0f};
 			}
-			BodyEndPos = { BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f };
+			BodyEndPos = {BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::down)
 		{
 			if (SlidePat == -1)
 			{
-				BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 75, center.y + 25, Ease.timeRate), 0.0f };
+				BodyStartPos = {center.x - 25.0f, Ease.easeOut(center.y + 75, center.y + 25, Ease.timeRate), 0.0f};
 			}
 			else
 			{
-				BodyStartPos = { center.x - 25.0f, Ease.easeOut(center.y + 25, center.y + 75, Ease.timeRate), 0.0f };
+				BodyStartPos = {center.x - 25.0f, Ease.easeOut(center.y + 25, center.y + 75, Ease.timeRate), 0.0f};
 			}
-			BodyEndPos = { BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f };
+			BodyEndPos = {BodyStartPos.x + static_cast<float>(-100 * IsFold + BodySize), center.y + 25.0f, 0.0f};
 		}
 
 		if (Ease.timeRate >= 1.0f)
@@ -507,22 +512,22 @@ void PlayerBody::setactivate(RVector3 center)
 	{
 		if (Body_Type == BodyType::left)
 		{
-			BodyStartPos = { center.x - 90.0f, center.y - 30.0f, 0.0f };
+			BodyStartPos = {center.x - 90.0f, center.y - 30.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::right)
 		{
-			BodyStartPos = { center.x + 30.0f, center.y - 30.0f, 0.0f };
+			BodyStartPos = {center.x + 30.0f, center.y - 30.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::up)
 		{
-			BodyStartPos = { center.x - 30.0f, center.y - 90.0f, 0.0f };
+			BodyStartPos = {center.x - 30.0f, center.y - 90.0f, 0.0f};
 		}
 		else if (Body_Type == BodyType::down)
 		{
-			BodyStartPos = { center.x - 30.0f, center.y + 30.0f, 0.0f };
+			BodyStartPos = {center.x - 30.0f, center.y + 30.0f, 0.0f};
 		}
 
-		BodyEndPos = { BodyStartPos.x + 60.0f, BodyStartPos.y + 60.0f, 0.0f };
+		BodyEndPos = {BodyStartPos.x + 60.0f, BodyStartPos.y + 60.0f, 0.0f};
 	}
 }
 
@@ -541,7 +546,7 @@ void PlayerBody::setslide(int slidepat, int move_dis)
 	SlideDis = move_dis;
 }
 
-void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide)
+void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide)
 {
 	Update(*center);
 
@@ -575,10 +580,10 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	}
 
 	//四辺をブロックサイズで割った数
-	int BodyLeft_mapchip = (int)(BodyLeft - stage.offset.x) / 60;
-	int BodyUp_mapchip = (int)(BodyUp - stage.offset.y) / 60;
-	int BodyRight_mapchip = (int)(BodyRight - stage.offset.x) / 60;
-	int BodyDown_mapchip = (int)(BodyDown - stage.offset.y) / 60;
+	int BodyLeft_mapchip = (int)(BodyLeft - stage->offset.x) / 60;
+	int BodyUp_mapchip = (int)(BodyUp - stage->offset.y) / 60;
+	int BodyRight_mapchip = (int)(BodyRight - stage->offset.x) / 60;
+	int BodyDown_mapchip = (int)(BodyDown - stage->offset.y) / 60;
 
 	//タイル内のマップチップ座標
 	int BodyLeft_mapchip_tile;
@@ -608,31 +613,31 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
-	if (BodyLeft < stage.offset.x)
+	if (BodyLeft < stage->offset.x)
 	{
-		center->x = stage.offset.x + (center->x - BodyLeft);
+		center->x = stage->offset.x + (center->x - BodyLeft);
 		iscolide = true;
 	}
-	if (BodyUp < stage.offset.y)
+	if (BodyUp < stage->offset.y)
 	{
-		center->y = stage.offset.y + (center->y - BodyUp);
+		center->y = stage->offset.y + (center->y - BodyUp);
 		iscolide = true;
 	}
 
 	//体の四隅とブロックとの判定
-	for (i = 0; i < stage.GetStageDataSize(); i++)
+	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyLeft,BodyUp,0.0f}, i, j))
 			{
-				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
 					BuriedY = (BodyUp_mapchip * 60) - BodyUp;
@@ -659,13 +664,13 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 			//左下
-			if (stage.IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyLeft,BodyDown,0.0f}, i, j))
 			{
-				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
-				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = (BodyDown_mapchip_tile)*stage.GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
 					BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
@@ -689,13 +694,13 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 			//右上
-			if (stage.IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyRight,BodyUp,0.0f}, i, j))
 			{
-				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = (BodyUp_mapchip_tile)*stage.GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
 					BuriedY = (BodyUp_mapchip * 60) - BodyUp;
@@ -722,13 +727,13 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 				}
 			}
 			//右下
-			if (stage.IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyRight,BodyDown,0.0f}, i, j))
 			{
-				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
-				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = (BodyDown_mapchip_tile)*stage.GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
 					BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
@@ -758,30 +763,30 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	bool DiagonallyUpRight = false;
 
 	//進む方向の斜め上にブロックがあるかどうか
-	for (i = 0; i < stage.GetStageDataSize(); i++)
+	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage.IsPositionTile({ BodyLeft - 20,BodyUp - 20,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyLeft - 20,BodyUp - 20,0.0f}, i, j))
 			{
-				BodyLeft_mapchip_tile = (BodyLeft_mapchip - 1) % stage.GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage.GetStageTileHeight(i, j);
+				BodyLeft_mapchip_tile = (BodyLeft_mapchip - 1) % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
 					Player::Get()->IsLeft == true)
 				{
 					DiagonallyUpLeft = true;
 				}
 			}
 
-			if (stage.IsPositionTile({ BodyRight + 20,BodyUp - 20,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyRight + 20,BodyUp - 20,0.0f}, i, j))
 			{
-				BodyRight_mapchip_tile = (BodyRight_mapchip + 1) % stage.GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage.GetStageTileHeight(i, j);
+				BodyRight_mapchip_tile = (BodyRight_mapchip + 1) % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = (BodyUp_mapchip_tile)*stage.GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
+				mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
 					Player::Get()->IsRight == true)
 				{
 					DiagonallyUpRight = true;
@@ -810,7 +815,7 @@ void PlayerBody::IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, boo
 	}
 }
 
-bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
+bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 {
 	//体の四辺
 	float BodyLeft;
@@ -847,10 +852,10 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	}
 
 	//四辺をブロックサイズで割った数
-	int BodyLeft_mapchip = (int)(BodyLeft - stage.offset.x) / 60;
-	int BodyUp_mapchip = (int)(BodyUp - stage.offset.y) / 60;
-	int BodyRight_mapchip = (int)(BodyRight - stage.offset.x) / 60;
-	int BodyDown_mapchip = (int)(BodyDown - stage.offset.y) / 60;
+	int BodyLeft_mapchip = (int)(BodyLeft - stage->offset.x) / 60;
+	int BodyUp_mapchip = (int)(BodyUp - stage->offset.y) / 60;
+	int BodyRight_mapchip = (int)(BodyRight - stage->offset.x) / 60;
+	int BodyDown_mapchip = (int)(BodyDown - stage->offset.y) / 60;
 
 	//タイル内のマップチップ座標
 	int BodyLeft_mapchip_tile;
@@ -861,10 +866,10 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 	//マップチップの座標
 	int mapchipPos = 0;
 
-	char* mapchip = { 0 };
+	char* mapchip = {0};
 
 	//設定用の値
-	int SettingMapchip = stage.FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, &mapchip);
+	int SettingMapchip = stage->FoldSimulation(RVector3(BodyLeft, BodyUp, 0.0f), direction, &mapchip);
 
 	if (SettingMapchip == -1)
 	{
@@ -878,18 +883,18 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 
 	int BlockCount = 0;
 
-	for (size_t i = 0; i < stage.GetStageDataSize(); i++)
+	for (size_t i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (size_t j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (size_t j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyLeft,BodyUp,0.0f}, i, j))
 			{
-				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
 				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
@@ -897,13 +902,13 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//左下
-			if (stage.IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyLeft,BodyDown,0.0f}, i, j))
 			{
-				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage.GetStageTileWidth(i, j);
-				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = BodyDown_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
 				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
@@ -911,13 +916,13 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//右上
-			if (stage.IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyRight,BodyUp,0.0f}, i, j))
 			{
-				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = BodyUp_mapchip % stage.GetStageTileHeight(i, j);
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = BodyUp_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
 				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{
@@ -925,13 +930,13 @@ bool PlayerBody::IsReverseHitBody(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//右下
-			if (stage.IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
+			if (stage->IsPositionTile({BodyRight,BodyDown,0.0f}, i, j))
 			{
-				BodyRight_mapchip_tile = BodyRight_mapchip % stage.GetStageTileWidth(i, j);
-				BodyDown_mapchip_tile = BodyDown_mapchip % stage.GetStageTileHeight(i, j);
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = BodyDown_mapchip_tile * stage.GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
+				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
 				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
 				{

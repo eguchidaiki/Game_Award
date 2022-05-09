@@ -29,7 +29,7 @@ public:
 	{
 		Init();
 	}
-	~ParticleSingle();
+	~ParticleSingle() {};
 
 	void Init() override;
 	void Update() override;
@@ -88,7 +88,7 @@ public: //’è”
 	static const int foldLineCount;     //Ü‚ê–Ú‚ÌŠÔŠu
 	static const XMFLOAT4 lineColor[2]; //ü‚ÌF
 
-	RVector3 offset = { 0,0,0 };
+	RVector3 offset = {0,0,0};
 
 private: //Ã“Iƒƒ“ƒo•Ï”
 	static int startPlayerPosX;
