@@ -8,6 +8,7 @@
 #include "SceneManager.h"
 #include "Raki_imguiMgr.h"
 
+#include "ActFlag.h"
 #include "InputManger.h"
 
 using namespace DirectX;
@@ -41,6 +42,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(),
         rakiWinApp->window_width, rakiWinApp->window_height);
     TexManager::InitTexManager();
+
+    //マウスを使えるようにする
+    ActFlag::SetMouseFlag(true);
 
     //音
     Audio::Init();
