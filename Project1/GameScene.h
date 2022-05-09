@@ -2,7 +2,16 @@
 #include "BaseScene.h"
 #include "ISceneChanger.h"
 #include "NY_Object3DMgr.h"
-#include "Raki_Input.h"
+#include "SpriteManager.h"
+#include "Audio.h"
+#include "../RakiEngine_Library/SpriteManager.h"
+
+#include "testParticle.h"
+#include "Player.h"
+#include "Stage.h"
+
+#include "StageSelecter.h"
+#include "GameMainManager.h"
 
 class GameScene : public BaseScene {
 public:
@@ -13,10 +22,38 @@ public:
     void Update() override;        //更新処理をオーバーライド。
     void Draw() override;            //描画処理をオーバーライド。
 
-    ////モデル
-    //Model3D boxModel;
-    ////オブジェクト
-    //Object3d boxObject;
+    //シーンで使うインスタンス
+    XMFLOAT3 eye = { 0,0,-150 };
+    XMFLOAT3 target = { 0,0,0 };
+    XMFLOAT3 up = { 0,1,0 };
+
+    // ゲームループで使う変数の宣言
+    Player* player = Player::Get();
+    unsigned char playerTile[4] = { 0 };
+    Stage* stage = Stage::Get();
+
+    //ステージ選択かゲーム中か
+    enum NowGameState
+    {
+        is_Select,
+        is_Game,
+    };
+    NowGameState nowState = is_Select;
+
+    //選択されたステージ
+    enum StageID
+    {
+        id_initialized,
+        id_1,
+        id_2,
+        id_3,
+        //以下、追加されるたびに記述
+
+    };
+    StageID nowID;
+
+    StageSelecter selecter;
+    GameMainManager gamemain;
 
 };
 

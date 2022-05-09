@@ -157,6 +157,7 @@
     <ClCompile Include="ActFlag.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Easing.cpp" />
+    <ClCompile Include="GameMainManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="goalParticle.cpp" />
     <ClCompile Include="InputManger.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="StageSelecter.cpp" />
     <ClCompile Include="testParticle.cpp" />
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
@@ -243,6 +245,7 @@
     <ClInclude Include="ActFlag.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Easing.h" />
+    <ClInclude Include="GameMainManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="General.h" />
     <ClInclude Include="goalParticle.h" />
@@ -254,6 +257,7 @@
     <ClInclude Include="PlayerFoot.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Stage.h" />
+    <ClInclude Include="StageSelecter.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="testParticle.h" />
     <ClInclude Include="Title.h" />

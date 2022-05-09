@@ -44,16 +44,16 @@
       <UniqueIdentifier>{ba93e0c3-5f54-4db1-b2d2-95228e4d2f34}</UniqueIdentifier>
       <Extensions>csv</Extensions>
     </Filter>
+    <Filter Include="App\Scene\Game">
+      <UniqueIdentifier>{4497999f-d19a-40ba-8305-e555f6cf5e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App\Scene\Title">
+      <UniqueIdentifier>{8d07b6f7-f3b6-42a0-9cf7-018db612cb5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp">
       <Filter>App\SceneManager</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>App\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Title.cpp">
-      <Filter>App\Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
       <Filter>App\SceneManager</Filter>
@@ -94,6 +94,18 @@
     </ClCompile>
     <ClCompile Include="ActFlag.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>App\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>App\Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="StageSelecter.cpp">
+      <Filter>App\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMainManager.cpp">
+      <Filter>App\Scene\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,12 +164,6 @@
     <ClInclude Include="ISceneChanger.h">
       <Filter>App\SceneManager</Filter>
     </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>App\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Title.h">
-      <Filter>App\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>App\SceneManager</Filter>
     </ClInclude>
@@ -197,6 +203,18 @@
     </ClInclude>
     <ClInclude Include="ActFlag.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>App\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>App\Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="StageSelecter.h">
+      <Filter>App\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMainManager.h">
+      <Filter>App\Scene\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
