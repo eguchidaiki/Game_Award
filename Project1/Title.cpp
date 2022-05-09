@@ -13,7 +13,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
-	stage->LoadStage("./Resources/stage/test.csv", playerTile);
+	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
 	player->BodySetUp(playerTile);
 
@@ -60,7 +60,7 @@ void Title::Update() {
 		player->BodySetUp(playerTile);
 	}
 
-#endif // _DEBUG
+//#endif // _DEBUG
 
 	if (InputManger::ResetTrigger())
 	{

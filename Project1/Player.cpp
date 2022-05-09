@@ -203,7 +203,7 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	if (IsGoal)
 	{
-		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
 	goalParticle.Update();
 }
@@ -247,8 +247,6 @@ void Player::Draw(int offsetX, int offsetY)
 			static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
 			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
-
-#pragma region BodyDraw
 
 #pragma region body_draw
 
@@ -303,8 +301,6 @@ void Player::Draw(int offsetX, int offsetY)
 		Body_Four.Draw(offsetX, offsetY);
 	}
 
-#pragma endregion
-
 #pragma endregion //body_draw
 
 	if(Player_IsAction)
@@ -316,7 +312,7 @@ void Player::Draw(int offsetX, int offsetY)
 		PlayerSprite.Draw();
 	}
 
-	//goalParticle.Draw()
+	//goalParticle.Draw();
 
 #ifdef _DEBUG
 	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
@@ -1078,7 +1074,7 @@ bool Player::IsPressInStage(Stage& stage)
 		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.GetPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
+			if (stage.IsPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
 			{
 				return true;
 			}
@@ -2871,7 +2867,7 @@ void Player::IsAroundBlock(Stage& stage)
 		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
 			//左隣
-			if (stage.GetPositionTile({ NextLeft,CenterPosition.y,0.0 }, i, j))
+			if (stage.IsPositionTile({ NextLeft,CenterPosition.y,0.0 }, i, j))
 			{
 				X_mapchip_tile = NextLeft_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
@@ -2889,7 +2885,7 @@ void Player::IsAroundBlock(Stage& stage)
 			}
 
 			//右隣
-			if (stage.GetPositionTile({ NextRight,CenterPosition.y,0.0 }, i, j))
+			if (stage.IsPositionTile({ NextRight,CenterPosition.y,0.0 }, i, j))
 			{
 				X_mapchip_tile = NextRight_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
@@ -2907,7 +2903,7 @@ void Player::IsAroundBlock(Stage& stage)
 			}
 
 			//上隣
-			if (stage.GetPositionTile({ CenterPosition.x,NextUp,0.0 }, i, j))
+			if (stage.IsPositionTile({ CenterPosition.x,NextUp,0.0 }, i, j))
 			{
 				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = NextUp_mapchip % stage.GetStageTileHeight(i, j);
@@ -2925,7 +2921,7 @@ void Player::IsAroundBlock(Stage& stage)
 			}
 
 			//下隣
-			if (stage.GetPositionTile({ CenterPosition.x,NextDown,0.0 }, i, j))
+			if (stage.IsPositionTile({ CenterPosition.x,NextDown,0.0 }, i, j))
 			{
 				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = NextDown_mapchip % stage.GetStageTileHeight(i, j);

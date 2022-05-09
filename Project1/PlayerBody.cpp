@@ -1008,7 +1008,7 @@ void PlayerBody::IsAroundBlock(Stage& stage)
 		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
 		{
 			//左隣
-			if (stage.GetPositionTile({ NextLeft,BodyCenterPos.y,0.0 }, i, j))
+			if (stage.IsPositionTile({ NextLeft,BodyCenterPos.y,0.0 }, i, j))
 			{
 				X_mapchip_tile = NextLeft_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
@@ -1026,7 +1026,7 @@ void PlayerBody::IsAroundBlock(Stage& stage)
 			}
 
 			//右隣
-			if (stage.GetPositionTile({ NextRight,BodyCenterPos.y,0.0 }, i, j))
+			if (stage.IsPositionTile({ NextRight,BodyCenterPos.y,0.0 }, i, j))
 			{
 				X_mapchip_tile = NextRight_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
@@ -1044,7 +1044,7 @@ void PlayerBody::IsAroundBlock(Stage& stage)
 			}
 
 			//上隣
-			if (stage.GetPositionTile({ BodyCenterPos.x,NextUp,0.0 }, i, j))
+			if (stage.IsPositionTile({ BodyCenterPos.x,NextUp,0.0 }, i, j))
 			{
 				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = NextUp_mapchip % stage.GetStageTileHeight(i, j);
@@ -1062,7 +1062,7 @@ void PlayerBody::IsAroundBlock(Stage& stage)
 			}
 
 			//下隣
-			if (stage.GetPositionTile({ BodyCenterPos.x,NextDown,0.0 }, i, j))
+			if (stage.IsPositionTile({ BodyCenterPos.x,NextDown,0.0 }, i, j))
 			{
 				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
 				Y_mapchip_tile = NextDown_mapchip % stage.GetStageTileHeight(i, j);
