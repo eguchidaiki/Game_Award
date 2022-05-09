@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         //更新
         InputManger::Update();
 
-        if (InputManger::Escape())
+        if (InputManger::Get()->Escape())
         {
             break;
         }
