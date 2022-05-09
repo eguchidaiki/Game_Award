@@ -442,7 +442,7 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	//particleManager->Prototype_Draw(EmptyHandle);
+	particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 

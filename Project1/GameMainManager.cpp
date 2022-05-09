@@ -77,17 +77,17 @@ void GameMainManager::GameInstanceUpdate()
 	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = {
-		player->IsLeftFold,
 		player->IsUpFold,
-		player->IsRightFold,
-		player->IsDownFold
+		player->IsDownFold,
+		player->IsLeftFold,
+		player->IsRightFold
 	};
 
 	bool IsOpens[4] = {
-		player->IsLeftOpen,
 		player->IsUpOpen,
-		player->IsRightOpen,
-		player->IsDownOpen
+		player->IsDownOpen,
+		player->IsLeftOpen,
+		player->IsRightOpen
 	};
 
 	stage->Updata();
