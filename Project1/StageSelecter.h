@@ -1,7 +1,4 @@
 #pragma once
-#include "Stage.h"
-#include "Player.h"
-
 #include <memory>
 #include <array>
 #include <TexManager.h>
@@ -13,15 +10,13 @@ class StageSelecter
 {
 private:
 	//ステージ本編を管理するクラスのポインタ（参照しているだけなのでweak_ptrにしたい）
-	Stage *stagePtr;
-	Player* playerPtr;
 
 public:
 	StageSelecter();
 	~StageSelecter();
 
 	//初期化
-	void Init(Stage *stageptr,Player *playerptr);
+	void Init();
 	//更新
 	void Update();
 	//描画

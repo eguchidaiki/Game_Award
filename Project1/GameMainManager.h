@@ -1,16 +1,11 @@
 #pragma once
 
-#include "Stage.h"
-#include "Player.h"
 #include "UI.h"
 #include "Raki_imguiMgr.h"
 
 class GameMainManager
 {
 private:
-	Stage* stage;
-	Player* player;
-
 	// ゲームループで使う変数の宣言
 	UINT BackHandle;
 	Sprite Back;
@@ -23,7 +18,7 @@ public:
 	GameMainManager();
 	~GameMainManager();
 
-	void Init(Stage* stageptr, Player* playerptr);
+	void Init();
 	void Update();
 	void Draw();
 	void Finalize();
