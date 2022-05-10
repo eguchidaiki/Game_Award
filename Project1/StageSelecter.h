@@ -32,6 +32,18 @@ public:
 	//ゲーム本編へ遷移するフラグ
 	bool GetMoveGameMain() { return isChanging_GameMain; }
 
+	//ゲームメインへ遷移するフラグ
+	bool isChanging_GameMain = false;
+
+	//現在の状態
+	enum NOW_SELECTER_STATE
+	{
+		is_selecting,				//選択中（ステージ番号の入力を受け付ける）
+		is_pageChange_waiting,		//ページチェンジ演出中
+		is_stageSelected_waiting,	//ステージ選択完了、遷移演出実行中
+	};
+	NOW_SELECTER_STATE state;
+
 private:
 	//ステージ選択画面のリソース
 	std::array<Sprite, 20> selectImg_1_4;
@@ -56,20 +68,14 @@ private:
 	};
 	PAGE_MOVE_DIR pageMoveDir;
 
-	//現在の状態
-	enum NOW_SELECTER_STATE
-	{
-		is_selecting,				//選択中（ステージ番号の入力を受け付ける）
-		is_pageChange_waiting,		//ページチェンジ演出中
-		is_stageSelected_waiting,	//ステージ選択完了、遷移演出実行中
-	};
-	NOW_SELECTER_STATE state;
+	
 
 	//表示番号
 	int nowDisplayNum = 0;
 
-	//ゲームメインへ遷移するフラグ
-	bool isChanging_GameMain = false;
+	
+
+	unsigned char playerTile[4] = { 0 };
 
 	//ロード関数（連番画像のためにint -> string変換）
 	void LoadSprite();

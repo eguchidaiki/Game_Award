@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Stage.h"
 
+
 enum NowState {
     title,
     game,
@@ -34,6 +35,8 @@ public:
 
     // ゲームループで使う変数の宣言
 
+
+    const int drawOffsetX = 320, drawOffsetY = 45;
     //タイトルのメインスプライト
     Sprite titleMainSprite;
 
