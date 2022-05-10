@@ -9,7 +9,7 @@
 SceneManager::SceneManager() :mNextScene(eScene_None) {
 
     //‰‰ñ‹O“¹‚·‚éƒV[ƒ“‚Í‚±‚±‚Å’è‹`
-    nowScene = (BaseScene*)new Title(this);
+    nowScene = (BaseScene*)new GameScene(this);
     Initialize();
 }
 

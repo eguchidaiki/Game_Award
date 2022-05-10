@@ -442,7 +442,7 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	//particleManager->Prototype_Draw(EmptyHandle);
+	particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
@@ -714,22 +714,22 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	direction = -1;
 
 	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
-	if (IsFolds[BodyType::up] || IsOpens[BodyType::up])
+	if (IsFolds[0] || IsOpens[0])
 	{
 		direction = BodyType::up;
 	}
 	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
-	else if (IsFolds[BodyType::down] || IsOpens[BodyType::down])
+	else if (IsFolds[1] || IsOpens[1])
 	{
 		direction = BodyType::down;
 	}
 	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
-	else if (IsFolds[BodyType::left] || IsOpens[BodyType::left])
+	else if (IsFolds[2] || IsOpens[2])
 	{
 		direction = BodyType::left;
 	}
 	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
-	else if (IsFolds[BodyType::right] || IsOpens[BodyType::right])
+	else if (IsFolds[3] || IsOpens[3])
 	{
 		direction = BodyType::right;
 	}
@@ -772,26 +772,41 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (BodyStatus[BodyType::up] == false)
+				if (stageData[i].stageTileData[moveStageData].stageEase.isMove)
 				{
-					break;
+					stageData[i].stageTileData[moveStageData].stageEase.isMove = false;
+					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 				}
 
-				if (OpenCount == 2 && IsOpens[BodyType::up] == true)
+				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
-					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
+					if (BodyStatus[0] == true && OpenCount == 2 && IsOpens[0] == true)
 					{
-						isAct = true;
+						Open(playerTile, direction, i, moveStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::up] == true)
+				else
 				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					if (BodyStatus[0] == true && IsFootAction == false && IsFolds[0] == true)
 					{
-						isAct = true;
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
+
+				isAct = true;
 
 				break;
 			}
@@ -811,26 +826,41 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (BodyStatus[BodyType::down] == false)
+				if (stageData[i].stageTileData[moveStageData].stageEase.isMove)
 				{
-					break;
+					stageData[i].stageTileData[moveStageData].stageEase.isMove = false;
+					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 				}
 
-				if (OpenCount == 2 && IsOpens[BodyType::down] == true)
+				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
-					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
+					if (BodyStatus[1] == true && OpenCount == 2 && IsOpens[1] == true)
 					{
-						isAct = true;
+						Open(playerTile, direction, i, moveStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::down] == true)
+				else
 				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					if (BodyStatus[1] == true && IsFootAction == false && IsFolds[1] == true)
 					{
-						isAct = true;
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
+
+				isAct = true;
 
 				break;
 			}
@@ -850,26 +880,41 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (BodyStatus[BodyType::left] == false)
+				if (stageData[i].stageTileData[moveStageData].stageEase.isMove)
 				{
-					break;
+					stageData[i].stageTileData[moveStageData].stageEase.isMove = false;
+					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 				}
 
-				if (OpenCount == 2 && IsOpens[BodyType::left] == true)
+				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
-					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
+					if (BodyStatus[2] == true && OpenCount == 2 && IsOpens[2] == true)
 					{
-						isAct = true;
+						Open(playerTile, direction, i, onPlayerStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::left] == true)
+				else
 				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					if (BodyStatus[2] == true && IsFootAction == false && IsFolds[2] == true)
 					{
-						isAct = true;
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
+
+				isAct = true;
 
 				break;
 			}
@@ -889,26 +934,41 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					break;
 				}
 
-				if (BodyStatus[BodyType::right] == false)
+				if (stageData[i].stageTileData[moveStageData].stageEase.isMove)
 				{
-					break;
+					stageData[i].stageTileData[moveStageData].stageEase.isMove = false;
+					stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+					stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
 				}
 
-				if (OpenCount == 2 && IsOpens[BodyType::right] == true)
+				if (stageData[i].stageTileData[moveStageData].isFold)
 				{
-					//if (Open(playerTile, direction + 2, i, onPlayerStageTile) != EF)
-					if (Open(playerTile, direction + 2, i, moveStageData) != EF)
+					if (BodyStatus[3] == true && OpenCount == 2 && IsOpens[3] == true)
 					{
-						isAct = true;
+						Open(playerTile, direction, i, moveStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::right] == true)
+				else
 				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
+					if (BodyStatus[3] == true && IsFootAction == false && IsFolds[3] == true)
 					{
-						isAct = true;
+						Fold(playerTile, direction, i, onPlayerStageTile, moveStageData);
+
+						stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
+						stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
+						stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
+						stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
+						stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
 					}
 				}
+
+				isAct = true;
 
 				break;
 			}
@@ -1324,24 +1384,6 @@ int Stage::Fold(unsigned char playerTile[4], const unsigned char& direction, con
 		return EF;
 	}
 
-	if (stageData[i].stageTileData[moveStageData].isFold)
-	{
-		return EF;
-	}
-
-	if (stageData[i].stageTileData[moveStageData].stageEase.isMove)
-	{
-		stageData[i].stageTileData[moveStageData].stageEase.isMove = false;
-		stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-		stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-	}
-
-	stageData[i].stageTileData[moveStageData].stageEase.isMove = true;
-	stageData[i].stageTileData[moveStageData].stageEase.splineIndex = 0;
-	stageData[i].stageTileData[moveStageData].stageEase.timeRate = 0.0f;
-	stageData[i].stageTileData[moveStageData].stageEase.addTime = 0.1f;
-	stageData[i].stageTileData[moveStageData].stageEase.maxTime = 1.2f;
-
 	if (direction == BodyType::up || direction == BodyType::down)
 	{
 		EaseingInit(onPlayerStage, moveStageData, direction);
@@ -1409,92 +1451,76 @@ int Stage::Fold(unsigned char playerTile[4], const unsigned char& direction, con
 	return 0;
 }
 
-int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile)
+int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageTile, const size_t& moveStageData)
 {
-	if (playerTile[(direction + 2) % 4] > 0)
+	if (playerTile[direction] > 0)
 	{
 		return EF;
 	}
-
-	if (stageData[i].stageTileData[onPlayerStageTile].isFold == false)
-	{
-		return EF;
-	}
-
-	if (stageData[i].stageTileData[onPlayerStageTile].stageEase.isMove)
-	{
-		stageData[i].stageTileData[onPlayerStageTile].stageEase.isMove = false;
-		stageData[i].stageTileData[onPlayerStageTile].stageEase.splineIndex = 0;
-		stageData[i].stageTileData[onPlayerStageTile].stageEase.timeRate = 0.0f;
-	}
-
-	stageData[i].stageTileData[onPlayerStageTile].stageEase.isMove = true;
-	stageData[i].stageTileData[onPlayerStageTile].stageEase.splineIndex = 0;
-	stageData[i].stageTileData[onPlayerStageTile].stageEase.timeRate = 0.0f;
-	stageData[i].stageTileData[onPlayerStageTile].stageEase.addTime = 0.1f;
-	stageData[i].stageTileData[onPlayerStageTile].stageEase.maxTime = 1.2f;
-
-	EaseingInit(onPlayerStage, onPlayerStageTile, direction);
 
 	if (direction == BodyType::up || direction == BodyType::down)
 	{
-		for (y = 0; y < static_cast<size_t>(stageData[onPlayerStage].stageTileData[onPlayerStageTile].height / 2); y++)
+		EaseingInit(onPlayerStage, moveStageData, direction + 2);
+
+		for (y = 0; y < static_cast<size_t>(stageData[onPlayerStage].stageTileData[moveStageData].height / 2); y++)
 		{
-			if (y >= stageData[onPlayerStage].stageTileData[onPlayerStageTile].height - y - 1)
+			if (y >= stageData[onPlayerStage].stageTileData[moveStageData].height - y - 1)
 			{
 				break;
 			}
 
-			for (x = 0; x < stageData[onPlayerStage].stageTileData[onPlayerStageTile].width; x++)
+			for (x = 0; x < stageData[onPlayerStage].stageTileData[moveStageData].width; x++)
 			{
-				mapchipPos = y * stageData[onPlayerStage].stageTileData[onPlayerStageTile].width + x;
-				reverseMapchipPos = (stageData[onPlayerStage].stageTileData[onPlayerStageTile].height - y - 1) * stageData[onPlayerStage].stageTileData[onPlayerStageTile].width + x;
+				mapchipPos = y * stageData[onPlayerStage].stageTileData[moveStageData].width + x;
+				reverseMapchipPos = (stageData[onPlayerStage].stageTileData[moveStageData].height - y - 1) * stageData[onPlayerStage].stageTileData[moveStageData].width + x;
 
-				Swap(&stageData[onPlayerStage].stageTileData[onPlayerStageTile].mapchip[mapchipPos], &stageData[onPlayerStage].stageTileData[onPlayerStageTile].mapchip[reverseMapchipPos]);
+				Swap(&stageData[onPlayerStage].stageTileData[moveStageData].mapchip[mapchipPos], &stageData[onPlayerStage].stageTileData[moveStageData].mapchip[reverseMapchipPos]);
 			}
 		}
 
 		if (direction / 2 == 0)
 		{
-			stageData[onPlayerStage].stageTileData[onPlayerStageTile].offsetY -= static_cast<char>(stageData[onPlayerStage].stageTileData[onPlayerStageTile].height);
+			stageData[onPlayerStage].stageTileData[moveStageData].offsetY -= static_cast<char>(stageData[onPlayerStage].stageTileData[moveStageData].height);
 		}
 		else
 		{
-			stageData[onPlayerStage].stageTileData[onPlayerStageTile].offsetY += static_cast<char>(stageData[onPlayerStage].stageTileData[onPlayerStageTile].height);
+			stageData[onPlayerStage].stageTileData[moveStageData].offsetY += static_cast<char>(stageData[onPlayerStage].stageTileData[moveStageData].height);
 		}
 	}
 	if (direction == BodyType::left || direction == BodyType::right)
 	{
-		for (y = 0; y < stageData[onPlayerStage].stageTileData[onPlayerStageTile].height; y++)
+		EaseingInit(onPlayerStage, moveStageData, direction + 2);
+
+		for (y = 0; y < stageData[onPlayerStage].stageTileData[moveStageData].height; y++)
 		{
-			for (x = 0; x < static_cast<size_t>(stageData[onPlayerStage].stageTileData[onPlayerStageTile].width / 2); x++)
+			for (x = 0; x < static_cast<size_t>(stageData[onPlayerStage].stageTileData[moveStageData].width / 2); x++)
 			{
-				if (x == stageData[onPlayerStage].stageTileData[onPlayerStageTile].width - x - 1)
+				if (x == stageData[onPlayerStage].stageTileData[moveStageData].width - x - 1)
 				{
 					break;
 				}
 
-				mapchipPos = y * stageData[onPlayerStage].stageTileData[onPlayerStageTile].width + x;
-				reverseMapchipPos = y * stageData[onPlayerStage].stageTileData[onPlayerStageTile].width + (stageData[onPlayerStage].stageTileData[onPlayerStageTile].width - x - 1);
+				mapchipPos = y * stageData[onPlayerStage].stageTileData[moveStageData].width + x;
+				reverseMapchipPos = y * stageData[onPlayerStage].stageTileData[moveStageData].width + (stageData[onPlayerStage].stageTileData[moveStageData].width - x - 1);
 
-				Swap(&stageData[onPlayerStage].stageTileData[onPlayerStageTile].mapchip[mapchipPos], &stageData[onPlayerStage].stageTileData[onPlayerStageTile].mapchip[reverseMapchipPos]);
+				Swap(&stageData[onPlayerStage].stageTileData[moveStageData].mapchip[mapchipPos], &stageData[onPlayerStage].stageTileData[moveStageData].mapchip[reverseMapchipPos]);
 			}
 		}
 
 		if (direction / 2 == 0)
 		{
-			stageData[onPlayerStage].stageTileData[onPlayerStageTile].offsetX += static_cast<char>(stageData[onPlayerStage].stageTileData[onPlayerStageTile].width);
+			stageData[onPlayerStage].stageTileData[moveStageData].offsetX -= static_cast<char>(stageData[onPlayerStage].stageTileData[moveStageData].width);
 		}
 		else
 		{
-			stageData[onPlayerStage].stageTileData[onPlayerStageTile].offsetX -= static_cast<char>(stageData[onPlayerStage].stageTileData[onPlayerStageTile].width);
+			stageData[onPlayerStage].stageTileData[moveStageData].offsetX += static_cast<char>(stageData[onPlayerStage].stageTileData[moveStageData].width);
 		}
 	}
 
-	stageData[onPlayerStage].stageTileData[onPlayerStageTile].stageNumber = initStageData[onPlayerStage].stageTileData[onPlayerStageTile].stageNumber;
-	stageData[onPlayerStage].stageTileData[onPlayerStageTile].direction = direction + 1;
-	stageData[onPlayerStage].stageTileData[onPlayerStageTile].isFold = false;
-	playerTile[(direction + 2) % 4]++;
+	stageData[onPlayerStage].stageTileData[moveStageData].stageNumber = static_cast<char>(moveStageTile);
+	stageData[onPlayerStage].stageTileData[moveStageData].direction = direction + 1 + 2;
+	stageData[onPlayerStage].stageTileData[moveStageData].isFold = false;
+	playerTile[direction]++;
 
 	return 0;
 }
