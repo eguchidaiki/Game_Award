@@ -167,6 +167,8 @@ public: //メンバ変数
 	float JumpSpeed;
 	float FallSpeed;
 
+	//ジャンプ入力保持
+	bool IsInitJump = false;
 
 	//落下判定(顔のみ)
 	bool IsFaceFall;
