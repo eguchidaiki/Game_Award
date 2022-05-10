@@ -1,20 +1,31 @@
-#pragma once
+ï»¿#pragma once
 
 #include "UI.h"
 #include "Raki_imguiMgr.h"
 
+#include <Audio.h>
+
 class GameMainManager
 {
 private:
-	// ƒQ[ƒ€ƒ‹[ƒv‚Åg‚¤•Ï”‚ÌéŒ¾
+	// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—ã§ä½¿ã†å¤‰æ•°ã®å®£è¨€
 	UINT BackHandle;
 	Sprite Back;
 	unsigned char playerTile[4] = { 0 };
 	const int drawOffsetX = 320, drawOffsetY = 45;
 
+
+	//é«»ï½³
+	SoundData menuBGM;
+	SoundData playBGM;
+
 	UI ui;
 
+
 public:
+	bool IsGoSelect = false;
+	bool Ischangecount = false;
+	int changecount = 0;
 	GameMainManager();
 	~GameMainManager();
 

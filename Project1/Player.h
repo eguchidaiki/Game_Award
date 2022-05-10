@@ -185,6 +185,9 @@ public: //メンバ変数
 	//画像ハンドル(顔)
 	UINT FaceHandle[2];
 
+	//スタートしたかどうか
+	bool IsStart;
+
 	//ゴールに触れているかどうか
 	bool IsGoal;
 
@@ -208,4 +211,5 @@ public: //メンバ変数
 	// ゴールパーティクル
 	GoalParticle goalParticle;
 
+	unsigned char playerTile[4] = {0};
 };

@@ -9,7 +9,7 @@
 SceneManager::SceneManager() :mNextScene(eScene_None) {
 
     //初回軌道するシーンはここで定義
-    nowScene = (BaseScene*)new GameScene(this);
+    nowScene = (BaseScene*)new Title(this);
     Initialize();
 }
 
@@ -58,3 +58,10 @@ void SceneManager::ChangeScene(eScene NextScene)
     //次のシーン番号をセット
     mNextScene = NextScene;
 }
+
+void SceneManager::EndAplication()
+{
+    isSceneEnd = true;
+}
+
+

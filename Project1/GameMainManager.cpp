@@ -24,13 +24,17 @@ void GameMainManager::Init()
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 
-	ui.Init();
+	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
+	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
 }
 
 void GameMainManager::Update()
 {
 	//ゲーム内インスタンスの更新処理（ようは俺が作ってないクラスの更新処理。ややこしくなるからラップした）
 	GameInstanceUpdate();
+
+	//クリアフラグが立ったら遷移演出、セレクトに移動する処理を書きたい所存
+
 }
 
 void GameMainManager::Draw()
@@ -44,8 +48,6 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update(stage, player, playerTile);
-
 	//各ステージの処理
 //#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
@@ -56,14 +58,14 @@ void GameMainManager::GameInstanceUpdate()
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
-		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
-		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
@@ -82,17 +84,17 @@ void GameMainManager::GameInstanceUpdate()
 	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = {
-		player->IsUpFold,
-		player->IsDownFold,
 		player->IsLeftFold,
-		player->IsRightFold
+		player->IsUpFold,
+		player->IsRightFold,
+		player->IsDownFold
 	};
 
 	bool IsOpens[4] = {
-		player->IsUpOpen,
-		player->IsDownOpen,
 		player->IsLeftOpen,
-		player->IsRightOpen
+		player->IsUpOpen,
+		player->IsRightOpen,
+		player->IsDownOpen
 	};
 
 	stage->Updata();
@@ -129,20 +131,6 @@ void GameMainManager::GameInstanceDraw()
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
-	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
-
-	ImguiMgr::Get()->StartDrawImgui("Info", 0.0f, 100.0f);
-	ImGui::Text("IsGoal:%d", player->IsGoal);
-	ImGui::Text("PressCount:%d", player->PressCount);
-	ImGui::Text("IsWalk:%d", player->IsWalk);
-	ImGui::Text("IsJump:%d", player->IsJump);
-	ImGui::Text("IsInitJump:%d", player->IsInitJump);
-	ImGui::Text("x:%f", player->CenterPosition.x);
-	ImGui::Text("y:%f", player->CenterPosition.y);
-	ImGui::Text("z:%f", player->CenterPosition.z);
-	ImGui::Text("Reset.x:%f", ui.ResetUISprite.spdata.get()->position.x);
-	ImGui::Text("Reset.y:%f", ui.ResetUISprite.spdata.get()->position.y);
-	ImguiMgr::Get()->EndDrawImgui();
 }

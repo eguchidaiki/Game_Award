@@ -69,6 +69,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
             break;
         }
 
+        if (smgr->isEndApp()) { break; }
+
         smgr->Update();
 
         smgr->Draw();

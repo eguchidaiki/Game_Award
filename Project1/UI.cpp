@@ -14,7 +14,7 @@ void UI::Init()
 	PauseAddRot = 1;
 }
 
-void UI::Update(Stage* stage,Player* player,unsigned char PlayerTile[4])
+void UI::Update(Stage* stage,Player* player,unsigned char PlayerTile[4], bool* Isback)
 {
 	mousePos = Input::getMousePos();
 
@@ -29,7 +29,7 @@ void UI::Update(Stage* stage,Player* player,unsigned char PlayerTile[4])
 
 	if (IsPausePress && Input::isMouseClickTrigger(0))
 	{
-
+		*Isback = true;
 	}
 }
 
