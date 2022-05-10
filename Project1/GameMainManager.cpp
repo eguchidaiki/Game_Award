@@ -24,8 +24,11 @@ void GameMainManager::Init(Stage* stageptr, Player* playerptr)
 
 void GameMainManager::Update()
 {
-	//ƒQ[ƒ€“àƒCƒ“ƒXƒ^ƒ“ƒX‚ÌXVˆ—i‚æ‚¤‚Í‰´‚ªì‚Á‚Ä‚È‚¢ƒNƒ‰ƒX‚ÌXVˆ—B‚â‚â‚±‚µ‚­‚È‚é‚©‚çƒ‰ƒbƒv‚µ‚½j
+	//ã‚²ãƒ¼ãƒ å†…ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ›´æ–°å‡¦ç†ï¼ˆã‚ˆã†ã¯ä¿ºãŒä½œã£ã¦ãªã„ã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã€‚ã‚„ã‚„ã“ã—ããªã‚‹ã‹ã‚‰ãƒ©ãƒƒãƒ—ã—ãŸï¼‰
 	GameInstanceUpdate();
+
+	//ã‚¯ãƒªã‚¢ãƒ•ãƒ©ã‚°ãŒç«‹ã£ãŸã‚‰é·ç§»æ¼”å‡ºã€ã‚»ãƒ¬ã‚¯ãƒˆã«ç§»å‹•ã™ã‚‹å‡¦ç†ã‚’æ›¸ããŸã„æ‰€å­˜
+
 }
 
 void GameMainManager::Draw()
@@ -46,7 +49,7 @@ void GameMainManager::GameInstanceUpdate()
 
 	ui.Update(stage, player, playerTile,&Ischangecount);
 
-	//ŠeƒXƒe[ƒW‚Ìˆ—
+	//å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®å‡¦ç†
 //#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
@@ -56,16 +59,28 @@ void GameMainManager::GameInstanceUpdate()
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
+
+		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
+		player->Init();
+		player->BodySetUp(playerTile);
+
 		//stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
 		//player->Init();
 		//player->BodySetUp(playerTile);
+
 	}
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
+
+		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
+		player->Init();
+		player->BodySetUp(playerTile);
+
 		//stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
 		//player->Init();
 		//player->BodySetUp(playerTile);
+
 	}
 
 #endif // _DEBUG
@@ -98,7 +113,7 @@ void GameMainManager::GameInstanceUpdate()
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
-	//ƒXƒe[ƒW‚Æ‚Ì˜A“®‚Ì‚½‚ßŠJ‚­ˆ—‚Í‚±‚Á‚¿‚Å‚â‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã¨ã®é€£å‹•ã®ãŸã‚é–‹ãå‡¦ç†ã¯ã“ã£ã¡ã§ã‚„ã‚‹
 	if (player->OpenCount >= 2)
 	{
 		if (player->IsLeftOpen == true)
@@ -140,7 +155,7 @@ void GameMainManager::GameInstanceUpdate()
 
 void GameMainManager::GameInstanceDraw()
 {
-	//ŠeƒXƒe[ƒW‚Ìˆ—
+	//å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®å‡¦ç†
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();

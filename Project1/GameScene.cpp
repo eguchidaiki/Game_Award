@@ -28,7 +28,6 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-
 	switch (nowState)
 	{
 	case GameScene::is_Select:

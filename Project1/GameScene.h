@@ -40,18 +40,6 @@ public:
     };
     NowGameState nowState = is_Select;
 
-    //選択されたステージ
-    enum StageID
-    {
-        id_initialized,
-        id_1,
-        id_2,
-        id_3,
-        //以下、追加されるたびに記述
-
-    };
-    StageID nowID;
-
     StageSelecter selecter;
     GameMainManager gamemain;
 

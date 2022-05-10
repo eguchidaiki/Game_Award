@@ -5,19 +5,27 @@
 #include "UI.h"
 #include "Raki_imguiMgr.h"
 
+#include <Audio.h>
+
 class GameMainManager
 {
 private:
 	Stage* stage;
 	Player* player;
 
-	// ƒQ[ƒ€ƒ‹[ƒv‚Åg‚¤•Ï”‚ÌéŒ¾
+	// ã‚²ãƒ¼ãƒ ãƒ«ãƒ¼ãƒ—ã§ä½¿ã†å¤‰æ•°ã®å®£è¨€
 	UINT BackHandle;
 	Sprite Back;
 	unsigned char playerTile[4] = { 0 };
 	const int drawOffsetX = 320, drawOffsetY = 45;
 
+
+	//éŸ³
+	SoundData menuBGM;
+	SoundData playBGM;
+
 	UI ui;
+
 
 
 
