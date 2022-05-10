@@ -40,6 +40,7 @@ Player::Player() :
 	IsInputjump(false),
 	Player_IsAction(false),
 	FaceHandle{},
+	IsStart(false),
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
@@ -78,6 +79,8 @@ void Player::Init()
 	leg.Init();
 	IsLeft = true;
 	IsRight = false;
+
+	IsStart = true;
 
 	goalParticle.Create();
 }
@@ -738,6 +741,11 @@ void Player::Mouse_Input(int offsetX, int offsetY)
 
 void Player::Mouse_Move(int offsetX, int offsetY, Stage& stage)
 {
+	if (IsStart == false)
+	{
+		return;
+	}
+
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
@@ -1115,6 +1123,10 @@ void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool thre
 
 void Player::BodySetUp(const unsigned char foldCount[4])
 {
+	playerTile[0] = foldCount[0];
+	playerTile[1] = foldCount[1];
+	playerTile[2] = foldCount[2];
+	playerTile[3] = foldCount[3];
 	//static int bodyTile[4] = { 0 };
 	static size_t j = 0;
 
@@ -1136,10 +1148,10 @@ void Player::BodySetUp(const unsigned char foldCount[4])
 	//}
 
 	BodySetUp(
-		foldCount[0] != 0, BodyType::left,
-		foldCount[1] != 0, BodyType::up,
-		foldCount[2] != 0, BodyType::right,
-		foldCount[3] != 0, BodyType::down);
+		playerTile[0] != 0, BodyType::left,
+		playerTile[1] != 0, BodyType::up,
+		playerTile[2] != 0, BodyType::right,
+		playerTile[3] != 0, BodyType::down);
 }
 
 void Player::Fold()

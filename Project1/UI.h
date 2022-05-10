@@ -10,28 +10,28 @@
 class UI
 {
 public:
-    void Init();
+	void Init();
 
-    void Update(Stage* stage, Player* player, unsigned char PlayerTile[4]);
+	void Update(Stage* stage, Player* player, unsigned char PlayerTile[4], bool* Isback);
 
-    void Draw();
+	void Draw();
 
-    void IsInButton();
+	void IsInButton();
 
-//private:
-    UINT ResetHandle;
-    Sprite ResetUISprite;
+	//private:
+	UINT ResetHandle;
+	Sprite ResetUISprite;
 
-    UINT PauseHandle;
-    Sprite PauseUISprite;
+	UINT PauseHandle;
+	Sprite PauseUISprite;
 
-    bool IsResetPress;
-    bool IsPausePress;
+	bool IsResetPress;
+	bool IsPausePress;
 
-    float ResetRot;
-    float ResetAddRot;
-    float PauseRot;
-    float PauseAddRot;
+	float ResetRot;
+	float ResetAddRot;
+	float PauseRot;
+	float PauseAddRot;
 
-    XMFLOAT2 mousePos;
+	XMFLOAT2 mousePos;
 };

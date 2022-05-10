@@ -39,28 +39,33 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update(stage, player, playerTile);
+	playerTile[0] = player->playerTile[0];
+	playerTile[1] = player->playerTile[1];
+	playerTile[2] = player->playerTile[2];
+	playerTile[3] = player->playerTile[3];
+
+	ui.Update(stage, player, playerTile,&Ischangecount);
 
 	//各ステージの処理
 //#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
-		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
+		//stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
+		//player->Init();
+		//player->BodySetUp(playerTile);
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
-		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
+		//stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
+		//player->Init();
+		//player->BodySetUp(playerTile);
 	}
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
-		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
+		//stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
+		//player->Init();
+		//player->BodySetUp(playerTile);
 	}
 
 #endif // _DEBUG
@@ -115,6 +120,22 @@ void GameMainManager::GameInstanceUpdate()
 		player->OpenCount = 0;
 		player->IsOpenCountStart = false;
 	}
+
+	if (player->IsGoal)
+	{
+		Ischangecount = true;
+		changecount = 0;
+	}
+
+	if (Ischangecount)
+	{
+		changecount++;
+
+		if (changecount > 20)
+		{
+			IsGoSelect = true;
+		}
+	}
 }
 
 void GameMainManager::GameInstanceDraw()
@@ -128,7 +149,7 @@ void GameMainManager::GameInstanceDraw()
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
 
-	ImguiMgr::Get()->StartDrawImgui("Info", 0.0f, 100.0f);
+	/*ImguiMgr::Get()->StartDrawImgui("Info", 0.0f, 100.0f);
 	ImGui::Text("IsGoal:%d", player->IsGoal);
 	ImGui::Text("PressCount:%d", player->PressCount);
 	ImGui::Text("IsWalk:%d", player->IsWalk);
@@ -139,5 +160,5 @@ void GameMainManager::GameInstanceDraw()
 	ImGui::Text("z:%f", player->CenterPosition.z);
 	ImGui::Text("Reset.x:%f", ui.ResetUISprite.spdata.get()->position.x);
 	ImGui::Text("Reset.y:%f", ui.ResetUISprite.spdata.get()->position.y);
-	ImguiMgr::Get()->EndDrawImgui();
+	ImguiMgr::Get()->EndDrawImgui();*/
 }

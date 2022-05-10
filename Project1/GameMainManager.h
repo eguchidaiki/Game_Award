@@ -19,7 +19,12 @@ private:
 
 	UI ui;
 
+
+
 public:
+	bool IsGoSelect = false;
+	bool Ischangecount = false;
+	int changecount = 0;
 	GameMainManager();
 	~GameMainManager();
 
