@@ -1,4 +1,4 @@
-#include "Title.h"
+﻿#include "Title.h"
 #include "Raki_imguiMgr.h"
 #include "TexManager.h"
 
@@ -15,9 +15,6 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 //初期化
 void Title::Initialize() {
 
-
-
-
 }
 
 void Title::Finalize()
@@ -28,11 +25,11 @@ void Title::Finalize()
 //更新
 void Title::Update() {
 
-	
 }
 
 //描画
-void Title::Draw() {
+void Title::Draw()
+{
 
 	//背景に常にいる
 	Raki_DX12B::Get()->StartDrawRenderTarget();

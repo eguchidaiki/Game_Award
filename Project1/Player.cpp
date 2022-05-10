@@ -1,5 +1,4 @@
-﻿#include <Raki_Input.h>
-#include "Player.h"
+﻿#include "Player.h"
 #include "Stage.h"
 #include "InputManger.h"
 #include "ActFlag.h"
@@ -7,8 +6,10 @@
 
 namespace
 {
-	static size_t i = 0;
-	static ActFlag* actFlag = ActFlag::Get();
+static size_t i = 0;
+static ActFlag* actFlag = ActFlag::Get();
+
+static Stage* stage = Stage::Get();
 }
 
 Player* Player::Get()
@@ -19,7 +20,7 @@ Player* Player::Get()
 
 Player::Player() :
 	FloorHeight(640.0f),
-	CenterPosition{ 100.0f, 100.0f, 0.0f },
+	CenterPosition{100.0f, 100.0f, 0.0f},
 	IsLeft(),
 	IsRight(),
 	Body_One{},
@@ -55,8 +56,8 @@ Player::~Player()
 void Player::Init()
 {
 	Create();
-	CenterPosition.x = static_cast<float>(Stage::GetStartPlayerPosX() * Stage::blockSize + Stage::blockSize / 2);
-	CenterPosition.y = static_cast<float>(Stage::GetStartPlayerPosY() * Stage::blockSize + Stage::blockSize / 2);
+	CenterPosition.x = static_cast<float>(Stage::GetStartPlayerPosX() * Stage::blockSize + Stage::halfBlockSize);
+	CenterPosition.y = static_cast<float>(Stage::GetStartPlayerPosY() * Stage::blockSize + Stage::halfBlockSize);
 
 	FallSpeed = 3.0f;
 	IsAllFall = true;
@@ -82,13 +83,13 @@ void Player::Init()
 	goalParticle.Create();
 }
 
-void Player::Update(Stage& stage, int offsetX, int offsetY)
+void Player::Update(int offsetX, int offsetY)
 {
 	//マウス入力
 	Mouse_Input(offsetX, offsetY);
 
 	//マウス移動
-	Mouse_Move(offsetX, offsetY, stage);
+	Mouse_Move(offsetX, offsetY);
 
 	//キー移動
 	//Key_Move();
@@ -120,17 +121,17 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 	{
 		CenterPosition.y += FallSpeed;
 	}
-	IsHitPlayerBody(stage);
-	IsAroundBlock(stage);
+	IsHitPlayerBody();
+	IsAroundBlock();
 
 	//キー折る・開く入力
-	//Key_FoldOpen(stage);
+	//Key_FoldOpen();
 
 	//キースライド
 	//Key_Slide();
 
 	//マウス折る・開く入力
-	Mouse_FoldOpen(offsetX, offsetY, stage);
+	Mouse_FoldOpen(offsetX, offsetY);
 
 	Fold();
 
@@ -178,32 +179,32 @@ void Player::Update(Stage& stage, int offsetX, int offsetY)
 
 	if (Body_One.IsActivate == true)
 	{
-		Body_One.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_One.Update(CenterPosition);
-		Body_One.IsAroundBlock(stage);
+		Body_One.IsAroundBlock();
 	}
 	if (Body_Two.IsActivate == true)
 	{
-		Body_Two.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Two.Update(CenterPosition);
-		Body_Two.IsAroundBlock(stage);
+		Body_Two.IsAroundBlock();
 	}
 	if (Body_Three.IsActivate == true)
 	{
-		Body_Three.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Three.Update(CenterPosition);
-		Body_Three.IsAroundBlock(stage);
+		Body_Three.IsAroundBlock();
 	}
 	if (Body_Four.IsActivate == true)
 	{
-		Body_Four.IsHitBody(stage, &CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Four.Update(CenterPosition);
-		Body_Four.IsAroundBlock(stage);
+		Body_Four.IsAroundBlock();
 	}
 
 	if (IsGoal)
 	{
-		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+		goalParticle.Init({0.0f, 0.0f, 0.0f}, 1.0f, 10, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
 	}
 	goalParticle.Update();
 }
@@ -303,7 +304,7 @@ void Player::Draw(int offsetX, int offsetY)
 
 #pragma endregion //body_draw
 
-	if(Player_IsAction)
+	if (Player_IsAction)
 	{
 		PlayerSpriteAction.Draw();
 	}
@@ -352,13 +353,13 @@ void Player::Create()
 void Player::Key_Move()
 {
 	//左右移動
-	if (InputManger::Right() && Player_IsAction == false)
+	if (actFlag->MoveRight() && Player_IsAction == false)
 	{
 		CenterPosition.x += SideMoveSpeed;
 		IsLeft = false;
 		IsRight = true;
 	}
-	if (InputManger::Left() && Player_IsAction == false)
+	if (actFlag->MoveLeft() && Player_IsAction == false)
 	{
 		CenterPosition.x -= SideMoveSpeed;
 		IsLeft = true;
@@ -377,20 +378,20 @@ void Player::Key_Move()
 	}
 
 	//ジャンプ
-	if (InputManger::UpTrigger() && IsInputjump == true)
+	if (actFlag->Jump() && IsInputjump == true)
 	{
 		IsJump = true;
 		FallSpeed = -5.6f;
 	}
 }
 
-void Player::Key_FoldOpen(Stage& stage)
+void Player::Key_FoldOpen()
 {
 	//折る入力
 	//if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	if (actFlag->FoldLeft())
 	{ //左に折る
-		if (IsDirectionFoldAll(stage, BodyType::left))
+		if (IsDirectionFoldAll(BodyType::left))
 		{
 			Player_IsAction = true;
 			IsLeftFold = true;
@@ -408,7 +409,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	if (actFlag->FoldUp())
 	{ //上に折る
-		if (IsDirectionFoldAll(stage, BodyType::up))
+		if (IsDirectionFoldAll(BodyType::up))
 		{
 			Player_IsAction = true;
 			IsUpFold = true;
@@ -426,7 +427,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	if (actFlag->FoldRight())
 	{ //右に折る
-		if (IsDirectionFoldAll(stage, BodyType::right))
+		if (IsDirectionFoldAll(BodyType::right))
 		{
 			Player_IsAction = true;
 			IsRightFold = true;
@@ -444,7 +445,7 @@ void Player::Key_FoldOpen(Stage& stage)
 	//if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	if (actFlag->FoldDown())
 	{ //下に折る
-		if (IsDirectionFoldAll(stage, BodyType::down))
+		if (IsDirectionFoldAll(BodyType::down))
 		{
 			Player_IsAction = true;
 			IsDownFold = true;
@@ -711,7 +712,7 @@ void Player::Key_Slide()
 void Player::Mouse_Input(int offsetX, int offsetY)
 {
 	//マウス左ボタンを押したときの座標
-	if (Input::isMouseClickTrigger(0))
+	if (Input::isMouseClickTrigger(MOUSE_L))
 	{
 		PressPos = Input::getMousePos();
 		PressPos.x -= offsetX;
@@ -720,30 +721,30 @@ void Player::Mouse_Input(int offsetX, int offsetY)
 	}
 
 	//マウスを押している間はカウントを進める
-	if (Input::isMouseClicking(0))
+	if (Input::isMouseClicking(MOUSE_L))
 	{
 		PressCount++;
 	}
 
 	//マウス左ボタンを離したときの座標
-	if (Input::isMouseClicked(0))
+	if (Input::isMouseClicked(MOUSE_L))
 	{
 		ReleasePos = Input::getMousePos();
 		ReleasePos.x -= offsetX;
 		ReleasePos.y -= offsetY;
 	}
 
-	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
+	DragDis = {ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y};
 }
 
-void Player::Mouse_Move(int offsetX, int offsetY, Stage& stage)
+void Player::Mouse_Move(int offsetX, int offsetY)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
 		PressCount < 15 &&
-		Input::isMouseClicked(0) &&
-		IsPressInStage(stage))
+		Input::isMouseClicked(MOUSE_L) &&
+		IsPressInStage())
 	{
 		IsWalk = true;
 	}
@@ -779,18 +780,18 @@ void Player::Mouse_Move(int offsetX, int offsetY, Stage& stage)
 	}
 }
 
-void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
+void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount >= 15 &&
-		Input::isMouseClicked(0))
+		Input::isMouseClicked(MOUSE_L))
 	{
 		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
 		{
 			if (DragDis.x > 0)
 			{
-				if (IsDirectionFoldAll(stage, BodyType::left) && IsMouseClickFold(BodyType::left, stage))
+				if (IsDirectionFoldAll(BodyType::left) && IsMouseClickFold(BodyType::left))
 				{
 					Player_IsAction = true;
 					IsLeftFold = true;
@@ -798,10 +799,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					return;
 				}
 				if (((Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
-					(Body_One.IsActivate == true && Body_One.IsFold == true &&
-						Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
-					IsMouseClickOpen(BodyType::right, stage))
+					  Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
+					 (Body_One.IsActivate == true && Body_One.IsFold == true &&
+					  Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
+					IsMouseClickOpen(BodyType::right))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -811,7 +812,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 			else
 			{
-				if (IsDirectionFoldAll(stage, BodyType::right) && IsMouseClickFold(BodyType::right, stage))
+				if (IsDirectionFoldAll(BodyType::right) && IsMouseClickFold(BodyType::right))
 				{
 					Player_IsAction = true;
 					IsRightFold = true;
@@ -819,10 +820,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					return;
 				}
 				if ((Body_One.IsActivate == true && Body_One.IsFold == true &&
-					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
-					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
-					IsMouseClickOpen(BodyType::left, stage))
+					 Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
+					 Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					 Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
+					IsMouseClickOpen(BodyType::left))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -835,7 +836,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 		{
 			if (DragDis.y > 0)
 			{
-				if (IsDirectionFoldAll(stage, BodyType::up) && IsMouseClickFold(BodyType::up, stage))
+				if (IsDirectionFoldAll(BodyType::up) && IsMouseClickFold(BodyType::up))
 				{
 					Player_IsAction = true;
 					IsUpFold = true;
@@ -844,10 +845,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					return;
 				}
 				if ((Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
-					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
-					IsMouseClickOpen(BodyType::down, stage))
+					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
+					 Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
+					IsMouseClickOpen(BodyType::down))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -858,7 +859,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 			}
 			else
 			{
-				if (IsDirectionFoldAll(stage, BodyType::down) && IsMouseClickFold(BodyType::down, stage))
+				if (IsDirectionFoldAll(BodyType::down) && IsMouseClickFold(BodyType::down))
 				{
 					Player_IsAction = true;
 					IsDownFold = true;
@@ -867,10 +868,10 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 					return;
 				}
 				if ((Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
-					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
-					IsUpBlocked == true && IsMouseClickOpen(BodyType::up, stage))
+					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
+					 Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
+					IsUpBlocked == true && IsMouseClickOpen(BodyType::up))
 				{
 					OpenCount = 0;
 					IsOpenCountStart = true;
@@ -883,7 +884,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY, Stage& stage)
 	}
 }
 
-bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
+bool Player::IsMouseClickFold(BodyType Direction)
 {
 	int PlayerStage = -1;
 	int PlayerTile = -1;
@@ -891,17 +892,17 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 	int ReleaseStage = -1;
 	int ReleaseTile = -1;
 
-	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage.IsPositionTile(CenterPosition, i, j))
+			if (stage->IsPositionTile(CenterPosition, i, j))
 			{
 				PlayerStage = i;
 				PlayerTile = j;
 			}
 
-			if (stage.IsPositionTile({ ReleasePos.x,ReleasePos.y,0.0f }, i, j))
+			if (stage->IsPositionTile({ReleasePos.x,ReleasePos.y,0.0f}, i, j))
 			{
 				ReleaseStage = i;
 				ReleaseTile = j;
@@ -921,34 +922,34 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 		{
 		case BodyType::left:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
 			break;
 		}
 		case BodyType::right:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
 			break;
 		}
 		case BodyType::up:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
 			break;
 		}
 		case BodyType::down:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
 			break;
 		}
 
@@ -972,7 +973,7 @@ bool Player::IsMouseClickFold(BodyType Direction, Stage& stage)
 	}
 }
 
-bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
+bool Player::IsMouseClickOpen(BodyType Direction)
 {
 	int PlayerStage = -1;
 	int PlayerTile = -1;
@@ -980,17 +981,17 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 	int PressStage = -1;
 	int PressTile = -1;
 
-	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage.IsPositionTile(CenterPosition, i, j))
+			if (stage->IsPositionTile(CenterPosition, i, j))
 			{
 				PlayerStage = i;
 				PlayerTile = j;
 			}
 
-			if (stage.IsPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
+			if (stage->IsPositionTile({PressPos.x,PressPos.y,0.0f}, i, j))
 			{
 				PressStage = i;
 				PressTile = j;
@@ -1010,34 +1011,34 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 		{
 		case BodyType::left:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
 			break;
 		}
 		case BodyType::right:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
 			break;
 		}
 		case BodyType::up:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
 			break;
 		}
 		case BodyType::down:
 		{
-			TileLeft = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage.GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
-			TileDown = (stage.GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
+			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
+			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
 			break;
 		}
 
@@ -1061,14 +1062,14 @@ bool Player::IsMouseClickOpen(BodyType Direction, Stage& stage)
 	}
 }
 
-bool Player::IsPressInStage(Stage& stage)
+bool Player::IsPressInStage()
 {
-	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.IsPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
+			if (stage->IsPositionTile({ PressPos.x,PressPos.y,0.0f }, i, j))
 			{
 				return true;
 			}
@@ -1900,7 +1901,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::left &&
-				Body_One.IsFold == true)
+					 Body_One.IsFold == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
 				Body_One.Ease.maxTime = 1.2f;
@@ -1925,7 +1926,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::left &&
-				Body_Three.IsFold == true)
+					 Body_Three.IsFold == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
 				Body_Three.Ease.maxTime = 1.2f;
@@ -2014,7 +2015,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::up &&
-				Body_Two.IsFold == true)
+					 Body_Two.IsFold == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -2039,7 +2040,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::up &&
-				Body_Four.IsFold == true)
+					 Body_Four.IsFold == true)
 			{
 				Body_Four.Ease.addTime = 0.1f;
 				Body_Four.Ease.maxTime = 1.2f;
@@ -2128,7 +2129,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::right &&
-				Body_Three.IsFold == true)
+					 Body_Three.IsFold == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
 				Body_Three.Ease.maxTime = 1.2f;
@@ -2153,7 +2154,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::right &&
-				Body_One.IsFold == true)
+					 Body_One.IsFold == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
 				Body_One.Ease.maxTime = 1.2f;
@@ -2243,7 +2244,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::down &&
-				Body_Two.IsFold == true)
+					 Body_Two.IsFold == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -2268,7 +2269,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down &&
-				Body_Four.IsFold == true)
+					 Body_Four.IsFold == true)
 			{
 				Body_Four.Ease.addTime = 0.1f;
 				Body_Four.Ease.maxTime = 1.2f;
@@ -2298,7 +2299,7 @@ void Player::Open()
 	}
 }
 
-void Player::IsHitPlayerBody(Stage& stage)
+void Player::IsHitPlayerBody()
 {
 	//ステージの数
 	size_t i = 0;
@@ -2311,10 +2312,10 @@ void Player::IsHitPlayerBody(Stage& stage)
 	float FaceDown = CenterPosition.y + 33;
 
 	//上下左右(プレイヤーの顔)
-	int left_mapchip = (int)(FaceLeft - stage.offset.x) / 60;
-	int up_mapchip = (int)(FaceUp - stage.offset.y) / 60;
-	int right_mapchip = (int)(FaceRight - stage.offset.x) / 60;
-	int down_mapchip = (int)(FaceDown - stage.offset.y) / 60;
+	int left_mapchip = (int)(FaceLeft - stage->offset.x) / 60;
+	int up_mapchip = (int)(FaceUp - stage->offset.y) / 60;
+	int right_mapchip = (int)(FaceRight - stage->offset.x) / 60;
+	int down_mapchip = (int)(FaceDown - stage->offset.y) / 60;
 
 	//タイル内のマップチップ座標
 	int left_mapchip_tile;
@@ -2325,7 +2326,7 @@ void Player::IsHitPlayerBody(Stage& stage)
 	int MapchipPos = 0;
 
 	//マップチップの場所(ゴール用)
-	int MapchipPos_Goal[3] = { 0 };
+	int MapchipPos_Goal[3] = {0};
 
 	//押し出す方向を決めるための距離
 	float BuriedX = 0;
@@ -2336,46 +2337,46 @@ void Player::IsHitPlayerBody(Stage& stage)
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
-	if (CenterPosition.x - 25 <= stage.offset.x)
+	if (CenterPosition.x - 25 <= stage->offset.x)
 	{
 		CenterPosition.x = 25;
 		IsWalk = false;
 	}
-	if (CenterPosition.y - 25 <= stage.offset.y)
+	if (CenterPosition.y - 25 <= stage->offset.y)
 	{
 		CenterPosition.y = 25;
 	}
 
-	for (i = 0; i < stage.GetStageDataSize(); i++)
+	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.IsPositionTile({ FaceLeft,CenterPosition.y - 30,0.0f }, i, j))
+			if (stage->IsPositionTile({FaceLeft,CenterPosition.y - 30,0.0f}, i, j))
 			{
-				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (up_mapchip_tile)*stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = (left_mapchip * 60) - (CenterPosition.x - 30);
 					BuriedY = (up_mapchip * 60) - (CenterPosition.y - 30);
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage.blockSize + 25.0f;
+						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
+						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 						JumpCountLeft += IsLeft;
 					}
 				}
 				if (up_mapchip_tile > 0)
 				{
-					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
-					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					MapchipPos = (up_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 					{
 						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0)
 						{
@@ -2389,56 +2390,56 @@ void Player::IsHitPlayerBody(Stage& stage)
 				}
 			}
 			//左下
-			if (stage.IsPositionTile({ FaceLeft,FaceDown,0.0f }, i, j))
+			if (stage->IsPositionTile({FaceLeft,FaceDown,0.0f}, i, j))
 			{
-				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (down_mapchip_tile)*stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = (left_mapchip * 60) - (CenterPosition.x - 30);
 					BuriedY = ((CenterPosition.y + 29) - 60) - (down_mapchip * 60);
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(down_mapchip * stage.blockSize) - 33.0f;
+						CenterPosition.y = static_cast<float>(down_mapchip * stage->blockSize) - 33.0f;
 						FallCount++;
 						IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage.blockSize + 25.0f;
+						CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 						JumpCountLeft += IsLeft;
 					}
 				}
 			}
 			//右上
-			if (stage.IsPositionTile({ FaceRight,CenterPosition.y - 30,0.0f }, i, j))
+			if (stage->IsPositionTile({FaceRight,CenterPosition.y - 30,0.0f}, i, j))
 			{
-				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (up_mapchip_tile)*stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = ((CenterPosition.x + 29) - 60) - (right_mapchip * 60);
 					BuriedY = (up_mapchip * 60) - (CenterPosition.y - 30);
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage.blockSize + 25.0f;
+						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
 						jumpCountRight += IsRight;
 					}
 				}
 				if (up_mapchip_tile > 0)
 				{
-					MapchipPos = (up_mapchip_tile - 1) * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
-					if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					MapchipPos = (up_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 					{
 						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0)
 						{
@@ -2453,61 +2454,61 @@ void Player::IsHitPlayerBody(Stage& stage)
 
 			}
 			//右下
-			if (stage.IsPositionTile({ FaceRight,FaceDown,0.0f }, i, j))
+			if (stage->IsPositionTile({FaceRight,FaceDown,0.0f}, i, j))
 			{
-				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (down_mapchip_tile)*stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 				{
 					BuriedX = ((CenterPosition.x + 29) - 60) - (right_mapchip * 60);
 					BuriedY = ((CenterPosition.y + 29) - 60) - (down_mapchip * 60);
 
 					if (BuriedX > BuriedY)
 					{
-						CenterPosition.y = static_cast<float>(down_mapchip * stage.blockSize) - 33.0f;
+						CenterPosition.y = static_cast<float>(down_mapchip * stage->blockSize) - 33.0f;
 						FallCount++;
 						IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * stage.blockSize) - 25.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
 						jumpCountRight += IsRight;
 					}
 				}
 			}
 
 			//ゴール判定
-			if (stage.IsPositionTile(CenterPosition, i, j))
+			if (stage->IsPositionTile(CenterPosition, i, j))
 			{
-				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
-				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
 				//左上
-				MapchipPos = up_mapchip_tile * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
-				MapchipPos_Goal[0] = up_mapchip_tile * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
-				MapchipPos_Goal[1] = down_mapchip_tile * stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
-				MapchipPos_Goal[2] = down_mapchip_tile * stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+				MapchipPos_Goal[0] = up_mapchip_tile * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos_Goal[1] = down_mapchip_tile * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+				MapchipPos_Goal[2] = down_mapchip_tile * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
 
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::GOAL)
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::GOAL)
 				{
 					IsGoal = true;
 				}
 				//右上
-				else if (stage.GetStageMapchip(i, j, MapchipPos_Goal[0]) == MapchipData::GOAL)
+				else if (stage->GetStageMapchip(i, j, MapchipPos_Goal[0]) == MapchipData::GOAL)
 				{
 					IsGoal = true;
 				}
 				//左下
-				else if (stage.GetStageMapchip(i, j, MapchipPos_Goal[1]) == MapchipData::GOAL)
+				else if (stage->GetStageMapchip(i, j, MapchipPos_Goal[1]) == MapchipData::GOAL)
 				{
 					IsGoal = true;
 				}
 				//右下
-				else if (stage.GetStageMapchip(i, j, MapchipPos_Goal[2]) == MapchipData::GOAL)
+				else if (stage->GetStageMapchip(i, j, MapchipPos_Goal[2]) == MapchipData::GOAL)
 				{
 					IsGoal = true;
 				}
@@ -2523,30 +2524,30 @@ void Player::IsHitPlayerBody(Stage& stage)
 	bool DiagonallyUpRight = false;
 
 	//進む方向の斜め上にブロックがあるかどうか
-	for (i = 0; i < stage.GetStageDataSize(); i++)
+	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage.IsPositionTile({ FaceLeft - 20,FaceUp - 20,0.0f }, i, j))
+			if (stage->IsPositionTile({FaceLeft - 20,FaceUp - 20,0.0f}, i, j))
 			{
-				left_mapchip_tile = (left_mapchip - 1) % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = (up_mapchip - 1) % stage.GetStageTileHeight(i, j);
+				left_mapchip_tile = (left_mapchip - 1) % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = up_mapchip_tile * stage.GetStageTileWidth(i, j) + left_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
+				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + left_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
 					Player::Get()->IsLeft == true)
 				{
 					DiagonallyUpLeft = true;
 				}
 			}
 
-			if (stage.IsPositionTile({ FaceRight + 20,FaceUp - 20,0.0f }, i, j))
+			if (stage->IsPositionTile({FaceRight + 20,FaceUp - 20,0.0f}, i, j))
 			{
-				right_mapchip_tile = (right_mapchip + 1) % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = (up_mapchip - 1) % stage.GetStageTileHeight(i, j);
+				right_mapchip_tile = (right_mapchip + 1) % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = up_mapchip_tile * stage.GetStageTileWidth(i, j) + right_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
+				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + right_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
 					Player::Get()->IsRight == true)
 				{
 					DiagonallyUpRight = true;
@@ -2616,7 +2617,7 @@ void Player::SetBodyStatus(bool arrangement[4])
 	arrangement[3] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
 }
 
-bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
+bool Player::IsReverseHitFace(const unsigned char& direction)
 {
 	//顔の四辺
 	float BodyLeft;
@@ -2630,10 +2631,10 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	BodyDown = CenterPosition.y + 25;
 
 	//上下左右(プレイヤーの顔)
-	int left_mapchip = (int)(BodyLeft - stage.offset.x) / 60;
-	int up_mapchip = (int)(BodyUp - stage.offset.y) / 60;
-	int right_mapchip = (int)(BodyRight - stage.offset.x) / 60;
-	int down_mapchip = (int)(BodyDown - stage.offset.y) / 60;
+	int left_mapchip = (int)(BodyLeft - stage->offset.x) / 60;
+	int up_mapchip = (int)(BodyUp - stage->offset.y) / 60;
+	int right_mapchip = (int)(BodyRight - stage->offset.x) / 60;
+	int down_mapchip = (int)(BodyDown - stage->offset.y) / 60;
 
 	//タイル内のマップチップ座標
 	int left_mapchip_tile;
@@ -2642,10 +2643,10 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	int down_mapchip_tile;
 
 	//反転したマップチップたち
-	char* ReverseMapchips = { 0 };
+	char* ReverseMapchips = {0};
 
 	//折れるかどうか(プレイヤーの中心座標)
-	int CenterPositionFold = stage.FoldSimulation(CenterPosition, direction, &ReverseMapchips);
+	int CenterPositionFold = stage->FoldSimulation(CenterPosition, direction, &ReverseMapchips);
 
 	//playerの中心座標
 	if (CenterPositionFold == -1)
@@ -2657,17 +2658,17 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	int MapchipPos = 0;
 
 	//反転したブロックマップチップと顔の四隅との判定
-	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage.IsPositionTile({ CenterPosition.x - 25,CenterPosition.y - 30,0.0f }, i, j))
+			if (stage->IsPositionTile({CenterPosition.x - 25,CenterPosition.y - 30,0.0f}, i, j))
 			{
-				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (up_mapchip_tile)*stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
+				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
 
 				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
 				{
@@ -2675,12 +2676,12 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//左下
-			if (stage.IsPositionTile({ CenterPosition.x - 25,CenterPosition.y + 33,0.0f }, i, j))
+			if (stage->IsPositionTile({CenterPosition.x - 25,CenterPosition.y + 33,0.0f}, i, j))
 			{
-				left_mapchip_tile = left_mapchip % stage.GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (down_mapchip_tile)*stage.GetStageTileWidth(i, j) + (left_mapchip_tile);
+				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
 
 				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
 				{
@@ -2688,12 +2689,12 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//右上
-			if (stage.IsPositionTile({ CenterPosition.x + 25,CenterPosition.y - 30,0.0f }, i, j))
+			if (stage->IsPositionTile({CenterPosition.x + 25,CenterPosition.y - 30,0.0f}, i, j))
 			{
-				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage.GetStageTileHeight(i, j);
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (up_mapchip_tile)*stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
 
 				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
 				{
@@ -2701,12 +2702,12 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 				}
 			}
 			//右下
-			if (stage.IsPositionTile({ CenterPosition.x + 25,CenterPosition.y + 33,0.0f }, i, j))
+			if (stage->IsPositionTile({CenterPosition.x + 25,CenterPosition.y + 33,0.0f}, i, j))
 			{
-				right_mapchip_tile = right_mapchip % stage.GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage.GetStageTileHeight(i, j);
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (down_mapchip_tile)*stage.GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
 
 				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
 				{
@@ -2719,28 +2720,28 @@ bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)
 	return true;
 }
 
-bool Player::IsDirectionFoldAll(Stage& stage, BodyType foldtype)
+bool Player::IsDirectionFoldAll(BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(stage, foldtype) == false)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == false)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(stage, foldtype) == false)
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == false)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(stage, foldtype) == false)
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == false)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(stage, foldtype) == false)
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == false)
 	{
 		BodyCanFoldCount++;
 	}
 
-	bool ReverseHitFace = IsReverseHitFace(stage, foldtype);
+	bool ReverseHitFace = IsReverseHitFace(foldtype);
 
 	if (ReverseHitFace == true && BodyCanFoldCount <= 0)
 	{
@@ -2831,11 +2832,11 @@ void Player::IsdownBody()
 	return;
 }
 
-void Player::IsAroundBlock(Stage& stage)
+void Player::IsAroundBlock()
 {
 	//中心座標をブロックサイズで割った数
-	int Center_X_mapchip = (int)(CenterPosition.x - stage.offset.x) / 60;
-	int Center_Y_mapchip = (int)(CenterPosition.y - stage.offset.x) / 60;
+	int Center_X_mapchip = (int)(CenterPosition.x - stage->offset.x) / 60;
+	int Center_Y_mapchip = (int)(CenterPosition.y - stage->offset.x) / 60;
 
 	//体の四辺
 	float NextLeft = CenterPosition.x - PlayerBody::BodySize;
@@ -2844,10 +2845,10 @@ void Player::IsAroundBlock(Stage& stage)
 	float NextDown = CenterPosition.y + PlayerBody::BodySize;
 
 	//四辺をブロックサイズで割った数
-	int NextLeft_mapchip = (int)(NextLeft - stage.offset.x) / 60;
-	int NextUp_mapchip = (int)(NextUp - stage.offset.y) / 60;
-	int NextRight_mapchip = (int)(NextRight - stage.offset.x) / 60;
-	int NextDown_mapchip = (int)(NextDown - stage.offset.y) / 60;
+	int NextLeft_mapchip = (int)(NextLeft - stage->offset.x) / 60;
+	int NextUp_mapchip = (int)(NextUp - stage->offset.y) / 60;
+	int NextRight_mapchip = (int)(NextRight - stage->offset.x) / 60;
+	int NextDown_mapchip = (int)(NextDown - stage->offset.y) / 60;
 
 	//タイル内のマップチップ座標
 	int X_mapchip_tile;
@@ -2856,19 +2857,19 @@ void Player::IsAroundBlock(Stage& stage)
 	//マップチップの座標
 	int mapchipPos = 0;
 
-	for (int i = 0; i < stage.GetStageDataSize(); i++)
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (int j = 0; j < stage.GetStageTileDataSize(i); j++)
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左隣
-			if (stage.IsPositionTile({ NextLeft,CenterPosition.y,0.0 }, i, j))
+			if (stage->IsPositionTile({ NextLeft,CenterPosition.y,0.0 }, i, j))
 			{
-				X_mapchip_tile = NextLeft_mapchip % stage.GetStageTileWidth(i, j);
-				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
+				X_mapchip_tile = NextLeft_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = Center_Y_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					IsLeftBlockFace = true;
 				}
@@ -2879,14 +2880,14 @@ void Player::IsAroundBlock(Stage& stage)
 			}
 
 			//右隣
-			if (stage.IsPositionTile({ NextRight,CenterPosition.y,0.0 }, i, j))
+			if (stage->IsPositionTile({ NextRight,CenterPosition.y,0.0 }, i, j))
 			{
-				X_mapchip_tile = NextRight_mapchip % stage.GetStageTileWidth(i, j);
-				Y_mapchip_tile = Center_Y_mapchip % stage.GetStageTileHeight(i, j);
+				X_mapchip_tile = NextRight_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = Center_Y_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					IsRightBlockFace = true;
 				}
@@ -2897,14 +2898,14 @@ void Player::IsAroundBlock(Stage& stage)
 			}
 
 			//上隣
-			if (stage.IsPositionTile({ CenterPosition.x,NextUp,0.0 }, i, j))
+			if (stage->IsPositionTile({ CenterPosition.x,NextUp,0.0 }, i, j))
 			{
-				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
-				Y_mapchip_tile = NextUp_mapchip % stage.GetStageTileHeight(i, j);
+				X_mapchip_tile = Center_X_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					IsUpBlockFace = true;
 				}
@@ -2915,14 +2916,14 @@ void Player::IsAroundBlock(Stage& stage)
 			}
 
 			//下隣
-			if (stage.IsPositionTile({ CenterPosition.x,NextDown,0.0 }, i, j))
+			if (stage->IsPositionTile({ CenterPosition.x,NextDown,0.0 }, i, j))
 			{
-				X_mapchip_tile = Center_X_mapchip % stage.GetStageTileWidth(i, j);
-				Y_mapchip_tile = NextDown_mapchip % stage.GetStageTileHeight(i, j);
+				X_mapchip_tile = Center_X_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage.GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage.GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
 				{
 					IsDownBlockFace = true;
 				}

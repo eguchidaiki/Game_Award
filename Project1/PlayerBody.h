@@ -61,19 +61,19 @@ public: //メンバ関数
 	/// <param name="stage">ステージデータ</param>
 	/// <param name="center">プレイヤーの中心</param>
 	/// <returns></returns>
-	void IsHitBody(Stage& stage, RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
+	void IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
 
 	/// <summary>
 	/// 反転したタイルと体の四隅の判定
 	/// </summary>
 	/// <param name="stage">ステージデータ</param>
-	bool IsReverseHitBody(Stage& stage, const unsigned char& direction);
+	bool IsReverseHitBody(const unsigned char& direction);
 
 	/// <summary>
 	/// 十字方向にブロックがあるかどうか
 	/// </summary>
 	/// <param name="stage">ステージ情報</param>
-	void IsAroundBlock(Stage& stage);
+	void IsAroundBlock();
 
 public: //メンバ変数
 	//有効化フラグ

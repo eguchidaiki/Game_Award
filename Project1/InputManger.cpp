@@ -2,16 +2,55 @@
 
 namespace
 {
-	static char decisionKey = DIK_RETURN; //決定キー
-	static char cancelKey = DIK_BACK;     //キャンセルキー
+static char decisionKey = DIK_RETURN; //決定キー
+static char cancelKey = DIK_BACK;     //キャンセルキー
 
-	static XPAD_INPUT_CODE decisionXpad = XPAD_BUTTON_B; //決定ボタン
-	static XPAD_INPUT_CODE cancelXpad = XPAD_BUTTON_A;   //キャンセルボタン
+static XPAD_INPUT_CODE decisionXpad = XPAD_BUTTON_B; //決定ボタン
+static XPAD_INPUT_CODE cancelXpad = XPAD_BUTTON_A;   //キャンセルボタン
+}
+
+DirectX::XMFLOAT2 InputManger::pressPos = {0.0f, 0.0f};
+DirectX::XMFLOAT2 InputManger::releasePos = {0.0f, 0.0f};
+DirectX::XMFLOAT2 InputManger::dragDis = {0.0f, 0.0f};
+
+InputManger::InputManger()
+{
+}
+
+InputManger* InputManger::Get()
+{
+	static InputManger ins;
+	return &ins;
 }
 
 void InputManger::Update()
 {
 	Input::StartGetInputState();
+	MouseInputUpdate();
+}
+
+void InputManger::MouseInputUpdate()
+{
+	//マウス左ボタンを押したときの座標
+	if (Input::isMouseClickTrigger(0))
+	{
+		pressPos = Input::getMousePos();
+		//PressCount = 0;
+	}
+
+	//マウスを押している間はカウントを進める
+	if (Input::isMouseClicking(0))
+	{
+		//PressCount++;
+	}
+
+	//マウス左ボタンを離したときの座標
+	if (Input::isMouseClicked(0))
+	{
+		releasePos = Input::getMousePos();
+	}
+
+	dragDis = {releasePos.x - pressPos.x , releasePos.y - pressPos.y};
 }
 
 bool InputManger::Escape()
