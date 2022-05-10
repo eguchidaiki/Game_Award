@@ -7,14 +7,14 @@
 
 using namespace myImgui;
 
-Title::Title(ISceneChanger* changer) : BaseScene(changer) {
-
-
+Title::Title(ISceneChanger* changer) : BaseScene(changer)
+{
 	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
 }
 
 //初期化
-void Title::Initialize() {
+void Title::Initialize()
+{
 
 }
 
@@ -24,16 +24,21 @@ void Title::Finalize()
 }
 
 //更新
-void Title::Update() {
+void Title::Update()
+{
 	int mouse_x = static_cast<int>(Input::getMousePos().x);
 	int mouse_y = static_cast<int>(Input::getMousePos().y);
 
-	if (Input::isMouseClickTrigger(MOUSE_L)) {
-		if (mouse_x > MENUICON_START_X && mouse_x < MENUICON_START_X + MENUICON_SIZE_X) {
-			if (mouse_y > MENUICON_START_Y && mouse_y < MENUICON_START_Y + MENUICON_SIZE_Y) {
+	if (Input::isMouseClickTrigger(MOUSE_L))
+	{
+		if (mouse_x > MENUICON_START_X && mouse_x < MENUICON_START_X + MENUICON_SIZE_X)
+		{
+			if (mouse_y > MENUICON_START_Y && mouse_y < MENUICON_START_Y + MENUICON_SIZE_Y)
+			{
 				mSceneChanger->ChangeScene(eScene_Game);
 			}
-			else if (mouse_y > MENUICON_START_Y + MENUICON_SIZE_Y + MENUICON_OFFSET && mouse_y < MENUICON_START_Y + (MENUICON_SIZE_Y * 2) + MENUICON_OFFSET) {
+			else if (mouse_y > MENUICON_START_Y + MENUICON_SIZE_Y + MENUICON_OFFSET && mouse_y < MENUICON_START_Y + (MENUICON_SIZE_Y * 2) + MENUICON_OFFSET)
+			{
 				//終了
 				mSceneChanger->EndAplication();
 			}
@@ -43,7 +48,8 @@ void Title::Update() {
 }
 
 //描画
-void Title::Draw() {
+void Title::Draw()
+{
 	Raki_DX12B::Get()->StartDrawRenderTarget();
 	Raki_DX12B::Get()->StartDrawBackbuffer();
 

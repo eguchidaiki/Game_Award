@@ -1,4 +1,12 @@
 #include "UI.h"
+#include "Player.h"
+#include "Stage.h"
+
+namespace
+{
+Stage* stage = Stage::Get();
+Player* player = Player::Get();
+}
 
 void UI::Init()
 {
@@ -14,7 +22,7 @@ void UI::Init()
 	PauseAddRot = 1;
 }
 
-void UI::Update(Stage* stage,Player* player,unsigned char PlayerTile[4], bool* Isback)
+void UI::Update(unsigned char PlayerTile[4], bool* Isback)
 {
 	mousePos = Input::getMousePos();
 
