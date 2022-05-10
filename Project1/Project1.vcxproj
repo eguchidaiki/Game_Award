@@ -168,7 +168,7 @@
     <ClCompile Include="PlayerFoot.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Stage.cpp" />
+    <ClCompile Include="stage.cpp" />
     <ClCompile Include="StageSelecter.cpp" />
     <ClCompile Include="testParticle.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -258,7 +258,7 @@
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="PlayerFoot.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Stage.h" />
+    <ClInclude Include="stage.h" />
     <ClInclude Include="StageSelecter.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="testParticle.h" />
