@@ -345,7 +345,7 @@ void Stage::Draw(int offsetX, int offsetY)
 			{
 				FlameDraw(i, j, BodyType::left, offsetX, offsetY);
 			}
-			if (static_cast<size_t>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
+			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + 1;
 
@@ -408,7 +408,7 @@ void Stage::Draw(int offsetX, int offsetY)
 			{
 				FlameDraw(i, j, BodyType::up, offsetX, offsetY);
 			}
-			if (static_cast<size_t>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
+			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
 			{
 				sideStageTile = stageData[i].stageTileData[j].stageNumber + static_cast<char>(stageData[i].width);
 
@@ -442,7 +442,7 @@ void Stage::Draw(int offsetX, int offsetY)
 		}
 	}
 
-	particleManager->Prototype_Draw(EmptyHandle);
+	//particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
@@ -711,24 +711,18 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
 
-	direction = -1;
-
-	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
 	if (IsFolds[0] || IsOpens[0])
 	{
 		direction = BodyType::up;
 	}
-	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
 	else if (IsFolds[1] || IsOpens[1])
 	{
 		direction = BodyType::down;
 	}
-	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
 	else if (IsFolds[2] || IsOpens[2])
 	{
 		direction = BodyType::left;
 	}
-	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
 	else if (IsFolds[3] || IsOpens[3])
 	{
 		direction = BodyType::right;
@@ -742,12 +736,12 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
-			if ((playerPos.x / blockSize >= initStageData[i].stageTileData[j].offsetX &&
-				playerPos.x / blockSize < initStageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
-				(playerPos.y / blockSize >= initStageData[i].stageTileData[j].offsetY &&
-					playerPos.y / blockSize < initStageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
+			if ((playerPos.x / blockSize >= stageData[i].stageTileData[j].offsetX &&
+				playerPos.x / blockSize < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
+				(playerPos.y / blockSize >= stageData[i].stageTileData[j].offsetY &&
+					playerPos.y / blockSize < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
 			{
-				onPlayerStageTile = initStageData[i].stageTileData[j].stageNumber;
+				onPlayerStageTile = stageData[i].stageTileData[j].stageNumber;
 			}
 			else
 			{
@@ -758,13 +752,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 			case BodyType::up: //上入力
 			{
-				if (onPlayerStageTile / initStageData[i].width <= 0)
+				if (onPlayerStageTile / stageData[i].width <= 0)
 				{
 					break;
 				}
 
-				moveStageTile = onPlayerStageTile - initStageData[i].width;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
+				moveStageTile = onPlayerStageTile - stageData[i].width;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile < 0 ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -812,13 +806,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			}
 			case BodyType::down: //下入力
 			{
-				if (onPlayerStageTile / initStageData[i].width >= static_cast<size_t>(initStageData[i].height - 1))
+				if (onPlayerStageTile / stageData[i].width >= static_cast<size_t>(stageData[i].height - 1))
 				{
 					break;
 				}
 
-				moveStageTile = onPlayerStageTile + initStageData[i].width;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
+				moveStageTile = onPlayerStageTile + stageData[i].width;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -866,13 +860,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			}
 			case BodyType::left: //左入力
 			{
-				if (onPlayerStageTile % initStageData[i].width <= 0)
+				if (onPlayerStageTile % stageData[i].width <= 0)
 				{
 					break;
 				}
 
 				moveStageTile = onPlayerStageTile - 1;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile < 0 ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -920,13 +914,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			}
 			case BodyType::right: //右入力
 			{
-				if (onPlayerStageTile % initStageData[i].width >= static_cast<size_t>(initStageData[i].width - 1))
+				if (onPlayerStageTile % stageData[i].width >= static_cast<size_t>(stageData[i].width - 1))
 				{
 					break;
 				}
 
 				moveStageTile = onPlayerStageTile + 1;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
+				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
 
 				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
@@ -1001,9 +995,9 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	static size_t onPlayerStageData = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
-	static bool isFold = false; //折れる物があるかどうか
+	bool isFold = false; //折れる物があるかどうか
 
-	isFold = false;
+	//isFold = false;
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -1109,7 +1103,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 			}
 			default:
 			{
-				*returnMapchip = nullptr;
+				*returnMapchip = reverseMapchip;
 
 				return EF;
 				break;
@@ -1168,7 +1162,7 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 	}
 	else
 	{
-		*returnMapchip = nullptr;
+		*returnMapchip = reverseMapchip;
 
 		// 折れる物が無い
 		return EF;
@@ -1199,7 +1193,7 @@ void Stage::Reset(unsigned char foldCount[4])
 		}
 	}
 
-	GetInitFoldCount(foldCount);
+	//GetInitFoldCount(foldCount);
 }
 
 void Stage::DataClear()
@@ -1537,22 +1531,22 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
 		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
-		pos2.y = static_cast<float>(posY * blockSize + lineWidth);
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = (posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
+		pos2.y = posY * blockSize + lineWidth;
 
 		break;
 	}
 	case BodyType::down:
 	{
 		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
-		posY = static_cast<int>(stageData[stageNumber].stageTileData[stageTileNumber].height) + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+		posY = stageData[stageNumber].stageTileData[stageTileNumber].height + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
-		pos2.y = static_cast<float>(posY * blockSize - lineWidth);
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = (posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
+		pos2.y = posY * blockSize - lineWidth;
 
 		break;
 	}
@@ -1561,22 +1555,22 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
 		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX * blockSize + lineWidth);
-		pos2.y = static_cast<float>(posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = posX * blockSize + lineWidth;
+		pos2.y = (posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
 
 		break;
 	}
 	case BodyType::right:
 	{
-		posX = static_cast<int>(stageData[i].stageTileData[j].width) + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
+		posX = stageData[i].stageTileData[j].width + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
 		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX * blockSize - lineWidth);
-		pos2.y = static_cast<float>(posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
+		pos1.x = posX * blockSize;
+		pos1.y = posY * blockSize;
+		pos2.x = posX * blockSize - lineWidth;
+		pos2.y = (posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
 
 		break;
 	}
@@ -1600,7 +1594,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 {
 	static float keepA = 0.0f, keepB = 0.0f;
 
-	for (y = 0; y < stageData[onPlayerStage].stageTileData[moveStageData].height; y++)
+	for (y = 0; y < static_cast<size_t>(stageData[onPlayerStage].stageTileData[moveStageData].height); y++)
 	{
 		for (x = 0; x < stageData[onPlayerStage].stageTileData[moveStageData].width; x++)
 		{
@@ -1616,8 +1610,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height - y - 1);
-				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetY) +
-					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetY + stageData[onPlayerStage].stageTileData[moveStageData].height);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = keepA + keepB + 1.0f;
@@ -1633,8 +1626,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height - y - 1);
-				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetY) -
-					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].height);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetY - stageData[onPlayerStage].stageTileData[moveStageData].height);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = static_cast<float>(x + stageData[onPlayerStage].stageTileData[moveStageData].offsetX);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = keepA + keepB;
@@ -1650,8 +1642,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width - x - 1);
-				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX) +
-					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX + stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB + 1.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
@@ -1668,8 +1659,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				stageData[onPlayerStage].stageTileData[moveStageData].startPos[mapchipPos] *= blockSize;
 
 				keepA = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width - x - 1);
-				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX) -
-					static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].width);
+				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX - stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);

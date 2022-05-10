@@ -40,5 +40,11 @@ public:
     //タイトルのメインスプライト
     Sprite titleMainSprite;
 
+    const int MENUICON_START_X = 500;
+    const int MENUICON_START_Y = 470;
+    const int MENUICON_SIZE_Y = 60;
+    const int MENUICON_SIZE_X = 280;
+    const int MENUICON_OFFSET = 25;
+
 };
 

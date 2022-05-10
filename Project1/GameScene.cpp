@@ -5,7 +5,7 @@
 #include "InputManger.h"
 #include "NY_random.h"
 
-GameScene::GameScene(ISceneChanger *changer) : BaseScene(changer) {
+GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer) {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
@@ -15,7 +15,7 @@ GameScene::GameScene(ISceneChanger *changer) : BaseScene(changer) {
 
 	nowState = is_Select;
 
-	selecter.Init(stage,player);
+	selecter.Init(stage, player);
 	gamemain.Init(stage, player);
 }
 
@@ -28,14 +28,17 @@ void GameScene::Initialize() {
 void GameScene::Update() {
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
-
 	switch (nowState)
 	{
 	case GameScene::is_Select:
 		//ステージセレクト画面の処理
 		selecter.Update();
 		if (selecter.GetMoveGameMain()) {
-			nowState = is_Game; 
+			gamemain.Ischangecount = false;
+			gamemain.IsGoSelect = false;
+			gamemain.changecount = 0;
+			selecter.isChanging_GameMain = false;
+			nowState = is_Game;
 		}
 
 		break;
@@ -44,6 +47,14 @@ void GameScene::Update() {
 	case GameScene::is_Game:
 		//ゲーム本編の処理
 		gamemain.Update();
+		if (gamemain.IsGoSelect == true) {
+			gamemain.Ischangecount = false;
+			gamemain.IsGoSelect = false;
+			gamemain.changecount = 0;
+			selecter.isChanging_GameMain = false;
+			selecter.state = selecter.is_selecting;
+			nowState = is_Select;
+		}
 
 		break;
 	default:
