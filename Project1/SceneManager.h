@@ -25,6 +25,8 @@ private:
     //次のシーン管理変数
 	eScene mNextScene;
 
+    bool isSceneEnd = false;
+
 public:
     //コンスタラクタ
     SceneManager();
@@ -37,6 +39,10 @@ public:
 
     // 引数 nextScene にシーンを変更する
     void ChangeScene(eScene NextScene) override;
+
+    void EndAplication() override;
+
+    bool isEndApp() { return isSceneEnd; }
 
 };
 

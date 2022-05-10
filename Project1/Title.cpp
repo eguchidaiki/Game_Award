@@ -35,7 +35,7 @@ void Title::Update() {
 			}
 			else if (mouse_y > MENUICON_START_Y + MENUICON_SIZE_Y + MENUICON_OFFSET && mouse_y < MENUICON_START_Y + (MENUICON_SIZE_Y * 2) + MENUICON_OFFSET) {
 				//終了
-
+				mSceneChanger->EndAplication();
 			}
 
 		}
