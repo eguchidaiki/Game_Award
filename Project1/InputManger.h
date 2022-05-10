@@ -1,13 +1,18 @@
 #pragma once
 #include "Raki_Input.h"
+#include <DirectXMath.h>
 
 // 入力をまとめたクラス
 class InputManger final
 {
-private: //シングルトン化
-	InputManger() {}
+public: //シングルトン化
+	static InputManger* Get();
+private:
+	InputManger();
 	InputManger(const InputManger&) = delete;
-	~InputManger() {}
+	~InputManger()
+	{
+	}
 	InputManger operator=(const InputManger&) = delete;
 
 public: //サブクラス
@@ -23,78 +28,86 @@ public: //サブクラス
 public: //静的メンバ関数
 	// 更新
 	static void Update();
+	// マウスの入力状態更新
+	static void MouseInputUpdate();
 
+private: //静的メンバ変数
+	static DirectX::XMFLOAT2 pressPos;
+	static DirectX::XMFLOAT2 releasePos;
+	static DirectX::XMFLOAT2 dragDis;
+
+public: //メンバ関数
 	// 終了
-	static bool Escape();
+	bool Escape();
 	// 終了(押した瞬間の判定)
-	static bool EscapeTrigger();
+	bool EscapeTrigger();
 	// 終了(離した瞬間の判定)
-	static bool EscapeReturn();
+	bool EscapeReturn();
 	// 上
-	static bool Up();
+	bool Up();
 	// 上(押した瞬間の判定)
-	static bool UpTrigger();
+	bool UpTrigger();
 	// 上(離した瞬間の判定)
-	static bool UpReturn();
+	bool UpReturn();
 	// 下
-	static bool Down();
+	bool Down();
 	// 下(押した瞬間の判定)
-	static bool DownTrigger();
+	bool DownTrigger();
 	// 下(離した瞬間の判定)
-	static bool DownReturn();
+	bool DownReturn();
 	// 左
-	static bool Left();
+	bool Left();
 	// 左(押した瞬間の判定)
-	static bool LeftTrigger();
+	bool LeftTrigger();
 	// 左(離した瞬間の判定)
-	static bool LeftReturn();
+	bool LeftReturn();
 	// 右
-	static bool Right();
+	bool Right();
 	// 右(押した瞬間の判定)
-	static bool RightTrigger();
+	bool RightTrigger();
 	// 右(離した瞬間の判定)
-	static bool RightReturn();
+	bool RightReturn();
 	// 上(サブ)
-	static bool SubUp();
+	bool SubUp();
 	// 上(サブ)(押した瞬間の判定)
-	static bool SubUpTrigger();
+	bool SubUpTrigger();
 	// 上(サブ)(離した瞬間の判定)
-	static bool SubUpReturn();
+	bool SubUpReturn();
 	// 下(サブ)
-	static bool SubDown();
+	bool SubDown();
 	// 下(サブ)(押した瞬間の判定)
-	static bool SubDownTrigger();
+	bool SubDownTrigger();
 	// 下(サブ)(離した瞬間の判定)
-	static bool SubDownReturn();
+	bool SubDownReturn();
 	// 左(サブ)
-	static bool SubLeft();
+	bool SubLeft();
 	// 左(サブ)(押した瞬間の判定)
-	static bool SubLeftTrigger();
+	bool SubLeftTrigger();
 	// 左(サブ)(離した瞬間の判定)
-	static bool SubLeftReturn();
+	bool SubLeftReturn();
 	// 右(サブ)
-	static bool SubRight();
+	bool SubRight();
 	// 右(サブ)(押した瞬間の判定)
-	static bool SubRightTrigger();
+	bool SubRightTrigger();
 	// 右(サブ)(離した瞬間の判定)
-	static bool SubRightReturn();
+	bool SubRightReturn();
 	// 決定
-	static bool Decision();
+	bool Decision();
 	// 決定(押した瞬間の判定)
-	static bool DecisionTrigger();
+	bool DecisionTrigger();
 	// 決定(離した瞬間の判定)
-	static bool DecisionReturn();
+	bool DecisionReturn();
 	// キャンセル
-	static bool Cancel();
+	bool Cancel();
 	// キャンセル(押した瞬間の判定)
-	static bool CancelTrigger();
+	bool CancelTrigger();
 	// キャンセル(離した瞬間の判定)
-	static bool CancelReturn();
+	bool CancelReturn();
 	/*以下キーボードオンリー*/
 	// リセット
-	static bool Reset();
+	bool Reset();
 	// リセット(押した瞬間の判定)
-	static bool ResetTrigger();
+	bool ResetTrigger();
 	// リセット(離した瞬間の判定)
-	static bool ResetReturn();
+	bool ResetReturn();
 };

@@ -5,11 +5,12 @@
 
 namespace //関数間の受け渡しは必要無いが変数名が同じ物
 {
-	static bool isFold = false;   //折れるかどうか
-	static bool isOpen = false;   //開けるかどうか
-
+	static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
 	static Player* player = Player::Get(); //プレイヤー
 	static Stage* stage = Stage::Get();    //ステージ
+
+	static bool isFold = false;   //折れるかどうか
+	static bool isOpen = false;   //開けるかどうか
 
 	static size_t i = 0, j = 0; //ループカウンタ
 }
@@ -33,31 +34,31 @@ ActFlag::~ActFlag()
 bool ActFlag::Decision()
 {
 	// キーボード&コントローラー入力
-	return InputManger::DecisionTrigger();
+	return inputManger->DecisionTrigger();
 }
 
 bool ActFlag::Cancel()
 {
 	// キーボード&コントローラー入力
-	return InputManger::CancelTrigger();
+	return inputManger->CancelTrigger();
 }
 
 bool ActFlag::MoveLeft()
 {
 	// キーボード&コントローラー入力
-	return InputManger::Left();
+	return inputManger->Left();
 }
 
 bool ActFlag::MoveRight()
 {
 	// キーボード&コントローラー入力
-	return InputManger::Right();
+	return inputManger->Right();
 }
 
 bool ActFlag::Jump()
 {
 	// キーボード&コントローラー入力
-	return InputManger::UpTrigger();
+	return inputManger->UpTrigger();
 }
 
 bool ActFlag::FoldUp()
@@ -69,7 +70,7 @@ bool ActFlag::FoldUp()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubUpTrigger() == false)
+	if (inputManger->SubUpTrigger() == false)
 	{
 		//return false;
 	}
@@ -110,7 +111,7 @@ bool ActFlag::FoldDown()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubDownTrigger() == false)
+	if (inputManger->SubDownTrigger() == false)
 	{
 		//return false;
 	}
@@ -157,7 +158,7 @@ bool ActFlag::FoldLeft()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubLeftTrigger() == false)
+	if (inputManger->SubLeftTrigger() == false)
 	{
 		//return false;
 	}
@@ -204,7 +205,7 @@ bool ActFlag::FoldRight()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubRightTrigger() == false)
+	if (inputManger->SubRightTrigger() == false)
 	{
 		//return false;
 	}
@@ -256,7 +257,7 @@ bool ActFlag::OpenUp()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubUpTrigger() == false)
+	if (inputManger->SubUpTrigger() == false)
 	{
 		//return false;
 	}
@@ -304,7 +305,7 @@ bool ActFlag::OpenDown()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubDownTrigger() == false)
+	if (inputManger->SubDownTrigger() == false)
 	{
 		//return false;
 	}
@@ -346,7 +347,7 @@ bool ActFlag::OpenLeft()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubLeftTrigger() == false)
+	if (inputManger->SubLeftTrigger() == false)
 	{
 		//return false;
 	}
@@ -394,7 +395,7 @@ bool ActFlag::OpenRight()
 	}
 
 	// キーボード&コントローラー入力
-	if (InputManger::SubRightTrigger() == false)
+	if (inputManger->SubRightTrigger() == false)
 	{
 		//return false;
 	}

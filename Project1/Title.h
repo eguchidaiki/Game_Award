@@ -9,7 +9,7 @@
 #include "testParticle.h"
 #include "Player.h"
 #include "Stage.h"
-
+#include "Tutorial.h"
 
 enum NowState {
     title,

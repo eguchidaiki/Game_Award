@@ -173,6 +173,7 @@
     <ClCompile Include="testParticle.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Tutorial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resources\Shaders\mpEffectPixelShader.hlsl">
@@ -263,6 +264,7 @@
     <ClInclude Include="testParticle.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="Tutorial.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
