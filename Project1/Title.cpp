@@ -15,6 +15,8 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 	player->Init();
 	player->BodySetUp(playerTile);
+	tutorial.Create();
+	tutorial.isFirstOnly = true;
 
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
@@ -112,6 +114,12 @@ void Title::Update()
 		player->OpenCount = 0;
 		player->IsOpenCountStart = false;
 	}
+
+	if (true)
+	{
+		tutorial.StartTutorial();
+	}
+	tutorial.Update();
 }
 
 //描画
@@ -131,6 +139,7 @@ void Title::Draw()
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
 	stage->Draw(drawOffsetX, drawOffsetY);
+	tutorial.Draw();
 	player->Draw(drawOffsetX, drawOffsetY);
 
 	//描画終了

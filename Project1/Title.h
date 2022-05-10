@@ -9,6 +9,7 @@
 #include "testParticle.h"
 #include "Player.h"
 #include "Stage.h"
+#include "Tutorial.h"
 
 enum NowState {
     title,
@@ -39,7 +40,7 @@ public:
     unsigned char playerTile[4] = { 0 };
 
     Stage *stage = Stage::Get();
-
+    Tutorial tutorial = {};
 
     const int drawOffsetX = 320, drawOffsetY = 45;
 
