@@ -19,15 +19,16 @@ void GameMainManager::Init(Stage* stageptr, Player* playerptr)
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 
-	ui.Init();
+	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
+	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
 }
 
 void GameMainManager::Update()
 {
-	//ã‚²ãƒ¼ãƒ å†…ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ›´æ–°å‡¦ç†ï¼ˆã‚ˆã†ã¯ä¿ºãŒä½œã£ã¦ãªã„ã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã€‚ã‚„ã‚„ã“ã—ããªã‚‹ã‹ã‚‰ãƒ©ãƒƒãƒ—ã—ãŸï¼‰
+	//ƒQ[ƒ€“àƒCƒ“ƒXƒ^ƒ“ƒX‚ÌXVˆ—i‚æ‚¤‚Í‰´‚ªì‚Á‚Ä‚È‚¢ƒNƒ‰ƒX‚ÌXVˆ—B‚â‚â‚±‚µ‚­‚È‚é‚©‚çƒ‰ƒbƒv‚µ‚½j
 	GameInstanceUpdate();
 
-	//ã‚¯ãƒªã‚¢ãƒ•ãƒ©ã‚°ãŒç«‹ã£ãŸã‚‰é·ç§»æ¼”å‡ºã€ã‚»ãƒ¬ã‚¯ãƒˆã«ç§»å‹•ã™ã‚‹å‡¦ç†ã‚’æ›¸ããŸã„æ‰€å­˜
+	//ƒNƒŠƒAƒtƒ‰ƒO‚ª—§‚Á‚½‚ç‘JˆÚ‰‰oAƒZƒŒƒNƒg‚ÉˆÚ“®‚·‚éˆ—‚ð‘‚«‚½‚¢Š‘¶
 
 }
 
@@ -42,45 +43,26 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	playerTile[0] = player->playerTile[0];
-	playerTile[1] = player->playerTile[1];
-	playerTile[2] = player->playerTile[2];
-	playerTile[3] = player->playerTile[3];
-
-	ui.Update(stage, player, playerTile,&Ischangecount);
-
-	//å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®å‡¦ç†
+	//ŠeƒXƒe[ƒW‚Ìˆ—
 //#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
-		//stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-		//player->Init();
-		//player->BodySetUp(playerTile);
+		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
+		player->Init();
+		player->BodySetUp(playerTile);
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
-
 		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
-
-		//stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
-		//player->Init();
-		//player->BodySetUp(playerTile);
-
 	}
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
-
 		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
-
-		//stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
-		//player->Init();
-		//player->BodySetUp(playerTile);
-
 	}
 
 #endif // _DEBUG
@@ -97,23 +79,23 @@ void GameMainManager::GameInstanceUpdate()
 	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = {
-		player->IsUpFold,
-		player->IsDownFold,
 		player->IsLeftFold,
-		player->IsRightFold
+		player->IsUpFold,
+		player->IsRightFold,
+		player->IsDownFold
 	};
 
 	bool IsOpens[4] = {
-		player->IsUpOpen,
-		player->IsDownOpen,
 		player->IsLeftOpen,
-		player->IsRightOpen
+		player->IsUpOpen,
+		player->IsRightOpen,
+		player->IsDownOpen
 	};
 
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
-	//ã‚¹ãƒ†ãƒ¼ã‚¸ã¨ã®é€£å‹•ã®ãŸã‚é–‹ãå‡¦ç†ã¯ã“ã£ã¡ã§ã‚„ã‚‹
+	//ƒXƒe[ƒW‚Æ‚Ì˜A“®‚Ì‚½‚ßŠJ‚­ˆ—‚Í‚±‚Á‚¿‚Å‚â‚é
 	if (player->OpenCount >= 2)
 	{
 		if (player->IsLeftOpen == true)
@@ -135,45 +117,15 @@ void GameMainManager::GameInstanceUpdate()
 		player->OpenCount = 0;
 		player->IsOpenCountStart = false;
 	}
-
-	if (player->IsGoal)
-	{
-		Ischangecount = true;
-		changecount = 0;
-	}
-
-	if (Ischangecount)
-	{
-		changecount++;
-
-		if (changecount > 20)
-		{
-			IsGoSelect = true;
-		}
-	}
 }
 
 void GameMainManager::GameInstanceDraw()
 {
-	//å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®å‡¦ç†
+	//ŠeƒXƒe[ƒW‚Ìˆ—
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
-	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
-
-	/*ImguiMgr::Get()->StartDrawImgui("Info", 0.0f, 100.0f);
-	ImGui::Text("IsGoal:%d", player->IsGoal);
-	ImGui::Text("PressCount:%d", player->PressCount);
-	ImGui::Text("IsWalk:%d", player->IsWalk);
-	ImGui::Text("IsJump:%d", player->IsJump);
-	ImGui::Text("IsInitJump:%d", player->IsInitJump);
-	ImGui::Text("x:%f", player->CenterPosition.x);
-	ImGui::Text("y:%f", player->CenterPosition.y);
-	ImGui::Text("z:%f", player->CenterPosition.z);
-	ImGui::Text("Reset.x:%f", ui.ResetUISprite.spdata.get()->position.x);
-	ImGui::Text("Reset.y:%f", ui.ResetUISprite.spdata.get()->position.y);
-	ImguiMgr::Get()->EndDrawImgui();*/
 }

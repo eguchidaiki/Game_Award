@@ -58,3 +58,10 @@ void SceneManager::ChangeScene(eScene NextScene)
     //次のシーン番号をセット
     mNextScene = NextScene;
 }
+
+void SceneManager::EndAplication()
+{
+    isSceneEnd = true;
+}
+
+
