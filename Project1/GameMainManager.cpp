@@ -78,26 +78,17 @@ void GameMainManager::GameInstanceUpdate()
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-<<<<<<< HEAD
-	if (InputManger::ResetTrigger())
-=======
-
 #endif // _DEBUG
 
 	if (InputManger::Get()->ResetTrigger())
->>>>>>> origin/master
 	{
 		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-<<<<<<< HEAD
-#endif // _DEBUG
 
-	player->Update(*stage, drawOffsetX, drawOffsetY);
-=======
 	player->Update(drawOffsetX, drawOffsetY);
->>>>>>> origin/master
+
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
