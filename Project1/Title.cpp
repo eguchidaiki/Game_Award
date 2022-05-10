@@ -10,6 +10,7 @@ using namespace myImgui;
 Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 
 
+	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
 }
 
 //初期化
@@ -44,4 +45,6 @@ void Title::Draw()
 	//描画終了
 	Raki_DX12B::Get()->CloseDraw();
 
+
+	Raki_DX12B::Get()->CloseDraw();
 }
