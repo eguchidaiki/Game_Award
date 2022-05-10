@@ -54,14 +54,9 @@ void Title::Draw() {
 	titleMainSprite.Draw();
 
 
-	ImguiMgr::Get()->StartDrawImgui("mouse", 150, 100);
+	/*ImguiMgr::Get()->StartDrawImgui("mouse", 150, 100);
 	ImGui::Text("pos x : %f    y : %f", Input::getMousePos().x, Input::getMousePos().y);
-	ImguiMgr::Get()->EndDrawImgui();
-
-	//背景に常にいる
-	Raki_DX12B::Get()->StartDrawRenderTarget();
-
-	Raki_DX12B::Get()->StartDrawBackbuffer();
+	ImguiMgr::Get()->EndDrawImgui();*/
 
 	// 描画処理
 	//DrawGraph(0, 0, Back, true);
@@ -69,8 +64,5 @@ void Title::Draw() {
 
 
 	//描画終了
-	Raki_DX12B::Get()->CloseDraw();
-
-
 	Raki_DX12B::Get()->CloseDraw();
 }
