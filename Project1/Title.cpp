@@ -7,28 +7,14 @@
 
 using namespace myImgui;
 
-Title::Title(ISceneChanger* changer) : BaseScene(changer)
-{
-	camera->SetViewStatusEyeTargetUp(eye, target, up);
+Title::Title(ISceneChanger* changer) : BaseScene(changer) {
 
-	stage->Create();
-	stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-	player->Init();
-	player->BodySetUp(playerTile);
 
-	BackHandle = TexManager::LoadTexture("Resources/background03.png");
-	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
-	this->Back.Create(BackHandle);
 }
 
 //初期化
-void Title::Initialize()
-{
-	/// <summary>
-	/// フィールド管理部初期化
-	/// </summary>
+void Title::Initialize() {
 
-	//StageMoveParticle::Get()->Init(&cam);
 }
 
 void Title::Finalize()
@@ -37,81 +23,8 @@ void Title::Finalize()
 }
 
 //更新
-void Title::Update()
-{
-	camera->SetViewStatusEyeTargetUp(eye, target, up);
+void Title::Update() {
 
-#ifdef _DEBUG
-	if (Input::isKeyTrigger(DIK_1))
-	{
-		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-	if (Input::isKeyTrigger(DIK_2))
-	{
-		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-	if (Input::isKeyTrigger(DIK_3))
-	{
-		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-#endif // _DEBUG
-
-	if (InputManger::Get()->ResetTrigger())
-	{
-		stage->Reset(playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-	player->Update(drawOffsetX, drawOffsetY);
-	bool PlayerBodyStatus[4] = {};
-
-	player->SetBodyStatus(PlayerBodyStatus);
-
-	bool IsFolds[4] = {
-		player->IsLeftFold,
-		player->IsUpFold,
-		player->IsRightFold,
-		player->IsDownFold
-	};
-
-	bool IsOpens[4] = {
-		player->IsLeftOpen,
-		player->IsUpOpen,
-		player->IsRightOpen,
-		player->IsDownOpen
-	};
-
-	stage->Updata();
-	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
-
-	//ステージとの連動のため開く処理はこっちでやる
-	if (player->OpenCount >= 2)
-	{
-		if (player->IsLeftOpen == true)
-		{
-			player->IsLeftOpen = false;
-		}
-		if (player->IsUpOpen == true)
-		{
-			player->IsUpOpen = false;
-		}
-		if (player->IsRightOpen == true)
-		{
-			player->IsRightOpen = false;
-		}
-		if (player->IsDownOpen == true)
-		{
-			player->IsDownOpen = false;
-		}
-		player->OpenCount = 0;
-		player->IsOpenCountStart = false;
-	}
 }
 
 //描画
@@ -126,12 +39,7 @@ void Title::Draw()
 	// 描画処理
 	//DrawGraph(0, 0, Back, true);
 	//DrawBox(0, 0, 1280, 720, GetColor(0, 0, 0), true);
-	SpriteManager::Get()->SetCommonBeginDraw();
-	Back.DrawExtendSprite(0, 0, 1280, 720);
-	Back.Draw();
-	Raki_DX12B::Get()->ClearDepthBuffer();
-	stage->Draw(drawOffsetX, drawOffsetY);
-	player->Draw(drawOffsetX, drawOffsetY);
+
 
 	//描画終了
 	Raki_DX12B::Get()->CloseDraw();
