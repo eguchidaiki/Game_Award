@@ -205,11 +205,11 @@ public: //メンバ変数
 	Sprite PlayerSpriteAction;
 
 	//マウスのクリック座標
-	XMFLOAT2 PressPos = {0,0};
-	XMFLOAT2 ReleasePos = {0,0};
+	XMFLOAT2 PressPos = { 0, 0 };
+	XMFLOAT2 ReleasePos = { 0, 0 };
 
 	// ゴールパーティクル
 	GoalParticle goalParticle;
 
-	unsigned char playerTile[4] = {0};
+	unsigned char playerTile[4] = { 0 };
 };
