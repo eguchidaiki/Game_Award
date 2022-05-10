@@ -95,6 +95,10 @@
     <ClCompile Include="ActFlag.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+<<<<<<< HEAD
+    <ClCompile Include="UI.cpp">
+      <Filter>ソース ファイル</Filter>
+=======
     <ClCompile Include="GameScene.cpp">
       <Filter>App\Scene\Game</Filter>
     </ClCompile>
@@ -106,6 +110,7 @@
     </ClCompile>
     <ClCompile Include="GameMainManager.cpp">
       <Filter>App\Scene\Game</Filter>
+>>>>>>> origin/master
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +209,10 @@
     <ClInclude Include="ActFlag.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+<<<<<<< HEAD
+    <ClInclude Include="UI.h">
+      <Filter>ヘッダー ファイル</Filter>
+=======
     <ClInclude Include="GameScene.h">
       <Filter>App\Scene\Game</Filter>
     </ClInclude>
@@ -215,6 +224,7 @@
     </ClInclude>
     <ClInclude Include="GameMainManager.h">
       <Filter>App\Scene\Game</Filter>
+>>>>>>> origin/master
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

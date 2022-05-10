@@ -40,6 +40,7 @@ Player::Player() :
 	IsInputjump(false),
 	Player_IsAction(false),
 	FaceHandle{},
+	IsStart(false),
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
@@ -78,6 +79,8 @@ void Player::Init()
 	leg.Init();
 	IsLeft = true;
 	IsRight = false;
+
+	IsStart = true;
 
 	goalParticle.Create();
 }
@@ -315,7 +318,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	/*ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
 	ImGui::Text("IsGoal:%d", IsGoal);
 	ImGui::Text("PressCount:%d", PressCount);
 	ImGui::Text("IsWalk:%d", IsWalk);
@@ -328,15 +331,9 @@ void Player::Draw(int offsetX, int offsetY)
 	ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();
+	ImguiMgr::Get()->EndDrawImgui();*/
 #endif // _DEBUG
 
-
-	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 60.0f);
-	//ImGui::Text("Move:Click");
-	//ImGui::Text("Fold&Open:Drag");
-	//ImGui::Text("Slide:WASD");
-	//ImguiMgr::Get()->EndDrawImgui();
 
 }
 
@@ -744,6 +741,11 @@ void Player::Mouse_Input(int offsetX, int offsetY)
 
 void Player::Mouse_Move(int offsetX, int offsetY, Stage& stage)
 {
+	if (IsStart == false)
+	{
+		return;
+	}
+
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
@@ -1121,6 +1123,10 @@ void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool thre
 
 void Player::BodySetUp(const unsigned char foldCount[4])
 {
+	playerTile[0] = foldCount[0];
+	playerTile[1] = foldCount[1];
+	playerTile[2] = foldCount[2];
+	playerTile[3] = foldCount[3];
 	//static int bodyTile[4] = { 0 };
 	static size_t j = 0;
 
@@ -1142,10 +1148,10 @@ void Player::BodySetUp(const unsigned char foldCount[4])
 	//}
 
 	BodySetUp(
-		foldCount[0] != 0, BodyType::left,
-		foldCount[1] != 0, BodyType::up,
-		foldCount[2] != 0, BodyType::right,
-		foldCount[3] != 0, BodyType::down);
+		playerTile[0] != 0, BodyType::left,
+		playerTile[1] != 0, BodyType::up,
+		playerTile[2] != 0, BodyType::right,
+		playerTile[3] != 0, BodyType::down);
 }
 
 void Player::Fold()
@@ -2616,10 +2622,10 @@ bool Player::IsFall()
 
 void Player::SetBodyStatus(bool arrangement[4])
 {
-	arrangement[BodyType::left] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
-	arrangement[BodyType::up] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
-	arrangement[BodyType::right] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
-	arrangement[BodyType::down] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[0] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[1] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[2] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
+	arrangement[3] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
 }
 
 bool Player::IsReverseHitFace(Stage& stage, const unsigned char& direction)

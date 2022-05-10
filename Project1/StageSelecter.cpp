@@ -61,11 +61,9 @@ void StageSelecter::Draw()
 		break;
 	}
 
-	ImguiMgr::Get()->StartDrawImgui("mouse", 150, 100);
-
+	/*ImguiMgr::Get()->StartDrawImgui("mouse", 150, 100);
 	ImGui::Text("pos x : %f    y : %f", Input::getMousePos().x, Input::getMousePos().y);
-
-	ImguiMgr::Get()->EndDrawImgui();
+	ImguiMgr::Get()->EndDrawImgui();*/
 
 
 
@@ -211,14 +209,11 @@ void StageSelecter::PageChange()
 
 void StageSelecter::CheckLoadStage(int boxnum)
 {
-	//•K—v‚¾‚©‚ç
-	unsigned char playerTile[4] = { 0 };
-
 	switch (nowpage)
 	{
 	case StageSelecter::page_1_4:
 		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}
@@ -268,22 +263,22 @@ void StageSelecter::CheckLoadStage(int boxnum)
 
 	case StageSelecter::page_9_12:
 		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}
 		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}
 		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}
 		else {
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}
