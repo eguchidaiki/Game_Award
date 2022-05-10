@@ -78,42 +78,33 @@ void GameMainManager::GameInstanceUpdate()
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-<<<<<<< HEAD
-	if (InputManger::ResetTrigger())
-=======
-
-#endif // _DEBUG
 
 	if (InputManger::Get()->ResetTrigger())
->>>>>>> origin/master
 	{
 		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-<<<<<<< HEAD
 #endif // _DEBUG
 
-	player->Update(*stage, drawOffsetX, drawOffsetY);
-=======
 	player->Update(drawOffsetX, drawOffsetY);
->>>>>>> origin/master
+	player->Update(drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
 
 	bool IsFolds[4] = {
-		player->IsUpFold,
-		player->IsDownFold,
 		player->IsLeftFold,
-		player->IsRightFold
+		player->IsUpFold,
+		player->IsRightFold, 
+		player->IsDownFold, 
 	};
 
 	bool IsOpens[4] = {
-		player->IsUpOpen,
-		player->IsDownOpen,
 		player->IsLeftOpen,
-		player->IsRightOpen
+		player->IsUpOpen,
+		player->IsRightOpen,
+		player->IsDownOpen,
 	};
 
 	stage->Updata();
