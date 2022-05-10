@@ -211,5 +211,5 @@ public: //メンバ変数
 	// ゴールパーティクル
 	GoalParticle goalParticle;
 
-	unsigned char playerTile[4] = { 0 };
+	unsigned char playerTile[4] = {0};
 };

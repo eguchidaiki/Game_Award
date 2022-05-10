@@ -1,6 +1,14 @@
 #include "GameMainManager.h"
 #include "InputManger.h"
 #include "Raki_DX12B.h"
+#include "Stage.h"
+#include "Player.h"
+
+namespace
+{
+Stage* stage = Stage::Get();
+Player* player = Player::Get();
+}
 
 GameMainManager::GameMainManager()
 {
@@ -10,11 +18,8 @@ GameMainManager::~GameMainManager()
 {
 }
 
-void GameMainManager::Init(Stage* stageptr, Player* playerptr)
+void GameMainManager::Init()
 {
-	stage = stageptr;
-	player = playerptr;
-
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
@@ -67,13 +72,13 @@ void GameMainManager::GameInstanceUpdate()
 
 #endif // _DEBUG
 
-	if (InputManger::ResetTrigger())
+	if (InputManger::Get()->ResetTrigger())
 	{
 		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-	player->Update(*stage, drawOffsetX, drawOffsetY);
+	player->Update(drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
