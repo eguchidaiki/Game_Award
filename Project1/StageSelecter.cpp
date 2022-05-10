@@ -67,6 +67,8 @@ void StageSelecter::Draw()
 
 	ImguiMgr::Get()->EndDrawImgui();
 
+
+
 }
 
 void StageSelecter::Finalize()
@@ -161,13 +163,16 @@ void StageSelecter::PageChange()
 
 	//ページが変わるとき
 	if (nowpage != nextpage) {
+		animationFrame++;
 		//次のページ
 		if (pageMoveDir == is_front) {
 			//演出中は現在ページを表示
 			displayPage = nowpage;
 			//演出待機
 			state = is_pageChange_waiting;
-			nowDisplayNum++;
+			if (animationFrame % perFrame == 0) {
+				nowDisplayNum++;
+			}
 			if (nowDisplayNum >= 20) {
 				//描画するやつを切り替え
 				displayPage = nextpage;
@@ -177,6 +182,8 @@ void StageSelecter::PageChange()
 				nowDisplayNum = 0;
 				//入力を受付
 				state = is_selecting;
+
+				animationFrame = 0;
 			}
 		}
 		//前のページ
@@ -184,16 +191,19 @@ void StageSelecter::PageChange()
 			//ページ遷移判定にするタイミングで下準備をする
 			if (state != is_pageChange_waiting) {
 				state = is_pageChange_waiting;
-				nowDisplayNum = 20;
+				nowDisplayNum = 19;
 				displayPage = nextpage;
 			}
-			nowDisplayNum--;
-
+			//アニメーション進行
+			if (animationFrame % perFrame == 0) {
+				nowDisplayNum--;
+			}
 			//演出終了
 			if (nowDisplayNum <= 0) {
 				nowDisplayNum = 0;
 				state = is_selecting;
 				nowpage = nextpage;
+				animationFrame = 0;
 			}
 		}
 	}

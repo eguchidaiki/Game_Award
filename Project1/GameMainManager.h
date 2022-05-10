@@ -3,6 +3,8 @@
 #include "Stage.h"
 #include "Player.h"
 
+#include <Audio.h>
+
 class GameMainManager
 {
 private:
@@ -14,6 +16,10 @@ private:
 	Sprite Back;
 	unsigned char playerTile[4] = { 0 };
 	const int drawOffsetX = 320, drawOffsetY = 45;
+
+	//‰¹
+	SoundData menuBGM;
+	SoundData playBGM;
 
 public:
 	GameMainManager();

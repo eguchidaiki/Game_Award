@@ -78,7 +78,8 @@ private:
 	void CheckToPageChangeInput();
 
 	//ページ状態に応じた処理
-	const int PAGECHANGE_FRAME_TIME = 19;
+	int animationFrame = 0;
+	const int perFrame = 3;
 	void PageChange();
 
 	//ステージ遷移のための入力検知

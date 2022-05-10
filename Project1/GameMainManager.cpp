@@ -50,14 +50,14 @@ void GameMainManager::GameInstanceUpdate()
 	}
 	if (Input::isKeyTrigger(DIK_2))
 	{
-		stage->LoadStage("./Resources/stage/stage5.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_3))
 	{
-		stage->LoadStage("./Resources/stage/stage6.csv", playerTile);
+		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
