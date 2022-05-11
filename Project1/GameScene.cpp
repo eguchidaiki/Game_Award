@@ -15,10 +15,8 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer) {
 
 	nowState = is_Select;
 
-	selecter.Init(stage, player);
-	gamemain.Init(stage, player);
-
-	selecter.PlayAudio();
+	selecter.Init();
+	gamemain.Init();
 }
 
 //èâä˙âª
@@ -41,9 +39,6 @@ void GameScene::Update() {
 			gamemain.changecount = 0;
 			selecter.isChanging_GameMain = false;
 			nowState = is_Game;
-			
-			selecter.Finalize();
-			gamemain.PlayAudio();
 		}
 
 		break;
@@ -59,9 +54,6 @@ void GameScene::Update() {
 			selecter.isChanging_GameMain = false;
 			selecter.state = selecter.is_selecting;
 			nowState = is_Select;
-
-			gamemain.Finalize();
-			selecter.PlayAudio();
 		}
 
 		break;

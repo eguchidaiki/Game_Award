@@ -814,7 +814,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 {
-	if (Player::Get()->IsPressInStage(stage) == false)
+	if (Player::Get()->IsPressInStage() == false)
 	{
 		return false;
 	}

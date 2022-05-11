@@ -5,7 +5,7 @@
 #include "Sprite.h"
 #include "ParticleManager.h"
 
-/*ƒƒ‚ƒŠ‚ª‘å‚«‚­‚È‚è‚·‚¬‚éŒœ”O‚ª‚ ‚é‰ÓŠ‚ÍcharŒ^‚É‚µ‚Ä‚¢‚Ü‚·*/
+
 
 enum MapchipData
 {
@@ -18,11 +18,11 @@ enum MapchipData
 
 class PlayerBody;
 
-//ƒp[ƒeƒBƒNƒ‹”h¶ƒNƒ‰ƒX
+//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«æ´¾ç”Ÿã‚¯ãƒ©ã‚¹
 class ParticleSingle : public ParticlePrototype
 {
 public:
-	//ŠJnˆÊ’u•Û‘¶—p
+	//é–‹å§‹ä½ç½®ä¿å­˜ç”¨
 	RVector3 spos;
 
 	ParticleSingle()
@@ -38,7 +38,7 @@ public:
 
 class Stage final
 {
-public: //ƒVƒ“ƒOƒ‹ƒgƒ“‰»
+public: //ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³åŒ–
 	static Stage* Get();
 private:
 	Stage();
@@ -46,7 +46,7 @@ private:
 	~Stage();
 	Stage operator=(const Stage&) = delete;
 
-public: //ƒTƒuƒNƒ‰ƒX
+public: //ã‚µãƒ–ã‚¯ãƒ©ã‚¹
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
@@ -80,161 +80,161 @@ public: //ƒTƒuƒNƒ‰ƒX
 		std::vector<char> stageOffsetY;
 	};
 
-public: //’è”
-	static const int blockSize;     //ƒuƒƒbƒN‚Ì‘å‚«‚³
-	static const int halfBlockSize; //ƒuƒƒbƒN‚Ì”¼•ª‚Ì‘å‚«‚³
+public: //å®šæ•°
+	static const int blockSize;     //ãƒ–ãƒ­ãƒƒã‚¯ã®å¤§ãã•
+	static const int halfBlockSize; //ãƒ–ãƒ­ãƒƒã‚¯ã®åŠåˆ†ã®å¤§ãã•
 
-	static const int lineWidth;         //ü‚Ì‘¾‚³
-	static const int foldLineCount;     //Ü‚ê–Ú‚ÌŠÔŠu
-	static const XMFLOAT4 lineColor[2]; //ü‚ÌF
+	static const int lineWidth;         //ç·šã®å¤ªã•
+	static const int foldLineCount;     //æŠ˜ã‚Œç›®ã®é–“éš”
+	static const XMFLOAT4 lineColor[2]; //ç·šã®è‰²
 
-	RVector3 offset = {0,0,0};
+	RVector3 offset = { 0,0,0 };
 
-private: //Ã“Iƒƒ“ƒo•Ï”
+private: //é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
 	static int startPlayerPosX;
 	static int startPlayerPosY;
 	static unsigned char initFoldCount[4];
 
-public: //ƒƒ“ƒoŠÖ”
-	// ‰Šú‰»
+public: //ãƒ¡ãƒ³ãƒé–¢æ•°
+	// åˆæœŸåŒ–
 	void Init();
-	// XV
+	// æ›´æ–°
 	void Updata();
-	// •`‰æ
+	// æç”»
 	void Draw(int offsetX, int offsetY);
-	// ¶¬
+	// ç”Ÿæˆ
 	void Create();
 
 	/// <summary>
-	/// ƒXƒe[ƒWƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+	/// ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
 	/// </summary>
-	/// <param name="foldCount"> ƒvƒŒƒCƒ„[‚ªÜ‚ê‚é‰ñ”(0”Ô‚©‚çãA‰ºA¶A‰E) </param>
-	/// <param name="fileHandle"> ƒXƒe[ƒWƒtƒ@ƒCƒ‹‚ÌƒpƒX </param>
-	/// <returns> 0‚Å¬Œ÷A0ˆÈŠO‚Å¸”s </returns>
+	/// <param name="foldCount"> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒæŠ˜ã‚Œã‚‹å›æ•°(0ç•ªã‹ã‚‰ä¸Šã€ä¸‹ã€å·¦ã€å³) </param>
+	/// <param name="fileHandle"> ã‚¹ãƒ†ãƒ¼ã‚¸ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ </param>
+	/// <returns> 0ã§æˆåŠŸã€0ä»¥å¤–ã§å¤±æ•— </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
-	// ƒXƒe[ƒW‚ğÜ‚éEŠJ‚­
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’æŠ˜ã‚‹ãƒ»é–‹ã
 	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
 
 	/// <summary>
-	/// ƒXƒe[ƒW‚ª‚Ç‚¤Ü‚ê‚é‚©‚Ì—\‘ª
+	/// ã‚¹ãƒ†ãƒ¼ã‚¸ãŒã©ã†æŠ˜ã‚Œã‚‹ã‹ã®äºˆæ¸¬
 	/// </summary>
-	/// <param name="playerPos"> ƒvƒŒƒCƒ„[‚ÌÀ•W </param>
-	/// <param name="direction"> Ü‚è‚½‚¢•ûŒü </param>
-	/// <param name="returnMapchip"> ƒ}ƒbƒvƒ`ƒbƒv(o—Í) </param>
-	/// <returns> 0‚ÅÜ‚ê‚éA1‚ÅŠJ‚¯‚éA-1‚Å¸”s </returns>
+	/// <param name="playerPos"> ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™ </param>
+	/// <param name="direction"> æŠ˜ã‚ŠãŸã„æ–¹å‘ </param>
+	/// <param name="returnMapchip"> ãƒãƒƒãƒ—ãƒãƒƒãƒ—(å‡ºåŠ›) </param>
+	/// <returns> 0ã§æŠ˜ã‚Œã‚‹ã€1ã§é–‹ã‘ã‚‹ã€-1ã§å¤±æ•— </returns>
 	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip);
-	// ƒŠƒZƒbƒg
+	// ãƒªã‚»ãƒƒãƒˆ
 	void Reset(unsigned char foldCount[4]);
-	// “à•”ƒf[ƒ^‘Síœ
+	// å†…éƒ¨ãƒ‡ãƒ¼ã‚¿å…¨å‰Šé™¤
 	void DataClear();
 
-	// ”CˆÓ‚ÌÀ•W‚ª”CˆÓ‚ÌƒXƒe[ƒWƒ^ƒCƒ‹‚É‚¢‚é‚©‚Ç‚¤‚©
+	// ä»»æ„ã®åº§æ¨™ãŒä»»æ„ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã«ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
-	// ƒvƒŒƒCƒ„[‚Ìx²ã‚ÌŠJnˆÊ’u‚ğæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®xè»¸ä¸Šã®é–‹å§‹ä½ç½®ã‚’å–å¾—
 	inline static int GetStartPlayerPosX() { return startPlayerPosX; }
-	// ƒvƒŒƒCƒ„[‚Ìx²ã‚ÌŠJnˆÊ’u‚ğæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®xè»¸ä¸Šã®é–‹å§‹ä½ç½®ã‚’å–å¾—
 	inline static int GetStartPlayerPosY() { return startPlayerPosY; }
-	// ƒvƒŒƒCƒ„[‚ÌÜ‚ê‚é‰ñ”‚Ì‰Šúó‘Ô‚ğæ“¾
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æŠ˜ã‚Œã‚‹å›æ•°ã®åˆæœŸçŠ¶æ…‹ã‚’å–å¾—
 	static void GetInitFoldCount(unsigned char foldCount[4]);
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚Ìƒf[ƒ^‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
 	inline StageTileData* GetStageTileData(const size_t& stageNumber, const size_t& stageTileNumber);
-	// ƒXƒe[ƒW‚Ìƒf[ƒ^‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
 	inline StageData* GetStageData(const size_t& stageNumber);
-	// ‘SƒXƒe[ƒW‚Ìƒf[ƒ^‚ğæ“¾
+	// å…¨ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—
 	inline StageData* GetAllStageData();
-	// Stagedata‚ÌƒTƒCƒY‚ğæ“¾
+	// Stagedataã®ã‚µã‚¤ã‚ºã‚’å–å¾—
 	inline size_t GetStageDataSize() { return stageData.size(); }
-	// Stagetiledata‚ÌƒTƒCƒY‚ğæ“¾
+	// Stagetiledataã®ã‚µã‚¤ã‚ºã‚’å–å¾—
 	inline size_t GetStageTileDataSize(const size_t& stageNumber)
 	{
 		return stageData[stageNumber].stageTileData.size();
 	}
-	// ƒXƒe[ƒW‚Ì‰¡•‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®æ¨ªå¹…ã‚’å–å¾—
 	inline size_t GetStageWidth(const size_t& stageNumber) { return stageData[stageNumber].width; }
-	// ƒXƒe[ƒW‚Ìc•‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã®ç¸¦å¹…ã‚’å–å¾—
 	inline size_t GetStageHeight(const size_t& stageNumber) { return stageData[stageNumber].height; }
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚ÌX²‚ÌƒIƒtƒZƒbƒg‚ğ•Ô‚·
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®Xè»¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¿”ã™
 	inline char GetStageTileOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚ÌY²‚ÌƒIƒtƒZƒbƒg‚ğ•Ô‚·
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®Yè»¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¿”ã™
 	inline char GetStageTileOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚Ì•‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®å¹…ã‚’å–å¾—
 	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].width;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚Ì‚‚³‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®é«˜ã•ã‚’å–å¾—
 	inline size_t GetStageTileHeight(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].height;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚ÌX²‚ÌƒIƒtƒZƒbƒg‚Ì‰Šú’l‚ğ•Ô‚·
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®Xè»¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã®åˆæœŸå€¤ã‚’è¿”ã™
 	inline char GetStageTileInitOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return initStageData[stageNumber].stageTileData[stageTileNumber].offsetX;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚ÌY²‚ÌƒIƒtƒZƒbƒg‚Ì‰Šú’l‚ğ•Ô‚·
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®Yè»¸ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã®åˆæœŸå€¤ã‚’è¿”ã™
 	inline char GetStageTileInitOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return initStageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚Ì•‚Ì‰Šú’l‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®å¹…ã®åˆæœŸå€¤ã‚’å–å¾—
 	inline size_t GetStageTileInitWidth(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return initStageData[stageNumber].stageTileData[stageTileNumber].width;
 	}
-	// ƒXƒe[ƒWƒ^ƒCƒ‹‚Ì‚‚³‚Ì‰Šú’l‚ğæ“¾
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã®é«˜ã•ã®åˆæœŸå€¤ã‚’å–å¾—
 	inline size_t GetStageTileInitHeight(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return initStageData[stageNumber].stageTileData[stageTileNumber].height;
 	}
-	// ”CˆÓ‚ÌêŠ‚Ìƒ}ƒbƒvƒ`ƒbƒvî•ñ‚ğæ“¾
+	// ä»»æ„ã®å ´æ‰€ã®ãƒãƒƒãƒ—ãƒãƒƒãƒ—æƒ…å ±ã‚’å–å¾—
 	inline char GetStageMapchip(const size_t& stageNumber, const size_t& stageTileNumber, int mapchipPos)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].mapchip[mapchipPos];
 	}
-	// ”CˆÓ‚ÌÀ•W‚©‚ç‚Ç‚ÌƒXƒe[ƒWƒ^ƒCƒ‹‚É‚¢‚é‚©‚ğæ“¾
+	// ä»»æ„ã®åº§æ¨™ã‹ã‚‰ã©ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã«ã„ã‚‹ã‹ã‚’å–å¾—
 	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
-	// ”CˆÓ‚ÌÀ•W‚©‚ç‚Ç‚ÌƒXƒe[ƒWƒ^ƒCƒ‹‚É‚¢‚é‚©‚ğæ“¾(‰Šúó‘Ô)
+	// ä»»æ„ã®åº§æ¨™ã‹ã‚‰ã©ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã«ã„ã‚‹ã‹ã‚’å–å¾—(åˆæœŸçŠ¶æ…‹)
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 
-	//ƒp[ƒeƒBƒNƒ‹¶¬
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ç”Ÿæˆ
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
-	// ƒXƒe[ƒW‚ğÜ‚é
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’æŠ˜ã‚‹
 	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
-	// ƒXƒe[ƒW‚ğŠJ‚­
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageTile, const size_t& moveStageData);
+	// ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’é–‹ã
+	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData);
 
-	// ˜gü‚Ì•`‰æ
+	// æ ç·šã®æç”»
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction, int offsetX, int offsetY);
 
-	// ƒC[ƒWƒ“ƒO‚Ì‰Šú‰»
+	// ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®åˆæœŸåŒ–
 	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);
-	// ƒC[ƒWƒ“ƒO‚ÌXV
+	// ã‚¤ãƒ¼ã‚¸ãƒ³ã‚°ã®æ›´æ–°
 	void EaseingUpdate();
-	// ˆê”Ôã‚ÌƒXƒe[ƒWƒ^ƒCƒ‹‚ğ’T‚·
+	// ä¸€ç•ªä¸Šã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¿ã‚¤ãƒ«ã‚’æ¢ã™
 	int SearchTopStageTile();
 
-private: //ƒƒ“ƒo•Ï”
+private: //ãƒ¡ãƒ³ãƒå¤‰æ•°
 	std::vector<StageData> stageData;
 	std::vector<StageData> initStageData;
 
 	char* reverseMapchip;
 
-	UINT FoldHandle;  //Ü‚è–Ú‚Ì‰æ‘œƒnƒ“ƒhƒ‹
+	UINT FoldHandle;  //æŠ˜ã‚Šç›®ã®ç”»åƒãƒãƒ³ãƒ‰ãƒ«
 	UINT BlockHandle;
 	UINT EmptyHandle;
 	UINT GoalHandle;
 
-	Sprite FoldSprite; //Ü‚è–Ú‚ÌƒXƒvƒ‰ƒCƒg
+	Sprite FoldSprite; //æŠ˜ã‚Šç›®ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	Sprite MapchipSpriteBlock;
 	Sprite MapchipSpriteEmpty;
 	Sprite MapchipSpriteGoal;

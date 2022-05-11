@@ -1,6 +1,14 @@
 #include "GameMainManager.h"
 #include "InputManger.h"
 #include "Raki_DX12B.h"
+#include "Stage.h"
+#include "Player.h"
+
+namespace
+{
+Stage* stage = Stage::Get();
+Player* player = Player::Get();
+}
 
 GameMainManager::GameMainManager()
 {
@@ -10,17 +18,18 @@ GameMainManager::~GameMainManager()
 {
 }
 
-void GameMainManager::Init(Stage* stageptr, Player* playerptr)
+void GameMainManager::Init()
 {
-	stage = stageptr;
-	player = playerptr;
-
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 
-	playBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm02.wav");
+	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
+	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
 
+	ui.Init();
+
+	tutorial.Create();
 }
 
 void GameMainManager::Update()
@@ -39,47 +48,38 @@ void GameMainManager::Draw()
 
 void GameMainManager::Finalize()
 {
-	Audio::StopLoadedSound(playBGM);
-}
-
-void GameMainManager::PlayAudio()
-{
-	Audio::PlayLoadedSound(playBGM);
 }
 
 void GameMainManager::GameInstanceUpdate()
 {
+	//playerTile[0] = player->playerTile[0];
+	//playerTile[1] = player->playerTile[1];
+	//playerTile[2] = player->playerTile[2];
+	//playerTile[3] = player->playerTile[3];
+
+	ui.Update(playerTile, &Ischangecount);
+
+
+
 	//各ステージの処理
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-	if (Input::isKeyTrigger(DIK_2))
-	{
-		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-#ifdef _DEBUG
-	if (Input::isKeyTrigger(DIK_3))
-	{
-		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
 
-#endif // _DEBUG
-
-	if (InputManger::ResetTrigger())
+	if (InputManger::Get()->ResetTrigger())
 	{
 		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
-	player->Update(*stage, drawOffsetX, drawOffsetY);
+#endif // _DEBUG
+
+	player->Update(drawOffsetX, drawOffsetY);
+	player->Update(drawOffsetX, drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
@@ -88,14 +88,14 @@ void GameMainManager::GameInstanceUpdate()
 		player->IsLeftFold,
 		player->IsUpFold,
 		player->IsRightFold,
-		player->IsDownFold
+		player->IsDownFold,
 	};
 
 	bool IsOpens[4] = {
 		player->IsLeftOpen,
 		player->IsUpOpen,
 		player->IsRightOpen,
-		player->IsDownOpen
+		player->IsDownOpen,
 	};
 
 	stage->Updata();
@@ -123,6 +123,22 @@ void GameMainManager::GameInstanceUpdate()
 		player->OpenCount = 0;
 		player->IsOpenCountStart = false;
 	}
+
+	if (player->IsGoal && !Ischangecount)
+	{
+		Ischangecount = true;
+		changecount = 0;
+	}
+
+	if (Ischangecount)
+	{
+		changecount++;
+
+		if (changecount > 20)
+		{
+			IsGoSelect = true;
+		}
+	}
 }
 
 void GameMainManager::GameInstanceDraw()
@@ -132,6 +148,7 @@ void GameMainManager::GameInstanceDraw()
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
+	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
 }

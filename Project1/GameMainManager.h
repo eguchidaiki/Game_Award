@@ -1,27 +1,28 @@
-#pragma once
+﻿#pragma once
 
-#include "Stage.h"
-#include "Player.h"
 #include "UI.h"
 #include "Raki_imguiMgr.h"
+#include "Tutorial.h"
 
 #include <Audio.h>
 
 class GameMainManager
 {
 private:
-	Stage* stage;
-	Player* player;
-
 	// ゲームループで使う変数の宣言
 	UINT BackHandle;
 	Sprite Back;
 	unsigned char playerTile[4] = { 0 };
 	const int drawOffsetX = 320, drawOffsetY = 45;
 
+
+	//髻ｳ
+	SoundData menuBGM;
 	SoundData playBGM;
 
 	UI ui;
+
+	Tutorial tutorial;
 
 public:
 	bool IsGoSelect = false;
@@ -30,12 +31,10 @@ public:
 	GameMainManager();
 	~GameMainManager();
 
-	void Init(Stage* stageptr, Player* playerptr);
+	void Init();
 	void Update();
 	void Draw();
 	void Finalize();
-
-	void PlayAudio();
 
 private:
 	void GameInstanceUpdate();

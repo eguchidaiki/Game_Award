@@ -1,8 +1,16 @@
 #include "StageSelecter.h"
 #include <string>
 
-
 #include <Raki_imguiMgr.h>
+
+#include "Stage.h"
+#include "Player.h"
+
+namespace
+{
+Stage* stagePtr = Stage::Get();
+Player* playerPtr = Player::Get();
+}
 
 StageSelecter::StageSelecter()
 {
@@ -13,15 +21,11 @@ StageSelecter::~StageSelecter()
 {
 }
 
-void StageSelecter::Init(Stage *stageptr, Player* playerptr)
+void StageSelecter::Init()
 {
 	//リソース読み込み
 	LoadSprite();
 	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
-
-	//ポインタ設定
-	stagePtr = stageptr;
-	playerPtr = playerptr;
 
 	//最初のページ
 	nowpage = page_1_4;

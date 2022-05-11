@@ -1,8 +1,4 @@
 #pragma once
-#include "Stage.h"
-#include "Player.h"
-
-#include <Audio.h>
 #include <memory>
 #include <array>
 #include <TexManager.h>
@@ -14,15 +10,13 @@ class StageSelecter
 {
 private:
 	//ステージ本編を管理するクラスのポインタ（参照しているだけなのでweak_ptrにしたい）
-	Stage *stagePtr;
-	Player* playerPtr;
 
 public:
 	StageSelecter();
 	~StageSelecter();
 
 	//初期化
-	void Init(Stage *stageptr,Player *playerptr);
+	void Init();
 	//更新
 	void Update();
 	//描画
@@ -44,8 +38,6 @@ public:
 		is_stageSelected_waiting,	//ステージ選択完了、遷移演出実行中
 	};
 	NOW_SELECTER_STATE state;
-
-	void PlayAudio();
 
 private:
 	//ステージ選択画面のリソース
@@ -71,8 +63,12 @@ private:
 	};
 	PAGE_MOVE_DIR pageMoveDir;
 
+	
+
 	//表示番号
 	int nowDisplayNum = 0;
+
+	
 
 	unsigned char playerTile[4] = { 0 };
 
@@ -94,9 +90,6 @@ private:
 	const int NUMBOX_SPACE = 60;
 	void CheckLoadStage(int boxnum);
 	void CheckToStageChangeInput();
-
-	//音
-	SoundData menuBGM;
 
 };
 

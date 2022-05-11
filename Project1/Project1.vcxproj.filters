@@ -1,77 +1,228 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <FxCompile Include="Resources\Shaders\mpEffectPixelShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\mpPixelShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\mpVertexShader.hlsl" />
-    <FxCompile Include="Resources\Shaders\ParticleGS.hlsl" />
-    <FxCompile Include="Resources\Shaders\ParticlePS.hlsl" />
-    <FxCompile Include="Resources\Shaders\ParticleVS.hlsl" />
-    <FxCompile Include="Resources\Shaders\SpriteGS.hlsl" />
-    <FxCompile Include="Resources\Shaders\SpritePS.hlsl" />
-    <FxCompile Include="Resources\Shaders\SpriteVS.hlsl" />
+    <FxCompile Include="Resources\Shaders\mpEffectPixelShader.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\mpPixelShader.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\mpVertexShader.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ParticleGS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ParticlePS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\ParticleVS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteGS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpritePS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ActFlag.cpp" />
-    <ClCompile Include="BaseScene.cpp" />
-    <ClCompile Include="Easing.cpp" />
-    <ClCompile Include="GameMainManager.cpp" />
-    <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="goalParticle.cpp" />
-    <ClCompile Include="InputManger.cpp" />
-    <ClCompile Include="ISceneChanger.cpp" />
-    <ClCompile Include="LoadFile.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerBody.cpp" />
-    <ClCompile Include="PlayerFoot.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="StageSelecter.cpp" />
-    <ClCompile Include="testParticle.cpp" />
-    <ClCompile Include="Title.cpp" />
-    <ClCompile Include="UI.cpp" />
-    <ClCompile Include="SceneChangeDirectioner.cpp" />
+    <ClCompile Include="ActFlag.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Easing.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseScene.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMainManager.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManger.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneChanger.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadFile.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="stage.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="StageSelecter.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="goalParticle.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="testParticle.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerBody.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerFoot.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ActFlag.h" />
-    <ClInclude Include="BaseScene.h" />
-    <ClInclude Include="Easing.h" />
-    <ClInclude Include="GameMainManager.h" />
-    <ClInclude Include="GameScene.h" />
-    <ClInclude Include="General.h" />
-    <ClInclude Include="goalParticle.h" />
-    <ClInclude Include="InputManger.h" />
-    <ClInclude Include="ISceneChanger.h" />
-    <ClInclude Include="LoadFile.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerBody.h" />
-    <ClInclude Include="PlayerFoot.h" />
-    <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Stage.h" />
-    <ClInclude Include="StageSelecter.h" />
-    <ClInclude Include="Task.h" />
-    <ClInclude Include="testParticle.h" />
-    <ClInclude Include="Title.h" />
-    <ClInclude Include="UI.h" />
-    <ClInclude Include="SceneChangeDirectioner.h" />
+    <ClInclude Include="ActFlag.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Easing.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseScene.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMainManager.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="General.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManger.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ISceneChanger.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFile.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="stage.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="StageSelecter.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>ヘッダーファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="testParticle.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="goalParticle.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerBody.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerFoot.h">
+      <Filter>Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\backSin.png" />
-    <Image Include="Resources\block.png" />
-    <Image Include="Resources\goal.png" />
-    <Image Include="Resources\player.png" />
-    <Image Include="Resources\playerBody02.png" />
-    <Image Include="Resources\playerLegs.png" />
-    <Image Include="Resources\playerSub.png" />
-    <Image Include="Resources\stage_enpty.png" />
+    <Image Include="Resources\block.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\backSin.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\goal.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\player.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\playerBody02.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\stage_enpty.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\playerLegs.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
+    <Image Include="Resources\playerSub.png">
+      <Filter>リソースファイル</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\mpShaderHeader.hlsli" />
-    <None Include="Resources\Shaders\ParticleShaderHeader.hlsli" />
-    <None Include="Resources\Shaders\Sprite.hlsli" />
-    <None Include="Resources\stage\stage1.csv" />
-    <None Include="Resources\stage\stage2.csv" />
-    <None Include="Resources\stage\stage3.csv" />
+    <None Include="Resources\Shaders\mpShaderHeader.hlsli">
+      <Filter>リソースファイル\Shader</Filter>
+    </None>
+    <None Include="Resources\Shaders\ParticleShaderHeader.hlsli">
+      <Filter>リソースファイル\Shader</Filter>
+    </None>
+    <None Include="Resources\Shaders\Sprite.hlsli">
+      <Filter>リソースファイル\Shader</Filter>
+    </None>
+    <None Include="Resources\stage\stage1.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage2.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage3.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="リソースファイル">
+      <UniqueIdentifier>{69955774-79e3-4230-b4db-ccd384f35dfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソースファイル">
+      <UniqueIdentifier>{5af8784c-614f-44cc-be91-198765f9d924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダーファイル">
+      <UniqueIdentifier>{ec3c86c5-4e45-4d16-9224-dbc80c573fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソースファイル\Shader">
+      <UniqueIdentifier>{71bbf044-018b-4c79-bb9f-ede26d9784a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect">
+      <UniqueIdentifier>{821a4f3f-bda9-41d5-a9d7-98f800b3dd07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソースファイル\Stage">
+      <UniqueIdentifier>{4f5edd65-77b5-4947-b508-2858f31800cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{119f03a6-2661-4049-ad4d-e930682c77e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

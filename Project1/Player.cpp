@@ -20,7 +20,7 @@ Player* Player::Get()
 
 Player::Player() :
 	FloorHeight(640.0f),
-	CenterPosition{100.0f, 100.0f, 0.0f},
+	CenterPosition{ 100.0f, 100.0f, 0.0f },
 	IsLeft(),
 	IsRight(),
 	Body_One{},
@@ -207,7 +207,7 @@ void Player::Update(int offsetX, int offsetY)
 
 	if (IsGoal)
 	{
-		goalParticle.Init({0.0f, 0.0f, 0.0f}, 1.0f, 10, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f});
+		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	}
 	goalParticle.Update();
 }
@@ -737,7 +737,7 @@ void Player::Mouse_Input(int offsetX, int offsetY)
 		ReleasePos.y -= offsetY;
 	}
 
-	DragDis = {ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y};
+	DragDis = { ReleasePos.x - PressPos.x , ReleasePos.y - PressPos.y };
 }
 
 void Player::Mouse_Move(int offsetX, int offsetY)
@@ -750,7 +750,7 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
-		PressCount < 15 &&
+		PressCount < 20 &&
 		Input::isMouseClicked(MOUSE_L) &&
 		IsPressInStage())
 	{
@@ -792,7 +792,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
-		PressCount >= 15 &&
+		PressCount >= 20 &&
 		Input::isMouseClicked(MOUSE_L))
 	{
 		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
@@ -910,7 +910,7 @@ bool Player::IsMouseClickFold(BodyType Direction)
 				PlayerTile = j;
 			}
 
-			if (stage->IsPositionTile({ReleasePos.x,ReleasePos.y,0.0f}, i, j))
+			if (stage->IsPositionTile({ ReleasePos.x, ReleasePos.y, 0.0f }, i, j))
 			{
 				ReleaseStage = i;
 				ReleaseTile = j;
@@ -999,7 +999,7 @@ bool Player::IsMouseClickOpen(BodyType Direction)
 				PlayerTile = j;
 			}
 
-			if (stage->IsPositionTile({PressPos.x,PressPos.y,0.0f}, i, j))
+			if (stage->IsPositionTile({ PressPos.x, PressPos.y, 0.0f }, i, j))
 			{
 				PressStage = i;
 				PressTile = j;
@@ -2338,7 +2338,7 @@ void Player::IsHitPlayerBody()
 	int MapchipPos = 0;
 
 	//マップチップの場所(ゴール用)
-	int MapchipPos_Goal[3] = {0};
+	int MapchipPos_Goal[3] = { 0 };
 
 	//押し出す方向を決めるための距離
 	float BuriedX = 0;
@@ -2364,7 +2364,7 @@ void Player::IsHitPlayerBody()
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage->IsPositionTile({FaceLeft,CenterPosition.y - 30,0.0f}, i, j))
+			if (stage->IsPositionTile({ FaceLeft, CenterPosition.y - 30 ,0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
@@ -2402,7 +2402,7 @@ void Player::IsHitPlayerBody()
 				}
 			}
 			//左下
-			if (stage->IsPositionTile({FaceLeft,FaceDown,0.0f}, i, j))
+			if (stage->IsPositionTile({ FaceLeft, FaceDown, 0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
@@ -2427,7 +2427,7 @@ void Player::IsHitPlayerBody()
 				}
 			}
 			//右上
-			if (stage->IsPositionTile({FaceRight,CenterPosition.y - 30,0.0f}, i, j))
+			if (stage->IsPositionTile({ FaceRight, CenterPosition.y - 30, 0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
@@ -2466,7 +2466,7 @@ void Player::IsHitPlayerBody()
 
 			}
 			//右下
-			if (stage->IsPositionTile({FaceRight,FaceDown,0.0f}, i, j))
+			if (stage->IsPositionTile({ FaceRight, FaceDown, 0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
@@ -2540,7 +2540,7 @@ void Player::IsHitPlayerBody()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage->IsPositionTile({FaceLeft - 20,FaceUp - 20,0.0f}, i, j))
+			if (stage->IsPositionTile({ FaceLeft - 20, FaceUp - 20, 0.0f }, i, j))
 			{
 				left_mapchip_tile = (left_mapchip - 1) % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
@@ -2553,7 +2553,7 @@ void Player::IsHitPlayerBody()
 				}
 			}
 
-			if (stage->IsPositionTile({FaceRight + 20,FaceUp - 20,0.0f}, i, j))
+			if (stage->IsPositionTile({ FaceRight + 20, FaceUp - 20, 0.0f }, i, j))
 			{
 				right_mapchip_tile = (right_mapchip + 1) % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
@@ -2623,10 +2623,10 @@ bool Player::IsFall()
 
 void Player::SetBodyStatus(bool arrangement[4])
 {
-	arrangement[0] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
+	arrangement[0] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
 	arrangement[1] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
 	arrangement[2] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
-	arrangement[3] = (Body_One.IsActivate && Body_One.IsOpen) || (Body_Three.IsActivate && Body_Three.IsOpen);
+	arrangement[3] = (Body_Two.IsActivate && Body_Two.IsOpen) || (Body_Four.IsActivate && Body_Four.IsOpen);
 }
 
 bool Player::IsReverseHitFace(const unsigned char& direction)
@@ -2655,7 +2655,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 	int down_mapchip_tile;
 
 	//反転したマップチップたち
-	char* ReverseMapchips = {0};
+	char* ReverseMapchips = { 0 };
 
 	//折れるかどうか(プレイヤーの中心座標)
 	int CenterPositionFold = stage->FoldSimulation(CenterPosition, direction, &ReverseMapchips);
@@ -2675,7 +2675,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
 			//左上
-			if (stage->IsPositionTile({CenterPosition.x - 25,CenterPosition.y - 30,0.0f}, i, j))
+			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y - 30, 0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
@@ -2688,7 +2688,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				}
 			}
 			//左下
-			if (stage->IsPositionTile({CenterPosition.x - 25,CenterPosition.y + 33,0.0f}, i, j))
+			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y + 33, 0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
@@ -2701,7 +2701,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				}
 			}
 			//右上
-			if (stage->IsPositionTile({CenterPosition.x + 25,CenterPosition.y - 30,0.0f}, i, j))
+			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y - 30, 0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
@@ -2714,7 +2714,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				}
 			}
 			//右下
-			if (stage->IsPositionTile({CenterPosition.x + 25,CenterPosition.y + 33,0.0f}, i, j))
+			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y + 33, 0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
