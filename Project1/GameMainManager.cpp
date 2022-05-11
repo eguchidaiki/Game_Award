@@ -19,8 +19,8 @@ void GameMainManager::Init(Stage* stageptr, Player* playerptr)
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 
-	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
-	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
+	playBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm02.wav");
+
 }
 
 void GameMainManager::Update()
@@ -39,6 +39,12 @@ void GameMainManager::Draw()
 
 void GameMainManager::Finalize()
 {
+	Audio::StopLoadedSound(playBGM);
+}
+
+void GameMainManager::PlayAudio()
+{
+	Audio::PlayLoadedSound(playBGM);
 }
 
 void GameMainManager::GameInstanceUpdate()

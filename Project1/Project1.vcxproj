@@ -167,6 +167,7 @@
     <ClCompile Include="PlayerBody.cpp" />
     <ClCompile Include="PlayerFoot.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SceneChangeDirectioner.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageSelecter.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="PlayerFoot.h" />
+    <ClInclude Include="SceneChangeDirectioner.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageSelecter.h" />

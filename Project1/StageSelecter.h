@@ -2,6 +2,7 @@
 #include "Stage.h"
 #include "Player.h"
 
+#include <Audio.h>
 #include <memory>
 #include <array>
 #include <TexManager.h>
@@ -44,6 +45,8 @@ public:
 	};
 	NOW_SELECTER_STATE state;
 
+	void PlayAudio();
+
 private:
 	//ステージ選択画面のリソース
 	std::array<Sprite, 20> selectImg_1_4;
@@ -68,12 +71,8 @@ private:
 	};
 	PAGE_MOVE_DIR pageMoveDir;
 
-	
-
 	//表示番号
 	int nowDisplayNum = 0;
-
-	
 
 	unsigned char playerTile[4] = { 0 };
 
@@ -95,6 +94,9 @@ private:
 	const int NUMBOX_SPACE = 60;
 	void CheckLoadStage(int boxnum);
 	void CheckToStageChangeInput();
+
+	//音
+	SoundData menuBGM;
 
 };
 

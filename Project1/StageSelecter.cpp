@@ -17,6 +17,7 @@ void StageSelecter::Init(Stage *stageptr, Player* playerptr)
 {
 	//リソース読み込み
 	LoadSprite();
+	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
 
 	//ポインタ設定
 	stagePtr = stageptr;
@@ -71,6 +72,13 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
+	Audio::StopLoadedSound(menuBGM);
+}
+
+void StageSelecter::PlayAudio()
+{
+	//再生
+	Audio::PlayLoadedSound(menuBGM);
 }
 
 void StageSelecter::LoadSprite()

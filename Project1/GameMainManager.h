@@ -19,15 +19,9 @@ private:
 	unsigned char playerTile[4] = { 0 };
 	const int drawOffsetX = 320, drawOffsetY = 45;
 
-
-	//音
-	SoundData menuBGM;
 	SoundData playBGM;
 
 	UI ui;
-
-
-
 
 public:
 	bool IsGoSelect = false;
@@ -40,6 +34,8 @@ public:
 	void Update();
 	void Draw();
 	void Finalize();
+
+	void PlayAudio();
 
 private:
 	void GameInstanceUpdate();
