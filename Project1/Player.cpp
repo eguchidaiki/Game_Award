@@ -750,7 +750,7 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
-		PressCount < 15 &&
+		PressCount < 20 &&
 		Input::isMouseClicked(MOUSE_L) &&
 		IsPressInStage())
 	{
@@ -792,7 +792,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
-		PressCount >= 15 &&
+		PressCount >= 20 &&
 		Input::isMouseClicked(MOUSE_L))
 	{
 		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
