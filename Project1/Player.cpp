@@ -2359,6 +2359,7 @@ void Player::IsHitPlayerBody()
 		CenterPosition.y = 25;
 	}
 
+	//顔の四隅との当たり判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
@@ -2555,7 +2556,7 @@ void Player::IsHitPlayerBody()
 
 			if (stage->IsPositionTile({ FaceRight + 20, FaceUp - 20, 0.0f }, i, j))
 			{
-				right_mapchip_tile = (right_mapchip + 1) % stage->GetStageTileWidth(i, j);
+				right_mapchip_tile = (right_mapchip) % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + right_mapchip_tile;
@@ -2568,7 +2569,13 @@ void Player::IsHitPlayerBody()
 		}
 	}
 
-	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && IsInitJump == false)
+	if ((JumpCountLeft <= 1 && IsLeft && Body_Two.IsHitLeft) || (jumpCountRight <= 1 && IsRight && Body_Two.IsHitRight))
+	{
+		IsJump = false;
+		IsWalk = false;
+		IsInitJump = true;
+	}
+	else if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && IsInitJump == false)
 	{
 		IsJump = true;
 		FallSpeed = -5.6f;

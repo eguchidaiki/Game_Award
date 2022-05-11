@@ -8,8 +8,8 @@
 
 namespace
 {
-Stage* stagePtr = Stage::Get();
-Player* playerPtr = Player::Get();
+	Stage* stagePtr = Stage::Get();
+	Player* playerPtr = Player::Get();
 }
 
 StageSelecter::StageSelecter()
@@ -217,7 +217,7 @@ void StageSelecter::CheckLoadStage(int boxnum)
 	{
 	case StageSelecter::page_1_4:
 		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}
@@ -336,6 +336,10 @@ void StageSelecter::CheckToStageChangeInput()
 	}
 
 	//クリックされているボックスと、現在のページから、どのステージに移動するのかを求める
-	if(isHit){ CheckLoadStage(selectingBoxNum); }
+	if (isHit)
+	{
+		CheckLoadStage(selectingBoxNum);
+		SelectStageNum = selectingBoxNum;
+	}
 
 }

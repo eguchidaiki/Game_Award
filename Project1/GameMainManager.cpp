@@ -59,23 +59,17 @@ void GameMainManager::GameInstanceUpdate()
 
 	ui.Update(playerTile, &Ischangecount);
 
-
-
-	//各ステージの処理
-#ifdef _DEBUG
-	if (Input::isKeyTrigger(DIK_1))
-	{
-		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-
-	if (InputManger::Get()->ResetTrigger())
+	if (IsStart == false)
 	{
 		stage->Reset(playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
+		IsStart = true;
 	}
+
+	//各ステージの処理
+#ifdef _DEBUG
+	
 #endif // _DEBUG
 
 	player->Update(drawOffsetX, drawOffsetY);
@@ -141,6 +135,24 @@ void GameMainManager::GameInstanceUpdate()
 	}
 }
 
+void GameMainManager::SetSelectToGame(int SelectStageNum)
+{
+	//ゲームシーンに移るときのセットアップ
+	Ischangecount = false;
+	IsGoSelect = false;
+	changecount = 0;
+	IsStart = false;
+	NowScene = SelectStageNum;
+}
+
+void GameMainManager::SetGameToSelect()
+{
+	//セレクトシーンに戻るときのセットアップ
+	Ischangecount = false;
+	IsGoSelect = false;
+	changecount = 0;
+}
+
 void GameMainManager::GameInstanceDraw()
 {
 	//各ステージの処理
@@ -151,4 +163,5 @@ void GameMainManager::GameInstanceDraw()
 	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
+	tutorial.Draw(drawOffsetX, drawOffsetY);
 }

@@ -30,6 +30,9 @@ public:
 	//ゲームメインへ遷移するフラグ
 	bool isChanging_GameMain = false;
 
+	//選択したステージ番号(GameSceneに渡す用)
+	int SelectStageNum = 0;
+
 	//現在の状態
 	enum NOW_SELECTER_STATE
 	{
