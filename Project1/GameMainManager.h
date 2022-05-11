@@ -2,6 +2,7 @@
 
 #include "UI.h"
 #include "Raki_imguiMgr.h"
+#include "Tutorial.h"
 
 #include <Audio.h>
 
@@ -21,6 +22,7 @@ private:
 
 	UI ui;
 
+	Tutorial tutorial;
 
 public:
 	bool IsGoSelect = false;

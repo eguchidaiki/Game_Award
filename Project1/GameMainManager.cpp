@@ -28,6 +28,8 @@ void GameMainManager::Init()
 	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
 
 	ui.Init();
+
+	tutorial.Create();
 }
 
 void GameMainManager::Update()
@@ -56,6 +58,7 @@ void GameMainManager::GameInstanceUpdate()
 	//playerTile[3] = player->playerTile[3];
 
 	ui.Update(playerTile, &Ischangecount);
+
 
 
 	//各ステージの処理
