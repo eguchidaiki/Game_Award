@@ -52,12 +52,12 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	playerTile[0] = player->playerTile[0];
-	playerTile[1] = player->playerTile[1];
-	playerTile[2] = player->playerTile[2];
-	playerTile[3] = player->playerTile[3];
+	//playerTile[0] = player->playerTile[0];
+	//playerTile[1] = player->playerTile[1];
+	//playerTile[2] = player->playerTile[2];
+	//playerTile[3] = player->playerTile[3];
 
-	ui.Update(stage, player, playerTile, &Ischangecount);
+	ui.Update(playerTile, &Ischangecount);
 
 
 
@@ -66,18 +66,6 @@ void GameMainManager::GameInstanceUpdate()
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-	if (Input::isKeyTrigger(DIK_2))
-	{
-		stage->LoadStage("./Resources/stage/stage2.csv", playerTile);
-		player->Init();
-		player->BodySetUp(playerTile);
-	}
-	if (Input::isKeyTrigger(DIK_3))
-	{
-		stage->LoadStage("./Resources/stage/stage3.csv", playerTile);
 		player->Init();
 		player->BodySetUp(playerTile);
 	}
@@ -99,8 +87,8 @@ void GameMainManager::GameInstanceUpdate()
 	bool IsFolds[4] = {
 		player->IsLeftFold,
 		player->IsUpFold,
-		player->IsRightFold, 
-		player->IsDownFold, 
+		player->IsRightFold,
+		player->IsDownFold,
 	};
 
 	bool IsOpens[4] = {
