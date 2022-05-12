@@ -6,10 +6,10 @@
 
 namespace
 {
-static size_t i = 0;
-static ActFlag* actFlag = ActFlag::Get();
+	static size_t i = 0;
+	static ActFlag* actFlag = ActFlag::Get();
 
-static Stage* stage = Stage::Get();
+	static Stage* stage = Stage::Get();
 }
 
 Player* Player::Get()
@@ -89,13 +89,13 @@ void Player::Init()
 void Player::Update(int offsetX, int offsetY)
 {
 	//マウス入力
-	Mouse_Input(offsetX, offsetY);
+	//Mouse_Input(offsetX, offsetY);
 
 	//マウス移動
-	Mouse_Move(offsetX, offsetY);
+	//Mouse_Move(offsetX, offsetY);
 
 	//キー移動
-	//Key_Move();
+	Key_Move();
 
 	if (IsJump == true)
 	{
@@ -128,13 +128,13 @@ void Player::Update(int offsetX, int offsetY)
 	IsAroundBlock();
 
 	//キー折る・開く入力
-	//Key_FoldOpen();
+	Key_FoldOpen();
 
 	//キースライド
 	//Key_Slide();
 
 	//マウス折る・開く入力
-	Mouse_FoldOpen(offsetX, offsetY);
+	//Mouse_FoldOpen(offsetX, offsetY);
 
 	Fold();
 
@@ -319,20 +319,20 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	/*ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	ImGui::Text("IsGoal:%d", IsGoal);
-	ImGui::Text("PressCount:%d", PressCount);
-	ImGui::Text("IsWalk:%d", IsWalk);
-	ImGui::Text("IsJump:%d", IsJump);
-	ImGui::Text("IsInitJump:%d", IsInitJump);
-	ImGui::Text("x:%f", CenterPosition.x);
-	ImGui::Text("y:%f", CenterPosition.y);
-	ImGui::Text("z:%f", CenterPosition.z);
-	ImGui::Text("IsLeftSlide:%d", IsLeftSlide);
-	ImGui::Text("IsRightSlide:%d", IsRightSlide);
-	ImGui::Text("IsUpSlide:%d", IsUpSlide);
-	ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();*/
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	ImGui::Text("IsGoal:%d", IsUpBlocked);
+	//ImGui::Text("PressCount:%d", PressCount);
+	//ImGui::Text("IsWalk:%d", IsWalk);
+	//ImGui::Text("IsJump:%d", IsJump);
+	//ImGui::Text("IsInitJump:%d", IsInitJump);
+	//ImGui::Text("x:%f", CenterPosition.x);
+	//ImGui::Text("y:%f", CenterPosition.y);
+	//ImGui::Text("z:%f", CenterPosition.z);
+	//ImGui::Text("IsLeftSlide:%d", IsLeftSlide);
+	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
+	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
+	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
+	ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
@@ -391,8 +391,8 @@ void Player::Key_Move()
 void Player::Key_FoldOpen()
 {
 	//折る入力
-	//if (InputManger::SubLeftTrigger() && Player_IsAction == false && Body_One.IsActivate == true && Body_One.IsFold == false)
 	if (actFlag->FoldLeft())
+		//if (actFlag->FoldLeft())
 	{ //左に折る
 		if (IsDirectionFoldAll(BodyType::left))
 		{
@@ -409,8 +409,8 @@ void Player::Key_FoldOpen()
 		//	return;
 		//}
 	}
-	//if (InputManger::SubUpTrigger() && Player_IsAction == false && Body_Two.IsActivate == true && Body_Two.IsFold == false)
 	if (actFlag->FoldUp())
+		//if (actFlag->FoldUp())
 	{ //上に折る
 		if (IsDirectionFoldAll(BodyType::up))
 		{
@@ -427,8 +427,8 @@ void Player::Key_FoldOpen()
 		//	return;
 		//}
 	}
-	//if (InputManger::SubRightTrigger() && Player_IsAction == false && Body_Three.IsActivate == true && Body_Three.IsFold == false)
 	if (actFlag->FoldRight())
+		//if (actFlag->FoldRight())
 	{ //右に折る
 		if (IsDirectionFoldAll(BodyType::right))
 		{
@@ -445,8 +445,8 @@ void Player::Key_FoldOpen()
 		//	return;
 		//}
 	}
-	//if (InputManger::SubDownTrigger() && Player_IsAction == false && Body_Four.IsActivate == true && Body_Four.IsFold == false)
 	if (actFlag->FoldDown())
+		//if (actFlag->FoldDown())
 	{ //下に折る
 		if (IsDirectionFoldAll(BodyType::down))
 		{
@@ -465,8 +465,8 @@ void Player::Key_FoldOpen()
 	}
 
 	//開く入力
-	//if (InputManger::SubLeftTrigger() && Body_One.IsActivate == true && Body_One.IsFold == true && Body_One.AfterBodyFoldCount == 0)
 	if (actFlag->OpenLeft())
+		//if (actFlag->OpenLeft())
 	{ //左に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -480,8 +480,8 @@ void Player::Key_FoldOpen()
 		//	return;
 		//}
 	}
-	//if (InputManger::SubUpTrigger() && Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0 && IsUpBlocked == true)
 	if (actFlag->OpenUp())
+		//if (actFlag->OpenUp())
 	{ //上に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -495,8 +495,8 @@ void Player::Key_FoldOpen()
 		//	return;
 		//}
 	}
-	//if (InputManger::SubRightTrigger() && Body_Three.IsActivate == true && Body_Three.IsFold == true && Body_Three.AfterBodyFoldCount == 0)
 	if (actFlag->OpenRight())
+		//if (actFlag->OpenRight())
 	{ //右に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -510,8 +510,8 @@ void Player::Key_FoldOpen()
 		//	return;
 		//}
 	}
-	//if (InputManger::SubDownTrigger() && Body_Four.IsActivate == true && Body_Four.IsFold == true && Body_Four.AfterBodyFoldCount == 0)
 	if (actFlag->OpenDown())
+		//if (actFlag->OpenDown())
 	{ //下に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -750,7 +750,7 @@ void Player::Mouse_Move(int offsetX, int offsetY)
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
 		PressCount != 0 &&
-		PressCount < 20 &&
+		PressCount < 30 &&
 		Input::isMouseClicked(MOUSE_L) &&
 		IsPressInStage())
 	{
@@ -792,7 +792,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 {
 	if (ReleasePos.x != 0.0f &&
 		ReleasePos.y != 0.0f &&
-		PressCount >= 20 &&
+		PressCount >= 30 &&
 		Input::isMouseClicked(MOUSE_L))
 	{
 		if (fabs(ReleasePos.x - PressPos.x) > fabs(ReleasePos.y - PressPos.y))
@@ -807,9 +807,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if (((Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					  Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
-					 (Body_One.IsActivate == true && Body_One.IsFold == true &&
-					  Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
+					(Body_One.IsActivate == true && Body_One.IsFold == true &&
+						Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
 					IsMouseClickOpen(BodyType::right))
 				{
 					OpenCount = 0;
@@ -828,9 +828,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_One.IsActivate == true && Body_One.IsFold == true &&
-					 Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
-					 Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					 Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
+					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
+					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
 					IsMouseClickOpen(BodyType::left))
 				{
 					OpenCount = 0;
@@ -853,9 +853,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
-					 Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
+					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
 					IsMouseClickOpen(BodyType::down))
 				{
 					OpenCount = 0;
@@ -876,9 +876,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
-					 Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
+					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
 					IsUpBlocked == true && IsMouseClickOpen(BodyType::up))
 				{
 					OpenCount = 0;
@@ -1913,7 +1913,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::left &&
-					 Body_One.IsFold == true)
+				Body_One.IsFold == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
 				Body_One.Ease.maxTime = 1.2f;
@@ -1938,7 +1938,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::left &&
-					 Body_Three.IsFold == true)
+				Body_Three.IsFold == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
 				Body_Three.Ease.maxTime = 1.2f;
@@ -2027,7 +2027,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::up &&
-					 Body_Two.IsFold == true)
+				Body_Two.IsFold == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -2052,7 +2052,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::up &&
-					 Body_Four.IsFold == true)
+				Body_Four.IsFold == true)
 			{
 				Body_Four.Ease.addTime = 0.1f;
 				Body_Four.Ease.maxTime = 1.2f;
@@ -2141,7 +2141,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::right &&
-					 Body_Three.IsFold == true)
+				Body_Three.IsFold == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
 				Body_Three.Ease.maxTime = 1.2f;
@@ -2166,7 +2166,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::right &&
-					 Body_One.IsFold == true)
+				Body_One.IsFold == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
 				Body_One.Ease.maxTime = 1.2f;
@@ -2256,7 +2256,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::down &&
-					 Body_Two.IsFold == true)
+				Body_Two.IsFold == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -2281,7 +2281,7 @@ void Player::Open()
 				}
 			}
 			else if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down &&
-					 Body_Four.IsFold == true)
+				Body_Four.IsFold == true)
 			{
 				Body_Four.Ease.addTime = 0.1f;
 				Body_Four.Ease.maxTime = 1.2f;
@@ -2352,7 +2352,6 @@ void Player::IsHitPlayerBody()
 	if (CenterPosition.x - 25 <= stage->offset.x)
 	{
 		CenterPosition.x = 25;
-		IsWalk = false;
 	}
 	if (CenterPosition.y - 25 <= stage->offset.y)
 	{
@@ -2391,10 +2390,7 @@ void Player::IsHitPlayerBody()
 					MapchipPos = (up_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
 					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 					{
-						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0)
-						{
-							IsUpBlocked = false;
-						}
+						IsUpBlocked = false;
 					}
 					else
 					{
@@ -2454,10 +2450,7 @@ void Player::IsHitPlayerBody()
 					MapchipPos = (up_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
 					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
 					{
-						if (Body_Two.IsActivate == true && Body_Two.IsFold == true && Body_Two.AfterBodyFoldCount == 0)
-						{
-							IsUpBlocked = false;
-						}
+						IsUpBlocked = false;
 					}
 					else
 					{
@@ -2571,16 +2564,16 @@ void Player::IsHitPlayerBody()
 
 	if ((JumpCountLeft <= 1 && IsLeft && Body_Two.IsHitLeft) || (jumpCountRight <= 1 && IsRight && Body_Two.IsHitRight))
 	{
-		IsJump = false;
+		/*IsJump = false;
 		IsWalk = false;
-		IsInitJump = true;
+		IsInitJump = true;*/
 	}
 	else if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && IsInitJump == false)
 	{
-		IsJump = true;
+		/*IsJump = true;
 		FallSpeed = -5.6f;
 		IsWalk = true;
-		IsInitJump = true;
+		IsInitJump = true;*/
 	}
 
 	if (FallCount > 0)
@@ -2743,19 +2736,19 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == false)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == false && Body_One.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == false)
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == false && Body_Two.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == false)
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == false && Body_Three.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == false)
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == false && Body_Four.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}

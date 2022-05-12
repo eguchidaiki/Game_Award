@@ -16,7 +16,7 @@ enum MapchipData
 	START = 4
 };
 
-class PlayerBody;
+class Player;
 
 //パーティクル派生クラス
 class ParticleSingle : public ParticlePrototype

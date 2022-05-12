@@ -796,10 +796,10 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && Player::Get()->IsInitJump == false)
 	{
-		Player::Get()->IsJump = true;
+		/*Player::Get()->IsJump = true;
 		Player::Get()->FallSpeed = -5.6f;
 		Player::Get()->IsWalk = true;
-		Player::Get()->IsInitJump = true;
+		Player::Get()->IsInitJump = true;*/
 	}
 
 	if (FallCount > 0)

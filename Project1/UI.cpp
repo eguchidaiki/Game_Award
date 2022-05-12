@@ -10,10 +10,10 @@ Player* player = Player::Get();
 
 void UI::Init(Tutorial* tutorial)
 {
-	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton.png");
+	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton01.png");
 	this->ResetUISprite.Create(ResetHandle);
 
-	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton.png");
+	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton01.png");
 	this->PauseUISprite.Create(PauseHandle);
 
 	ResetRot = 0;

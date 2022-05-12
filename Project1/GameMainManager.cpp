@@ -95,6 +95,11 @@ void GameMainManager::GameInstanceUpdate()
 		player->IsDownOpen,
 	};
 
+	if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
+	{
+		int test = 0;
+	}
+
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
