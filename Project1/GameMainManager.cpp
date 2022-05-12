@@ -6,8 +6,8 @@
 
 namespace
 {
-Stage* stage = Stage::Get();
-Player* player = Player::Get();
+	Stage* stage = Stage::Get();
+	Player* player = Player::Get();
 }
 
 GameMainManager::GameMainManager()
@@ -27,7 +27,7 @@ void GameMainManager::Init()
 	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
 	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
 
-	ui.Init();
+	ui.Init(&tutorial);
 
 	tutorial.Create();
 }
@@ -67,9 +67,12 @@ void GameMainManager::GameInstanceUpdate()
 		IsStart = true;
 	}
 
+
+	tutorial.Update();
+
 	//各ステージの処理
 #ifdef _DEBUG
-	
+
 #endif // _DEBUG
 
 	player->Update(drawOffsetX, drawOffsetY);
@@ -143,6 +146,11 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	changecount = 0;
 	IsStart = false;
 	NowScene = SelectStageNum;
+
+	if (NowScene == 0)
+	{
+		tutorial.StartTutorial();
+	}
 }
 
 void GameMainManager::SetGameToSelect()
@@ -151,6 +159,8 @@ void GameMainManager::SetGameToSelect()
 	Ischangecount = false;
 	IsGoSelect = false;
 	changecount = 0;
+
+	tutorial.ResetTutorial();
 }
 
 void GameMainManager::GameInstanceDraw()
