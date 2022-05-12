@@ -656,6 +656,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
+							
 							IsHitLeft = true;
 							JumpCountLeft += Player::Get()->IsLeft;
 						}
@@ -718,7 +719,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
-							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x)-1;
 							IsHitRight = true;
 							jumpCountRight += Player::Get()->IsRight;
 						}
@@ -748,7 +749,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitRight == false)
 						{
-							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x)-1;
 							IsHitRight = true;
 							jumpCountRight += Player::Get()->IsRight;
 						}

@@ -2,16 +2,16 @@
 
 namespace
 {
-static char decisionKey = DIK_RETURN; //決定キー
-static char cancelKey = DIK_BACK;     //キャンセルキー
+	static char decisionKey = DIK_RETURN; //決定キー
+	static char cancelKey = DIK_BACK;     //キャンセルキー
 
-static XPAD_INPUT_CODE decisionXpad = XPAD_BUTTON_B; //決定ボタン
-static XPAD_INPUT_CODE cancelXpad = XPAD_BUTTON_A;   //キャンセルボタン
+	static XPAD_INPUT_CODE decisionXpad = XPAD_BUTTON_B; //決定ボタン
+	static XPAD_INPUT_CODE cancelXpad = XPAD_BUTTON_A;   //キャンセルボタン
 }
 
-DirectX::XMFLOAT2 InputManger::pressPos = {0.0f, 0.0f};
-DirectX::XMFLOAT2 InputManger::releasePos = {0.0f, 0.0f};
-DirectX::XMFLOAT2 InputManger::dragDis = {0.0f, 0.0f};
+DirectX::XMFLOAT2 InputManger::pressPos = { 0.0f, 0.0f };
+DirectX::XMFLOAT2 InputManger::releasePos = { 0.0f, 0.0f };
+DirectX::XMFLOAT2 InputManger::dragDis = { 0.0f, 0.0f };
 
 InputManger::InputManger()
 {
@@ -50,7 +50,7 @@ void InputManger::MouseInputUpdate()
 		releasePos = Input::getMousePos();
 	}
 
-	dragDis = {releasePos.x - pressPos.x , releasePos.y - pressPos.y};
+	dragDis = { releasePos.x - pressPos.x , releasePos.y - pressPos.y };
 }
 
 bool InputManger::Escape()
@@ -75,7 +75,7 @@ bool InputManger::Up()
 
 bool InputManger::UpTrigger()
 {
-	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_UP);
+	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_UP) || Input::isXpadStickTilt(XPAD_LSTICK_DIR_UP);
 }
 
 bool InputManger::UpReturn()

@@ -9,6 +9,9 @@ namespace
 	static size_t i = 0;
 	static ActFlag* actFlag = ActFlag::Get();
 
+	static int PlayerOffsetX = 0;
+	static int PlayerOffsetY = 0;
+
 	static Stage* stage = Stage::Get();
 }
 
@@ -88,6 +91,9 @@ void Player::Init()
 
 void Player::Update(int offsetX, int offsetY)
 {
+	PlayerOffsetX = offsetX;
+	PlayerOffsetY = offsetY;
+
 	//マウス入力
 	//Mouse_Input(offsetX, offsetY);
 
@@ -101,7 +107,7 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		if (Player_IsAction == false)
 		{
-			FallSpeed += 0.2f;
+			FallSpeed += 0.1f;
 		}
 
 		if (FallSpeed > 0)
@@ -116,7 +122,7 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		if (FallSpeed < 5.0)
 		{
-			FallSpeed += 0.2f;
+			FallSpeed += 0.1f;
 		}
 	}
 
@@ -319,8 +325,8 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	ImGui::Text("IsGoal:%d", IsUpBlocked);
+	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	//ImGui::Text("IsGoal:%d", IsUpBlocked);
 	//ImGui::Text("PressCount:%d", PressCount);
 	//ImGui::Text("IsWalk:%d", IsWalk);
 	//ImGui::Text("IsJump:%d", IsJump);
@@ -332,7 +338,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();
+	//ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
@@ -359,14 +365,22 @@ void Player::Key_Move()
 	if (actFlag->MoveRight() && Player_IsAction == false)
 	{
 		CenterPosition.x += SideMoveSpeed;
+		IsWalk = true;
 		IsLeft = false;
 		IsRight = true;
 	}
+
 	if (actFlag->MoveLeft() && Player_IsAction == false)
 	{
 		CenterPosition.x -= SideMoveSpeed;
+		IsWalk = true;
 		IsLeft = true;
 		IsRight = false;
+	}
+
+	if (!actFlag->MoveLeft() && !actFlag->MoveLeft())
+	{
+		IsWalk = false;
 	}
 
 	//ジャンプ入力できるかどうか
@@ -384,7 +398,7 @@ void Player::Key_Move()
 	if (actFlag->Jump() && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -5.6f;
+		FallSpeed = -4.1f;
 	}
 }
 
@@ -2349,11 +2363,11 @@ void Player::IsHitPlayerBody()
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
-	if (CenterPosition.x - 25 <= stage->offset.x)
+	if ((CenterPosition.x - 25) <= stage->offset.x)
 	{
 		CenterPosition.x = 25;
 	}
-	if (CenterPosition.y - 25 <= stage->offset.y)
+	if ((CenterPosition.y - 25) <= stage->offset.y)
 	{
 		CenterPosition.y = 25;
 	}

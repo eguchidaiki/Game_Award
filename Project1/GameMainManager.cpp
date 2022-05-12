@@ -57,7 +57,7 @@ void GameMainManager::GameInstanceUpdate()
 	//playerTile[2] = player->playerTile[2];
 	//playerTile[3] = player->playerTile[3];
 
-	ui.Update(playerTile, &Ischangecount);
+	ui.Update(playerTile, &Ischangecount, NowScene);
 
 	if (IsStart == false)
 	{

@@ -4,8 +4,8 @@
 
 namespace
 {
-Stage* stage = Stage::Get();
-Player* player = Player::Get();
+	Stage* stage = Stage::Get();
+	Player* player = Player::Get();
 }
 
 void UI::Init(Tutorial* tutorial)
@@ -24,7 +24,7 @@ void UI::Init(Tutorial* tutorial)
 	this->tutorial = tutorial;
 }
 
-void UI::Update(unsigned char PlayerTile[4], bool* Isback)
+void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 {
 	mousePos = Input::getMousePos();
 
@@ -35,8 +35,12 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback)
 		stage->Reset(PlayerTile);
 		player->Init();
 		player->BodySetUp(PlayerTile);
-		tutorial->ResetTutorial();
-		tutorial->isTutorial = true;
+
+		if (StageNum == 0)
+		{
+			tutorial->ResetTutorial();
+			tutorial->isTutorial = true;
+		}
 	}
 
 	if (IsPausePress && Input::isMouseClickTrigger(0))
