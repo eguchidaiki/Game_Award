@@ -6,7 +6,7 @@
 #include <Raki_Input.h>
 
 //ステージ選択を管理する
-class StageSelecter 
+class StageSelecter
 {
 private:
 	//ステージ本編を管理するクラスのポインタ（参照しているだけなのでweak_ptrにしたい）
@@ -29,6 +29,9 @@ public:
 
 	//ゲームメインへ遷移するフラグ
 	bool isChanging_GameMain = false;
+
+	//選択したステージ番号(GameSceneに渡す用)
+	int SelectStageNum = 0;
 
 	//現在の状態
 	enum NOW_SELECTER_STATE
@@ -63,12 +66,8 @@ private:
 	};
 	PAGE_MOVE_DIR pageMoveDir;
 
-	
-
 	//表示番号
 	int nowDisplayNum = 0;
-
-	
 
 	unsigned char playerTile[4] = { 0 };
 
