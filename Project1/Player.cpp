@@ -1307,6 +1307,7 @@ void Player::Fold()
 			}
 
 			IsRightFold = false;
+			return;
 		}
 		if (IsDownFold == true)
 		{
@@ -1388,6 +1389,7 @@ void Player::Open()
 			}
 
 			//IsLeftOpen = false;
+			return;
 		}
 		//上を開く
 		if (IsUpOpen == true)
@@ -1419,6 +1421,7 @@ void Player::Open()
 			}
 
 			//IsUpOpen = false;
+			return;
 		}
 		//右を開く
 		if (IsRightOpen == true)
@@ -1450,6 +1453,7 @@ void Player::Open()
 			}
 
 			//IsRightOpen = false;
+			return;
 		}
 		//下を開く
 		if (IsDownOpen == true)
@@ -1481,6 +1485,7 @@ void Player::Open()
 			}
 
 			//IsDownOpen = false;
+			return;
 		}
 	}
 }
