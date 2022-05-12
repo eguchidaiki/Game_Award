@@ -13,7 +13,7 @@ private:
 	UINT BackHandle;
 	Sprite Back;
 	unsigned char playerTile[4] = { 0 };
-	const int drawOffsetX = 320, drawOffsetY = 45;
+	const int tutorialOffsetX = 320, tutorialOffsetY = 45;
 
 
 	//BGM
