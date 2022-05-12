@@ -54,7 +54,7 @@ void GameMainManager::GameInstanceUpdate()
 {
 	ui.Update(player->playerTile, &Ischangecount);
 
-	ui.Update(playerTile, &Ischangecount);
+	ui.Update(playerTile, &Ischangecount, NowScene);
 
 	if (IsStart == false)
 	{
@@ -98,6 +98,11 @@ void GameMainManager::GameInstanceUpdate()
 		player->IsRightOpen,
 		player->IsDownOpen,
 	};
+
+	if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
+	{
+		int test = 0;
+	}
 
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, player->playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
