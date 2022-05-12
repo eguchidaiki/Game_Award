@@ -1,4 +1,4 @@
-#include "Stage.h"
+﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
 #include "PlayerBody.h"

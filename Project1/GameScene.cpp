@@ -5,13 +5,14 @@
 #include "InputManger.h"
 #include "NY_random.h"
 
-GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer) {
+GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
+{
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
-	stage->LoadStage("./Resources/stage/test.csv", playerTile);
+	stage->LoadStage("./Resources/stage/test.csv", player->playerTile);
 	player->Init();
-	player->BodySetUp(playerTile);
+	player->BodySetUp(player->playerTile);
 
 	nowState = is_Select;
 
@@ -20,12 +21,14 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer) {
 }
 
 //初期化
-void GameScene::Initialize() {
+void GameScene::Initialize()
+{
 
 }
 
 //更新
-void GameScene::Update() {
+void GameScene::Update()
+{
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	switch (nowState)
@@ -33,7 +36,8 @@ void GameScene::Update() {
 	case GameScene::is_Select:
 		//ステージセレクト画面の処理
 		selecter.Update();
-		if (selecter.GetMoveGameMain()) {
+		if (selecter.GetMoveGameMain())
+		{
 			gamemain.SetSelectToGame(selecter.SelectStageNum);
 			selecter.isChanging_GameMain = false;
 			nowState = is_Game;
@@ -45,7 +49,8 @@ void GameScene::Update() {
 	case GameScene::is_Game:
 		//ゲーム本編の処理
 		gamemain.Update();
-		if (gamemain.IsGoSelect == true) {
+		if (gamemain.IsGoSelect == true)
+		{
 			gamemain.SetGameToSelect();
 			selecter.isChanging_GameMain = false;
 			selecter.state = selecter.is_selecting;
@@ -59,7 +64,8 @@ void GameScene::Update() {
 }
 
 //描画
-void GameScene::Draw() {
+void GameScene::Draw()
+{
 
 	//背景に常にいる
 	Raki_DX12B::Get()->StartDrawRenderTarget();
