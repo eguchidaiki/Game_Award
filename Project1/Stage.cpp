@@ -1,4 +1,4 @@
-#include "Stage.h"
+﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
 #include "Player.h"
@@ -31,6 +31,8 @@ const XMFLOAT4 Stage::lineColor[2] = {
 	{ 0.5f, 0.5f, 0.5f, 1.0f }
 };
 
+int Stage::drawOffsetX = 0;
+int Stage::drawOffsetY = 0;
 int Stage::startPlayerPosX = 0;
 int Stage::startPlayerPosY = 0;
 unsigned char Stage::initFoldCount[4] = { 0 };
@@ -45,11 +47,11 @@ Stage::Stage() :
 	stageData{},
 	initStageData{},
 	reverseMapchip(nullptr),
-	FoldHandle(0),
+	lineHandle(0),
 	BlockHandle(0),
 	EmptyHandle(0),
 	GoalHandle(0),
-	FoldSprite{},
+	lineSprite{},
 	MapchipSpriteBlock{},
 	MapchipSpriteEmpty{},
 	MapchipSpriteGoal{},
@@ -255,16 +257,19 @@ void Stage::Updata()
 
 }
 
-void Stage::Draw(int offsetX, int offsetY)
+void Stage::Draw(const int offsetX, const int offsetY)
 {
 	static int posX = 0;
 	static int posY = 0;
-
 	static RVector3 pos1, pos2;
+
+	static DirectX::XMFLOAT2 drawOffset = {};
+	drawOffset.x = static_cast<float>(drawOffsetX) + static_cast<float>(offsetX);
+	drawOffset.y = static_cast<float>(drawOffsetY) + static_cast<float>(offsetY);
 
 	for (i = 0; i < stageData.size(); i++)
 	{
-		FoldSprite.spdata->color = lineColor[i % 2]; //色設定
+		lineSprite.spdata->color = lineColor[i % 2]; //色設定
 
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
@@ -274,11 +279,11 @@ void Stage::Draw(int offsetX, int offsetY)
 				{
 					mapchipPos = y * stageData[i].stageTileData[j].width + x;
 
-					pos1.x = stageData[i].stageTileData[j].drawLeftUp[mapchipPos].x + static_cast<float>(offsetX);
-					pos1.y = stageData[i].stageTileData[j].drawLeftUp[mapchipPos].y + static_cast<float>(offsetY);
+					pos1.x = stageData[i].stageTileData[j].drawLeftUp[mapchipPos].x + drawOffset.x;
+					pos1.y = stageData[i].stageTileData[j].drawLeftUp[mapchipPos].y + drawOffset.y;
 					pos1.z = stageData[i].stageTileData[j].drawLeftUp[mapchipPos].z;
-					pos2.x = stageData[i].stageTileData[j].drawRightDown[mapchipPos].x + static_cast<float>(offsetX);
-					pos2.y = stageData[i].stageTileData[j].drawRightDown[mapchipPos].y + static_cast<float>(offsetY);
+					pos2.x = stageData[i].stageTileData[j].drawRightDown[mapchipPos].x + drawOffset.x;
+					pos2.y = stageData[i].stageTileData[j].drawRightDown[mapchipPos].y + drawOffset.y;
 					pos2.z = stageData[i].stageTileData[j].drawRightDown[mapchipPos].z;
 
 					switch (stageData[i].stageTileData[j].mapchip[mapchipPos])
@@ -322,30 +327,16 @@ void Stage::Draw(int offsetX, int offsetY)
 
 				if (stageData[i].stageTile[sideStageTile] != MapchipData::EMPTY_STAGE)
 				{
-					for (y = 0; y < stageData[i].stageTileData[j].height; y++)
-					{
-						posX = static_cast<int>(0 + stageData[i].stageTileData[j].offsetX);
-						posY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
-
-						for (int k = 0; k < foldLineCount; k++)
-						{
-							pos1.x = static_cast<float>(posX * blockSize + offsetX);
-							pos1.y = static_cast<float>(posY * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount) + offsetY);
-							pos2.x = static_cast<float>(posX * blockSize + (lineWidth + 1) + offsetX);
-							pos2.y = static_cast<float>(posY * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount) + offsetY);
-
-							FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-						}
-					}
+					FoldDraw(i, j, BodyType::left, drawOffset.x, drawOffset.y);
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::left, offsetX, offsetY);
+					FlameDraw(i, j, BodyType::left, drawOffset.x, drawOffset.y);
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::left, offsetX, offsetY);
+				FlameDraw(i, j, BodyType::left, drawOffset.x, drawOffset.y);
 			}
 			if (static_cast<size_t>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
@@ -353,30 +344,16 @@ void Stage::Draw(int offsetX, int offsetY)
 
 				if (stageData[i].stageTile[sideStageTile] != MapchipData::EMPTY_STAGE)
 				{
-					for (y = 0; y < stageData[i].stageTileData[j].height; y++)
-					{
-						posX = static_cast<int>(stageData[i].stageTileData[j].width + stageData[i].stageTileData[j].offsetX);
-						posY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
-
-						for (int k = 0; k < foldLineCount; k++)
-						{
-							pos1.x = static_cast<float>(posX * blockSize + offsetX);
-							pos1.y = static_cast<float>(posY * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount) + offsetY);
-							pos2.x = static_cast<float>(posX * blockSize - (lineWidth + 1) + offsetX);
-							pos2.y = static_cast<float>(posY * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount) + offsetY);
-
-							FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-						}
-					}
+					FoldDraw(i, j, BodyType::right, drawOffset.x, drawOffset.y);
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::right, offsetX, offsetY);
+					FlameDraw(i, j, BodyType::right, drawOffset.x, drawOffset.y);
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::right, offsetX, offsetY);
+				FlameDraw(i, j, BodyType::right, drawOffset.x, drawOffset.y);
 			}
 			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
 			{
@@ -385,30 +362,16 @@ void Stage::Draw(int offsetX, int offsetY)
 
 				if (sideStageData != MapchipData::EMPTY_STAGE)
 				{
-					for (x = 0; x < stageData[i].stageTileData[sideStageData].width; x++)
-					{
-						posX = static_cast<int>(x + stageData[i].stageTileData[sideStageData].offsetX);
-						posY = static_cast<int>(0 + stageData[i].stageTileData[sideStageData].offsetY);
-
-						for (int k = 0; k < foldLineCount; k++)
-						{
-							pos1.x = static_cast<float>(posX * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount) + offsetX);
-							pos1.y = static_cast<float>(posY * blockSize + offsetY);
-							pos2.x = static_cast<float>(posX * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount) + offsetX);
-							pos2.y = static_cast<float>(posY * blockSize + (lineWidth + 1) + offsetY);
-
-							FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-						}
-					}
+					FoldDraw(i, j, BodyType::up, drawOffset.x, drawOffset.y);
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::up, offsetX, offsetY);
+					FlameDraw(i, j, BodyType::up, drawOffset.x, drawOffset.y);
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::up, offsetX, offsetY);
+				FlameDraw(i, j, BodyType::up, drawOffset.x, drawOffset.y);
 			}
 			if (static_cast<size_t>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
 			{
@@ -416,30 +379,16 @@ void Stage::Draw(int offsetX, int offsetY)
 
 				if (stageData[i].stageTile[sideStageTile] != MapchipData::EMPTY_STAGE)
 				{
-					for (x = 0; x < stageData[i].stageTileData[j].width; x++)
-					{
-						posX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
-						posY = static_cast<int>(stageData[i].stageTileData[j].height + stageData[i].stageTileData[j].offsetY);
-
-						for (int k = 0; k < foldLineCount; k++)
-						{
-							pos1.x = static_cast<float>(posX * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount) + offsetX);
-							pos1.y = static_cast<float>(posY * blockSize + offsetY);
-							pos2.x = static_cast<float>(posX * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount) + offsetX);
-							pos2.y = static_cast<float>(posY * blockSize - (lineWidth + 1) + offsetY);
-
-							FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-						}
-					}
+					FoldDraw(i, j, BodyType::down, drawOffset.x, drawOffset.y);
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::down, offsetX, offsetY);
+					FlameDraw(i, j, BodyType::down, drawOffset.x, drawOffset.y);
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::down, offsetX, offsetY);
+				FlameDraw(i, j, BodyType::down, drawOffset.x, drawOffset.y);
 			}
 		}
 	}
@@ -451,7 +400,7 @@ void Stage::Draw(int offsetX, int offsetY)
 	MapchipSpriteBlock.Draw();
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEmpty.Draw();
-	FoldSprite.Draw();
+	lineSprite.Draw();
 }
 
 void Stage::Create()
@@ -474,10 +423,10 @@ void Stage::Create()
 		MapchipSpriteGoal.Create(GoalHandle);
 	}
 
-	if ((FoldSprite.spdata->size.x <= 0) || (FoldSprite.spdata->size.y <= 0))
+	if ((lineSprite.spdata->size.x <= 0) || (lineSprite.spdata->size.y <= 0))
 	{
-		FoldHandle = TexManager::LoadTexture("Resources/WhitePixle.png");
-		FoldSprite.Create(FoldHandle);
+		lineHandle = TexManager::LoadTexture("Resources/WhitePixle.png");
+		lineSprite.Create(lineHandle);
 	}
 
 	if (particleManager == nullptr)
@@ -1498,7 +1447,131 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	return 0;
 }
 
-int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction, int offsetX, int offsetY)
+int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
+					const int offsetX, const int offsetY)
+{
+	static int posX = 0, posY = 0;
+	static XMFLOAT2 pos1 = {}, pos2 = {};
+
+	switch (direction)
+	{
+	case BodyType::up:
+	{
+		posY = static_cast<int>(0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY);
+		pos1.y = static_cast<float>(posY * blockSize);
+		pos2.y = static_cast<float>(posY * blockSize + (lineWidth + 1));
+
+		pos1.y += static_cast<float>(offsetY);
+		pos2.y += static_cast<float>(offsetY);
+
+		for (x = 0; x < stageData[stageNumber].stageTileData[stageTileNumber].width; x++)
+		{
+			posX = static_cast<int>(x + stageData[stageNumber].stageTileData[stageTileNumber].offsetX);
+
+			for (int k = 0; k < foldLineCount; k++)
+			{
+				pos1.x = static_cast<float>(posX * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount));
+				pos2.x = static_cast<float>(posX * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount));
+
+				pos1.x += static_cast<float>(offsetX);
+				pos2.x += static_cast<float>(offsetX);
+
+				lineSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			}
+		}
+		break;
+	}
+	case BodyType::down:
+	{
+		posY = static_cast<int>(stageData[i].stageTileData[j].height + stageData[i].stageTileData[j].offsetY);
+		pos1.y = static_cast<float>(posY * blockSize);
+		pos2.y = static_cast<float>(posY * blockSize - (lineWidth + 1));
+
+		pos1.y += static_cast<float>(offsetY);
+		pos2.y += static_cast<float>(offsetY);
+
+		for (x = 0; x < stageData[i].stageTileData[j].width; x++)
+		{
+			posX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
+
+			for (int k = 0; k < foldLineCount; k++)
+			{
+				pos1.x = static_cast<float>(posX * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount));
+				pos2.x = static_cast<float>(posX * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount));
+
+				pos1.x += static_cast<float>(offsetX);
+				pos2.x += static_cast<float>(offsetX);
+
+				lineSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			}
+		}
+
+		break;
+	}
+	case BodyType::left:
+	{
+		posX = static_cast<int>(0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX);
+		pos1.x = static_cast<float>(posX * blockSize);
+		pos2.x = static_cast<float>(posX * blockSize + (lineWidth + 1));
+
+		pos1.x += static_cast<float>(offsetX);
+		pos2.x += static_cast<float>(offsetX);
+
+		for (y = 0; y < stageData[stageNumber].stageTileData[stageTileNumber].height; y++)
+		{
+			posY = static_cast<int>(y + stageData[stageNumber].stageTileData[stageTileNumber].offsetY);
+
+			for (int k = 0; k < foldLineCount; k++)
+			{
+				pos1.y = static_cast<float>(posY * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount));
+				pos2.y = static_cast<float>(posY * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount));
+
+				pos1.y += static_cast<float>(offsetY);
+				pos2.y += static_cast<float>(offsetY);
+
+				lineSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			}
+		}
+		break;
+	}
+	case BodyType::right:
+	{
+		posX = static_cast<int>(stageData[stageNumber].stageTileData[stageTileNumber].width + stageData[stageNumber].stageTileData[stageTileNumber].offsetX);
+		pos1.x = static_cast<float>(posX * blockSize);
+		pos2.x = static_cast<float>(posX * blockSize - (lineWidth + 1));
+
+		pos1.x += static_cast<float>(offsetX);
+		pos2.x += static_cast<float>(offsetX);
+
+		for (y = 0; y < stageData[stageNumber].stageTileData[stageTileNumber].height; y++)
+		{
+			posY = static_cast<int>(y + stageData[stageNumber].stageTileData[stageTileNumber].offsetY);
+
+			for (int k = 0; k < foldLineCount; k++)
+			{
+				pos1.y = static_cast<float>(posY * blockSize + blockSize * (1 + k * 4) / (4 * foldLineCount));
+				pos2.y = static_cast<float>(posY * blockSize + blockSize * (3 + k * 4) / (4 * foldLineCount));
+
+				pos1.y += static_cast<float>(offsetY);
+				pos2.y += static_cast<float>(offsetY);
+
+				lineSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			}
+		}
+		break;
+	}
+	default:
+	{
+		return EF;
+		break;
+	}
+	}
+
+	return 0;
+}
+
+int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
+					 const int offsetX, const int offsetY)
 {
 	static int posX = 0, posY = 0;
 	static XMFLOAT2 pos1 = {}, pos2 = {};
@@ -1555,7 +1628,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 	}
 	default:
 	{
-		return 1;
+		return EF;
 		break;
 	}
 	}
@@ -1564,7 +1637,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 	pos2.x += static_cast<float>(offsetX);
 	pos2.y += static_cast<float>(offsetY);
 
-	FoldSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+	lineSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 
 	return 0;
 }

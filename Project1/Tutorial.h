@@ -7,6 +7,8 @@ public: //ƒƒ“ƒoŠÖ”
 	Tutorial();
 	~Tutorial();
 
+	// ‰Šú‰»
+	void Init();
 	// XV
 	void Update();
 	// •`‰æ
