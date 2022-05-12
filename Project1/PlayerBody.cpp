@@ -781,7 +781,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 			if (stage->IsPositionTile({BodyRight + 20,BodyUp - 20,0.0f}, i, j))
 			{
-				BodyRight_mapchip_tile = (BodyRight_mapchip + 1) % stage->GetStageTileWidth(i, j);
+				BodyRight_mapchip_tile = (BodyRight_mapchip) % stage->GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
 				mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);

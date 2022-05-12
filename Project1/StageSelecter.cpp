@@ -116,17 +116,20 @@ void StageSelecter::LoadSprite()
 void StageSelecter::CheckToPageChangeInput()
 {
 	//ステージ選択中でないなら処理しない
-	if (state != is_selecting) {
+	if (state != is_selecting)
+	{
 		return;
 	}
 
 	float mouse_x = Input::getMousePos().x;
 	float mouse_y = Input::getMousePos().y;
 
-	if (state == is_selecting) {
+	if (state == is_selecting)
+	{
 		//ページ遷移するのか？
 		bool isMove = false;
-		if (mouse_x > static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L)) {
+		if (mouse_x > static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		{
 			switch (nowpage)
 			{
 			case StageSelecter::page_1_4:
@@ -145,7 +148,8 @@ void StageSelecter::CheckToPageChangeInput()
 			if (isMove) { pageMoveDir = is_front; }
 
 		}
-		else if (mouse_x < static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L)) {
+		else if (mouse_x < static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		{
 			switch (nowpage)
 			{
 			case StageSelecter::page_1_4:
@@ -172,18 +176,22 @@ void StageSelecter::PageChange()
 	//ページ切り替え演出の処理
 
 	//ページが変わるとき
-	if (nowpage != nextpage) {
+	if (nowpage != nextpage)
+	{
 		animationFrame++;
 		//次のページ
-		if (pageMoveDir == is_front) {
+		if (pageMoveDir == is_front)
+		{
 			//演出中は現在ページを表示
 			displayPage = nowpage;
 			//演出待機
 			state = is_pageChange_waiting;
-			if (animationFrame % perFrame == 0) {
+			if (animationFrame % perFrame == 0)
+			{
 				nowDisplayNum++;
 			}
-			if (nowDisplayNum >= 20) {
+			if (nowDisplayNum >= 20)
+			{
 				//描画するやつを切り替え
 				displayPage = nextpage;
 				//現在ページを設定
@@ -197,19 +205,23 @@ void StageSelecter::PageChange()
 			}
 		}
 		//前のページ
-		else {
+		else
+		{
 			//ページ遷移判定にするタイミングで下準備をする
-			if (state != is_pageChange_waiting) {
+			if (state != is_pageChange_waiting)
+			{
 				state = is_pageChange_waiting;
 				nowDisplayNum = 19;
 				displayPage = nextpage;
 			}
 			//アニメーション進行
-			if (animationFrame % perFrame == 0) {
+			if (animationFrame % perFrame == 0)
+			{
 				nowDisplayNum--;
 			}
 			//演出終了
-			if (nowDisplayNum <= 0) {
+			if (nowDisplayNum <= 0)
+			{
 				nowDisplayNum = 0;
 				state = is_selecting;
 				nowpage = nextpage;
@@ -224,75 +236,111 @@ void StageSelecter::CheckLoadStage(int boxnum)
 	switch (nowpage)
 	{
 	case StageSelecter::page_1_4:
-		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerTile);
+		if (boxnum == 0)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerTile);
+		else if (boxnum == 1)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 500.0f;
+			stagePtr->drawOffsetY = 75.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerTile);
+		else if (boxnum == 2)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else {
-			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerTile);
+		else
+		{
+			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
 
 
 
 	case StageSelecter::page_5_8:
-		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerTile);
+		if (boxnum == 0)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerTile);
+		else if (boxnum == 1)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerTile);
+		else if (boxnum == 2)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else {
-			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerTile);
+		else
+		{
+			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
 
 
 
 	case StageSelecter::page_9_12:
-		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerTile);
+		if (boxnum == 0)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerTile);
+		else if (boxnum == 1)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerTile);
+		else if (boxnum == 2)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else {
-			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerTile);
+		else
+		{
+			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
 
@@ -306,26 +354,31 @@ void StageSelecter::CheckLoadStage(int boxnum)
 void StageSelecter::CheckToStageChangeInput()
 {
 	//選択中以外はそもそも実行しない
-	if (state != is_selecting) {
+	if (state != is_selecting)
+	{
 		return;
 	}
 
 	//各ボックスの左側座標を計算
 	std::array<int, 4> boxLeft;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++)
+	{
 		boxLeft[i] = NUMBOX_START_X + (NUMBOX_SIZE * i) + (NUMBOX_SPACE * i);
 	}
 
 	int selectingBoxNum = 0;
 	bool isHit = false;
 	//クリック時にどのボックスをクリックしているか求める
-	if (Input::isMouseClickTrigger(MOUSE_L) == true) {
+	if (Input::isMouseClickTrigger(MOUSE_L) == true)
+	{
 		int mouse_x = static_cast<int>(Input::getMousePos().x);
 		int mouse_y = static_cast<int>(Input::getMousePos().y);
 
 		//ステージにヒットしている
-		for (int i = 0; i < 4; i++) {
-			if (mouse_x > boxLeft[i] && mouse_x < boxLeft[i] + NUMBOX_SIZE && mouse_y > NUMBOX_START_Y && mouse_y < NUMBOX_START_Y + NUMBOX_SIZE) {
+		for (int i = 0; i < 4; i++)
+		{
+			if (mouse_x > boxLeft[i] && mouse_x < boxLeft[i] + NUMBOX_SIZE && mouse_y > NUMBOX_START_Y && mouse_y < NUMBOX_START_Y + NUMBOX_SIZE)
+			{
 				selectingBoxNum = i;
 				//ゲーム本編への遷移を許可
 				isChanging_GameMain = true;
@@ -339,11 +392,16 @@ void StageSelecter::CheckToStageChangeInput()
 		//一個もヒットしていない場合は終了
 		if (!isHit) { return; }
 	}
-	else {//入力がないなら終了
+	else
+	{//入力がないなら終了
 		return;
 	}
 
 	//クリックされているボックスと、現在のページから、どのステージに移動するのかを求める
-	if(isHit){ CheckLoadStage(selectingBoxNum); }
+	if (isHit)
+	{
+		CheckLoadStage(selectingBoxNum);
+		SelectStageNum = selectingBoxNum;
+	}
 
 }

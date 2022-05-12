@@ -4,11 +4,12 @@
 #include "Sprite.h"
 #include <Raki_Input.h>
 #include <DirectXMath.h>
+#include "Tutorial.h"
 
 class UI
 {
 public:
-	void Init();
+	void Init(Tutorial* tutorial);
 
 	void Update(unsigned char PlayerTile[4], bool* Isback);
 
@@ -32,4 +33,7 @@ public:
 	float PauseAddRot;
 
 	XMFLOAT2 mousePos;
+
+	//チュートリアルクラスポインター
+	Tutorial* tutorial;
 };

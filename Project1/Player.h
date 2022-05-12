@@ -67,6 +67,9 @@ public: //メンバ関数
 	//顔の当たり判定
 	void IsHitPlayerBody();
 
+	//body_twoのみ引っかかっているかどうか(trueであればジャンプできない)
+	bool IsOnlyHitBody_Two();
+
 	//各体・顔の落下判定
 	bool IsFall();
 
