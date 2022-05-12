@@ -16,7 +16,7 @@ private:
 	const int drawOffsetX = 320, drawOffsetY = 45;
 
 
-	//髻ｳ
+	//BGM
 	SoundData menuBGM;
 	SoundData playBGM;
 
@@ -25,9 +25,16 @@ private:
 	Tutorial tutorial;
 
 public:
+	//今プレイしているステージ番号
+	int NowScene = 0;
+	//ステージリセットを一回だけ通すフラグ
+	bool IsStart;
+	//セレクトシーン遷移フラグ
 	bool IsGoSelect = false;
-	bool Ischangecount = false;
+	//セレクトシーンに戻るまでのカウントとその開始フラグ
 	int changecount = 0;
+	bool Ischangecount = false;
+
 	GameMainManager();
 	~GameMainManager();
 
@@ -35,6 +42,8 @@ public:
 	void Update();
 	void Draw();
 	void Finalize();
+	void SetSelectToGame(int SelectStageNum);
+	void SetGameToSelect();
 
 private:
 	void GameInstanceUpdate();

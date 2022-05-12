@@ -20,19 +20,22 @@ public: //メンバ関数
 	void StartTutorial();
 	// チュートリアル中かどうか
 	inline bool GetTutorialFlag() { return isTutorial; }
+	//チュートリアルのリセット
+	void ResetTutorial();
 
 public: //メンバ変数
 	bool isFirstOnly;
-private:
 	//画像ハンドル
+	bool isTutorial;
+	bool isMoveTutorial;
+	bool isFoldTutorial;
+	bool isFirst;
+
+private:
 	UINT moveHandle;
 	UINT foldHandle;
 
 	Sprite moveSprite;
 	Sprite foldSprite;
 
-	bool isTutorial;
-	bool isMoveTutorial;
-	bool isFoldTutorial;
-	bool isFirst;
 };

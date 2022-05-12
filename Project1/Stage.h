@@ -1,11 +1,9 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include <RVector.h>
 #include "Easing.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
-
-
 
 enum MapchipData
 {

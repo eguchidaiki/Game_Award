@@ -38,9 +38,7 @@ void GameScene::Update()
 		selecter.Update();
 		if (selecter.GetMoveGameMain())
 		{
-			gamemain.Ischangecount = false;
-			gamemain.IsGoSelect = false;
-			gamemain.changecount = 0;
+			gamemain.SetSelectToGame(selecter.SelectStageNum);
 			selecter.isChanging_GameMain = false;
 			nowState = is_Game;
 		}
@@ -53,9 +51,7 @@ void GameScene::Update()
 		gamemain.Update();
 		if (gamemain.IsGoSelect == true)
 		{
-			gamemain.Ischangecount = false;
-			gamemain.IsGoSelect = false;
-			gamemain.changecount = 0;
+			gamemain.SetGameToSelect();
 			selecter.isChanging_GameMain = false;
 			selecter.state = selecter.is_selecting;
 			nowState = is_Select;

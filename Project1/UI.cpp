@@ -8,7 +8,7 @@ Stage* stage = Stage::Get();
 Player* player = Player::Get();
 }
 
-void UI::Init()
+void UI::Init(Tutorial* tutorial)
 {
 	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton.png");
 	this->ResetUISprite.Create(ResetHandle);
@@ -20,6 +20,8 @@ void UI::Init()
 	ResetAddRot = 1;
 	PauseRot = 0;
 	PauseAddRot = 1;
+
+	this->tutorial = tutorial;
 }
 
 void UI::Update(unsigned char PlayerTile[4], bool* Isback)
@@ -33,6 +35,8 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback)
 		stage->Reset(PlayerTile);
 		player->Init();
 		player->BodySetUp(PlayerTile);
+		tutorial->ResetTutorial();
+		tutorial->isTutorial = true;
 	}
 
 	if (IsPausePress && Input::isMouseClickTrigger(0))

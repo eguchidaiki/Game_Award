@@ -27,7 +27,7 @@ void GameMainManager::Init()
 	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
 	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
 
-	ui.Init();
+	ui.Init(&tutorial);
 
 	tutorial.Create();
 }
@@ -54,6 +54,19 @@ void GameMainManager::GameInstanceUpdate()
 {
 	ui.Update(player->playerTile, &Ischangecount);
 
+	ui.Update(playerTile, &Ischangecount);
+
+	if (IsStart == false)
+	{
+		stage->Reset(playerTile);
+		player->Init();
+		player->BodySetUp(playerTile);
+		IsStart = true;
+	}
+
+
+	tutorial.Update();
+
 	//各ステージの処理
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
@@ -63,12 +76,6 @@ void GameMainManager::GameInstanceUpdate()
 		player->BodySetUp(player->playerTile);
 	}
 
-	if (InputManger::Get()->ResetTrigger())
-	{
-		stage->Reset(player->playerTile);
-		player->Init();
-		player->BodySetUp(player->playerTile);
-	}
 #endif // _DEBUG
 
 	player->Update(drawOffsetX, drawOffsetY);
@@ -134,6 +141,31 @@ void GameMainManager::GameInstanceUpdate()
 	}
 }
 
+void GameMainManager::SetSelectToGame(int SelectStageNum)
+{
+	//ゲームシーンに移るときのセットアップ
+	Ischangecount = false;
+	IsGoSelect = false;
+	changecount = 0;
+	IsStart = false;
+	NowScene = SelectStageNum;
+
+	if (NowScene == 0)
+	{
+		tutorial.StartTutorial();
+	}
+}
+
+void GameMainManager::SetGameToSelect()
+{
+	//セレクトシーンに戻るときのセットアップ
+	Ischangecount = false;
+	IsGoSelect = false;
+	changecount = 0;
+
+	tutorial.ResetTutorial();
+}
+
 void GameMainManager::GameInstanceDraw()
 {
 	//各ステージの処理
@@ -144,4 +176,5 @@ void GameMainManager::GameInstanceDraw()
 	ui.Draw();
 	stage->Draw(drawOffsetX, drawOffsetY);
 	player->Draw(drawOffsetX, drawOffsetY);
+	tutorial.Draw(drawOffsetX, drawOffsetY);
 }

@@ -126,3 +126,12 @@ void Tutorial::StartTutorial()
 	isMoveTutorial = false;
 	isFoldTutorial = false;
 }
+
+void Tutorial::ResetTutorial()
+{
+	isTutorial = false;
+	isMoveTutorial = false;
+	isFoldTutorial = false;
+	isFirst = true;
+	isFirstOnly = false;
+}

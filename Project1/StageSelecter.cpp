@@ -230,7 +230,7 @@ void StageSelecter::CheckLoadStage(int boxnum)
 	case StageSelecter::page_1_4:
 		if (boxnum == 0)
 		{
-			stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
+			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -366,6 +366,10 @@ void StageSelecter::CheckToStageChangeInput()
 	}
 
 	//クリックされているボックスと、現在のページから、どのステージに移動するのかを求める
-	if (isHit) { CheckLoadStage(selectingBoxNum); }
+	if (isHit)
+	{
+		CheckLoadStage(selectingBoxNum);
+		SelectStageNum = selectingBoxNum;
+	}
 
 }
