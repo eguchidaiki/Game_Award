@@ -8,8 +8,8 @@
 
 namespace
 {
-	Stage* stagePtr = Stage::Get();
-	Player* playerPtr = Player::Get();
+Stage* stagePtr = Stage::Get();
+Player* playerPtr = Player::Get();
 }
 
 StageSelecter::StageSelecter()
@@ -23,10 +23,10 @@ StageSelecter::~StageSelecter()
 
 void StageSelecter::Init()
 {
-	//ƒŠƒ\[ƒX“Ç‚İ‚İ
+	//ãƒªã‚½ãƒ¼ã‚¹èª­ã¿è¾¼ã¿
 	LoadSprite();
 
-	//Å‰‚Ìƒy[ƒW
+	//æœ€åˆã®ãƒšãƒ¼ã‚¸
 	nowpage = page_1_4;
 	nextpage = nowpage;
 
@@ -35,11 +35,11 @@ void StageSelecter::Init()
 
 void StageSelecter::Update()
 {
-	//ƒXƒe[ƒW‘I‘ğ‚Ì“ü—Í‚ğŒŸ’m
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠã®å…¥åŠ›ã‚’æ¤œçŸ¥
 	CheckToStageChangeInput();
-	//ƒXƒe[ƒW‘I‘ğ‚Ìƒy[ƒW‚ğØ‚è‘Ö‚¦‚é“ü—Í‚ğŒŸ’m
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠã®ãƒšãƒ¼ã‚¸ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹å…¥åŠ›ã‚’æ¤œçŸ¥
 	CheckToPageChangeInput();
-	//ƒy[ƒW‚É‰‚¶‚½‰‰oˆ—
+	//ãƒšãƒ¼ã‚¸ã«å¿œã˜ãŸæ¼”å‡ºå‡¦ç†
 	PageChange();
 
 
@@ -107,18 +107,21 @@ void StageSelecter::LoadSprite()
 
 void StageSelecter::CheckToPageChangeInput()
 {
-	//ƒXƒe[ƒW‘I‘ğ’†‚Å‚È‚¢‚È‚çˆ—‚µ‚È‚¢
-	if (state != is_selecting) {
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠä¸­ã§ãªã„ãªã‚‰å‡¦ç†ã—ãªã„
+	if (state != is_selecting)
+	{
 		return;
 	}
 
 	float mouse_x = Input::getMousePos().x;
 	float mouse_y = Input::getMousePos().y;
 
-	if (state == is_selecting) {
-		//ƒy[ƒW‘JˆÚ‚·‚é‚Ì‚©H
+	if (state == is_selecting)
+	{
+		//ãƒšãƒ¼ã‚¸é·ç§»ã™ã‚‹ã®ã‹ï¼Ÿ
 		bool isMove = false;
-		if (mouse_x > static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L)) {
+		if (mouse_x > static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		{
 			switch (nowpage)
 			{
 			case StageSelecter::page_1_4:
@@ -137,7 +140,8 @@ void StageSelecter::CheckToPageChangeInput()
 			if (isMove) { pageMoveDir = is_front; }
 
 		}
-		else if (mouse_x < static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L)) {
+		else if (mouse_x < static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		{
 			switch (nowpage)
 			{
 			case StageSelecter::page_1_4:
@@ -161,47 +165,55 @@ void StageSelecter::CheckToPageChangeInput()
 
 void StageSelecter::PageChange()
 {
-	//ƒy[ƒWØ‚è‘Ö‚¦‰‰o‚Ìˆ—
+	//ãƒšãƒ¼ã‚¸åˆ‡ã‚Šæ›¿ãˆæ¼”å‡ºã®å‡¦ç†
 
-	//ƒy[ƒW‚ª•Ï‚í‚é‚Æ‚«
-	if (nowpage != nextpage) {
+	//ãƒšãƒ¼ã‚¸ãŒå¤‰ã‚ã‚‹ã¨ã
+	if (nowpage != nextpage)
+	{
 		animationFrame++;
-		//Ÿ‚Ìƒy[ƒW
-		if (pageMoveDir == is_front) {
-			//‰‰o’†‚ÍŒ»İƒy[ƒW‚ğ•\¦
+		//æ¬¡ã®ãƒšãƒ¼ã‚¸
+		if (pageMoveDir == is_front)
+		{
+			//æ¼”å‡ºä¸­ã¯ç¾åœ¨ãƒšãƒ¼ã‚¸ã‚’è¡¨ç¤º
 			displayPage = nowpage;
-			//‰‰o‘Ò‹@
+			//æ¼”å‡ºå¾…æ©Ÿ
 			state = is_pageChange_waiting;
-			if (animationFrame % perFrame == 0) {
+			if (animationFrame % perFrame == 0)
+			{
 				nowDisplayNum++;
 			}
-			if (nowDisplayNum >= 20) {
-				//•`‰æ‚·‚é‚â‚Â‚ğØ‚è‘Ö‚¦
+			if (nowDisplayNum >= 20)
+			{
+				//æç”»ã™ã‚‹ã‚„ã¤ã‚’åˆ‡ã‚Šæ›¿ãˆ
 				displayPage = nextpage;
-				//Œ»İƒy[ƒW‚ğİ’è
+				//ç¾åœ¨ãƒšãƒ¼ã‚¸ã‚’è¨­å®š
 				nowpage = nextpage;
-				//‰Šú‰»
+				//åˆæœŸåŒ–
 				nowDisplayNum = 0;
-				//“ü—Í‚ğó•t
+				//å…¥åŠ›ã‚’å—ä»˜
 				state = is_selecting;
 
 				animationFrame = 0;
 			}
 		}
-		//‘O‚Ìƒy[ƒW
-		else {
-			//ƒy[ƒW‘JˆÚ”»’è‚É‚·‚éƒ^ƒCƒ~ƒ“ƒO‚Å‰º€”õ‚ğ‚·‚é
-			if (state != is_pageChange_waiting) {
+		//å‰ã®ãƒšãƒ¼ã‚¸
+		else
+		{
+			//ãƒšãƒ¼ã‚¸é·ç§»åˆ¤å®šã«ã™ã‚‹ã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§ä¸‹æº–å‚™ã‚’ã™ã‚‹
+			if (state != is_pageChange_waiting)
+			{
 				state = is_pageChange_waiting;
 				nowDisplayNum = 19;
 				displayPage = nextpage;
 			}
-			//ƒAƒjƒ[ƒVƒ‡ƒ“is
-			if (animationFrame % perFrame == 0) {
+			//ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é€²è¡Œ
+			if (animationFrame % perFrame == 0)
+			{
 				nowDisplayNum--;
 			}
-			//‰‰oI—¹
-			if (nowDisplayNum <= 0) {
+			//æ¼”å‡ºçµ‚äº†
+			if (nowDisplayNum <= 0)
+			{
 				nowDisplayNum = 0;
 				state = is_selecting;
 				nowpage = nextpage;
@@ -216,75 +228,111 @@ void StageSelecter::CheckLoadStage(int boxnum)
 	switch (nowpage)
 	{
 	case StageSelecter::page_1_4:
-		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerTile);
+		if (boxnum == 0)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/test.csv", playerTile);
+		else if (boxnum == 1)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 500.0f;
+			stagePtr->drawOffsetY = 75.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerTile);
+		else if (boxnum == 2)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else {
-			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerTile);
+		else
+		{
+			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
 
 
 
 	case StageSelecter::page_5_8:
-		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerTile);
+		if (boxnum == 0)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerTile);
+		else if (boxnum == 1)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerTile);
+		else if (boxnum == 2)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else {
-			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerTile);
+		else
+		{
+			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
 
 
 
 	case StageSelecter::page_9_12:
-		if (boxnum == 0) {
-			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerTile);
+		if (boxnum == 0)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerTile);
+		else if (boxnum == 1)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else if (boxnum == 2) {
-			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerTile);
+		else if (boxnum == 2)
+		{
+			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
-		else {
-			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerTile);
+		else
+		{
+			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
-			playerPtr->BodySetUp(playerTile);
+			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
 
@@ -297,45 +345,51 @@ void StageSelecter::CheckLoadStage(int boxnum)
 
 void StageSelecter::CheckToStageChangeInput()
 {
-	//‘I‘ğ’†ˆÈŠO‚Í‚»‚à‚»‚àÀs‚µ‚È‚¢
-	if (state != is_selecting) {
+	//é¸æŠä¸­ä»¥å¤–ã¯ãã‚‚ãã‚‚å®Ÿè¡Œã—ãªã„
+	if (state != is_selecting)
+	{
 		return;
 	}
 
-	//Šeƒ{ƒbƒNƒX‚Ì¶‘¤À•W‚ğŒvZ
+	//å„ãƒœãƒƒã‚¯ã‚¹ã®å·¦å´åº§æ¨™ã‚’è¨ˆç®—
 	std::array<int, 4> boxLeft;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++)
+	{
 		boxLeft[i] = NUMBOX_START_X + (NUMBOX_SIZE * i) + (NUMBOX_SPACE * i);
 	}
 
 	int selectingBoxNum = 0;
 	bool isHit = false;
-	//ƒNƒŠƒbƒN‚É‚Ç‚Ìƒ{ƒbƒNƒX‚ğƒNƒŠƒbƒN‚µ‚Ä‚¢‚é‚©‹‚ß‚é
-	if (Input::isMouseClickTrigger(MOUSE_L) == true) {
+	//ã‚¯ãƒªãƒƒã‚¯æ™‚ã«ã©ã®ãƒœãƒƒã‚¯ã‚¹ã‚’ã‚¯ãƒªãƒƒã‚¯ã—ã¦ã„ã‚‹ã‹æ±‚ã‚ã‚‹
+	if (Input::isMouseClickTrigger(MOUSE_L) == true)
+	{
 		int mouse_x = static_cast<int>(Input::getMousePos().x);
 		int mouse_y = static_cast<int>(Input::getMousePos().y);
 
-		//ƒXƒe[ƒW‚Éƒqƒbƒg‚µ‚Ä‚¢‚é
-		for (int i = 0; i < 4; i++) {
-			if (mouse_x > boxLeft[i] && mouse_x < boxLeft[i] + NUMBOX_SIZE && mouse_y > NUMBOX_START_Y && mouse_y < NUMBOX_START_Y + NUMBOX_SIZE) {
+		//ã‚¹ãƒ†ãƒ¼ã‚¸ã«ãƒ’ãƒƒãƒˆã—ã¦ã„ã‚‹
+		for (int i = 0; i < 4; i++)
+		{
+			if (mouse_x > boxLeft[i] && mouse_x < boxLeft[i] + NUMBOX_SIZE && mouse_y > NUMBOX_START_Y && mouse_y < NUMBOX_START_Y + NUMBOX_SIZE)
+			{
 				selectingBoxNum = i;
-				//ƒQ[ƒ€–{•Ò‚Ö‚Ì‘JˆÚ‚ğ‹–‰Â
+				//ã‚²ãƒ¼ãƒ æœ¬ç·¨ã¸ã®é·ç§»ã‚’è¨±å¯
 				isChanging_GameMain = true;
-				//ƒqƒbƒg
+				//ãƒ’ãƒƒãƒˆ
 				isHit = true;
-				//ƒXƒe[ƒW‘JˆÚŠJn
+				//ã‚¹ãƒ†ãƒ¼ã‚¸é·ç§»é–‹å§‹
 				state = is_stageSelected_waiting;
 				break;
 			}
 		}
-		//ˆêŒÂ‚àƒqƒbƒg‚µ‚Ä‚¢‚È‚¢ê‡‚ÍI—¹
+		//ä¸€å€‹ã‚‚ãƒ’ãƒƒãƒˆã—ã¦ã„ãªã„å ´åˆã¯çµ‚äº†
 		if (!isHit) { return; }
 	}
-	else {//“ü—Í‚ª‚È‚¢‚È‚çI—¹
+	else
+	{//å…¥åŠ›ãŒãªã„ãªã‚‰çµ‚äº†
 		return;
 	}
 
-	//ƒNƒŠƒbƒN‚³‚ê‚Ä‚¢‚éƒ{ƒbƒNƒX‚ÆAŒ»İ‚Ìƒy[ƒW‚©‚çA‚Ç‚ÌƒXƒe[ƒW‚ÉˆÚ“®‚·‚é‚Ì‚©‚ğ‹‚ß‚é
+	//ã‚¯ãƒªãƒƒã‚¯ã•ã‚Œã¦ã„ã‚‹ãƒœãƒƒã‚¯ã‚¹ã¨ã€ç¾åœ¨ã®ãƒšãƒ¼ã‚¸ã‹ã‚‰ã€ã©ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã«ç§»å‹•ã™ã‚‹ã®ã‹ã‚’æ±‚ã‚ã‚‹
 	if (isHit)
 	{
 		CheckLoadStage(selectingBoxNum);

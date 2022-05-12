@@ -6,8 +6,8 @@
 
 namespace
 {
-	Stage* stage = Stage::Get();
-	Player* player = Player::Get();
+Stage* stage = Stage::Get();
+Player* player = Player::Get();
 }
 
 GameMainManager::GameMainManager()
@@ -52,10 +52,7 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	//playerTile[0] = player->playerTile[0];
-	//playerTile[1] = player->playerTile[1];
-	//playerTile[2] = player->playerTile[2];
-	//playerTile[3] = player->playerTile[3];
+	ui.Update(player->playerTile, &Ischangecount);
 
 	ui.Update(playerTile, &Ischangecount, NowScene);
 
@@ -72,11 +69,18 @@ void GameMainManager::GameInstanceUpdate()
 
 	//各ステージの処理
 #ifdef _DEBUG
+	if (Input::isKeyTrigger(DIK_1))
+	{
+		stage->LoadStage("./Resources/stage/stage1.csv", player->playerTile);
+		stage->drawOffsetX = 0.0f;
+		stage->drawOffsetY = 0.0f;
+		player->Init();
+		player->BodySetUp(player->playerTile);
+	}
 
 #endif // _DEBUG
 
-	player->Update(drawOffsetX, drawOffsetY);
-	player->Update(drawOffsetX, drawOffsetY);
+	player->Update(stage->drawOffsetX, stage->drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
@@ -101,7 +105,7 @@ void GameMainManager::GameInstanceUpdate()
 	}
 
 	stage->Updata();
-	stage->FoldAndOpen(player->CenterPosition, playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+	stage->FoldAndOpen(player->CenterPosition, player->playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
 	//ステージとの連動のため開く処理はこっちでやる
 	if (player->OpenCount >= 2)
@@ -176,7 +180,7 @@ void GameMainManager::GameInstanceDraw()
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
 	ui.Draw();
-	stage->Draw(drawOffsetX, drawOffsetY);
-	player->Draw(drawOffsetX, drawOffsetY);
-	tutorial.Draw(drawOffsetX, drawOffsetY);
+	stage->Draw();
+	player->Draw(stage->drawOffsetX, stage->drawOffsetY);
+	tutorial.Draw(tutorialOffsetX, tutorialOffsetY);
 }

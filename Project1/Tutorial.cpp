@@ -4,7 +4,7 @@
 
 namespace
 {
-	Player* player = Player::Get();
+Player* player = Player::Get();
 }
 
 Tutorial::Tutorial() :
@@ -18,10 +18,20 @@ Tutorial::Tutorial() :
 	isFirst(true),
 	isFirstOnly(false)
 {
+	Init();
 }
 
 Tutorial::~Tutorial()
 {
+}
+
+void Tutorial::Init()
+{
+	isTutorial = false;
+	isMoveTutorial = false;
+	isFoldTutorial = false;
+	isFirst = true;
+	isFirstOnly = false;
 }
 
 void Tutorial::Update()
