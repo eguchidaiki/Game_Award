@@ -231,24 +231,32 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 500.0f;
+			stagePtr->drawOffsetY = 75.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -260,24 +268,32 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -289,24 +305,32 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerPtr->playerTile);
+			stagePtr->drawOffsetX = 0.0f;
+			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}

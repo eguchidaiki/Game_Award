@@ -72,14 +72,15 @@ void GameMainManager::GameInstanceUpdate()
 	if (Input::isKeyTrigger(DIK_1))
 	{
 		stage->LoadStage("./Resources/stage/stage1.csv", player->playerTile);
+		stage->drawOffsetX = 0.0f;
+		stage->drawOffsetY = 0.0f;
 		player->Init();
 		player->BodySetUp(player->playerTile);
 	}
 
 #endif // _DEBUG
 
-	player->Update(drawOffsetX, drawOffsetY);
-	player->Update(drawOffsetX, drawOffsetY);
+	player->Update(stage->drawOffsetX, stage->drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
 	player->SetBodyStatus(PlayerBodyStatus);
@@ -174,7 +175,7 @@ void GameMainManager::GameInstanceDraw()
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
 	ui.Draw();
-	stage->Draw(drawOffsetX, drawOffsetY);
-	player->Draw(drawOffsetX, drawOffsetY);
-	tutorial.Draw(drawOffsetX, drawOffsetY);
+	stage->Draw();
+	player->Draw(stage->drawOffsetX, stage->drawOffsetY);
+	tutorial.Draw(tutorialOffsetX, tutorialOffsetY);
 }

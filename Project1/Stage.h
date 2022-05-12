@@ -88,7 +88,10 @@ public: //定数
 
 	RVector3 offset = { 0,0,0 };
 
-private: //静的メンバ変数
+public: //静的メンバ変数
+	static int drawOffsetX;
+	static int drawOffsetY;
+private:
 	static int startPlayerPosX;
 	static int startPlayerPosY;
 	static unsigned char initFoldCount[4];
@@ -99,7 +102,7 @@ public: //メンバ関数
 	// 更新
 	void Updata();
 	// 描画
-	void Draw(int offsetX, int offsetY);
+	void Draw(const int offsetX = 0, const int offsetY = 0);
 	// 生成
 	void Create();
 
@@ -211,8 +214,12 @@ private:
 	// ステージを開く
 	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData);
 
+	// 折り目の描画
+	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
+				 const int offsetX, const int offsetY);
 	// 枠線の描画
-	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction, int offsetX, int offsetY);
+	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
+				  const int offsetX, const int offsetY);
 
 	// イージングの初期化
 	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);
@@ -227,12 +234,12 @@ private: //メンバ変数
 
 	char* reverseMapchip;
 
-	UINT FoldHandle;  //折り目の画像ハンドル
+	UINT lineHandle;  //折り目の画像ハンドル
 	UINT BlockHandle;
 	UINT EmptyHandle;
 	UINT GoalHandle;
 
-	Sprite FoldSprite; //折り目のスプライト
+	Sprite lineSprite; //折り目のスプライト
 	Sprite MapchipSpriteBlock;
 	Sprite MapchipSpriteEmpty;
 	Sprite MapchipSpriteGoal;

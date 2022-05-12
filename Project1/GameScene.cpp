@@ -11,6 +11,8 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 
 	stage->Create();
 	stage->LoadStage("./Resources/stage/test.csv", player->playerTile);
+	stage->drawOffsetX = 0.0f;
+	stage->drawOffsetY = 0.0f;
 	player->Init();
 	player->BodySetUp(player->playerTile);
 
