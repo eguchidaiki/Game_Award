@@ -6,7 +6,7 @@
 #include <Raki_Input.h>
 
 //ステージ選択を管理する
-class StageSelecter 
+class StageSelecter
 {
 private:
 	//ステージ本編を管理するクラスのポインタ（参照しているだけなのでweak_ptrにしたい）
@@ -63,12 +63,8 @@ private:
 	};
 	PAGE_MOVE_DIR pageMoveDir;
 
-	
-
 	//表示番号
 	int nowDisplayNum = 0;
-
-	
 
 	unsigned char playerTile[4] = { 0 };
 
