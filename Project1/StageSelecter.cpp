@@ -222,7 +222,7 @@ void StageSelecter::CheckLoadStage(int boxnum)
 			playerPtr->BodySetUp(playerTile);
 		}
 		else if (boxnum == 1) {
-			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerTile);
+			stagePtr->LoadStage("./Resources/stage/test.csv", playerTile);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerTile);
 		}

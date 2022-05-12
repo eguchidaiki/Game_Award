@@ -103,6 +103,7 @@ void Player::Update(int offsetX, int offsetY)
 	//キー移動
 	Key_Move();
 
+	//ジャンプ中の処理
 	if (IsJump == true)
 	{
 		if (Player_IsAction == false)
@@ -126,10 +127,13 @@ void Player::Update(int offsetX, int offsetY)
 		}
 	}
 
+	//どの体にも引っかからなかったら落ちる
 	if (IsAllFall == true && Player_IsAction == false)
 	{
 		CenterPosition.y += FallSpeed;
 	}
+
+	//顔の当たり判定
 	IsHitPlayerBody();
 	IsAroundBlock();
 
@@ -142,6 +146,7 @@ void Player::Update(int offsetX, int offsetY)
 	//マウス折る・開く入力
 	//Mouse_FoldOpen(offsetX, offsetY);
 
+	//足を上げる演出が終わったら折る処理に入る
 	Fold();
 
 	//PlayerIsactionのfalse条件
@@ -160,32 +165,48 @@ void Player::Update(int offsetX, int offsetY)
 		OpenCount++;
 	}
 
+	//開く処理(OpenCountを参照するのでこの順番でOK)
 	Open();
 
+	//顔の下に体があるかどうか
 	IsdownBody();
-	leg.Update(CenterPosition, IsDownBody, 1);
-	if (leg.FootIsAction == false)
+
+	//足のy座標はこっちで判断して引数で渡す
+	RVector3 FootUpPosition = { 0,0,0 };
+	if (Body_Four.IsActivate && Body_Four.IsOpen)
 	{
-		if (CenterPosition.y + 25 <= Body_Two.BodyEndPos.y && Body_Two.IsActivate)
+		if (Body_Four.BodyStartPos.y < Body_Four.BodyEndPos.y)
 		{
-			if (Body_Four.IsActivate && Body_Four.IsOpen && Body_Four.BodyEndPos.y <= Body_Two.BodyEndPos.y)
+			FootUpPosition =
 			{
-				leg.FootLeftUpPosition.x = CenterPosition.x - 30;
-				leg.FootLeftUpPosition.y = Body_Four.BodyEndPos.y;
-			}
-			else
-			{
-				leg.FootLeftUpPosition.x = CenterPosition.x - 30;
-				leg.FootLeftUpPosition.y = Body_Two.BodyEndPos.y;
-			}
+				CenterPosition.x - 30,
+				Body_Four.BodyEndPos.y,
+				0
+			};
 		}
 		else
 		{
-			leg.FootLeftUpPosition.x = CenterPosition.x - 30;
-			leg.FootLeftUpPosition.y = CenterPosition.y + 25;
+			FootUpPosition =
+			{
+				CenterPosition.x - 30,
+				Body_Four.BodyStartPos.y,
+				0
+			};
 		}
 	}
+	else
+	{
+		FootUpPosition =
+		{
+			CenterPosition.x - 30,
+			CenterPosition.y + 25,
+			0
+		};
+	}
 
+	leg.Update(FootUpPosition, IsDownBody, 1);
+
+	//それぞれの体のアップデート処理(有効化されているときのみ)
 	if (Body_One.IsActivate == true)
 	{
 		Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
@@ -211,6 +232,7 @@ void Player::Update(int offsetX, int offsetY)
 		Body_Four.IsAroundBlock();
 	}
 
+	//ゴール演出
 	if (IsGoal)
 	{
 		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
@@ -235,9 +257,6 @@ void Player::Draw(int offsetX, int offsetY)
 				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
 				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
 		}
-		/*DrawExtendGraph(
-			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-			static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
 	if (IsRight)
 	{
@@ -253,9 +272,6 @@ void Player::Draw(int offsetX, int offsetY)
 				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
 				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
 		}
-		/*DrawExtendGraph(
-			static_cast<int>(CenterPosition.x) + 25 + offsetX, static_cast<int>(CenterPosition.y) - 25 + offsetY,
-			static_cast<int>(CenterPosition.x) - 25 + offsetX, static_cast<int>(CenterPosition.y) + 25 + offsetY, FaceHandle[Player_IsAction], true);*/
 	}
 
 #pragma region body_draw
@@ -325,11 +341,12 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	//ImGui::Text("IsGoal:%d", IsUpBlocked);
-	//ImGui::Text("PressCount:%d", PressCount);
-	//ImGui::Text("IsWalk:%d", IsWalk);
-	//ImGui::Text("IsJump:%d", IsJump);
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	ImGui::Text("flag:%d", IsWalk);
+	ImGui::Text("1:%d", Body_One.AfterBodyFoldCount);
+	ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
+	ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
+	ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
 	//ImGui::Text("IsInitJump:%d", IsInitJump);
 	//ImGui::Text("x:%f", CenterPosition.x);
 	//ImGui::Text("y:%f", CenterPosition.y);
@@ -338,7 +355,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	//ImguiMgr::Get()->EndDrawImgui();
+	ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
@@ -361,11 +378,12 @@ void Player::Create()
 
 void Player::Key_Move()
 {
+	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
+
 	//左右移動
 	if (actFlag->MoveRight() && Player_IsAction == false)
 	{
 		CenterPosition.x += SideMoveSpeed;
-		IsWalk = true;
 		IsLeft = false;
 		IsRight = true;
 	}
@@ -373,14 +391,8 @@ void Player::Key_Move()
 	if (actFlag->MoveLeft() && Player_IsAction == false)
 	{
 		CenterPosition.x -= SideMoveSpeed;
-		IsWalk = true;
 		IsLeft = true;
 		IsRight = false;
-	}
-
-	if (!actFlag->MoveLeft() && !actFlag->MoveLeft())
-	{
-		IsWalk = false;
 	}
 
 	//ジャンプ入力できるかどうか
@@ -406,7 +418,6 @@ void Player::Key_FoldOpen()
 {
 	//折る入力
 	if (actFlag->FoldLeft())
-		//if (actFlag->FoldLeft())
 	{ //左に折る
 		if (IsDirectionFoldAll(BodyType::left))
 		{
@@ -424,7 +435,6 @@ void Player::Key_FoldOpen()
 		//}
 	}
 	if (actFlag->FoldUp())
-		//if (actFlag->FoldUp())
 	{ //上に折る
 		if (IsDirectionFoldAll(BodyType::up))
 		{
@@ -442,7 +452,6 @@ void Player::Key_FoldOpen()
 		//}
 	}
 	if (actFlag->FoldRight())
-		//if (actFlag->FoldRight())
 	{ //右に折る
 		if (IsDirectionFoldAll(BodyType::right))
 		{
@@ -460,7 +469,6 @@ void Player::Key_FoldOpen()
 		//}
 	}
 	if (actFlag->FoldDown())
-		//if (actFlag->FoldDown())
 	{ //下に折る
 		if (IsDirectionFoldAll(BodyType::down))
 		{
@@ -480,7 +488,6 @@ void Player::Key_FoldOpen()
 
 	//開く入力
 	if (actFlag->OpenLeft())
-		//if (actFlag->OpenLeft())
 	{ //左に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -495,7 +502,6 @@ void Player::Key_FoldOpen()
 		//}
 	}
 	if (actFlag->OpenUp())
-		//if (actFlag->OpenUp())
 	{ //上に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -510,7 +516,6 @@ void Player::Key_FoldOpen()
 		//}
 	}
 	if (actFlag->OpenRight())
-		//if (actFlag->OpenRight())
 	{ //右に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -525,7 +530,6 @@ void Player::Key_FoldOpen()
 		//}
 	}
 	if (actFlag->OpenDown())
-		//if (actFlag->OpenDown())
 	{ //下に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -1176,86 +1180,8 @@ void Player::Fold()
 	{
 		if (IsLeftFold == true)
 		{
-			//body1とbody3が両方有効だった時
-			if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-			{
-				Body_One.Ease.addTime = 0.1f;
-				Body_One.Ease.maxTime = 1.2f;
-				Body_One.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_One.IsFold == false && Body_One.IsOpen == true && Body_One.IsAction == false)
-				{
-					Body_One.Ease.isMove = true;
-					Body_One.IsFold = true;
-					Body_One.IsOpen = false;
-					Body_One.IsAction = true;
-
-					if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Two.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Four.IsActivate == true)
-					{
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-				}
-
-				if (Body_One.IsFold == true && Body_One.IsOpen == false && Body_One.FoldCount == 1 &&
-					Body_One.IsAction == false && Body_Three.Body_Type == BodyType::left)
-				{
-					Body_Three.Ease.addTime = 0.1f;
-					Body_Three.Ease.maxTime = 1.2f;
-					Body_Three.Ease.timeRate = 0.0f;
-
-					Body_Three.Ease.isMove = true;
-					Body_Three.IsFold = true;
-					Body_Three.IsOpen = false;
-					Body_Three.IsAction = true;
-					Body_Three.AfterBodyFoldCount = 0;
-
-					Body_One.IsAction = true;
-					Body_One.Ease.isMove = true;
-					Body_One.AfterBodyFoldCount = 1;
-
-					if (Body_Two.IsFold == true)
-					{
-						Body_Two.AfterBodyFoldCount = 2;
-					}
-				}
-
-				if (Body_One.BodyDistance == 2 && Body_Two.IsFold == true)
-				{
-					//IsOpenUp = false;
-				}
-
-				if (Body_One.Body_Type != Body_Three.Body_Type)
-				{
-					if (Body_Three.IsFold == true)
-					{
-						Body_Three.AfterBodyFoldCount++;
-					}
-				}
-			}
 			//body1のみ有効
-			else if (Body_One.IsActivate == true)
+			if (Body_One.IsActivate == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
 				Body_One.Ease.maxTime = 1.2f;
@@ -1269,67 +1195,22 @@ void Player::Fold()
 					Body_One.IsOpen = false;
 					Body_One.IsAction = true;
 
-					if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Two.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Four.IsActivate == true)
-					{
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-				}
-			}
-			//body3のみ有効
-			else if (Body_Three.IsActivate == true)
-			{
-				Body_Three.Ease.addTime = 0.1f;
-				Body_Three.Ease.maxTime = 1.2f;
-				Body_Three.Ease.timeRate = 0.0f;
 
-				//折る
-				if (Body_Three.IsFold == false && Body_Three.IsOpen == true && Body_Three.IsAction == false)
-				{
-					Body_Three.Ease.isMove = true;
-					Body_Three.IsFold = true;
-					Body_Three.IsOpen = false;
-					Body_Three.IsAction = true;
-
-					if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Two.IsActivate == true)
+					if (Body_Two.IsActivate == true)
 					{
 						if (Body_Two.IsFold == true)
 						{
 							Body_Two.AfterBodyFoldCount++;
 						}
 					}
-					else if (Body_Four.IsActivate == true)
+					if (Body_Three.IsActivate == true)
+					{
+						if (Body_Three.IsFold == true)
+						{
+							Body_Three.AfterBodyFoldCount++;
+						}
+					}
+					if (Body_Four.IsActivate == true)
 					{
 						if (Body_Four.IsFold == true)
 						{
@@ -1343,94 +1224,8 @@ void Player::Fold()
 		}
 		if (IsUpFold == true)
 		{
-			//body2とbody4が両方有効だった時
-			if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-			{
-				Body_Two.Ease.addTime = 0.1f;
-				Body_Two.Ease.maxTime = 1.2f;
-				Body_Two.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_Two.IsFold == false && Body_Two.IsOpen == true && Body_Two.IsAction == false)
-				{
-					Body_Two.Ease.isMove = true;
-					Body_Two.IsFold = true;
-					Body_Two.IsOpen = false;
-					Body_Two.IsAction = true;
-
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Three.IsActivate == true)
-					{
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-				}
-
-				if (Body_Two.IsFold == true && Body_Two.IsOpen == false && Body_Two.FoldCount == 1 &&
-					Body_Two.IsAction == false && Body_Four.Body_Type == BodyType::left)
-				{
-					Body_Four.Ease.addTime = 0.1f;
-					Body_Four.Ease.maxTime = 1.2f;
-					Body_Four.Ease.timeRate = 0.0f;
-
-					Body_Four.Ease.isMove = true;
-					Body_Four.IsFold = true;
-					Body_Four.IsOpen = false;
-					Body_Four.IsAction = true;
-					Body_Four.AfterBodyFoldCount = 0;
-
-					Body_Two.IsAction = true;
-					Body_Two.Ease.isMove = true;
-					Body_Two.AfterBodyFoldCount = 1;
-
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Three.IsActivate == true)
-					{
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-				}
-			}
 			//body2のみ有効
-			else if (Body_Two.IsActivate == true)
+			if (Body_Two.IsActivate == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
 				Body_Two.Ease.maxTime = 1.2f;
@@ -1444,71 +1239,25 @@ void Player::Fold()
 					Body_Two.IsOpen = false;
 					Body_Two.IsAction = true;
 
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
+					if (Body_One.IsActivate == true)
 					{
 						if (Body_One.IsFold == true)
 						{
 							Body_One.AfterBodyFoldCount++;
 						}
 					}
-					else if (Body_Three.IsActivate == true)
+					if (Body_Three.IsActivate == true)
 					{
 						if (Body_Three.IsFold == true)
 						{
 							Body_Three.AfterBodyFoldCount++;
 						}
 					}
-				}
-			}
-			//body4のみ有効
-			else if (Body_Four.IsActivate == true)
-			{
-				Body_Four.Ease.addTime = 0.1f;
-				Body_Four.Ease.maxTime = 1.2f;
-				Body_Four.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_Four.IsFold == false && Body_Four.IsOpen == true && Body_Four.IsAction == false)
-				{
-					Body_Four.Ease.isMove = true;
-					Body_Four.IsFold = true;
-					Body_Four.IsOpen = false;
-					Body_Four.IsAction = true;
-
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
+					if (Body_Four.IsActivate == true)
 					{
-						if (Body_One.IsFold == true)
+						if (Body_Four.IsFold == true)
 						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Three.IsActivate == true)
-					{
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
+							Body_Four.AfterBodyFoldCount++;
 						}
 					}
 				}
@@ -1518,128 +1267,8 @@ void Player::Fold()
 		}
 		if (IsRightFold == true)
 		{
-			//body1とbody3が両方有効だった時
-			if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-			{
-				Body_Three.Ease.addTime = 0.1f;
-				Body_Three.Ease.maxTime = 1.2f;
-				Body_Three.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_Three.IsFold == false && Body_Three.IsOpen == true && Body_Three.IsAction == false)
-				{
-					Body_Three.Ease.isMove = true;
-					Body_Three.IsFold = true;
-					Body_Three.IsOpen = false;
-					Body_Three.IsAction = true;
-
-					if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Two.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Four.IsActivate == true)
-					{
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-				}
-
-				if (Body_Three.IsFold == true && Body_Three.IsOpen == false && Body_Three.FoldCount == 1 &&
-					Body_Three.IsAction == false && Body_One.Body_Type == BodyType::right)
-				{
-					Body_One.Ease.addTime = 0.1f;
-					Body_One.Ease.maxTime = 1.2f;
-					Body_One.Ease.timeRate = 0.0f;
-
-					Body_One.Ease.isMove = true;
-					Body_One.IsFold = true;
-					Body_One.IsOpen = false;
-					Body_One.IsAction = true;
-					Body_One.AfterBodyFoldCount = 0;
-
-					Body_Three.IsAction = true;
-					Body_Three.Ease.isMove = true;
-					Body_Three.AfterBodyFoldCount = 1;
-
-					if (Body_Two.IsFold == true)
-					{
-						Body_Two.AfterBodyFoldCount = 2;
-					}
-				}
-
-				if (Body_Three.BodyDistance == 2 && Body_Two.IsFold == true)
-				{
-					//IsOpenUp = false;
-				}
-
-				if (Body_One.Body_Type != Body_Three.Body_Type)
-				{
-					if (Body_One.IsFold == true)
-					{
-						Body_One.AfterBodyFoldCount++;
-					}
-				}
-			}
-			//body1のみ有効
-			else if (Body_One.IsActivate == true)
-			{
-				Body_One.Ease.addTime = 0.1f;
-				Body_One.Ease.maxTime = 1.2f;
-				Body_One.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_One.IsFold == false && Body_One.IsOpen == true && Body_One.IsAction == false)
-				{
-					Body_One.Ease.isMove = true;
-					Body_One.IsFold = true;
-					Body_One.IsOpen = false;
-					Body_One.IsAction = true;
-
-					if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Two.IsActivate == true)
-					{
-						if (Body_Two.IsFold == true)
-						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Four.IsActivate == true)
-					{
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
-						}
-					}
-				}
-			}
 			//body3のみ有効
-			else if (Body_Three.IsActivate == true)
+			if (Body_Three.IsActivate == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
 				Body_Three.Ease.maxTime = 1.2f;
@@ -1653,25 +1282,21 @@ void Player::Fold()
 					Body_Three.IsOpen = false;
 					Body_Three.IsAction = true;
 
-					if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
+					if (Body_One.IsActivate == true)
 					{
-						if (Body_Two.IsFold == true)
+						if (Body_One.IsFold == true)
 						{
-							Body_Two.AfterBodyFoldCount++;
-						}
-						if (Body_Four.IsFold == true)
-						{
-							Body_Four.AfterBodyFoldCount++;
+							Body_One.AfterBodyFoldCount++;
 						}
 					}
-					else if (Body_Two.IsActivate == true)
+					if (Body_Two.IsActivate == true)
 					{
 						if (Body_Two.IsFold == true)
 						{
 							Body_Two.AfterBodyFoldCount++;
 						}
 					}
-					else if (Body_Four.IsActivate == true)
+					if (Body_Four.IsActivate == true)
 					{
 						if (Body_Four.IsFold == true)
 						{
@@ -1685,136 +1310,8 @@ void Player::Fold()
 		}
 		if (IsDownFold == true)
 		{
-			//body2とbody4が両方有効だった時
-			if (Body_Two.IsActivate == true && Body_Four.IsActivate == true)
-			{
-				Body_Two.Ease.addTime = 0.1f;
-				Body_Two.Ease.maxTime = 1.2f;
-				Body_Two.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_Two.IsFold == false && Body_Two.IsOpen == true && Body_Two.IsAction == false)
-				{
-					Body_Two.Ease.isMove = true;
-					Body_Two.IsFold = true;
-					Body_Two.IsOpen = false;
-					Body_Two.IsAction = true;
-
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Three.IsActivate == true)
-					{
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-				}
-
-				if (Body_Two.IsFold == true && Body_Two.IsOpen == false && Body_Two.FoldCount == 1 &&
-					Body_Two.IsAction == false && Body_Four.Body_Type == BodyType::left)
-				{
-					Body_Four.Ease.addTime = 0.1f;
-					Body_Four.Ease.maxTime = 1.2f;
-					Body_Four.Ease.timeRate = 0.0f;
-
-					Body_Four.Ease.isMove = true;
-					Body_Four.IsFold = true;
-					Body_Four.IsOpen = false;
-					Body_Four.IsAction = true;
-					Body_Four.AfterBodyFoldCount = 0;
-
-					Body_Two.IsAction = true;
-					Body_Two.Ease.isMove = true;
-					Body_Two.AfterBodyFoldCount = 1;
-
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Three.IsActivate == true)
-					{
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-				}
-			}
-			//body2のみ有効
-			else if (Body_Two.IsActivate == true)
-			{
-				Body_Two.Ease.addTime = 0.1f;
-				Body_Two.Ease.maxTime = 1.2f;
-				Body_Two.Ease.timeRate = 0.0f;
-
-				//折る
-				if (Body_Two.IsFold == false && Body_Two.IsOpen == true && Body_Two.IsAction == false)
-				{
-					Body_Two.Ease.isMove = true;
-					Body_Two.IsFold = true;
-					Body_Two.IsOpen = false;
-					Body_Two.IsAction = true;
-
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_Three.IsActivate == true)
-					{
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-				}
-			}
 			//body4のみ有効
-			else if (Body_Four.IsActivate == true)
+			if (Body_Four.IsActivate == true)
 			{
 				Body_Four.Ease.addTime = 0.1f;
 				Body_Four.Ease.maxTime = 1.2f;
@@ -1828,25 +1325,21 @@ void Player::Fold()
 					Body_Four.IsOpen = false;
 					Body_Four.IsAction = true;
 
-					if (Body_One.IsActivate == true && Body_Three.IsActivate == true)
-					{
-						if (Body_One.IsFold == true)
-						{
-							Body_One.AfterBodyFoldCount++;
-						}
-						if (Body_Three.IsFold == true)
-						{
-							Body_Three.AfterBodyFoldCount++;
-						}
-					}
-					else if (Body_One.IsActivate == true)
+					if (Body_One.IsActivate == true)
 					{
 						if (Body_One.IsFold == true)
 						{
 							Body_One.AfterBodyFoldCount++;
 						}
 					}
-					else if (Body_Three.IsActivate == true)
+					if (Body_Two.IsActivate == true)
+					{
+						if (Body_Two.IsFold == true)
+						{
+							Body_Two.AfterBodyFoldCount++;
+						}
+					}
+					if (Body_Three.IsActivate == true)
 					{
 						if (Body_Three.IsFold == true)
 						{
@@ -1869,64 +1362,6 @@ void Player::Open()
 		if (IsLeftOpen == true)
 		{
 			if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::left &&
-				Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::left)
-			{
-				if (Body_Three.IsFold == false)
-				{
-					Body_One.Ease.addTime = 0.1f;
-					Body_One.Ease.maxTime = 1.2f;
-					Body_One.Ease.timeRate = 0.0f;
-
-					Body_One.Ease.isMove = true;
-					Body_One.IsFold = false;
-					Body_One.IsOpen = true;
-					Body_One.IsAction = true;
-
-					Body_Three.AfterBodyFoldCount--;
-
-					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-					{
-						Body_Two.AfterBodyFoldCount--;
-					}
-					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-					{
-						Body_Four.AfterBodyFoldCount--;
-					}
-				}
-				else
-				{
-					Body_One.Ease.addTime = 0.1f;
-					Body_One.Ease.maxTime = 1.2f;
-					Body_One.Ease.timeRate = 0.0f;
-
-					Body_One.Ease.isMove = true;
-					Body_One.IsFold = false;
-					Body_One.IsOpen = true;
-					Body_One.IsAction = true;
-
-					Body_Three.Ease.addTime = 0.1f;
-					Body_Three.Ease.maxTime = 1.2f;
-					Body_Three.Ease.timeRate = 0.0f;
-
-					Body_Three.Ease.isMove = true;
-					Body_Three.IsFold = false;
-					Body_Three.IsOpen = true;
-					Body_Three.IsAction = true;
-
-					Body_Three.AfterBodyFoldCount++;
-					Body_One.AfterBodyFoldCount--;
-
-					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-					{
-						Body_Two.AfterBodyFoldCount--;
-					}
-					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-					{
-						Body_Four.AfterBodyFoldCount--;
-					}
-				}
-			}
-			else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::left &&
 				Body_One.IsFold == true)
 			{
 				Body_One.Ease.addTime = 0.1f;
@@ -1945,31 +1380,6 @@ void Player::Open()
 				if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
 				{
 					Body_Three.AfterBodyFoldCount--;
-				}
-				if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-				{
-					Body_Four.AfterBodyFoldCount--;
-				}
-			}
-			else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::left &&
-				Body_Three.IsFold == true)
-			{
-				Body_Three.Ease.addTime = 0.1f;
-				Body_Three.Ease.maxTime = 1.2f;
-				Body_Three.Ease.timeRate = 0.0f;
-
-				Body_Three.Ease.isMove = true;
-				Body_Three.IsFold = false;
-				Body_Three.IsOpen = true;
-				Body_Three.IsAction = true;
-
-				if (Body_One.IsActivate == true && Body_One.IsFold == true)
-				{
-					Body_One.AfterBodyFoldCount--;
-				}
-				if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-				{
-					Body_Two.AfterBodyFoldCount--;
 				}
 				if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
 				{
@@ -1983,64 +1393,6 @@ void Player::Open()
 		if (IsUpOpen == true)
 		{
 			if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::up &&
-				Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::up)
-			{
-				if (Body_Four.IsFold == false)
-				{
-					Body_Two.Ease.addTime = 0.1f;
-					Body_Two.Ease.maxTime = 1.2f;
-					Body_Two.Ease.timeRate = 0.0f;
-
-					Body_Two.Ease.isMove = true;
-					Body_Two.IsFold = false;
-					Body_Two.IsOpen = true;
-					Body_Two.IsAction = true;
-
-					Body_Four.AfterBodyFoldCount--;
-
-					if (Body_One.IsActivate == true && Body_One.IsFold == true)
-					{
-						Body_One.AfterBodyFoldCount--;
-					}
-					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-					{
-						Body_Three.AfterBodyFoldCount--;
-					}
-				}
-				else
-				{
-					Body_Two.Ease.addTime = 0.1f;
-					Body_Two.Ease.maxTime = 1.2f;
-					Body_Two.Ease.timeRate = 0.0f;
-
-					Body_Two.Ease.isMove = true;
-					Body_Two.IsFold = false;
-					Body_Two.IsOpen = true;
-					Body_Two.IsAction = true;
-
-					Body_Four.Ease.addTime = 0.1f;
-					Body_Four.Ease.maxTime = 1.2f;
-					Body_Four.Ease.timeRate = 0.0f;
-
-					Body_Four.Ease.isMove = true;
-					Body_Four.IsFold = false;
-					Body_Four.IsOpen = true;
-					Body_Four.IsAction = true;
-
-					Body_Two.AfterBodyFoldCount--;
-					Body_Four.AfterBodyFoldCount++;
-
-					if (Body_One.IsActivate == true && Body_One.IsFold == true)
-					{
-						Body_One.AfterBodyFoldCount--;
-					}
-					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-					{
-						Body_Three.AfterBodyFoldCount--;
-					}
-				}
-			}
-			else if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::up &&
 				Body_Two.IsFold == true)
 			{
 				Body_Two.Ease.addTime = 0.1f;
@@ -2065,31 +1417,6 @@ void Player::Open()
 					Body_Four.AfterBodyFoldCount--;
 				}
 			}
-			else if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::up &&
-				Body_Four.IsFold == true)
-			{
-				Body_Four.Ease.addTime = 0.1f;
-				Body_Four.Ease.maxTime = 1.2f;
-				Body_Four.Ease.timeRate = 0.0f;
-
-				Body_Four.Ease.isMove = true;
-				Body_Four.IsFold = false;
-				Body_Four.IsOpen = true;
-				Body_Four.IsAction = true;
-
-				if (Body_One.IsActivate == true && Body_One.IsFold == true)
-				{
-					Body_One.AfterBodyFoldCount--;
-				}
-				if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-				{
-					Body_Two.AfterBodyFoldCount--;
-				}
-				if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-				{
-					Body_Three.AfterBodyFoldCount--;
-				}
-			}
 
 			//IsUpOpen = false;
 		}
@@ -2097,64 +1424,6 @@ void Player::Open()
 		if (IsRightOpen == true)
 		{
 			if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::right &&
-				Body_One.IsActivate == true && Body_One.Body_Type == BodyType::right)
-			{
-				if (Body_One.IsFold == false)
-				{
-					Body_Three.Ease.addTime = 0.1f;
-					Body_Three.Ease.maxTime = 1.2f;
-					Body_Three.Ease.timeRate = 0.0f;
-
-					Body_Three.Ease.isMove = true;
-					Body_Three.IsFold = false;
-					Body_Three.IsOpen = true;
-					Body_Three.IsAction = true;
-
-					Body_One.AfterBodyFoldCount--;
-
-					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-					{
-						Body_Two.AfterBodyFoldCount--;
-					}
-					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-					{
-						Body_Four.AfterBodyFoldCount--;
-					}
-				}
-				else
-				{
-					Body_Three.Ease.addTime = 0.1f;
-					Body_Three.Ease.maxTime = 1.2f;
-					Body_Three.Ease.timeRate = 0.0f;
-
-					Body_Three.Ease.isMove = true;
-					Body_Three.IsFold = false;
-					Body_Three.IsOpen = true;
-					Body_Three.IsAction = true;
-
-					Body_One.Ease.addTime = 0.1f;
-					Body_One.Ease.maxTime = 1.2f;
-					Body_One.Ease.timeRate = 0.0f;
-
-					Body_One.Ease.isMove = true;
-					Body_One.IsFold = false;
-					Body_One.IsOpen = true;
-					Body_One.IsAction = true;
-
-					Body_One.AfterBodyFoldCount++;
-					Body_Three.AfterBodyFoldCount--;
-
-					if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-					{
-						Body_Two.AfterBodyFoldCount--;
-					}
-					if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-					{
-						Body_Four.AfterBodyFoldCount--;
-					}
-				}
-			}
-			else if (Body_Three.IsActivate == true && Body_Three.Body_Type == BodyType::right &&
 				Body_Three.IsFold == true)
 			{
 				Body_Three.Ease.addTime = 0.1f;
@@ -2179,122 +1448,13 @@ void Player::Open()
 					Body_Four.AfterBodyFoldCount--;
 				}
 			}
-			else if (Body_One.IsActivate == true && Body_One.Body_Type == BodyType::right &&
-				Body_One.IsFold == true)
-			{
-				Body_One.Ease.addTime = 0.1f;
-				Body_One.Ease.maxTime = 1.2f;
-				Body_One.Ease.timeRate = 0.0f;
-
-				Body_One.Ease.isMove = true;
-				Body_One.IsFold = false;
-				Body_One.IsOpen = true;
-				Body_One.IsAction = true;
-
-				if (Body_Two.IsActivate == true && Body_Two.IsFold == true)
-				{
-					Body_Two.AfterBodyFoldCount--;
-				}
-				if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-				{
-					Body_Three.AfterBodyFoldCount--;
-				}
-				if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-				{
-					Body_Four.AfterBodyFoldCount--;
-				}
-			}
-
 
 			//IsRightOpen = false;
 		}
 		//下を開く
 		if (IsDownOpen == true)
 		{
-			if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::down &&
-				Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down)
-			{
-				if (Body_Two.IsFold == false)
-				{
-					Body_Four.Ease.addTime = 0.1f;
-					Body_Four.Ease.maxTime = 1.2f;
-					Body_Four.Ease.timeRate = 0.0f;
-
-					Body_Four.Ease.isMove = true;
-					Body_Four.IsFold = false;
-					Body_Four.IsOpen = true;
-					Body_Four.IsAction = true;
-
-					Body_Two.AfterBodyFoldCount--;
-
-					if (Body_One.IsActivate == true && Body_One.IsFold == true)
-					{
-						Body_One.AfterBodyFoldCount--;
-					}
-					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-					{
-						Body_Three.AfterBodyFoldCount--;
-					}
-				}
-				else
-				{
-					Body_Two.Ease.addTime = 0.1f;
-					Body_Two.Ease.maxTime = 1.2f;
-					Body_Two.Ease.timeRate = 0.0f;
-
-					Body_Two.Ease.isMove = true;
-					Body_Two.IsFold = false;
-					Body_Two.IsOpen = true;
-					Body_Two.IsAction = true;
-
-					Body_Four.Ease.addTime = 0.1f;
-					Body_Four.Ease.maxTime = 1.2f;
-					Body_Four.Ease.timeRate = 0.0f;
-
-					Body_Four.Ease.isMove = true;
-					Body_Four.IsFold = false;
-					Body_Four.IsOpen = true;
-					Body_Four.IsAction = true;
-
-					Body_Two.AfterBodyFoldCount++;
-					Body_Four.AfterBodyFoldCount--;
-
-					if (Body_One.IsActivate == true && Body_One.IsFold == true)
-					{
-						Body_One.AfterBodyFoldCount--;
-					}
-					if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-					{
-						Body_Three.AfterBodyFoldCount--;
-					}
-				}
-			}
-			else if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::down &&
-				Body_Two.IsFold == true)
-			{
-				Body_Two.Ease.addTime = 0.1f;
-				Body_Two.Ease.maxTime = 1.2f;
-				Body_Two.Ease.timeRate = 0.0f;
-
-				Body_Two.Ease.isMove = true;
-				Body_Two.IsFold = false;
-				Body_Two.IsOpen = true;
-				Body_Two.IsAction = true;
-
-				if (Body_One.IsActivate == true && Body_One.IsFold == true)
-				{
-					Body_One.AfterBodyFoldCount--;
-				}
-				if (Body_Three.IsActivate == true && Body_Three.IsFold == true)
-				{
-					Body_Three.AfterBodyFoldCount--;
-				}
-				if (Body_Four.IsActivate == true && Body_Four.IsFold == true)
-				{
-					Body_Four.AfterBodyFoldCount--;
-				}
-			}
-			else if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down &&
+			if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down &&
 				Body_Four.IsFold == true)
 			{
 				Body_Four.Ease.addTime = 0.1f;
@@ -2769,13 +1929,13 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 
 	bool ReverseHitFace = IsReverseHitFace(foldtype);
 
-	if (ReverseHitFace == true && BodyCanFoldCount <= 0)
+	if (ReverseHitFace == false && BodyCanFoldCount > 0)
 	{
-		return true;
+		return false;
 	}
 	else
 	{
-		return false;
+		return true;
 	}
 }
 

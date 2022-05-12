@@ -716,22 +716,22 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	direction = -1;
 
 	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
-	if (player->Body_Two.IsFold || player->IsUpOpen)
+	if (player->Body_Two.IsAction)
 	{
 		direction = BodyType::up;
 	}
 	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
-	else if (player->Body_Four.IsFold || player->IsDownOpen)
+	else if (player->Body_Four.IsAction)
 	{
 		direction = BodyType::down;
 	}
 	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
-	else if (player->Body_One.IsFold || player->IsLeftOpen)
+	else if (player->Body_One.IsAction)
 	{
 		direction = BodyType::left;
 	}
 	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
-	else if (player->Body_Three.IsFold || player->IsRightOpen)
+	else if (player->Body_Three.IsAction)
 	{
 		direction = BodyType::right;
 	}
@@ -794,6 +794,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					}
 				}
 
+				CreateParticle(i, moveStageData);
+
 				break;
 			}
 			case BodyType::down: //下入力
@@ -814,7 +816,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::down] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::down] == true)
@@ -831,6 +833,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -852,7 +856,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::left] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::left] == true)
@@ -869,6 +873,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -909,6 +915,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 					}
 				}
 
+				CreateParticle(i, moveStageData);
+
 				break;
 			}
 			default:
@@ -917,8 +925,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 				break;
 			}
 			}
-
-			CreateParticle(i, moveStageData);
 
 			if (isAct)
 			{

@@ -318,8 +318,8 @@ bool ActFlag::OpenDown()
 		//return false;
 	}
 
-	if ((player->Body_Four.IsActivate && player->Body_Four.IsFold &&
-		player->Body_Four.AfterBodyFoldCount == 0) == false && inputManger->SubDownTrigger())
+	if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
+		player->Body_Four.AfterBodyFoldCount == 0 && inputManger->SubDownTrigger())
 	{
 		return true;
 	}

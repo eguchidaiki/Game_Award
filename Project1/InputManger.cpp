@@ -75,7 +75,7 @@ bool InputManger::Up()
 
 bool InputManger::UpTrigger()
 {
-	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_UP) || Input::isXpadStickTilt(XPAD_LSTICK_DIR_UP);
+	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_B);
 }
 
 bool InputManger::UpReturn()
@@ -135,7 +135,7 @@ bool InputManger::SubUp()
 
 bool InputManger::SubUpTrigger()
 {
-	return Input::isKeyTrigger(DIK_UP) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_Y);
+	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_UP);
 }
 
 bool InputManger::SubUpReturn()
@@ -150,7 +150,7 @@ bool InputManger::SubDown()
 
 bool InputManger::SubDownTrigger()
 {
-	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_A);
+	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_DOWN);
 }
 
 bool InputManger::SubDownReturn()
@@ -165,7 +165,7 @@ bool InputManger::SubLeft()
 
 bool InputManger::SubLeftTrigger()
 {
-	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_X);
+	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_LEFT);
 }
 
 bool InputManger::SubLeftReturn()
@@ -180,7 +180,7 @@ bool InputManger::SubRight()
 
 bool InputManger::SubRightTrigger()
 {
-	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_B);
+	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_RIGHT);
 }
 
 bool InputManger::SubRightReturn()
