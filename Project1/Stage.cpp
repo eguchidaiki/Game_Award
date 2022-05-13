@@ -1707,7 +1707,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX + stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB + 1.0f;
-				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
+				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].z = 0.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos] *= blockSize;
 
@@ -1724,7 +1724,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX - stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB;
-				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
+				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].z = 0.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos] *= blockSize;
 
@@ -1759,51 +1759,49 @@ void Stage::EaseingUpdate()
 				min(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
 			ease = Easing::easeOut(0.0f, 1.0f, stageData[i].stageTileData[j].stageEase.timeRate);
 
-			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
+			for (mapchipPos = 0; mapchipPos < stageData[i].stageTileData[j].size; mapchipPos++)
 			{
-				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
+				//x = mapchipPos % stageData[i].stageTileData[j].width;
+				//y = mapchipPos / stageData[i].stageTileData[j].width;
+
+				static RVector3 axisPos = {};
+
+				switch ((stageData[i].stageTileData[j].direction - 1) % 4)
 				{
-					static RVector3 axisPos = {};
-
-					mapchipPos = y * stageData[i].stageTileData[j].width + x;
-
-					switch ((stageData[i].stageTileData[j].direction - 1) % 4)
-					{
-					case BodyType::up:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y + (stageData[i].stageTileData[j].offsetY * blockSize)),
-							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
-						break;
-					case BodyType::down:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y - blockSize),
-							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
-						break;
-					case BodyType::left:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x + (stageData[i].stageTileData[j].offsetX * blockSize)),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
-							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
-						break;
-					case BodyType::right:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x - blockSize),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
-							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
-						break;
-					default:
-						break;
-					}
-
-					std::vector<RVector3> pos = {
-						stageData[i].stageTileData[j].startPos[mapchipPos],
-						axisPos,
-						stageData[i].stageTileData[j].endPos[mapchipPos]
-					};
-
-					stageData[i].stageTileData[j].easePos[mapchipPos] = Easing::SplineCurve(
-						pos,
-						stageData[i].stageTileData[j].stageEase.splineIndex,
-						stageData[i].stageTileData[j].stageEase.timeRate);
+				case BodyType::up:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[0].y + (stageData[i].stageTileData[j].height * blockSize)),
+						static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
+					break;
+				case BodyType::down:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[0].y - blockSize),
+						static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
+					break;
+				case BodyType::left:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x + (stageData[i].stageTileData[j].width * blockSize)),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
+						static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
+					break;
+				case BodyType::right:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x - blockSize),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
+						static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
+					break;
+				default:
+					break;
 				}
+
+				std::vector<RVector3> pos = {
+					stageData[i].stageTileData[j].startPos[mapchipPos],
+					axisPos,
+					stageData[i].stageTileData[j].endPos[mapchipPos]
+				};
+
+				stageData[i].stageTileData[j].easePos[mapchipPos] = Easing::SplineCurve(
+					pos,
+					stageData[i].stageTileData[j].stageEase.splineIndex,
+					stageData[i].stageTileData[j].stageEase.timeRate);
 			}
 
 			if (stageData[i].stageTileData[j].stageEase.timeRate >= 1.0f)

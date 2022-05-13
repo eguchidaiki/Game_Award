@@ -234,20 +234,30 @@ private: //メンバ変数
 
 	char* reverseMapchip;
 
+<<<<<<< HEAD
 	//折り目の画像ハンドル
 	UINT lineHandle;
 	//ブロックの画像ハンドル
 	UINT BlocksHandle[4];
 	//空白の画像ハンドル
+=======
+	UINT lineHandle;  //線の画像ハンドル
+	UINT BlockHandle;
+>>>>>>> origin/master
 	UINT EmptyHandle;
 	//ゴールの画像ハンドル
 	UINT GoalHandle;
 
+<<<<<<< HEAD
 	//折り目のスプライト
 	Sprite lineSprite;
 	//ブロックのスプライト
 	Sprite MapchipSpriteBlocks[4];
 	//空白のスプライト
+=======
+	Sprite lineSprite; //線のスプライト
+	Sprite MapchipSpriteBlock;
+>>>>>>> origin/master
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト
 	Sprite MapchipSpriteGoal;

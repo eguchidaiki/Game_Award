@@ -72,8 +72,6 @@ private:
 	//表示番号
 	int nowDisplayNum = 0;
 
-	unsigned char playerTile[4] = { 0 };
-
 	//ロード関数（連番画像のためにint -> string変換）
 	void LoadSprite();
 
