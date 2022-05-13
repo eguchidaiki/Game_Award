@@ -48,11 +48,11 @@ Stage::Stage() :
 	initStageData{},
 	reverseMapchip(nullptr),
 	lineHandle(0),
-	BlockHandle(0),
+	BlocksHandle(),
 	EmptyHandle(0),
 	GoalHandle(0),
 	lineSprite{},
-	MapchipSpriteBlock{},
+	MapchipSpriteBlocks{},
 	MapchipSpriteEmpty{},
 	MapchipSpriteGoal{},
 	IsParticleTrigger(false),
@@ -295,7 +295,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 					}
 					case MapchipData::BLOCK:
 					{
-						MapchipSpriteBlock.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						MapchipSpriteBlocks[i].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
 					case MapchipData::GOAL:
@@ -397,7 +397,11 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
-	MapchipSpriteBlock.Draw();
+	for (i = 0; i < stageData.size() ;i++)
+	{
+		MapchipSpriteBlocks[i].Draw();
+	}
+
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEmpty.Draw();
 	lineSprite.Draw();
@@ -405,10 +409,16 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 void Stage::Create()
 {
-	if ((MapchipSpriteBlock.spdata->size.x <= 0) || (MapchipSpriteBlock.spdata->size.y <= 0))
+	BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/blockB.png");//青
+	BlocksHandle[1] = TexManager::LoadTexture("Resources/Blocks/blockG.png");//緑
+	BlocksHandle[2] = TexManager::LoadTexture("Resources/Blocks/blockR.png");//赤
+	BlocksHandle[3] = TexManager::LoadTexture("Resources/Blocks/blockY.png");//黄
+	for (i = 0; i < 4; i++)
 	{
-		BlockHandle = TexManager::LoadTexture("Resources/block.png");
-		MapchipSpriteBlock.Create(BlockHandle);
+		if ((MapchipSpriteBlocks[i].spdata->size.x <= 0) || (MapchipSpriteBlocks[i].spdata->size.y <= 0))
+		{
+			MapchipSpriteBlocks[i].Create(BlocksHandle[i]);
+		}
 	}
 
 	if ((MapchipSpriteEmpty.spdata->size.x <= 0) || (MapchipSpriteEmpty.spdata->size.y <= 0))
