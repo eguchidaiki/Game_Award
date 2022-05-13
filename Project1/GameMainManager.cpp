@@ -52,15 +52,13 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update(player->playerTile, &Ischangecount);
-
-	ui.Update(playerTile, &Ischangecount, NowScene);
+	ui.Update(player->playerTile, &Ischangecount, NowScene);
 
 	if (IsStart == false)
 	{
-		stage->Reset(playerTile);
+		stage->Reset(player->playerTile);
 		player->Init();
-		player->BodySetUp(playerTile);
+		player->BodySetUp(player->playerTile);
 		IsStart = true;
 	}
 
@@ -71,8 +69,8 @@ void GameMainManager::GameInstanceUpdate()
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
-		stage->LoadStage("./Resources/stage/stage1.csv", player->playerTile);
-		stage->drawOffsetX = 0.0f;
+		stage->LoadStage("./Resources/stage/test.csv", player->playerTile);
+		stage->drawOffsetX = 200.0f;
 		stage->drawOffsetY = 0.0f;
 		player->Init();
 		player->BodySetUp(player->playerTile);
