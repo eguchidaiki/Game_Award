@@ -52,15 +52,13 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update(player->playerTile, &Ischangecount);
-
-	ui.Update(playerTile, &Ischangecount, NowScene);
+	ui.Update(player->playerTile, &Ischangecount, NowScene);
 
 	if (IsStart == false)
 	{
-		stage->Reset(playerTile);
+		stage->Reset(player->playerTile);
 		player->Init();
-		player->BodySetUp(playerTile);
+		player->BodySetUp(player->playerTile);
 		IsStart = true;
 	}
 

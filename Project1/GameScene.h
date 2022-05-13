@@ -29,7 +29,6 @@ public:
 
     // ゲームループで使う変数の宣言
     Player* player = Player::Get();
-    unsigned char playerTile[4] = { 0 };
     Stage* stage = Stage::Get();
 
     //ステージ選択かゲーム中か
