@@ -11,7 +11,7 @@ class UI
 public:
 	void Init(Tutorial* tutorial);
 
-	void Update(unsigned char PlayerTile[4], bool* Isback);
+	void Update(unsigned char PlayerTile[4], bool* Isback, int StageNum);
 
 	void Draw();
 

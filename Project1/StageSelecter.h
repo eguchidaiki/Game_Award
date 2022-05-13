@@ -83,8 +83,8 @@ private:
 	void PageChange();
 
 	//ステージ遷移のための入力検知
-	const int NUMBOX_START_X = 325;
-	const int NUMBOX_START_Y = 285;
+	const int NUMBOX_START_X = 275;
+	const int NUMBOX_START_Y = 320;
 	const int NUMBOX_SIZE = 130;
 	const int NUMBOX_SPACE = 60;
 	void CheckLoadStage(int boxnum);

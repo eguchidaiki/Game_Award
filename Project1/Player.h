@@ -163,7 +163,7 @@ public: //メンバ変数
 	bool IsOpenCountStart = false;
 
 	//移動速度
-	float SideMoveSpeed = 3.0f;
+	float SideMoveSpeed = 2.0f;
 
 	//ジャンプ
 	bool IsJump;

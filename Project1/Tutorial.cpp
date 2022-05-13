@@ -36,17 +36,6 @@ void Tutorial::Init()
 
 void Tutorial::Update()
 {
-	if (isTutorial == false)
-	{
-		return;
-	}
-
-	if (isFirstOnly && isFirst == false)
-	{
-		isTutorial = false;
-		return;
-	}
-
 	static bool isMove = false;
 	static bool isFold = false;
 
@@ -54,41 +43,21 @@ void Tutorial::Update()
 	isFold = player->IsUpFold || player->IsDownFold ||
 		player->IsLeftFold || player->IsRightFold;
 
-	if (isMoveTutorial == false)
+	if (isMoveTutorial && player->IsWalk)
 	{
-		if (isMove)
-		{
-			isMoveTutorial = true;
-		}
-	}
-	else if (isFoldTutorial == false)
-	{
-		if (isFold)
-		{
-			isFoldTutorial = true;
-		}
-	}
-
-	if (isMoveTutorial && isFoldTutorial)
-	{
-		isFirst = false;
-		isTutorial = false;
+		isMoveTutorial = false;
+		isFoldTutorial = true;
 	}
 }
 
 void Tutorial::Draw(int offsetX, int offsetY)
 {
-	if (isTutorial == false)
-	{
-		return;
-	}
-
-	if (isMoveTutorial == false)
+	if (isMoveTutorial == true)
 	{
 		moveSprite.DrawSprite(offsetX, offsetY);
 		moveSprite.Draw();
 	}
-	else if (isFoldTutorial == false)
+	if(isFoldTutorial == true)
 	{
 		foldSprite.DrawSprite(offsetX, offsetY);
 		foldSprite.Draw();
@@ -123,14 +92,14 @@ void Tutorial::StartTutorial()
 	}
 
 	isTutorial = true;
-	isMoveTutorial = false;
+	isMoveTutorial = true;
 	isFoldTutorial = false;
 }
 
 void Tutorial::ResetTutorial()
 {
 	isTutorial = false;
-	isMoveTutorial = false;
+	isMoveTutorial = true;
 	isFoldTutorial = false;
 	isFirst = true;
 	isFirstOnly = false;

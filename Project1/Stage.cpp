@@ -1,7 +1,7 @@
 ﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
-#include "PlayerBody.h"
+#include "Player.h"
 #include "NY_random.h"
 #include <Raki_DX12B.h>
 
@@ -13,11 +13,13 @@ container.shrink_to_fit();
 
 namespace
 {
-static size_t i = 0, j = 0; //for文のループカウンタ
-static size_t x = 0, y = 0; //マップチップ上の座標
+	static size_t i = 0, j = 0; //for文のループカウンタ
+	static size_t x = 0, y = 0; //マップチップ上の座標
 
-static size_t mapchipPos = 0; //マップチップの要素番号
-static size_t reverseMapchipPos = 0; //反転したマップチップの要素番号
+	static size_t mapchipPos = 0; //マップチップの要素番号
+	static size_t reverseMapchipPos = 0; //反転したマップチップの要素番号
+
+	static Player* player = Player::Get(); //プレイヤー
 }
 
 const int Stage::blockSize = 60;
@@ -391,7 +393,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 		}
 	}
 
-	//particleManager->Prototype_Draw(EmptyHandle);
+	particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
@@ -565,8 +567,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 			}
 
 			if (LoadFile::LoadCSV(stageData[i].stageTileData[lastIndex].mapchip,
-								  stageData[i].stageTileData[lastIndex].width *
-								  stageData[i].stageTileData[lastIndex].height, fileHandle, endCharacter) != 0)
+				stageData[i].stageTileData[lastIndex].width *
+				stageData[i].stageTileData[lastIndex].height, fileHandle, endCharacter) != 0)
 			{
 				// 関数失敗
 				return EF;
@@ -645,7 +647,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 		{
 			char* initMapchip = static_cast<char*>(malloc(sizeof(char) * stageData[i].stageTileData[j].size));
 			memcpy_s(initMapchip, sizeof(char) * stageData[i].stageTileData[j].size,
-					 stageData[i].stageTileData[j].mapchip, sizeof(char) * stageData[i].stageTileData[j].size);
+				stageData[i].stageTileData[j].mapchip, sizeof(char) * stageData[i].stageTileData[j].size);
 			initStageData[i].stageTileData[j].mapchip = initMapchip;
 		}
 	}
@@ -663,22 +665,22 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	direction = -1;
 
 	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
-	if (IsFolds[BodyType::up] || IsOpens[BodyType::up])
+	if (player->Body_Two.IsAction)
 	{
 		direction = BodyType::up;
 	}
 	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
-	else if (IsFolds[BodyType::down] || IsOpens[BodyType::down])
+	else if (player->Body_Four.IsAction)
 	{
 		direction = BodyType::down;
 	}
 	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
-	else if (IsFolds[BodyType::left] || IsOpens[BodyType::left])
+	else if (player->Body_One.IsAction)
 	{
 		direction = BodyType::left;
 	}
 	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
-	else if (IsFolds[BodyType::right] || IsOpens[BodyType::right])
+	else if (player->Body_Three.IsAction)
 	{
 		direction = BodyType::right;
 	}
@@ -692,9 +694,9 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			if ((playerPos.x / blockSize >= initStageData[i].stageTileData[j].offsetX &&
-				 playerPos.x / blockSize < initStageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
+				playerPos.x / blockSize < initStageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
 				(playerPos.y / blockSize >= initStageData[i].stageTileData[j].offsetY &&
-				 playerPos.y / blockSize < initStageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
+					playerPos.y / blockSize < initStageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
 			{
 				onPlayerStageTile = initStageData[i].stageTileData[j].stageNumber;
 			}
@@ -723,7 +725,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::up] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::up] == true)
@@ -733,13 +735,15 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::up] == true)
+				else if (player->leg.FootIsAction == false && player->Body_Two.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -761,7 +765,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::down] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::down] == true)
@@ -771,13 +775,15 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::down] == true)
+				else if (player->leg.FootIsAction == false && player->Body_Four.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -799,7 +805,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::left] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::left] == true)
@@ -809,13 +815,15 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::left] == true)
+				else if (player->leg.FootIsAction == false && player->Body_One.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -837,7 +845,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::right] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::right] == true)
@@ -847,13 +855,16 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::right] == true)
+
+				if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -863,8 +874,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 				break;
 			}
 			}
-
-			CreateParticle(i, moveStageData);
 
 			if (isAct)
 			{
@@ -895,9 +904,9 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			if ((playerPos.x / blockSize >= stageData[i].stageTileData[j].offsetX &&
-				 playerPos.x / blockSize < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
+				playerPos.x / blockSize < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
 				(playerPos.y / blockSize >= stageData[i].stageTileData[j].offsetY &&
-				 playerPos.y / blockSize < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
+					playerPos.y / blockSize < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
 			{
 				onPlayerStageData = i;
 			}
@@ -1258,7 +1267,8 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
 		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
-		this->particleManager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
+		//this->particleManager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
+		this->particleManager->Prototype_Add(1, { 10,10,0.0f });
 	}
 }
 
