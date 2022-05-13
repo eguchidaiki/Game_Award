@@ -1549,7 +1549,7 @@ void Player::IsHitPlayerBody()
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = (left_mapchip * 60) - (CenterPosition.x - 30);
 					BuriedY = (up_mapchip * 60) - (CenterPosition.y - 30);
@@ -1567,7 +1567,7 @@ void Player::IsHitPlayerBody()
 				if (up_mapchip_tile > 0)
 				{
 					MapchipPos = (up_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
-					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 					{
 						IsUpBlocked = false;
 					}
@@ -1584,7 +1584,7 @@ void Player::IsHitPlayerBody()
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = (left_mapchip * 60) - (CenterPosition.x - 30);
 					BuriedY = ((CenterPosition.y + 29) - 60) - (down_mapchip * 60);
@@ -1609,7 +1609,7 @@ void Player::IsHitPlayerBody()
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = ((CenterPosition.x + 29) - 60) - (right_mapchip * 60);
 					BuriedY = (up_mapchip * 60) - (CenterPosition.y - 30);
@@ -1627,7 +1627,7 @@ void Player::IsHitPlayerBody()
 				if (up_mapchip_tile > 0)
 				{
 					MapchipPos = (up_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
-					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 					{
 						IsUpBlocked = false;
 					}
@@ -1645,7 +1645,7 @@ void Player::IsHitPlayerBody()
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = ((CenterPosition.x + 29) - 60) - (right_mapchip * 60);
 					BuriedY = ((CenterPosition.y + 29) - 60) - (down_mapchip * 60);
@@ -1719,7 +1719,7 @@ void Player::IsHitPlayerBody()
 				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + left_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)) &&
 					Player::Get()->IsLeft == true)
 				{
 					DiagonallyUpLeft = true;
@@ -1732,7 +1732,7 @@ void Player::IsHitPlayerBody()
 				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
 				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + right_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::BLOCK &&
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)) &&
 					Player::Get()->IsRight == true)
 				{
 					DiagonallyUpRight = true;
@@ -1861,7 +1861,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
 
-				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
 					return false;
 				}
@@ -1874,7 +1874,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
 
-				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
 					return false;
 				}
@@ -1887,7 +1887,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
 
-				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
 					return false;
 				}
@@ -1900,7 +1900,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
 
-				if (ReverseMapchips[MapchipPos] == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
 					return false;
 				}
@@ -2060,7 +2060,7 @@ void Player::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsLeftBlockFace = true;
 				}
@@ -2078,7 +2078,7 @@ void Player::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsRightBlockFace = true;
 				}
@@ -2096,7 +2096,7 @@ void Player::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsUpBlockFace = true;
 				}
@@ -2114,7 +2114,7 @@ void Player::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsDownBlockFace = true;
 				}
