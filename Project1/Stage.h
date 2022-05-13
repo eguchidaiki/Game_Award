@@ -11,7 +11,25 @@ enum MapchipData
 	NONE = 1,
 	BLOCK = 2,
 	GOAL = 3,
-	START = 4
+	START = 4,
+
+	HORIZONTAL = 10,
+	VERTICAL = 11,
+
+	LEFTONLY = 20,
+	UPONLY = 21,
+	RIGHTONLY = 22,
+	DOWNONLY = 23,
+
+	LEFTL = 30,
+	UPL = 31,
+	RIGHTL = 32,
+	DOWNL = 33,
+
+	LEFTU = 40,
+	UPU = 41,
+	RIGHTU = 42,
+	DOWNU = 43,
 };
 
 class Player;
@@ -105,6 +123,13 @@ public: //メンバ関数
 	void Draw(const int offsetX = 0, const int offsetY = 0);
 	// 生成
 	void Create();
+
+	//ブロックの画像ハンドルの読み込み
+	void LoadBlocksHandle();
+	//ブロックスライトの生成
+	void CreateBlocksSprite();
+
+	//ブロックのスプライト読み込み
 
 	/// <summary>
 	/// ステージファイルの読み込み
@@ -201,6 +226,8 @@ public: //メンバ関数
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].mapchip[mapchipPos];
 	}
+	//引数で取ったマップチップがブロックかどうか
+	bool IsMapchipBlocks(char mapchip);
 	// 任意の座標からどのステージタイルにいるかを取得
 	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
@@ -216,10 +243,10 @@ private:
 
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-				 const int offsetX, const int offsetY);
+		const int offsetX, const int offsetY);
 	// 枠線の描画
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-				  const int offsetX, const int offsetY);
+		const int offsetX, const int offsetY);
 
 	// イージングの初期化
 	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);
@@ -238,7 +265,12 @@ private: //メンバ変数
 	//折り目の画像ハンドル
 	UINT lineHandle;
 	//ブロックの画像ハンドル
-	UINT BlocksHandle[4];
+	//UINT BlocksHandle[4];
+	UINT AllBlockHandle[4][15];
+	UINT Bule_BlocksHandle[15];
+	UINT Green_BlocksHandle[15];
+	UINT Red_BlocksHandle[15];
+	UINT Yellow_BlocksHandle[15];
 	//空白の画像ハンドル
 	UINT EmptyHandle;
 	//ゴールの画像ハンドル
@@ -247,7 +279,8 @@ private: //メンバ変数
 	//折り目のスプライト
 	Sprite lineSprite;
 	//ブロックのスプライト
-	Sprite MapchipSpriteBlocks[4];
+	//Sprite MapchipSpriteBlocks[4];
+	Sprite AllBlockSprite[4][15];
 	//空白のスプライト
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト

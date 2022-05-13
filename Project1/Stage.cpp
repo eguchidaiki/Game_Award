@@ -48,11 +48,11 @@ Stage::Stage() :
 	initStageData{},
 	reverseMapchip(nullptr),
 	lineHandle(0),
-	BlocksHandle(),
+	AllBlockHandle(),
 	EmptyHandle(0),
 	GoalHandle(0),
 	lineSprite{},
-	MapchipSpriteBlocks{},
+	AllBlockSprite{},
 	MapchipSpriteEmpty{},
 	MapchipSpriteGoal{},
 	IsParticleTrigger(false),
@@ -295,7 +295,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 					}
 					case MapchipData::BLOCK:
 					{
-						MapchipSpriteBlocks[i].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						AllBlockSprite[i][0].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
 					case MapchipData::GOAL:
@@ -303,6 +303,62 @@ void Stage::Draw(const int offsetX, const int offsetY)
 						MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
+					case MapchipData::HORIZONTAL:
+						AllBlockSprite[i][1].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::VERTICAL:
+						AllBlockSprite[i][2].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::LEFTONLY:
+						AllBlockSprite[i][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+						
+					case MapchipData::UPONLY:
+						AllBlockSprite[i][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::RIGHTONLY:
+						AllBlockSprite[i][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::DOWNONLY:
+						AllBlockSprite[i][6].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::LEFTL:
+						AllBlockSprite[i][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::UPL:
+						AllBlockSprite[i][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::RIGHTL:
+						AllBlockSprite[i][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::DOWNL:
+						AllBlockSprite[i][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::LEFTU:
+						AllBlockSprite[i][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::UPU:
+						AllBlockSprite[i][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::RIGHTU:
+						AllBlockSprite[i][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::DOWNU:
+						AllBlockSprite[i][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
 					case MapchipData::NONE:
 					case MapchipData::START:
 					default:
@@ -397,9 +453,12 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
-	for (i = 0; i < stageData.size() ;i++)
+	for (i = 0; i < stageData.size(); i++)
 	{
-		MapchipSpriteBlocks[i].Draw();
+		for (j = 0; j < 15; j++)
+		{
+			AllBlockSprite[i][j].Draw();
+		}
 	}
 
 	MapchipSpriteGoal.Draw();
@@ -409,17 +468,8 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 void Stage::Create()
 {
-	BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/blockB.png");//青
-	BlocksHandle[1] = TexManager::LoadTexture("Resources/Blocks/blockG.png");//緑
-	BlocksHandle[2] = TexManager::LoadTexture("Resources/Blocks/blockR.png");//赤
-	BlocksHandle[3] = TexManager::LoadTexture("Resources/Blocks/blockY.png");//黄
-	for (i = 0; i < 4; i++)
-	{
-		if ((MapchipSpriteBlocks[i].spdata->size.x <= 0) || (MapchipSpriteBlocks[i].spdata->size.y <= 0))
-		{
-			MapchipSpriteBlocks[i].Create(BlocksHandle[i]);
-		}
-	}
+	LoadBlocksHandle();
+	CreateBlocksSprite();
 
 	if ((MapchipSpriteEmpty.spdata->size.x <= 0) || (MapchipSpriteEmpty.spdata->size.y <= 0))
 	{
@@ -443,6 +493,132 @@ void Stage::Create()
 	{
 		particleManager = ParticleManager::Create();
 		particleManager->Prototype_Set(FoldParticle);
+	}
+}
+
+void Stage::LoadBlocksHandle()
+{
+	//画像ハンドルの読み込み
+	Bule_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Bule/blockB.png");//青
+	Green_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Green/blockG.png");//緑
+	Red_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Red/blockR.png");//赤
+	Yellow_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Yellow/blockY.png");//黄
+
+	std::string BasePath = "Resources/Blocks/";
+	std::string fileType = ".png";
+
+	std::string Bule = "Block_Bule/blockB";
+	std::string Green = "Block_Green/blockG";
+	std::string Red = "Block_Red/blockR";
+	std::string Yellow = "Block_Yellow/blockY";
+
+	std::string Horizontal = "_=";
+	std::string Vertical = "_ll";
+
+	for (i = 0; i < 4; i++)
+	{
+		switch (i)
+		{
+		case 0:
+		{
+			//青色のブロックの画像ハンドル
+			AllBlockHandle[0][0] = TexManager::LoadTexture(BasePath + Bule + fileType);
+			AllBlockHandle[0][1] = TexManager::LoadTexture(BasePath + Bule + Horizontal + fileType);
+			AllBlockHandle[0][2] = TexManager::LoadTexture(BasePath + Bule + Vertical + fileType);
+			AllBlockHandle[0][3] = TexManager::LoadTexture(BasePath + Bule + "_I_Left" + fileType);
+			AllBlockHandle[0][4] = TexManager::LoadTexture(BasePath + Bule + "_I_Up" + fileType);
+			AllBlockHandle[0][5] = TexManager::LoadTexture(BasePath + Bule + "_I_Right" + fileType);
+			AllBlockHandle[0][6] = TexManager::LoadTexture(BasePath + Bule + "_I_Down" + fileType);
+			AllBlockHandle[0][7] = TexManager::LoadTexture(BasePath + Bule + "_L_Left" + fileType);
+			AllBlockHandle[0][8] = TexManager::LoadTexture(BasePath + Bule + "_L_Up" + fileType);
+			AllBlockHandle[0][9] = TexManager::LoadTexture(BasePath + Bule + "_L_right" + fileType);
+			AllBlockHandle[0][10] = TexManager::LoadTexture(BasePath + Bule + "_L_Down" + fileType);
+			AllBlockHandle[0][11] = TexManager::LoadTexture(BasePath + Bule + "_U_Left" + fileType);
+			AllBlockHandle[0][12] = TexManager::LoadTexture(BasePath + Bule + "_U_Up" + fileType);
+			AllBlockHandle[0][13] = TexManager::LoadTexture(BasePath + Bule + "_U_Right" + fileType);
+			AllBlockHandle[0][14] = TexManager::LoadTexture(BasePath + Bule + "_U_Down" + fileType);
+
+			break;
+		}
+		case 1:
+		{
+			//緑色のブロックの画像ハンドル
+			AllBlockHandle[1][0] = TexManager::LoadTexture(BasePath + Green + fileType);
+			AllBlockHandle[1][1] = TexManager::LoadTexture(BasePath + Green + Horizontal + fileType);
+			AllBlockHandle[1][2] = TexManager::LoadTexture(BasePath + Green + Vertical + fileType);
+			AllBlockHandle[1][3] = TexManager::LoadTexture(BasePath + Green + "_I_Left" + fileType);
+			AllBlockHandle[1][4] = TexManager::LoadTexture(BasePath + Green + "_I_Up" + fileType);
+			AllBlockHandle[1][5] = TexManager::LoadTexture(BasePath + Green + "_I_Right" + fileType);
+			AllBlockHandle[1][6] = TexManager::LoadTexture(BasePath + Green + "_I_Down" + fileType);
+			AllBlockHandle[1][7] = TexManager::LoadTexture(BasePath + Green + "_L_Left" + fileType);
+			AllBlockHandle[1][8] = TexManager::LoadTexture(BasePath + Green + "_L_Up" + fileType);
+			AllBlockHandle[1][9] = TexManager::LoadTexture(BasePath + Green + "_L_right" + fileType);
+			AllBlockHandle[1][10] = TexManager::LoadTexture(BasePath + Green + "_L_Down" + fileType);
+			AllBlockHandle[1][11] = TexManager::LoadTexture(BasePath + Green + "_U_Left" + fileType);
+			AllBlockHandle[1][12] = TexManager::LoadTexture(BasePath + Green + "_U_Up" + fileType);
+			AllBlockHandle[1][13] = TexManager::LoadTexture(BasePath + Green + "_U_Right" + fileType);
+			AllBlockHandle[1][14] = TexManager::LoadTexture(BasePath + Green + "_U_Down" + fileType);
+			break;
+		}
+		case 2:
+		{
+			//赤色のブロックの画像ハンドル
+			AllBlockHandle[2][0] = TexManager::LoadTexture(BasePath + Red + fileType);
+			AllBlockHandle[2][1] = TexManager::LoadTexture(BasePath + Red + Horizontal + fileType);
+			AllBlockHandle[2][2] = TexManager::LoadTexture(BasePath + Red + Vertical + fileType);
+			AllBlockHandle[2][3] = TexManager::LoadTexture(BasePath + Red + "_I_Left" + fileType);
+			AllBlockHandle[2][4] = TexManager::LoadTexture(BasePath + Red + "_I_Up" + fileType);
+			AllBlockHandle[2][5] = TexManager::LoadTexture(BasePath + Red + "_I_Right" + fileType);
+			AllBlockHandle[2][6] = TexManager::LoadTexture(BasePath + Red + "_I_Down" + fileType);
+			AllBlockHandle[2][7] = TexManager::LoadTexture(BasePath + Red + "_L_Left" + fileType);
+			AllBlockHandle[2][8] = TexManager::LoadTexture(BasePath + Red + "_L_Up" + fileType);
+			AllBlockHandle[2][9] = TexManager::LoadTexture(BasePath + Red + "_L_right" + fileType);
+			AllBlockHandle[2][10] = TexManager::LoadTexture(BasePath + Red + "_L_Down" + fileType);
+			AllBlockHandle[2][11] = TexManager::LoadTexture(BasePath + Red + "_U_Left" + fileType);
+			AllBlockHandle[2][12] = TexManager::LoadTexture(BasePath + Red + "_U_Up" + fileType);
+			AllBlockHandle[2][13] = TexManager::LoadTexture(BasePath + Red + "_U_Right" + fileType);
+			AllBlockHandle[2][14] = TexManager::LoadTexture(BasePath + Red + "_U_Down" + fileType);
+			break;
+		}
+		case 3:
+		{
+			//黄色のブロックの画像ハンドル
+			AllBlockHandle[3][0] = TexManager::LoadTexture(BasePath + Yellow + fileType);
+			AllBlockHandle[3][1] = TexManager::LoadTexture(BasePath + Yellow + Horizontal + fileType);
+			AllBlockHandle[3][2] = TexManager::LoadTexture(BasePath + Yellow + Vertical + fileType);
+			AllBlockHandle[3][3] = TexManager::LoadTexture(BasePath + Yellow + "_I_Left" + fileType);
+			AllBlockHandle[3][4] = TexManager::LoadTexture(BasePath + Yellow + "_I_Up" + fileType);
+			AllBlockHandle[3][5] = TexManager::LoadTexture(BasePath + Yellow + "_I_Right" + fileType);
+			AllBlockHandle[3][6] = TexManager::LoadTexture(BasePath + Yellow + "_I_Down" + fileType);
+			AllBlockHandle[3][7] = TexManager::LoadTexture(BasePath + Yellow + "_L_Left" + fileType);
+			AllBlockHandle[3][8] = TexManager::LoadTexture(BasePath + Yellow + "_L_Up" + fileType);
+			AllBlockHandle[3][9] = TexManager::LoadTexture(BasePath + Yellow + "_L_right" + fileType);
+			AllBlockHandle[3][10] = TexManager::LoadTexture(BasePath + Yellow + "_L_Down" + fileType);
+			AllBlockHandle[3][11] = TexManager::LoadTexture(BasePath + Yellow + "_U_Left" + fileType);
+			AllBlockHandle[3][12] = TexManager::LoadTexture(BasePath + Yellow + "_U_Up" + fileType);
+			AllBlockHandle[3][13] = TexManager::LoadTexture(BasePath + Yellow + "_U_Right" + fileType);
+			AllBlockHandle[3][14] = TexManager::LoadTexture(BasePath + Yellow + "_U_Down" + fileType);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+	}
+}
+
+void Stage::CreateBlocksSprite()
+{
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 15; j++)
+		{
+			if ((AllBlockSprite[i][j].spdata->size.x <= 0) || (AllBlockSprite[i][j].spdata->size.y <= 0))
+			{
+				AllBlockSprite[i][j].Create(AllBlockHandle[i][j]);
+			}
+		}
 	}
 }
 
@@ -1216,6 +1392,31 @@ inline Stage::StageData* Stage::GetAllStageData()
 	return stageData.data();
 }
 
+bool Stage::IsMapchipBlocks(char mapchip)
+{
+	if (mapchip == MapchipData::BLOCK)
+	{
+		return true;
+	}
+
+	if (mapchip >= MapchipData::LEFTONLY && mapchip <= MapchipData::DOWNONLY)
+	{
+		return true;
+	}
+
+	if (mapchip >= MapchipData::LEFTL && mapchip <= MapchipData::DOWNL)
+	{
+		return true;
+	}
+
+	if (mapchip >= MapchipData::LEFTU && mapchip <= MapchipData::DOWNU)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber)
 {
 	*stageNumber = static_cast<size_t>(-1);
@@ -1458,7 +1659,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 }
 
 int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-					const int offsetX, const int offsetY)
+	const int offsetX, const int offsetY)
 {
 	static int posX = 0, posY = 0;
 	static XMFLOAT2 pos1 = {}, pos2 = {};
@@ -1581,7 +1782,7 @@ int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, co
 }
 
 int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-					 const int offsetX, const int offsetY)
+	const int offsetX, const int offsetY)
 {
 	static int posX = 0, posY = 0;
 	static XMFLOAT2 pos1 = {}, pos2 = {};
