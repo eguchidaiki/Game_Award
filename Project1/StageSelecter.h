@@ -48,6 +48,9 @@ private:
 	std::array<Sprite, 20> selectImg_5_8;
 	std::array<Sprite, 20> selectImg_9_12;
 
+	Sprite SelectLeft;
+	Sprite SelectRight;
+
 	//現在表示するステージのページ
 	enum STAGE_PAGE
 	{
