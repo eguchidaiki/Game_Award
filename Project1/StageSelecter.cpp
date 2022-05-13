@@ -140,7 +140,8 @@ void StageSelecter::CheckToPageChangeInput()
 			if (isMove) { pageMoveDir = is_front; }
 
 		}
-		else if (mouse_x < static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		else if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626
+			&& Input::isMouseClickTrigger(MOUSE_L))
 		{
 			switch (nowpage)
 			{

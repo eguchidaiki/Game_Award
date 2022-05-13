@@ -6,8 +6,8 @@
 
 namespace
 {
-Stage* stage = Stage::Get();
-Player* player = Player::Get();
+	Stage* stage = Stage::Get();
+	Player* player = Player::Get();
 }
 
 GameMainManager::GameMainManager()
@@ -52,7 +52,7 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update(player->playerTile, &Ischangecount);
+	ui.Update(player->playerTile, &Ischangecount, NowScene);
 
 	ui.Update(playerTile, &Ischangecount, NowScene);
 
