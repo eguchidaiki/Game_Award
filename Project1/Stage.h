@@ -234,14 +234,23 @@ private: //メンバ変数
 
 	char* reverseMapchip;
 
-	UINT lineHandle;  //線の画像ハンドル
-	UINT BlockHandle;
+
+	//折り目の画像ハンドル
+	UINT lineHandle;
+	//ブロックの画像ハンドル
+	UINT BlocksHandle[4];
+	//空白の画像ハンドル
 	UINT EmptyHandle;
+	//ゴールの画像ハンドル
 	UINT GoalHandle;
 
-	Sprite lineSprite; //線のスプライト
-	Sprite MapchipSpriteBlock;
+	//折り目のスプライト
+	Sprite lineSprite;
+	//ブロックのスプライト
+	Sprite MapchipSpriteBlocks[4];
+	//空白のスプライト
 	Sprite MapchipSpriteEmpty;
+	//ゴールのスプライト
 	Sprite MapchipSpriteGoal;
 
 	bool IsParticleTrigger;

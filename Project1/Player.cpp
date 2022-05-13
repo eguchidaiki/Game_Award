@@ -341,12 +341,12 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	ImGui::Text("flag:%d", IsWalk);
-	ImGui::Text("1:%d", Body_One.AfterBodyFoldCount);
-	ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
-	ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
-	ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
+	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	//ImGui::Text("flag:%d", IsWalk);
+	//ImGui::Text("1:%d", Body_One.AfterBodyFoldCount);
+	//ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
+	//ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
+	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
 	//ImGui::Text("IsInitJump:%d", IsInitJump);
 	//ImGui::Text("x:%f", CenterPosition.x);
 	//ImGui::Text("y:%f", CenterPosition.y);
@@ -355,7 +355,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();
+	//ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
