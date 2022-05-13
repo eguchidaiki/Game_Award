@@ -48,6 +48,9 @@ private:
 	std::array<Sprite, 20> selectImg_5_8;
 	std::array<Sprite, 20> selectImg_9_12;
 
+	Sprite SelectLeft;
+	Sprite SelectRight;
+
 	//現在表示するステージのページ
 	enum STAGE_PAGE
 	{
@@ -81,10 +84,10 @@ private:
 	void PageChange();
 
 	//ステージ遷移のための入力検知
-	const int NUMBOX_START_X = 275;
-	const int NUMBOX_START_Y = 320;
-	const int NUMBOX_SIZE = 130;
-	const int NUMBOX_SPACE = 60;
+	const int NUMBOX_START_X = 284;
+	const int NUMBOX_START_Y = 325;
+	const int NUMBOX_SIZE = 129;
+	const int NUMBOX_SPACE = 65;
 	void CheckLoadStage(int boxnum);
 	void CheckToStageChangeInput();
 

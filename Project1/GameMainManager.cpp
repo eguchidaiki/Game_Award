@@ -6,8 +6,8 @@
 
 namespace
 {
-Stage* stage = Stage::Get();
-Player* player = Player::Get();
+	Stage* stage = Stage::Get();
+	Player* player = Player::Get();
 }
 
 GameMainManager::GameMainManager()
@@ -34,10 +34,10 @@ void GameMainManager::Init()
 
 void GameMainManager::Update()
 {
-	//ƒQ[ƒ€“àƒCƒ“ƒXƒ^ƒ“ƒX‚ÌXVˆ—i‚æ‚¤‚Í‰´‚ªì‚Á‚Ä‚È‚¢ƒNƒ‰ƒX‚ÌXVˆ—B‚â‚â‚±‚µ‚­‚È‚é‚©‚çƒ‰ƒbƒv‚µ‚½j
+	//ã‚²ãƒ¼ãƒ å†…ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®æ›´æ–°å‡¦ç†ï¼ˆã‚ˆã†ã¯ä¿ºãŒä½œã£ã¦ãªã„ã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã€‚ã‚„ã‚„ã“ã—ããªã‚‹ã‹ã‚‰ãƒ©ãƒƒãƒ—ã—ãŸï¼‰
 	GameInstanceUpdate();
 
-	//ƒNƒŠƒAƒtƒ‰ƒO‚ª—§‚Á‚½‚ç‘JˆÚ‰‰oAƒZƒŒƒNƒg‚ÉˆÚ“®‚·‚éˆ—‚ð‘‚«‚½‚¢Š‘¶
+	//ã‚¯ãƒªã‚¢ãƒ•ãƒ©ã‚°ãŒç«‹ã£ãŸã‚‰é·ç§»æ¼”å‡ºã€ã‚»ãƒ¬ã‚¯ãƒˆã«ç§»å‹•ã™ã‚‹å‡¦ç†ã‚’æ›¸ããŸã„æ‰€å­˜
 
 }
 
@@ -65,7 +65,7 @@ void GameMainManager::GameInstanceUpdate()
 
 	tutorial.Update();
 
-	//ŠeƒXƒe[ƒW‚Ìˆ—
+	//å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®å‡¦ç†
 #ifdef _DEBUG
 	if (Input::isKeyTrigger(DIK_1))
 	{
@@ -105,7 +105,7 @@ void GameMainManager::GameInstanceUpdate()
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, player->playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
-	//ƒXƒe[ƒW‚Æ‚Ì˜A“®‚Ì‚½‚ßŠJ‚­ˆ—‚Í‚±‚Á‚¿‚Å‚â‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã¨ã®é€£å‹•ã®ãŸã‚é–‹ãå‡¦ç†ã¯ã“ã£ã¡ã§ã‚„ã‚‹
 	if (player->OpenCount >= 2)
 	{
 		if (player->IsLeftOpen == true)
@@ -147,7 +147,7 @@ void GameMainManager::GameInstanceUpdate()
 
 void GameMainManager::SetSelectToGame(int SelectStageNum)
 {
-	//ƒQ[ƒ€ƒV[ƒ“‚ÉˆÚ‚é‚Æ‚«‚ÌƒZƒbƒgƒAƒbƒv
+	//ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã«ç§»ã‚‹ã¨ãã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 	Ischangecount = false;
 	IsGoSelect = false;
 	changecount = 0;
@@ -162,7 +162,7 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 
 void GameMainManager::SetGameToSelect()
 {
-	//ƒZƒŒƒNƒgƒV[ƒ“‚É–ß‚é‚Æ‚«‚ÌƒZƒbƒgƒAƒbƒv
+	//ã‚»ãƒ¬ã‚¯ãƒˆã‚·ãƒ¼ãƒ³ã«æˆ»ã‚‹ã¨ãã®ã‚»ãƒƒãƒˆã‚¢ãƒƒãƒ—
 	Ischangecount = false;
 	IsGoSelect = false;
 	changecount = 0;
@@ -172,7 +172,7 @@ void GameMainManager::SetGameToSelect()
 
 void GameMainManager::GameInstanceDraw()
 {
-	//ŠeƒXƒe[ƒW‚Ìˆ—
+	//å„ã‚¹ãƒ†ãƒ¼ã‚¸ã®å‡¦ç†
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();

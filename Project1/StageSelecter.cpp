@@ -5,11 +5,13 @@
 
 #include "Stage.h"
 #include "Player.h"
+#include "InputManger.h"
 
 namespace
 {
-Stage* stagePtr = Stage::Get();
-Player* playerPtr = Player::Get();
+	static InputManger* inputManager = InputManger::Get();
+	Stage* stagePtr = Stage::Get();
+	Player* playerPtr = Player::Get();
 }
 
 StageSelecter::StageSelecter()
@@ -69,7 +71,33 @@ void StageSelecter::Draw()
 	ImGui::Text("pos x : %f    y : %f", Input::getMousePos().x, Input::getMousePos().y);
 	ImguiMgr::Get()->EndDrawImgui();*/
 
+	SelectLeft.DrawSprite(29, 623);
+	SelectLeft.Draw();
+	SelectRight.DrawSprite(1184, 623);
+	SelectRight.Draw();
 
+	float mouse_x = Input::getMousePos().x;
+	float mouse_y = Input::getMousePos().y;
+
+	if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626)
+	{
+		SelectLeft.DrawExtendSprite(19, 613, 29 + 77, 623 + 77);
+	}
+	else
+	{
+		SelectLeft.DrawSprite(29, 623);
+	}
+	SelectLeft.Draw();
+
+	if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626)
+	{
+		SelectRight.DrawExtendSprite(1174, 613, 1184 + 77, 623 + 77);
+	}
+	else
+	{
+		SelectRight.DrawSprite(1184, 623);
+	}
+	SelectRight.Draw();
 
 }
 
@@ -103,6 +131,9 @@ void StageSelecter::LoadSprite()
 		selectImg_5_8[i].Create(TexManager::LoadTexture(fullpath_5_8));
 		selectImg_9_12[i].Create(TexManager::LoadTexture(fullpath_9_12));
 	}
+
+	SelectLeft.Create(TexManager::LoadTexture(fullImgPath + "SelectLeft" + filename));
+	SelectRight.Create(TexManager::LoadTexture(fullImgPath + "SelectRight" + filename));
 }
 
 void StageSelecter::CheckToPageChangeInput()
@@ -120,7 +151,8 @@ void StageSelecter::CheckToPageChangeInput()
 	{
 		//ページ遷移するのか？
 		bool isMove = false;
-		if (mouse_x > static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626
+			&& Input::isMouseClickTrigger(MOUSE_L))
 		{
 			switch (nowpage)
 			{
@@ -140,7 +172,8 @@ void StageSelecter::CheckToPageChangeInput()
 			if (isMove) { pageMoveDir = is_front; }
 
 		}
-		else if (mouse_x < static_cast<float>(1280 / 2) && Input::isMouseClickTrigger(MOUSE_L))
+		else if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626
+			&& Input::isMouseClickTrigger(MOUSE_L))
 		{
 			switch (nowpage)
 			{
