@@ -637,7 +637,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
 					BuriedY = (BodyUp_mapchip * 60) - BodyUp;
@@ -656,6 +656,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
+							
 							IsHitLeft = true;
 							JumpCountLeft += Player::Get()->IsLeft;
 						}
@@ -669,7 +670,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
 					BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
@@ -700,7 +701,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
 					BuriedY = (BodyUp_mapchip * 60) - BodyUp;
@@ -718,7 +719,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
-							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x)-1;
 							IsHitRight = true;
 							jumpCountRight += Player::Get()->IsRight;
 						}
@@ -732,7 +733,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
 					BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
@@ -748,7 +749,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitRight == false)
 						{
-							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x)-1;
 							IsHitRight = true;
 							jumpCountRight += Player::Get()->IsRight;
 						}
@@ -772,7 +773,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
 				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)) &&
 					Player::Get()->IsLeft == true)
 				{
 					DiagonallyUpLeft = true;
@@ -785,7 +786,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				BodyUp_mapchip_tile = (BodyUp_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
 				mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK &&
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)) &&
 					Player::Get()->IsRight == true)
 				{
 					DiagonallyUpRight = true;
@@ -796,10 +797,10 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && Player::Get()->IsInitJump == false)
 	{
-		Player::Get()->IsJump = true;
+		/*Player::Get()->IsJump = true;
 		Player::Get()->FallSpeed = -5.6f;
 		Player::Get()->IsWalk = true;
-		Player::Get()->IsInitJump = true;
+		Player::Get()->IsInitJump = true;*/
 	}
 
 	if (FallCount > 0)
@@ -898,7 +899,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
 					BlockCount++;
 				}
@@ -912,7 +913,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
 					BlockCount++;
 				}
@@ -926,7 +927,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
 					BlockCount++;
 				}
@@ -940,7 +941,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (mapchip != nullptr && mapchip[mapchipPos] == MapchipData::BLOCK)
+				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
 					BlockCount++;
 				}
@@ -1020,7 +1021,7 @@ void PlayerBody::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsLeftBlock = true;
 				}
@@ -1038,7 +1039,7 @@ void PlayerBody::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsRightBlock = true;
 				}
@@ -1056,7 +1057,7 @@ void PlayerBody::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsUpBlock = true;
 				}
@@ -1074,7 +1075,7 @@ void PlayerBody::IsAroundBlock()
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
-				if (stage->GetStageMapchip(i, j, mapchipPos) == MapchipData::BLOCK)
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsDownBlock = true;
 				}

@@ -1,7 +1,7 @@
 ﻿#include "Stage.h"
 #include "LoadFile.h"
 #include "General.h"
-#include "PlayerBody.h"
+#include "Player.h"
 #include "NY_random.h"
 #include <Raki_DX12B.h>
 
@@ -13,11 +13,13 @@ container.shrink_to_fit();
 
 namespace
 {
-static size_t i = 0, j = 0; //for文のループカウンタ
-static size_t x = 0, y = 0; //マップチップ上の座標
+	static size_t i = 0, j = 0; //for文のループカウンタ
+	static size_t x = 0, y = 0; //マップチップ上の座標
 
-static size_t mapchipPos = 0; //マップチップの要素番号
-static size_t reverseMapchipPos = 0; //反転したマップチップの要素番号
+	static size_t mapchipPos = 0; //マップチップの要素番号
+	static size_t reverseMapchipPos = 0; //反転したマップチップの要素番号
+
+	static Player* player = Player::Get(); //プレイヤー
 }
 
 const int Stage::blockSize = 60;
@@ -46,11 +48,11 @@ Stage::Stage() :
 	initStageData{},
 	reverseMapchip(nullptr),
 	lineHandle(0),
-	BlockHandle(0),
+	AllBlockHandle(),
 	EmptyHandle(0),
 	GoalHandle(0),
 	lineSprite{},
-	MapchipSpriteBlock{},
+	AllBlockSprite{},
 	MapchipSpriteEmpty{},
 	MapchipSpriteGoal{},
 	IsParticleTrigger(false),
@@ -293,7 +295,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 					}
 					case MapchipData::BLOCK:
 					{
-						MapchipSpriteBlock.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						AllBlockSprite[i][0].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
 					case MapchipData::GOAL:
@@ -301,6 +303,62 @@ void Stage::Draw(const int offsetX, const int offsetY)
 						MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
 					}
+					case MapchipData::HORIZONTAL:
+						AllBlockSprite[i][1].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::VERTICAL:
+						AllBlockSprite[i][2].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::LEFTONLY:
+						AllBlockSprite[i][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+						
+					case MapchipData::UPONLY:
+						AllBlockSprite[i][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::RIGHTONLY:
+						AllBlockSprite[i][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::DOWNONLY:
+						AllBlockSprite[i][6].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::LEFTL:
+						AllBlockSprite[i][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::UPL:
+						AllBlockSprite[i][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::RIGHTL:
+						AllBlockSprite[i][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::DOWNL:
+						AllBlockSprite[i][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::LEFTU:
+						AllBlockSprite[i][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::UPU:
+						AllBlockSprite[i][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::RIGHTU:
+						AllBlockSprite[i][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
+					case MapchipData::DOWNU:
+						AllBlockSprite[i][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+						break;
+
 					case MapchipData::NONE:
 					case MapchipData::START:
 					default:
@@ -391,11 +449,18 @@ void Stage::Draw(const int offsetX, const int offsetY)
 		}
 	}
 
-	//particleManager->Prototype_Draw(EmptyHandle);
+	particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
-	MapchipSpriteBlock.Draw();
+	for (i = 0; i < stageData.size(); i++)
+	{
+		for (j = 0; j < 15; j++)
+		{
+			AllBlockSprite[i][j].Draw();
+		}
+	}
+
 	MapchipSpriteGoal.Draw();
 	MapchipSpriteEmpty.Draw();
 	lineSprite.Draw();
@@ -403,11 +468,8 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 void Stage::Create()
 {
-	if ((MapchipSpriteBlock.spdata->size.x <= 0) || (MapchipSpriteBlock.spdata->size.y <= 0))
-	{
-		BlockHandle = TexManager::LoadTexture("Resources/block.png");
-		MapchipSpriteBlock.Create(BlockHandle);
-	}
+	LoadBlocksHandle();
+	CreateBlocksSprite();
 
 	if ((MapchipSpriteEmpty.spdata->size.x <= 0) || (MapchipSpriteEmpty.spdata->size.y <= 0))
 	{
@@ -431,6 +493,132 @@ void Stage::Create()
 	{
 		particleManager = ParticleManager::Create();
 		particleManager->Prototype_Set(FoldParticle);
+	}
+}
+
+void Stage::LoadBlocksHandle()
+{
+	//画像ハンドルの読み込み
+	Bule_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Bule/blockB.png");//青
+	Green_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Green/blockG.png");//緑
+	Red_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Red/blockR.png");//赤
+	Yellow_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Yellow/blockY.png");//黄
+
+	std::string BasePath = "Resources/Blocks/";
+	std::string fileType = ".png";
+
+	std::string Bule = "Block_Bule/blockB";
+	std::string Green = "Block_Green/blockG";
+	std::string Red = "Block_Red/blockR";
+	std::string Yellow = "Block_Yellow/blockY";
+
+	std::string Horizontal = "_=";
+	std::string Vertical = "_ll";
+
+	for (i = 0; i < 4; i++)
+	{
+		switch (i)
+		{
+		case 0:
+		{
+			//青色のブロックの画像ハンドル
+			AllBlockHandle[0][0] = TexManager::LoadTexture(BasePath + Bule + fileType);
+			AllBlockHandle[0][1] = TexManager::LoadTexture(BasePath + Bule + Horizontal + fileType);
+			AllBlockHandle[0][2] = TexManager::LoadTexture(BasePath + Bule + Vertical + fileType);
+			AllBlockHandle[0][3] = TexManager::LoadTexture(BasePath + Bule + "_I_Left" + fileType);
+			AllBlockHandle[0][4] = TexManager::LoadTexture(BasePath + Bule + "_I_Up" + fileType);
+			AllBlockHandle[0][5] = TexManager::LoadTexture(BasePath + Bule + "_I_Right" + fileType);
+			AllBlockHandle[0][6] = TexManager::LoadTexture(BasePath + Bule + "_I_Down" + fileType);
+			AllBlockHandle[0][7] = TexManager::LoadTexture(BasePath + Bule + "_L_Left" + fileType);
+			AllBlockHandle[0][8] = TexManager::LoadTexture(BasePath + Bule + "_L_Up" + fileType);
+			AllBlockHandle[0][9] = TexManager::LoadTexture(BasePath + Bule + "_L_right" + fileType);
+			AllBlockHandle[0][10] = TexManager::LoadTexture(BasePath + Bule + "_L_Down" + fileType);
+			AllBlockHandle[0][11] = TexManager::LoadTexture(BasePath + Bule + "_U_Left" + fileType);
+			AllBlockHandle[0][12] = TexManager::LoadTexture(BasePath + Bule + "_U_Up" + fileType);
+			AllBlockHandle[0][13] = TexManager::LoadTexture(BasePath + Bule + "_U_Right" + fileType);
+			AllBlockHandle[0][14] = TexManager::LoadTexture(BasePath + Bule + "_U_Down" + fileType);
+
+			break;
+		}
+		case 1:
+		{
+			//緑色のブロックの画像ハンドル
+			AllBlockHandle[1][0] = TexManager::LoadTexture(BasePath + Green + fileType);
+			AllBlockHandle[1][1] = TexManager::LoadTexture(BasePath + Green + Horizontal + fileType);
+			AllBlockHandle[1][2] = TexManager::LoadTexture(BasePath + Green + Vertical + fileType);
+			AllBlockHandle[1][3] = TexManager::LoadTexture(BasePath + Green + "_I_Left" + fileType);
+			AllBlockHandle[1][4] = TexManager::LoadTexture(BasePath + Green + "_I_Up" + fileType);
+			AllBlockHandle[1][5] = TexManager::LoadTexture(BasePath + Green + "_I_Right" + fileType);
+			AllBlockHandle[1][6] = TexManager::LoadTexture(BasePath + Green + "_I_Down" + fileType);
+			AllBlockHandle[1][7] = TexManager::LoadTexture(BasePath + Green + "_L_Left" + fileType);
+			AllBlockHandle[1][8] = TexManager::LoadTexture(BasePath + Green + "_L_Up" + fileType);
+			AllBlockHandle[1][9] = TexManager::LoadTexture(BasePath + Green + "_L_right" + fileType);
+			AllBlockHandle[1][10] = TexManager::LoadTexture(BasePath + Green + "_L_Down" + fileType);
+			AllBlockHandle[1][11] = TexManager::LoadTexture(BasePath + Green + "_U_Left" + fileType);
+			AllBlockHandle[1][12] = TexManager::LoadTexture(BasePath + Green + "_U_Up" + fileType);
+			AllBlockHandle[1][13] = TexManager::LoadTexture(BasePath + Green + "_U_Right" + fileType);
+			AllBlockHandle[1][14] = TexManager::LoadTexture(BasePath + Green + "_U_Down" + fileType);
+			break;
+		}
+		case 2:
+		{
+			//赤色のブロックの画像ハンドル
+			AllBlockHandle[2][0] = TexManager::LoadTexture(BasePath + Red + fileType);
+			AllBlockHandle[2][1] = TexManager::LoadTexture(BasePath + Red + Horizontal + fileType);
+			AllBlockHandle[2][2] = TexManager::LoadTexture(BasePath + Red + Vertical + fileType);
+			AllBlockHandle[2][3] = TexManager::LoadTexture(BasePath + Red + "_I_Left" + fileType);
+			AllBlockHandle[2][4] = TexManager::LoadTexture(BasePath + Red + "_I_Up" + fileType);
+			AllBlockHandle[2][5] = TexManager::LoadTexture(BasePath + Red + "_I_Right" + fileType);
+			AllBlockHandle[2][6] = TexManager::LoadTexture(BasePath + Red + "_I_Down" + fileType);
+			AllBlockHandle[2][7] = TexManager::LoadTexture(BasePath + Red + "_L_Left" + fileType);
+			AllBlockHandle[2][8] = TexManager::LoadTexture(BasePath + Red + "_L_Up" + fileType);
+			AllBlockHandle[2][9] = TexManager::LoadTexture(BasePath + Red + "_L_right" + fileType);
+			AllBlockHandle[2][10] = TexManager::LoadTexture(BasePath + Red + "_L_Down" + fileType);
+			AllBlockHandle[2][11] = TexManager::LoadTexture(BasePath + Red + "_U_Left" + fileType);
+			AllBlockHandle[2][12] = TexManager::LoadTexture(BasePath + Red + "_U_Up" + fileType);
+			AllBlockHandle[2][13] = TexManager::LoadTexture(BasePath + Red + "_U_Right" + fileType);
+			AllBlockHandle[2][14] = TexManager::LoadTexture(BasePath + Red + "_U_Down" + fileType);
+			break;
+		}
+		case 3:
+		{
+			//黄色のブロックの画像ハンドル
+			AllBlockHandle[3][0] = TexManager::LoadTexture(BasePath + Yellow + fileType);
+			AllBlockHandle[3][1] = TexManager::LoadTexture(BasePath + Yellow + Horizontal + fileType);
+			AllBlockHandle[3][2] = TexManager::LoadTexture(BasePath + Yellow + Vertical + fileType);
+			AllBlockHandle[3][3] = TexManager::LoadTexture(BasePath + Yellow + "_I_Left" + fileType);
+			AllBlockHandle[3][4] = TexManager::LoadTexture(BasePath + Yellow + "_I_Up" + fileType);
+			AllBlockHandle[3][5] = TexManager::LoadTexture(BasePath + Yellow + "_I_Right" + fileType);
+			AllBlockHandle[3][6] = TexManager::LoadTexture(BasePath + Yellow + "_I_Down" + fileType);
+			AllBlockHandle[3][7] = TexManager::LoadTexture(BasePath + Yellow + "_L_Left" + fileType);
+			AllBlockHandle[3][8] = TexManager::LoadTexture(BasePath + Yellow + "_L_Up" + fileType);
+			AllBlockHandle[3][9] = TexManager::LoadTexture(BasePath + Yellow + "_L_right" + fileType);
+			AllBlockHandle[3][10] = TexManager::LoadTexture(BasePath + Yellow + "_L_Down" + fileType);
+			AllBlockHandle[3][11] = TexManager::LoadTexture(BasePath + Yellow + "_U_Left" + fileType);
+			AllBlockHandle[3][12] = TexManager::LoadTexture(BasePath + Yellow + "_U_Up" + fileType);
+			AllBlockHandle[3][13] = TexManager::LoadTexture(BasePath + Yellow + "_U_Right" + fileType);
+			AllBlockHandle[3][14] = TexManager::LoadTexture(BasePath + Yellow + "_U_Down" + fileType);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+	}
+}
+
+void Stage::CreateBlocksSprite()
+{
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 15; j++)
+		{
+			if ((AllBlockSprite[i][j].spdata->size.x <= 0) || (AllBlockSprite[i][j].spdata->size.y <= 0))
+			{
+				AllBlockSprite[i][j].Create(AllBlockHandle[i][j]);
+			}
+		}
 	}
 }
 
@@ -565,8 +753,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 			}
 
 			if (LoadFile::LoadCSV(stageData[i].stageTileData[lastIndex].mapchip,
-								  stageData[i].stageTileData[lastIndex].width *
-								  stageData[i].stageTileData[lastIndex].height, fileHandle, endCharacter) != 0)
+				stageData[i].stageTileData[lastIndex].width *
+				stageData[i].stageTileData[lastIndex].height, fileHandle, endCharacter) != 0)
 			{
 				// 関数失敗
 				return EF;
@@ -645,7 +833,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 		{
 			char* initMapchip = static_cast<char*>(malloc(sizeof(char) * stageData[i].stageTileData[j].size));
 			memcpy_s(initMapchip, sizeof(char) * stageData[i].stageTileData[j].size,
-					 stageData[i].stageTileData[j].mapchip, sizeof(char) * stageData[i].stageTileData[j].size);
+				stageData[i].stageTileData[j].mapchip, sizeof(char) * stageData[i].stageTileData[j].size);
 			initStageData[i].stageTileData[j].mapchip = initMapchip;
 		}
 	}
@@ -663,22 +851,22 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	direction = -1;
 
 	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
-	if (IsFolds[BodyType::up] || IsOpens[BodyType::up])
+	if (player->Body_Two.IsAction)
 	{
 		direction = BodyType::up;
 	}
 	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
-	else if (IsFolds[BodyType::down] || IsOpens[BodyType::down])
+	else if (player->Body_Four.IsAction)
 	{
 		direction = BodyType::down;
 	}
 	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
-	else if (IsFolds[BodyType::left] || IsOpens[BodyType::left])
+	else if (player->Body_One.IsAction)
 	{
 		direction = BodyType::left;
 	}
 	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
-	else if (IsFolds[BodyType::right] || IsOpens[BodyType::right])
+	else if (player->Body_Three.IsAction)
 	{
 		direction = BodyType::right;
 	}
@@ -692,9 +880,9 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			if ((playerPos.x / blockSize >= initStageData[i].stageTileData[j].offsetX &&
-				 playerPos.x / blockSize < initStageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
+				playerPos.x / blockSize < initStageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
 				(playerPos.y / blockSize >= initStageData[i].stageTileData[j].offsetY &&
-				 playerPos.y / blockSize < initStageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
+					playerPos.y / blockSize < initStageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
 			{
 				onPlayerStageTile = initStageData[i].stageTileData[j].stageNumber;
 			}
@@ -723,7 +911,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::up] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::up] == true)
@@ -733,13 +921,15 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::up] == true)
+				else if (player->leg.FootIsAction == false && player->Body_Two.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -761,7 +951,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::down] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::down] == true)
@@ -771,13 +961,15 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::down] == true)
+				else if (player->leg.FootIsAction == false && player->Body_Four.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -799,7 +991,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::left] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::left] == true)
@@ -809,13 +1001,15 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::left] == true)
+				else if (player->leg.FootIsAction == false && player->Body_One.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -837,7 +1031,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 				if (BodyStatus[BodyType::right] == false)
 				{
-					break;
+					//break;
 				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::right] == true)
@@ -847,13 +1041,16 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 						isAct = true;
 					}
 				}
-				else if (IsFootAction == false && IsFolds[BodyType::right] == true)
+
+				if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
 				{
 					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData) != EF)
 					{
 						isAct = true;
 					}
 				}
+
+				CreateParticle(i, moveStageData);
 
 				break;
 			}
@@ -863,8 +1060,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 				break;
 			}
 			}
-
-			CreateParticle(i, moveStageData);
 
 			if (isAct)
 			{
@@ -895,9 +1090,9 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			if ((playerPos.x / blockSize >= stageData[i].stageTileData[j].offsetX &&
-				 playerPos.x / blockSize < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
+				playerPos.x / blockSize < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
 				(playerPos.y / blockSize >= stageData[i].stageTileData[j].offsetY &&
-				 playerPos.y / blockSize < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
+					playerPos.y / blockSize < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
 			{
 				onPlayerStageData = i;
 			}
@@ -1197,6 +1392,31 @@ inline Stage::StageData* Stage::GetAllStageData()
 	return stageData.data();
 }
 
+bool Stage::IsMapchipBlocks(char mapchip)
+{
+	if (mapchip == MapchipData::BLOCK)
+	{
+		return true;
+	}
+
+	if (mapchip >= MapchipData::LEFTONLY && mapchip <= MapchipData::DOWNONLY)
+	{
+		return true;
+	}
+
+	if (mapchip >= MapchipData::LEFTL && mapchip <= MapchipData::DOWNL)
+	{
+		return true;
+	}
+
+	if (mapchip >= MapchipData::LEFTU && mapchip <= MapchipData::DOWNU)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber)
 {
 	*stageNumber = static_cast<size_t>(-1);
@@ -1258,7 +1478,8 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 			static_cast<float>(stageData[StageDataNum].stageTileData[StageTileDataNum].offsetY * blockSize));
 
 		RVector3 world_startpos = RV3Colider::CalcScreen2World({ xpos,ypos }, 0.0f);
-		this->particleManager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
+		//this->particleManager->Prototype_Add(1, { world_startpos.x,world_startpos.y,0.0f });
+		this->particleManager->Prototype_Add(1, { 10,10,0.0f });
 	}
 }
 
@@ -1438,7 +1659,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 }
 
 int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-					const int offsetX, const int offsetY)
+	const int offsetX, const int offsetY)
 {
 	static int posX = 0, posY = 0;
 	static XMFLOAT2 pos1 = {}, pos2 = {};
@@ -1561,7 +1782,7 @@ int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, co
 }
 
 int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-					 const int offsetX, const int offsetY)
+	const int offsetX, const int offsetY)
 {
 	static int posX = 0, posY = 0;
 	static XMFLOAT2 pos1 = {}, pos2 = {};
@@ -1687,7 +1908,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX + stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB + 1.0f;
-				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
+				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].z = 0.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos] *= blockSize;
 
@@ -1704,7 +1925,7 @@ void Stage::EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData
 				keepB = static_cast<float>(stageData[onPlayerStage].stageTileData[moveStageData].offsetX - stageData[onPlayerStage].stageTileData[moveStageData].width);
 
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].x = keepA + keepB;
-				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[i].stageTileData[j].offsetY);
+				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].y = static_cast<float>(y + stageData[onPlayerStage].stageTileData[moveStageData].offsetY);
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos].z = 0.0f;
 				stageData[onPlayerStage].stageTileData[moveStageData].endPos[mapchipPos] *= blockSize;
 
@@ -1739,51 +1960,49 @@ void Stage::EaseingUpdate()
 				min(stageData[i].stageTileData[j].stageEase.addTime / stageData[i].stageTileData[j].stageEase.maxTime, 1.0f);
 			ease = Easing::easeOut(0.0f, 1.0f, stageData[i].stageTileData[j].stageEase.timeRate);
 
-			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
+			for (mapchipPos = 0; mapchipPos < stageData[i].stageTileData[j].size; mapchipPos++)
 			{
-				for (x = 0; x < stageData[i].stageTileData[j].width; x++)
+				//x = mapchipPos % stageData[i].stageTileData[j].width;
+				//y = mapchipPos / stageData[i].stageTileData[j].width;
+
+				static RVector3 axisPos = {};
+
+				switch ((stageData[i].stageTileData[j].direction - 1) % 4)
 				{
-					static RVector3 axisPos = {};
-
-					mapchipPos = y * stageData[i].stageTileData[j].width + x;
-
-					switch ((stageData[i].stageTileData[j].direction - 1) % 4)
-					{
-					case BodyType::up:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y + (stageData[i].stageTileData[j].offsetY * blockSize)),
-							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
-						break;
-					case BodyType::down:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[0].y - blockSize),
-							static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
-						break;
-					case BodyType::left:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x + (stageData[i].stageTileData[j].offsetX * blockSize)),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
-							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
-						break;
-					case BodyType::right:
-						axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x - blockSize),
-							static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
-							static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
-						break;
-					default:
-						break;
-					}
-
-					std::vector<RVector3> pos = {
-						stageData[i].stageTileData[j].startPos[mapchipPos],
-						axisPos,
-						stageData[i].stageTileData[j].endPos[mapchipPos]
-					};
-
-					stageData[i].stageTileData[j].easePos[mapchipPos] = Easing::SplineCurve(
-						pos,
-						stageData[i].stageTileData[j].stageEase.splineIndex,
-						stageData[i].stageTileData[j].stageEase.timeRate);
+				case BodyType::up:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[0].y + (stageData[i].stageTileData[j].height * blockSize)),
+						static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
+					break;
+				case BodyType::down:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].x),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[0].y - blockSize),
+						static_cast<float>(stageData[i].stageTileData[j].height * blockSize) };
+					break;
+				case BodyType::left:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x + (stageData[i].stageTileData[j].width * blockSize)),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
+						static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
+					break;
+				case BodyType::right:
+					axisPos = { static_cast<float>(stageData[i].stageTileData[j].startPos[0].x - blockSize),
+						static_cast<float>(stageData[i].stageTileData[j].startPos[mapchipPos].y),
+						static_cast<float>(stageData[i].stageTileData[j].width * blockSize) };
+					break;
+				default:
+					break;
 				}
+
+				std::vector<RVector3> pos = {
+					stageData[i].stageTileData[j].startPos[mapchipPos],
+					axisPos,
+					stageData[i].stageTileData[j].endPos[mapchipPos]
+				};
+
+				stageData[i].stageTileData[j].easePos[mapchipPos] = Easing::SplineCurve(
+					pos,
+					stageData[i].stageTileData[j].stageEase.splineIndex,
+					stageData[i].stageTileData[j].stageEase.timeRate);
 			}
 
 			if (stageData[i].stageTileData[j].stageEase.timeRate >= 1.0f)

@@ -12,7 +12,6 @@ private:
 	// ゲームループで使う変数の宣言
 	UINT BackHandle;
 	Sprite Back;
-	unsigned char playerTile[4] = { 0 };
 	const int tutorialOffsetX = 320, tutorialOffsetY = 45;
 
 
