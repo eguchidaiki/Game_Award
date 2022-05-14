@@ -1399,6 +1399,11 @@ bool Stage::IsMapchipBlocks(char mapchip)
 		return true;
 	}
 
+	if (mapchip == MapchipData::HORIZONTAL || mapchip == MapchipData::VERTICAL)
+	{
+		return true;
+	}
+
 	if (mapchip >= MapchipData::LEFTONLY && mapchip <= MapchipData::DOWNONLY)
 	{
 		return true;
