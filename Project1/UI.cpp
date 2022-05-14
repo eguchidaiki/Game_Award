@@ -4,16 +4,16 @@
 
 namespace
 {
-Stage* stage = Stage::Get();
-Player* player = Player::Get();
+	Stage* stage = Stage::Get();
+	Player* player = Player::Get();
 }
 
 void UI::Init(Tutorial* tutorial)
 {
-	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton.png");
+	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton01.png");
 	this->ResetUISprite.Create(ResetHandle);
 
-	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton.png");
+	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton01.png");
 	this->PauseUISprite.Create(PauseHandle);
 
 	ResetRot = 0;
@@ -24,7 +24,7 @@ void UI::Init(Tutorial* tutorial)
 	this->tutorial = tutorial;
 }
 
-void UI::Update(unsigned char PlayerTile[4], bool* Isback)
+void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 {
 	mousePos = Input::getMousePos();
 
@@ -35,8 +35,12 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback)
 		stage->Reset(PlayerTile);
 		player->Init();
 		player->BodySetUp(PlayerTile);
-		tutorial->ResetTutorial();
-		tutorial->isTutorial = true;
+
+		if (StageNum == 0)
+		{
+			tutorial->ResetTutorial();
+			tutorial->isTutorial = true;
+		}
 	}
 
 	if (IsPausePress && Input::isMouseClickTrigger(0))

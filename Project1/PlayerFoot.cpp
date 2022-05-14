@@ -35,11 +35,15 @@ void PlayerFoot::Update(RVector3& DownPos, bool IsDownBody, int BodyDis)
 		ease.addTime += ease.maxTime / 40.0f;
 		ease.timeRate = min(ease.addTime / ease.maxTime, 1.0f);
 
-		FootLeftUpPosition = { DownPos.x - 30,ease.easeOut(DownPos.y + (IsDownBody * 50 * BodyDis) + 25,DownPos.y + (IsDownBody * 50 * BodyDis) + 15,ease.timeRate),0.0f };
+		FootLeftUpPosition = { DownPos.x,ease.easeOut(DownPos.y ,DownPos.y - 15,ease.timeRate),0.0f };
 		if (ease.timeRate >= 1.0f)
 		{
 			FootIsAction = false;
 		}
+	}
+	else
+	{
+		FootLeftUpPosition = DownPos;
 	}
 }
 
