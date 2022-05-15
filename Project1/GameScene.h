@@ -42,5 +42,8 @@ public:
     StageSelecter selecter;
     GameMainManager gamemain;
 
+
+
+
 };
 

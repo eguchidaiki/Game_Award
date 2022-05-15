@@ -27,6 +27,7 @@ typedef struct SpriteInstance
 	XMMATRIX worldmat;	//ワールド変換行列
 	XMFLOAT2 drawsize;	//縦横幅
 	XMFLOAT4 uvOffset;	//uv値
+	XMFLOAT4 color;
 };
 
 //定数バッファデータ構造体
@@ -53,7 +54,7 @@ typedef struct SpriteData
 	ComPtr<ID3D12Resource> constBuff;//定数バッファ
 	UINT texNumber;//マネージャーに保存されたリソースの番号
 
-	XMFLOAT2 size = { 0.0f, 0.0f };//スプライトサイズ
+	XMFLOAT2 size;//スプライトサイズ
 
 	float rotation = 0.0f;//z軸回転角
 	XMFLOAT3 position = { 0.0f,0.0f,0.0f };//座標
