@@ -27,6 +27,7 @@ void StageSelecter::Init()
 {
 	//リソース読み込み
 	LoadSprite();
+	//menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
 
 	//最初のページ
 	nowpage = page_1_4;
@@ -103,7 +104,14 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
+	/*Audio::StopLoadedSound(menuBGM);*/
 }
+
+//void StageSelecter::PlayAudio()
+//{
+//	//�Đ�
+//	//Audio::PlayLoadedSound(menuBGM);
+//}
 
 void StageSelecter::LoadSprite()
 {

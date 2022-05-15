@@ -90,6 +90,9 @@
     <ClCompile Include="PlayerFoot.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="SceneChangeDirectioner.cpp" />
+    <ClCompile Include="GoalEffect.cpp" />
+    <ClCompile Include="StageFractureEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -155,6 +158,9 @@
     <ClInclude Include="PlayerFoot.h">
       <Filter>Player</Filter>
     </ClInclude>
+    <ClInclude Include="SceneChangeDirectioner.h" />
+    <ClInclude Include="GoalEffect.h" />
+    <ClInclude Include="StageFractureEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\block.png">
