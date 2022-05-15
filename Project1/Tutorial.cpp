@@ -54,12 +54,12 @@ void Tutorial::Draw(int offsetX, int offsetY)
 {
 	if (isMoveTutorial == true)
 	{
-		moveSprite.DrawSprite(offsetX, offsetY);
+		moveSprite.DrawSprite(static_cast<float>(offsetX), static_cast<float>(offsetY));
 		moveSprite.Draw();
 	}
 	if(isFoldTutorial == true)
 	{
-		foldSprite.DrawSprite(offsetX, offsetY);
+		foldSprite.DrawSprite(static_cast<float>(offsetX), static_cast<float>(offsetY));
 		foldSprite.Draw();
 	}
 }

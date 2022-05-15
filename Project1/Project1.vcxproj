@@ -159,8 +159,7 @@
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameMainManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="GoalEffect.cpp" />
-    <ClCompile Include="goalParticle.cpp" />
+    <ClCompile Include="GoalParticle.cpp" />
     <ClCompile Include="InputManger.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="LoadFile.cpp" />
@@ -168,10 +167,8 @@
     <ClCompile Include="PlayerBody.cpp" />
     <ClCompile Include="PlayerFoot.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SceneChangeDirectioner.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="stage.cpp" />
-    <ClCompile Include="StageFractureEffect.cpp" />
     <ClCompile Include="StageSelecter.cpp" />
     <ClCompile Include="testParticle.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -243,8 +240,17 @@
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli" />
     <None Include="Resources\Shaders\Sprite.hlsli" />
     <None Include="Resources\stage\stage1.csv" />
+    <None Include="Resources\stage\stage10.csv" />
+    <None Include="Resources\stage\stage11.csv" />
+    <None Include="Resources\stage\stage12.csv" />
     <None Include="Resources\stage\stage2.csv" />
     <None Include="Resources\stage\stage3.csv" />
+    <None Include="Resources\stage\stage4.csv" />
+    <None Include="Resources\stage\stage5.csv" />
+    <None Include="Resources\stage\stage6.csv" />
+    <None Include="Resources\stage\stage7.csv" />
+    <None Include="Resources\stage\stage8.csv" />
+    <None Include="Resources\stage\stage9.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h" />
@@ -253,18 +259,15 @@
     <ClInclude Include="GameMainManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="General.h" />
-    <ClInclude Include="GoalEffect.h" />
-    <ClInclude Include="goalParticle.h" />
+    <ClInclude Include="GoalParticle.h" />
     <ClInclude Include="InputManger.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="LoadFile.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="PlayerFoot.h" />
-    <ClInclude Include="SceneChangeDirectioner.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="stage.h" />
-    <ClInclude Include="StageFractureEffect.h" />
     <ClInclude Include="StageSelecter.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="testParticle.h" />
