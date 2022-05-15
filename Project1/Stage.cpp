@@ -314,7 +314,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 					case MapchipData::LEFTONLY:
 						AllBlockSprite[i][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
-						
+
 					case MapchipData::UPONLY:
 						AllBlockSprite[i][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 						break;
@@ -843,7 +843,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
-	unsigned char direction = -1;
+	char direction = -1;
 	static size_t onPlayerStageTile = 0;
 	static size_t moveStageTile = 0;
 	static size_t moveStageData = 0;
@@ -875,14 +875,16 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 	isAct = false;
 
+	if (direction == -1)
+	{
+		return 0;
+	}
+
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
-			if ((playerPos.x / blockSize >= initStageData[i].stageTileData[j].offsetX &&
-				playerPos.x / blockSize < initStageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
-				(playerPos.y / blockSize >= initStageData[i].stageTileData[j].offsetY &&
-					playerPos.y / blockSize < initStageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
+			if (IsPositionTile(i, j))
 			{
 				onPlayerStageTile = initStageData[i].stageTileData[j].stageNumber;
 			}
@@ -897,7 +899,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 				if (onPlayerStageTile / initStageData[i].width <= 0)
 				{
-					break;
+					//break;
 				}
 
 				moveStageTile = onPlayerStageTile - initStageData[i].width;
@@ -937,7 +939,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 				if (onPlayerStageTile / initStageData[i].width >= static_cast<size_t>(initStageData[i].height - 1))
 				{
-					break;
+					//break;
 				}
 
 				moveStageTile = onPlayerStageTile + initStageData[i].width;
@@ -977,7 +979,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 				if (onPlayerStageTile % initStageData[i].width <= 0)
 				{
-					break;
+					//break;
 				}
 
 				moveStageTile = onPlayerStageTile - 1;
@@ -1017,7 +1019,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 				if (onPlayerStageTile % initStageData[i].width >= static_cast<size_t>(initStageData[i].width - 1))
 				{
-					break;
+					//break;
 				}
 
 				moveStageTile = onPlayerStageTile + 1;
@@ -1357,6 +1359,24 @@ bool Stage::IsPositionTile(const RVector3& center, const size_t& stageNumber, co
 	}
 }
 
+void Stage::SetMoveTile(int direction, size_t* moveStageTile, size_t* moveStageData)
+{
+	for (i = 0; i < stageData.size(); i++)
+	{
+		//タイルが1個しかないステージは調べない
+		if (stageData[i].stageTileData.size() == 2)
+		{
+			
+		}
+		else if (stageData[i].stageTileData.size() == 3)
+		{
+
+		}
+	}
+
+	return;
+}
+
 void Stage::GetInitFoldCount(unsigned char foldCount[4])
 {
 	for (i = 0; i < sizeof(initFoldCount) / sizeof(initFoldCount[0]); i++)
@@ -1468,6 +1488,18 @@ void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, siz
 			}
 		}
 	}
+}
+
+bool Stage::IsPositionTile(size_t StageNum, size_t StageTileNum)
+{
+	if ((player->CenterPosition.x / blockSize >= initStageData[StageNum].stageTileData[StageTileNum].offsetX &&
+		player->CenterPosition.x / blockSize < initStageData[StageNum].stageTileData[StageTileNum].offsetX + stageData[StageNum].stageTileData[StageTileNum].width) &&
+		(player->CenterPosition.y / blockSize >= initStageData[StageNum].stageTileData[StageTileNum].offsetY &&
+			player->CenterPosition.y / blockSize < initStageData[StageNum].stageTileData[StageTileNum].offsetY + stageData[StageNum].stageTileData[StageTileNum].height))
+	{
+		return true;
+	}
+	return false;
 }
 
 void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)

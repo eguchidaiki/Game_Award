@@ -341,8 +341,8 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	ImGui::Text("flag:%d", Player_IsAction);
+	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	//ImGui::Text("flag:%d", Player_IsAction);
 	//ImGui::Text("1:%d", Body_One.AfterBodyFoldCount);
 	//ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
 	//ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
@@ -355,7 +355,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();
+	//ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 

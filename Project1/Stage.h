@@ -158,6 +158,9 @@ public: //メンバ関数
 	// 任意の座標が任意のステージタイルにいるかどうか
 	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
+	//折ることができるステージタイルを探してセットする
+	void SetMoveTile(int direction, size_t* moveStageTile, size_t* moveStageData);
+
 	// プレイヤーのx軸上の開始位置を取得
 	inline static int GetStartPlayerPosX() { return startPlayerPosX; }
 	// プレイヤーのx軸上の開始位置を取得
@@ -232,6 +235,8 @@ public: //メンバ関数
 	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	//指定した場所のステージタイルにプレイヤーがいるかどうか
+	bool IsPositionTile(size_t StageNum, size_t StageTileNum);
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
