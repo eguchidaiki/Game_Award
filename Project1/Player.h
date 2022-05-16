@@ -58,6 +58,9 @@ public: //メンバ関数
 	void BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type);
 	void BodySetUp(const unsigned char foldCount[4]);
 
+	//プレイヤーが今いるステージがタイル一枚のみのステージなのかどうか
+	bool IsPlayerStageOnly();
+
 	//折る
 	void Fold();
 

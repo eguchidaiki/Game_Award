@@ -764,6 +764,9 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	fclose(fileHandle);
 
+	//ステージグループの設定
+	SetStageGroup();
+
 	// オフセット値の計算
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -1359,22 +1362,111 @@ bool Stage::IsPositionTile(const RVector3& center, const size_t& stageNumber, co
 	}
 }
 
-void Stage::SetMoveTile(int direction, size_t* moveStageTile, size_t* moveStageData)
+void Stage::SetMoveTiles(int direction, size_t* moveStageTile, size_t* moveStageData)
 {
-	for (i = 0; i < stageData.size(); i++)
-	{
-		//タイルが1個しかないステージは調べない
-		if (stageData[i].stageTileData.size() == 2)
-		{
-			
-		}
-		else if (stageData[i].stageTileData.size() == 3)
-		{
+	//ステージ内のタイルの中でdirectionどおりに折れるものを探す
 
+
+	return;
+}
+
+void Stage::SetTwoTileFoldDirection(size_t stagenum)
+{
+	int foldcount = 0;
+
+	for (int a = 0; a < stageData[stagenum].stageTileData.size(); a++)
+	{
+		if (stageData[stagenum].stageTileData[a].isFold == true)
+		{
+			foldcount++;
 		}
 	}
 
-	return;
+	if (stageData[stagenum].stageTileData.size() != 2 || foldcount > 0)
+	{
+		return;
+	}
+
+	//横軸が同じとき
+	if (stageData[stagenum].stageTileData[0].offsetX == stageData[stagenum].stageTileData[1].offsetX)
+	{
+		//上下判定
+		if (stageData[stagenum].stageTileData[0].offsetY < stageData[stagenum].stageTileData[1].offsetY && initFoldCount[BodyType::up])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::up;
+			stageData[stagenum].stageTileData[1].RelativePositionFold = BodyType::down;
+		}
+		else if (stageData[stagenum].stageTileData[0].offsetY > stageData[stagenum].stageTileData[1].offsetY && initFoldCount[BodyType::down])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::down;
+			stageData[stagenum].stageTileData[1].RelativePositionFold = BodyType::up;
+		}
+	}
+	//縦軸が同じとき
+	else if (stageData[stagenum].stageTileData[0].offsetY == stageData[stagenum].stageTileData[1].offsetY)
+	{
+		//左右判定
+		if (stageData[stagenum].stageTileData[0].offsetX < stageData[stagenum].stageTileData[1].offsetY && initFoldCount[BodyType::left])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::left;
+			stageData[stagenum].stageTileData[1].RelativePositionFold = BodyType::right;
+		}
+		else if (stageData[stagenum].stageTileData[0].offsetX > stageData[stagenum].stageTileData[1].offsetY && initFoldCount[BodyType::right])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::right;
+			stageData[stagenum].stageTileData[1].RelativePositionFold = BodyType::left;
+		}
+	}
+}
+
+void Stage::SetThreeTileFoldDirection(size_t stagenum, size_t nowstage, size_t nowtile)
+{
+	StageTileData PlayerTile = stageData[nowstage].stageTileData[nowtile];
+
+	if (stageData[stagenum].stageTileData.size() != 3)
+	{
+		return;
+	}
+
+	//まずは3つのタイルの位置関係を調べる
+	// タイル[0]
+	//横軸が同じとき
+	if (stageData[stagenum].stageTileData[0].offsetX == PlayerTile.offsetX)
+	{
+		//上下判定
+		if (stageData[stagenum].stageTileData[0].offsetY < PlayerTile.offsetY && initFoldCount[BodyType::up])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::up;
+		}
+		else if (stageData[stagenum].stageTileData[0].offsetY > PlayerTile.offsetY && initFoldCount[BodyType::down])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::down;
+		}
+	}
+	//縦軸が同じとき
+	else if (stageData[stagenum].stageTileData[0].offsetY == PlayerTile.offsetY)
+	{
+		//上下判定
+		if (stageData[stagenum].stageTileData[0].offsetX < PlayerTile.offsetX && initFoldCount[BodyType::left])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::up;
+		}
+		else if (stageData[stagenum].stageTileData[0].offsetX > PlayerTile.offsetX && initFoldCount[BodyType::right])
+		{
+			stageData[stagenum].stageTileData[0].RelativePositionFold = BodyType::down;
+		}
+	}
+}
+
+void Stage::SetStageGroup()
+{
+	for (i = 0; i < stageData.size(); i++)
+	{
+		for (j = 0; j < stageData[i].stageTileData.size(); j++)
+		{
+			stageData[i].stageTileData[j].StageGroup = i;
+		}
+	}
 }
 
 void Stage::GetInitFoldCount(unsigned char foldCount[4])

@@ -1173,6 +1173,36 @@ void Player::BodySetUp(const unsigned char foldCount[4])
 		playerTile[3] != 0, BodyType::down);
 }
 
+bool Player::IsPlayerStageOnly()
+{
+	int onlycount = 0;
+
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (stage->IsPositionTile(CenterPosition, i, j))
+			{
+				if (stage->GetStageTileDataSize(i) <= 1)
+				{
+					onlycount++;
+				}
+				else
+				{
+					onlycount = 0;
+				}
+			}
+		}
+	}
+
+	if (onlycount > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void Player::Fold()
 {
 	//足を上げ終わったら折る

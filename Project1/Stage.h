@@ -83,6 +83,13 @@ public: //サブクラス
 		std::vector<RVector3> easePos = {};
 
 		bool isTop = true;
+
+		//相対的な位置
+		int RelativePositionFold = -1;
+		int RelativePositionOpen = -1;
+
+		//どのステージのタイルなのか
+		int StageGroup = -1;
 	};
 	struct StageData
 	{
@@ -159,7 +166,16 @@ public: //メンバ関数
 	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
 	//折ることができるステージタイルを探してセットする
-	void SetMoveTile(int direction, size_t* moveStageTile, size_t* moveStageData);
+	void SetMoveTiles(int direction, size_t* moveStageTile, size_t* moveStageData);
+
+	//タイルが2枚のステージの折れる方向をセット
+	void SetTwoTileFoldDirection(size_t stagenum);
+
+	//タイルが3枚のステージの折れる方向をセット
+	void SetThreeTileFoldDirection(size_t stagenum, size_t nowstage, size_t nowtile);
+
+	//ステージグループのセッティング
+	void SetStageGroup();
 
 	// プレイヤーのx軸上の開始位置を取得
 	inline static int GetStartPlayerPosX() { return startPlayerPosX; }
