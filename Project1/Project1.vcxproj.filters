@@ -75,7 +75,7 @@
     <ClCompile Include="UI.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="goalParticle.cpp">
+    <ClCompile Include="GoalParticle.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="testParticle.cpp">
@@ -143,7 +143,7 @@
     <ClInclude Include="testParticle.h">
       <Filter>Effect</Filter>
     </ClInclude>
-    <ClInclude Include="goalParticle.h">
+    <ClInclude Include="GoalParticle.h">
       <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
@@ -199,6 +199,33 @@
       <Filter>リソースファイル\Stage</Filter>
     </None>
     <None Include="Resources\stage\stage3.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage4.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage5.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage6.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage7.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage8.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage9.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage10.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage11.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage12.csv">
       <Filter>リソースファイル\Stage</Filter>
     </None>
   </ItemGroup>

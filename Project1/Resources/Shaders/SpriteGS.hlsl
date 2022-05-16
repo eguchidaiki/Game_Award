@@ -40,6 +40,7 @@ void main(
         element.ins_matrix = input[0].ins_matrix;
         element.size = input[0].size;
         element.uvOffset = input[0].uvOffset;
+        element.color = input[0].color;
 		//èoóÕ
 		output.Append(element);
 	}

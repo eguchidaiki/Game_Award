@@ -1,4 +1,4 @@
-#include "StageSelecter.h"
+﻿#include "StageSelecter.h"
 #include <string>
 
 #include <Raki_imguiMgr.h>
@@ -25,10 +25,11 @@ StageSelecter::~StageSelecter()
 
 void StageSelecter::Init()
 {
-	//リソース読み込み
+	//繝ｪ繧ｽ繝ｼ繧ｹ隱ｭ縺ｿ霎ｼ縺ｿ
 	LoadSprite();
+	//menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
 
-	//最初のページ
+	//譛蛻昴・繝壹・繧ｸ
 	nowpage = page_1_4;
 	nextpage = nowpage;
 
@@ -37,11 +38,11 @@ void StageSelecter::Init()
 
 void StageSelecter::Update()
 {
-	//ステージ選択の入力を検知
+	//繧ｹ繝・・繧ｸ驕ｸ謚槭・蜈･蜉帙ｒ讀懃衍
 	CheckToStageChangeInput();
-	//ステージ選択のページを切り替える入力を検知
+	//繧ｹ繝・・繧ｸ驕ｸ謚槭・繝壹・繧ｸ繧貞・繧頑崛縺医ｋ蜈･蜉帙ｒ讀懃衍
 	CheckToPageChangeInput();
-	//ページに応じた演出処理
+	//繝壹・繧ｸ縺ｫ蠢懊§縺滓ｼ泌・蜃ｦ逅・
 	PageChange();
 
 
@@ -103,7 +104,14 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
+	/*Audio::StopLoadedSound(menuBGM);*/
 }
+
+//void StageSelecter::PlayAudio()
+//{
+//	//再生
+//	//Audio::PlayLoadedSound(menuBGM);
+//}
 
 void StageSelecter::LoadSprite()
 {
@@ -138,7 +146,7 @@ void StageSelecter::LoadSprite()
 
 void StageSelecter::CheckToPageChangeInput()
 {
-	//ステージ選択中でないなら処理しない
+	//繧ｹ繝・・繧ｸ驕ｸ謚樔ｸｭ縺ｧ縺ｪ縺・↑繧牙・逅・＠縺ｪ縺・
 	if (state != is_selecting)
 	{
 		return;
@@ -149,7 +157,7 @@ void StageSelecter::CheckToPageChangeInput()
 
 	if (state == is_selecting)
 	{
-		//ページ遷移するのか？
+		//繝壹・繧ｸ驕ｷ遘ｻ縺吶ｋ縺ｮ縺具ｼ・
 		bool isMove = false;
 		if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626
 			&& Input::isMouseClickTrigger(MOUSE_L))
@@ -198,18 +206,18 @@ void StageSelecter::CheckToPageChangeInput()
 
 void StageSelecter::PageChange()
 {
-	//ページ切り替え演出の処理
+	//繝壹・繧ｸ蛻・ｊ譖ｿ縺域ｼ泌・縺ｮ蜃ｦ逅・
 
-	//ページが変わるとき
+	//繝壹・繧ｸ縺悟､峨ｏ繧九→縺・
 	if (nowpage != nextpage)
 	{
 		animationFrame++;
-		//次のページ
+		//谺｡縺ｮ繝壹・繧ｸ
 		if (pageMoveDir == is_front)
 		{
-			//演出中は現在ページを表示
+			//貍泌・荳ｭ縺ｯ迴ｾ蝨ｨ繝壹・繧ｸ繧定｡ｨ遉ｺ
 			displayPage = nowpage;
-			//演出待機
+			//貍泌・蠕・ｩ・
 			state = is_pageChange_waiting;
 			if (animationFrame % perFrame == 0)
 			{
@@ -217,34 +225,34 @@ void StageSelecter::PageChange()
 			}
 			if (nowDisplayNum >= 20)
 			{
-				//描画するやつを切り替え
+				//謠冗判縺吶ｋ繧・▽繧貞・繧頑崛縺・
 				displayPage = nextpage;
-				//現在ページを設定
+				//迴ｾ蝨ｨ繝壹・繧ｸ繧定ｨｭ螳・
 				nowpage = nextpage;
-				//初期化
+				//蛻晄悄蛹・
 				nowDisplayNum = 0;
-				//入力を受付
+				//蜈･蜉帙ｒ蜿嶺ｻ・
 				state = is_selecting;
 
 				animationFrame = 0;
 			}
 		}
-		//前のページ
+		//蜑阪・繝壹・繧ｸ
 		else
 		{
-			//ページ遷移判定にするタイミングで下準備をする
+			//繝壹・繧ｸ驕ｷ遘ｻ蛻､螳壹↓縺吶ｋ繧ｿ繧､繝溘Φ繧ｰ縺ｧ荳区ｺ門ｙ繧偵☆繧・
 			if (state != is_pageChange_waiting)
 			{
 				state = is_pageChange_waiting;
 				nowDisplayNum = 19;
 				displayPage = nextpage;
 			}
-			//アニメーション進行
+			//繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ騾ｲ陦・
 			if (animationFrame % perFrame == 0)
 			{
 				nowDisplayNum--;
 			}
-			//演出終了
+			//貍泌・邨ゆｺ・
 			if (nowDisplayNum <= 0)
 			{
 				nowDisplayNum = 0;
@@ -378,13 +386,13 @@ void StageSelecter::CheckLoadStage(int boxnum)
 
 void StageSelecter::CheckToStageChangeInput()
 {
-	//選択中以外はそもそも実行しない
+	//驕ｸ謚樔ｸｭ莉･螟悶・縺昴ｂ縺昴ｂ螳溯｡後＠縺ｪ縺・
 	if (state != is_selecting)
 	{
 		return;
 	}
 
-	//各ボックスの左側座標を計算
+	//蜷・・繝・け繧ｹ縺ｮ蟾ｦ蛛ｴ蠎ｧ讓吶ｒ險育ｮ・
 	std::array<int, 4> boxLeft;
 	for (int i = 0; i < 4; i++)
 	{
@@ -393,36 +401,36 @@ void StageSelecter::CheckToStageChangeInput()
 
 	int selectingBoxNum = 0;
 	bool isHit = false;
-	//クリック時にどのボックスをクリックしているか求める
+	//繧ｯ繝ｪ繝・け譎ゅ↓縺ｩ縺ｮ繝懊ャ繧ｯ繧ｹ繧偵け繝ｪ繝・け縺励※縺・ｋ縺区ｱゅａ繧・
 	if (Input::isMouseClickTrigger(MOUSE_L) == true)
 	{
 		int mouse_x = static_cast<int>(Input::getMousePos().x);
 		int mouse_y = static_cast<int>(Input::getMousePos().y);
 
-		//ステージにヒットしている
+		//繧ｹ繝・・繧ｸ縺ｫ繝偵ャ繝医＠縺ｦ縺・ｋ
 		for (int i = 0; i < 4; i++)
 		{
 			if (mouse_x > boxLeft[i] && mouse_x < boxLeft[i] + NUMBOX_SIZE && mouse_y > NUMBOX_START_Y && mouse_y < NUMBOX_START_Y + NUMBOX_SIZE)
 			{
 				selectingBoxNum = i;
-				//ゲーム本編への遷移を許可
+				//繧ｲ繝ｼ繝譛ｬ邱ｨ縺ｸ縺ｮ驕ｷ遘ｻ繧定ｨｱ蜿ｯ
 				isChanging_GameMain = true;
-				//ヒット
+				//繝偵ャ繝・
 				isHit = true;
-				//ステージ遷移開始
+				//繧ｹ繝・・繧ｸ驕ｷ遘ｻ髢句ｧ・
 				state = is_stageSelected_waiting;
 				break;
 			}
 		}
-		//一個もヒットしていない場合は終了
+		//荳蛟九ｂ繝偵ャ繝医＠縺ｦ縺・↑縺・ｴ蜷医・邨ゆｺ・
 		if (!isHit) { return; }
 	}
 	else
-	{//入力がないなら終了
+	{//蜈･蜉帙′縺ｪ縺・↑繧臥ｵゆｺ・
 		return;
 	}
 
-	//クリックされているボックスと、現在のページから、どのステージに移動するのかを求める
+	//繧ｯ繝ｪ繝・け縺輔ｌ縺ｦ縺・ｋ繝懊ャ繧ｯ繧ｹ縺ｨ縲∫樟蝨ｨ縺ｮ繝壹・繧ｸ縺九ｉ縲√←縺ｮ繧ｹ繝・・繧ｸ縺ｫ遘ｻ蜍輔☆繧九・縺九ｒ豎ゅａ繧・
 	if (isHit)
 	{
 		CheckLoadStage(selectingBoxNum);

@@ -5,6 +5,9 @@
 
 #include "Raki_DX12B.h"
 
+//スプライト加工カラー
+DirectX::XMFLOAT4 Sprite::sprite_color = { 1.0f,1.0f,1.0f,1.0f };
+
 Sprite::Sprite()
 {
     spdata.reset(new SpriteData);
@@ -15,10 +18,17 @@ Sprite::~Sprite()
 
 }
 
+void Sprite::SetSpriteColorParam(float r, float g, float b, float a)
+{
+    sprite_color.x = r;
+    sprite_color.y = g;
+    sprite_color.z = b;
+    sprite_color.w = a;
+}
+
 void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool adjustResourceFlag, uvAnimData *animData)
 {
-    HRESULT result;
-
+	HRESULT result;
 
     if (animData != nullptr) {
         //this->animData = animData;
@@ -42,10 +52,10 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
     //�A���J�[�|�C���g�̃R�s�[
     spdata->anchorPoint = anchor;
 
-    //���_�f�[�^�S�̂̃T�C�Y = ���_�f�[�^����̃T�C�Y * ���_�f�[�^�̗v�f��
-    UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 1);
+	//���_�f�[�^�S�̂̃T�C�Y = ���_�f�[�^����̃T�C�Y * ���_�f�[�^�̗v�f��
+	UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * 1);
 
-    //���_�o�b�t�@����
+	//���_�o�b�t�@����
     D3D12_HEAP_PROPERTIES heapprop{}; //�q�[�v�ݒ�
     heapprop.Type = D3D12_HEAP_TYPE_UPLOAD; //GPU�ւ̓]���p
     D3D12_RESOURCE_DESC resdesc{}; //���\�[�X�ݒ�
@@ -279,18 +289,27 @@ void Sprite::Create(UINT resourceID)
 
     //デフォルトのuvを格納
     spdata->uvOffsets.push_back(XMFLOAT4(0.0, 0.0, 1.0, 1.0));
+
+    //スプライト生成炭
+    isCreated = true;
 }
 
 void Sprite::CreateAndSetDivisionUVOffsets(int divAllnum, int divX, int divY, int sizeX, int sizeY, UINT resourceID)
 {
+    //負の値は無効
+    if (divAllnum < 0 || divX < 0 || divY < 0 || sizeX < 0 || sizeY < 0) {
+        std::cout << "ERROR : SPRITE : CreateAndSetDivisionUVOffsets() : Invalid value." << std::endl;
+        return;
+    }
+
+    //uv分割が意図しない値にならないかチェック
+
+
     //スプライトデータ作成
     Create(resourceID);
     //デフォルトサイズを変更
     TEXTURE_DEFAULT_SIZE.x = sizeX;
     TEXTURE_DEFAULT_SIZE.y = sizeY;
-    //uv分割が意図しない値にならないかチェック
-
-    //負の値は無効
 
     //初期化したコンテナを一旦クリア
     spdata->uvOffsets.clear();
@@ -340,11 +359,7 @@ void Sprite::UpdateSprite()
     spdata->matWorld *= XMMatrixTranslation(spdata->position.x, spdata->position.y, spdata->position.z);
 
     //�萔�o�b�t�@�]��
-    SpConstBufferData *constMap = nullptr;
-    HRESULT result = spdata->constBuff->Map(0, nullptr, (void **)&constMap);
-    constMap->mat = spdata->matWorld * camera->GetMatrixProjection();
-    constMap->color = spdata->color;
-    spdata->constBuff->Unmap(0, nullptr);
+
 
 }
 
@@ -366,8 +381,15 @@ void Sprite::InstanceUpdate()
         insmap[i].worldmat = spdata->insWorldMatrixes[i].worldmat * camera->GetMatrixProjection2D();
         insmap[i].drawsize = spdata->insWorldMatrixes[i].drawsize;
         insmap[i].uvOffset = spdata->uvOffsets[uvOffsetHandle];
+        insmap[i].color = spdata->insWorldMatrixes[i].color;
     }
     spdata->vertInsBuff->Unmap(0, nullptr);
+
+    SpConstBufferData* constMap = nullptr;
+    result = spdata->constBuff->Map(0, nullptr, (void**)&constMap);
+    constMap->mat = spdata->matWorld * camera->GetMatrixProjection();
+    constMap->color = spdata->color;
+    spdata->constBuff->Unmap(0, nullptr);
 }
 
 void Sprite::Draw()
@@ -410,6 +432,7 @@ void Sprite::DrawSprite(float posX, float posY)
     ins.worldmat *= trans;
     //�f�t�H���g�T�C�Y���i�[
     ins.drawsize = TEXTURE_DEFAULT_SIZE;
+    ins.color = sprite_color;
     spdata->insWorldMatrixes.push_back(ins);
 }
 
@@ -429,6 +452,7 @@ void Sprite::DrawExtendSprite(float x1, float y1, float x2, float y2)
     ins.worldmat *= trans;
     ins.drawsize = { x2 - x1, y2 - y1 };
     //�s��R���e�i�Ɋi�[
+    ins.color = sprite_color;
     spdata->insWorldMatrixes.push_back(ins);
 }
 
@@ -445,6 +469,11 @@ void Sprite::DrawMPRender()
             0, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
     //�`��
     SpriteManager::Get()->cmd->DrawInstanced(4, 1, 0, 0);
+}
+
+bool Sprite::IsCreated()
+{
+    return isCreated;
 }
 
 bool Sprite::isVertexBufferNeedResize()

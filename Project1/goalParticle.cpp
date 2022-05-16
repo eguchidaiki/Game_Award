@@ -1,4 +1,4 @@
-#include "goalParticle.h"
+#include "GoalParticle.h"
 #include "NY_random.h"
 
 GoalParticle::ParticleClass::ParticleClass()
@@ -22,7 +22,9 @@ ParticlePrototype* GoalParticle::ParticleClass::clone(RVector3 start)
 	return nullptr;
 }
 
-GoalParticle::GoalParticle()
+GoalParticle::GoalParticle() :
+	particleHandle(0),
+	particleManager{}
 {
 }
 

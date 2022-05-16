@@ -4,7 +4,7 @@
 #include <RVector.h>
 #include <TexManager.h>
 #include "Sprite.h"
-#include "goalParticle.h"
+#include "GoalParticle.h"
 
 class Player final
 {

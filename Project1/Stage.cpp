@@ -26,9 +26,11 @@ const int Stage::blockSize = 60;
 const int Stage::halfBlockSize = Stage::blockSize / 2;
 const int Stage::lineWidth = 5;
 const int Stage::foldLineCount = 2;
-const XMFLOAT4 Stage::lineColor[2] = {
-	{ 0.0f, 0.0f, 0.0f, 1.0f },
-	{ 0.5f, 0.5f, 0.5f, 1.0f }
+const XMFLOAT4 Stage::lineColor[4] = {
+	{ 0.0f, 0.0f, 0.9f, 0.9f },
+	{ 0.0f, 0.9f, 0.0f, 0.9f },
+	{ 0.9f, 0.0f, 0.0f, 0.9f },
+	{ 0.9f, 0.9f, 0.0f, 0.9f }
 };
 
 int Stage::drawOffsetX = 0;
@@ -269,8 +271,6 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	for (i = 0; i < stageData.size(); i++)
 	{
-		lineSprite.spdata->color = lineColor[i % 2]; //色設定
-
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			for (y = 0; y < stageData[i].stageTileData[j].height; y++)
@@ -371,6 +371,10 @@ void Stage::Draw(const int offsetX, const int offsetY)
 			}
 		}
 
+		// 色設定
+		Sprite::SetSpriteColorParam(lineColor[i % 4].x, lineColor[i % 4].y,
+									lineColor[i % 4].z, lineColor[i % 4].w);
+
 		// 折り目・枠線の描画
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
@@ -383,16 +387,19 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 				if (stageData[i].stageTile[sideStageTile] != MapchipData::EMPTY_STAGE)
 				{
-					FoldDraw(i, j, BodyType::left, drawOffset.x, drawOffset.y);
+					FoldDraw(i, j, BodyType::left,
+							 static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::left, drawOffset.x, drawOffset.y);
+					FlameDraw(i, j, BodyType::left,
+							  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::left, drawOffset.x, drawOffset.y);
+				FlameDraw(i, j, BodyType::left,
+						  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 			}
 			if (static_cast<size_t>(stageData[i].stageTileData[j].stageNumber % stageData[i].width) + 1 < stageData[i].width)
 			{
@@ -400,16 +407,19 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 				if (stageData[i].stageTile[sideStageTile] != MapchipData::EMPTY_STAGE)
 				{
-					FoldDraw(i, j, BodyType::right, drawOffset.x, drawOffset.y);
+					FoldDraw(i, j, BodyType::right,
+							 static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::right, drawOffset.x, drawOffset.y);
+					FlameDraw(i, j, BodyType::right,
+							  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::right, drawOffset.x, drawOffset.y);
+				FlameDraw(i, j, BodyType::right,
+						  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 			}
 			if (static_cast<INT64>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) - 1 >= 0)
 			{
@@ -418,16 +428,19 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 				if (sideStageData != MapchipData::EMPTY_STAGE)
 				{
-					FoldDraw(i, j, BodyType::up, drawOffset.x, drawOffset.y);
+					FoldDraw(i, j, BodyType::up,
+							 static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::up, drawOffset.x, drawOffset.y);
+					FlameDraw(i, j, BodyType::up,
+							  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::up, drawOffset.x, drawOffset.y);
+				FlameDraw(i, j, BodyType::up,
+						  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 			}
 			if (static_cast<size_t>(stageData[i].stageTileData[j].stageNumber / stageData[i].width) + 1 < stageData[i].height)
 			{
@@ -435,18 +448,22 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 				if (stageData[i].stageTile[sideStageTile] != MapchipData::EMPTY_STAGE)
 				{
-					FoldDraw(i, j, BodyType::down, drawOffset.x, drawOffset.y);
+					FoldDraw(i, j, BodyType::down,
+							 static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 				else
 				{
-					FlameDraw(i, j, BodyType::down, drawOffset.x, drawOffset.y);
+					FlameDraw(i, j, BodyType::down,
+							  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 				}
 			}
 			else
 			{
-				FlameDraw(i, j, BodyType::down, drawOffset.x, drawOffset.y);
+				FlameDraw(i, j, BodyType::down,
+						  static_cast<int>(drawOffset.x), static_cast<int>(drawOffset.y));
 			}
 		}
+		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
 	particleManager->Prototype_Draw(EmptyHandle);
@@ -1845,7 +1862,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 		pos1.x = static_cast<float>(posX * blockSize);
 		pos1.y = static_cast<float>(posY * blockSize);
 		pos2.x = static_cast<float>(posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
-		pos2.y = static_cast<float>(posY * blockSize + lineWidth);
+		pos2.y = static_cast<float>(posY * blockSize - lineWidth);
 
 		break;
 	}
@@ -1857,7 +1874,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 		pos1.x = static_cast<float>(posX * blockSize);
 		pos1.y = static_cast<float>(posY * blockSize);
 		pos2.x = static_cast<float>(posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
-		pos2.y = static_cast<float>(posY * blockSize - lineWidth);
+		pos2.y = static_cast<float>(posY * blockSize + lineWidth);
 
 		break;
 	}
@@ -1868,7 +1885,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 
 		pos1.x = static_cast<float>(posX * blockSize);
 		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX * blockSize + lineWidth);
+		pos2.x = static_cast<float>(posX * blockSize - lineWidth);
 		pos2.y = static_cast<float>(posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
 
 		break;
@@ -1880,7 +1897,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 
 		pos1.x = static_cast<float>(posX * blockSize);
 		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX * blockSize - lineWidth);
+		pos2.x = static_cast<float>(posX * blockSize + lineWidth);
 		pos2.y = static_cast<float>(posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
 
 		break;

@@ -159,7 +159,7 @@
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameMainManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="goalParticle.cpp" />
+    <ClCompile Include="GoalParticle.cpp" />
     <ClCompile Include="InputManger.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="LoadFile.cpp" />
@@ -240,8 +240,17 @@
     <None Include="Resources\Shaders\ParticleShaderHeader.hlsli" />
     <None Include="Resources\Shaders\Sprite.hlsli" />
     <None Include="Resources\stage\stage1.csv" />
+    <None Include="Resources\stage\stage10.csv" />
+    <None Include="Resources\stage\stage11.csv" />
+    <None Include="Resources\stage\stage12.csv" />
     <None Include="Resources\stage\stage2.csv" />
     <None Include="Resources\stage\stage3.csv" />
+    <None Include="Resources\stage\stage4.csv" />
+    <None Include="Resources\stage\stage5.csv" />
+    <None Include="Resources\stage\stage6.csv" />
+    <None Include="Resources\stage\stage7.csv" />
+    <None Include="Resources\stage\stage8.csv" />
+    <None Include="Resources\stage\stage9.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h" />
@@ -250,7 +259,7 @@
     <ClInclude Include="GameMainManager.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="General.h" />
-    <ClInclude Include="goalParticle.h" />
+    <ClInclude Include="GoalParticle.h" />
     <ClInclude Include="InputManger.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="LoadFile.h" />
