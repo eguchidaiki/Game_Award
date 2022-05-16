@@ -66,6 +66,7 @@ public: //サブクラス
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
+		//ステージの構成(CSVのステージの情報)の中で1になっている順番
 		char stageNumber = 0;
 		char offsetX = 0;
 		char offsetY = 0;
@@ -162,11 +163,17 @@ public: //メンバ関数
 	// 内部データ全削除
 	void DataClear();
 
-	// 任意の座標が任意のステージタイルにいるかどうか
-	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
+	// 任意の座標が任意のステージにいるかどうか
+	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
 
-	//折ることができるステージタイルを探してセットする
-	void SetMoveTiles(int direction, size_t* moveStageTile, size_t* moveStageData);
+	//プレイヤーがどのタイルにいるか
+	bool IsPlayerTile(const size_t& stageNumber, const size_t& TileNumber);
+
+	//このタイルは指定した方向に折れるのかどうか
+	bool IsThisTileFold(int direction);
+
+	//折ることができるステージタイルを探す
+	bool SetMoveTiles(int direction, const size_t& stageNumber, const size_t& TileNumber, size_t* moveStageTile, size_t* moveStageData);
 
 	//タイルが2枚のステージの折れる方向をセット
 	void SetTwoTileFoldDirection(size_t stagenum);
@@ -252,7 +259,7 @@ public: //メンバ関数
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 	//指定した場所のステージタイルにプレイヤーがいるかどうか
-	bool IsPositionTile(size_t StageNum, size_t StageTileNum);
+	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);

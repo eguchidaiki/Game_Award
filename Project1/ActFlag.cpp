@@ -86,7 +86,7 @@ bool ActFlag::FoldUp()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage->IsPositionTile(player->CenterPosition, i, j) == false)
+			if (stage->IsPlayerTile(i, j) == false)
 			{
 				continue;
 			}
@@ -138,7 +138,7 @@ bool ActFlag::FoldDown()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage->IsPositionTile(player->CenterPosition, i, j) == false)
+			if (stage->IsPlayerTile(i, j) == false)
 			{
 				continue;
 			}
@@ -190,7 +190,7 @@ bool ActFlag::FoldLeft()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage->IsPositionTile(player->CenterPosition, i, j) == false)
+			if (stage->IsPlayerTile(i, j) == false)
 			{
 				continue;
 			}
@@ -242,7 +242,7 @@ bool ActFlag::FoldRight()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage->IsPositionTile(player->CenterPosition, i, j) == false)
+			if (stage->IsPlayerTile(i, j) == false)
 			{
 				continue;
 			}
