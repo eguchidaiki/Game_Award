@@ -877,22 +877,18 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 
 	direction = -1;
 
-	//if (IsFolds[BodyType::up] || IsOpens[BodyType::down])
 	if (player->Body_Two.IsAction)
 	{
 		direction = BodyType::up;
 	}
-	//else if (IsFolds[BodyType::down] || IsOpens[BodyType::up])
 	else if (player->Body_Four.IsAction)
 	{
 		direction = BodyType::down;
 	}
-	//else if (IsFolds[BodyType::left] || IsOpens[BodyType::right])
 	else if (player->Body_One.IsAction)
 	{
 		direction = BodyType::left;
 	}
-	//else if (IsFolds[BodyType::right] || IsOpens[BodyType::left])
 	else if (player->Body_Three.IsAction)
 	{
 		direction = BodyType::right;
@@ -931,6 +927,11 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			{
 			case BodyType::up: //上入力
 			{
+				if (onPlayerStageTile / initStageData[i].width <= 0)
+				{
+					break;
+				}
+
 				moveStageTile = onPlayerStageTile - initStageData[i].width;
 				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
@@ -961,6 +962,11 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			}
 			case BodyType::down: //下入力
 			{
+				if (onPlayerStageTile / initStageData[i].width >= static_cast<size_t>(initStageData[i].height - 1))
+				{
+					break;
+				}
+
 				moveStageTile = onPlayerStageTile + initStageData[i].width;
 				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
@@ -991,6 +997,11 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			}
 			case BodyType::left: //左入力
 			{
+				if (onPlayerStageTile % initStageData[i].width <= 0)
+				{
+					break;
+				}
+
 				moveStageTile = onPlayerStageTile - 1;
 				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
@@ -1021,19 +1032,21 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 			}
 			case BodyType::right: //右入力
 			{
-				//今のタイルがright方向に折れるのであればmoveStageたちにデータを格納
-				if (IsThisTileFold(direction))
+				if (onPlayerStageTile % initStageData[i].width >= static_cast<size_t>(initStageData[i].width - 1))
 				{
-
+					break;
 				}
+
+				//今のタイルがright方向に折れるのであればmoveStageたちにデータを格納
+				
 				moveStageTile = onPlayerStageTile + 1;
 				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
 
-				/*if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
+				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
 					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
 				{
 					break;
-				}*/
+				}
 
 				if (OpenCount >= 2 && IsOpens[BodyType::right] == true)
 				{
@@ -1519,6 +1532,23 @@ bool Stage::IsPositionInitTile(size_t StageNum, size_t StageTileNum)
 		return true;
 	}
 	return false;
+}
+
+bool Stage::IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber)
+{
+	float left = (float)stageData[stageNumber].stageTileData[stageTileNumber].offsetX * blockSize;
+	float up = (float)stageData[stageNumber].stageTileData[stageTileNumber].offsetY * blockSize;
+	float right = left + blockSize * (float)stageData[stageNumber].stageTileData[stageTileNumber].width;
+	float down = up + blockSize * (float)stageData[stageNumber].stageTileData[stageTileNumber].height;
+
+	if (center.x >= left && center.x < right && center.y >= up && center.y < down)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)

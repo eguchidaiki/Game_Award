@@ -272,6 +272,7 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
+			//stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
 			stagePtr->drawOffsetX = 0.0f;
 			stagePtr->drawOffsetY = 0.0f;
 			playerPtr->Init();

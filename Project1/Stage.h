@@ -260,6 +260,8 @@ public: //メンバ関数
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 	//指定した場所のステージタイルにプレイヤーがいるかどうか
 	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
+	//任意の座標がステージタイルにいるのか
+	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
