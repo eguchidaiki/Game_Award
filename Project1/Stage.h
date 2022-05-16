@@ -91,6 +91,9 @@ public: //サブクラス
 
 		//どのステージのタイルなのか
 		int StageGroup = -1;
+
+		//折られている場合の方向
+		int FoldDirection = -1;
 	};
 	struct StageData
 	{
@@ -169,17 +172,16 @@ public: //メンバ関数
 	//プレイヤーがどのタイルにいるか
 	bool IsPlayerTile(const size_t& stageNumber, const size_t& TileNumber);
 
-	//このタイルは指定した方向に折れるのかどうか
-	bool IsThisTileFold(int direction);
+	//onplayerstageを設定(折る時)
+	void SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber,std::vector<size_t>& onplayerstage, 
+		std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
 
-	//折ることができるステージタイルを探す
-	bool SetMoveTiles(int direction, const size_t& stageNumber, const size_t& TileNumber, size_t* moveStageTile, size_t* moveStageData);
+	//onplayerstageを設定(開く時)
+	void SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage,
+		std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
 
-	//タイルが2枚のステージの折れる方向をセット
-	void SetTwoTileFoldDirection(size_t stagenum);
-
-	//タイルが3枚のステージの折れる方向をセット
-	void SetThreeTileFoldDirection(size_t stagenum, size_t nowstage, size_t nowtile);
+	//ステージの中で指定した方向のoffset血を比べる
+	XMFLOAT2 ReturnMostOffset(const unsigned char& direction, const size_t& stageNumber);
 
 	//ステージグループのセッティング
 	void SetStageGroup();
@@ -267,9 +269,9 @@ public: //メンバ関数
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
 	// ステージを折る
-	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
+	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData,int datasize);
 	// ステージを開く
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData);
+	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData, int datasize);
 
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
@@ -279,7 +281,7 @@ private:
 		const int offsetX, const int offsetY);
 
 	// イージングの初期化
-	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);
+	void EaseingInit(const size_t& moveStage, const size_t& moveTile, const int& direction);
 	// イージングの更新
 	void EaseingUpdate();
 	// 一番上のステージタイルを探す
