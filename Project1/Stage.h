@@ -102,6 +102,7 @@ public: //定数
 
 	static const int lineWidth;         //線の太さ
 	static const int foldLineCount;     //折れ目の間隔
+	static const XMFLOAT4 backColor[4]; //ステージの何もない場所の色
 	static const XMFLOAT4 lineColor[4]; //線の色
 
 	RVector3 offset = { 0,0,0 };
