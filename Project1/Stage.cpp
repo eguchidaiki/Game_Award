@@ -763,6 +763,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
+	MapchipSpriteEmpty.Draw();
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < 15; j++)
@@ -770,9 +771,8 @@ void Stage::Draw(const int offsetX, const int offsetY)
 			AllBlockSprite[i][j].Draw();
 		}
 	}
-
 	MapchipSpriteGoal.Draw();
-	MapchipSpriteEmpty.Draw();
+	
 	lineSprite.Draw();
 }
 
@@ -1201,10 +1201,13 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 		return 0;
 	}
 
+	//Open専用のコンテナに格納
 	SetOnPlayerStageTileFold(stagenumber, onplayerstage, movestagetile, movestagedata, direction);
 
+	//Fold専用のコンテナに格納
 	SetOnPlayerStageTileOpen(stagenumber, onplayerstageOpen, movestagetileOpen, movestagedataOpen, direction);
 
+	//Fold専用のコンテナのサイズ分回す
 	for (int a = 0; a < onplayerstage.size(); a++)
 	{
 		if (player->leg.FootIsAction == false && BodyStatus[direction] == false)
@@ -1216,6 +1219,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 		}
 	}
 
+	//Open専用のコンテナのサイズ分回す
 	for (int a = 0; a < onplayerstageOpen.size(); a++)
 	{
 		if (OpenCount >= 2 && IsOpens[direction] == true)
@@ -1227,189 +1231,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 		}
 	}
 
-	/*
-	for (i = 0; i < stageData.size(); i++)
-	{
-		//プレイヤーがいないステージは省く
-		if (IsPositionStage(player->CenterPosition, i) == false)
-		{
-			continue;
-		}
-
-		for (j = 0; j < stageData[i].stageTileData.size(); j++)
-		{
-			//プレイヤーがいるタイルをonPlayerStageTileにセット
-			if (IsPositionInitTile(i, j))
-			{
-				onPlayerStageTile = initStageData[i].stageTileData[j].stageNumber;
-			}
-			else
-			{
-				continue;
-			}
-			if (isAct)
-			{
-				break;
-			}
-
-			switch (direction)
-			{
-			case BodyType::up: //上入力
-			{
-				if (onPlayerStageTile / initStageData[i].width <= 0)
-				{
-					break;
-				}
-
-				moveStageTile = onPlayerStageTile - initStageData[i].width;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile < 0 ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					break;
-				}
-
-				if (OpenCount >= 2 && IsOpens[BodyType::up] == true)
-				{
-					if (Open(playerTile, direction, i, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-				else if (player->leg.FootIsAction == false && player->Body_Two.IsFold == true)
-				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-
-				CreateParticle(i, moveStageData);
-
-				break;
-			}
-			case BodyType::down: //下入力
-			{
-				if (onPlayerStageTile / initStageData[i].width >= static_cast<size_t>(initStageData[i].height - 1))
-				{
-					break;
-				}
-
-				moveStageTile = onPlayerStageTile + initStageData[i].width;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					break;
-				}
-
-				if (OpenCount >= 2 && IsOpens[BodyType::down] == true)
-				{
-					if (Open(playerTile, direction, i, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-				else if (player->leg.FootIsAction == false && player->Body_Four.IsFold == true)
-				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-
-				CreateParticle(i, moveStageData);
-
-				break;
-			}
-			case BodyType::left: //左入力
-			{
-				if (onPlayerStageTile % initStageData[i].width <= 0)
-				{
-					break;
-				}
-
-				moveStageTile = onPlayerStageTile - 1;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile < 0 ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					break;
-				}
-
-				if (OpenCount >= 2 && IsOpens[BodyType::left] == true)
-				{
-					if (Open(playerTile, direction, i, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-				else if (player->leg.FootIsAction == false && player->Body_One.IsFold == true)
-				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-
-				CreateParticle(i, moveStageData);
-
-				break;
-			}
-			case BodyType::right: //右入力
-			{
-				if (onPlayerStageTile % initStageData[i].width >= static_cast<size_t>(initStageData[i].width - 1))
-				{
-					break;
-				}
-
-				moveStageTile = onPlayerStageTile + 1;
-				moveStageData = static_cast<size_t>(initStageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					break;
-				}
-
-				if (OpenCount >= 2 && IsOpens[BodyType::right] == true)
-				{
-					if (Open(playerTile, direction, i, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-
-				if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
-				{
-					if (Fold(playerTile, direction, i, onPlayerStageTile, moveStageData, 0) != EF)
-					{
-						isAct = true;
-					}
-				}
-
-				CreateParticle(i, moveStageData);
-
-				break;
-			}
-			default:
-			{
-				return EF;
-				break;
-			}
-			}
-
-		}
-
-		if (isAct)
-		{
-			break;
-		}
-	}
-	*/
 	return 0;
 }
 
@@ -1860,12 +1681,25 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage, std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction)
 {
+	size_t NowStage = -1;
+	size_t NowTile = -1;
+	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
+
+	//テンプレfor文
 	for (int a = 0; a < stageData.size(); a++)
 	{
+		//プレイヤーがいないステージは省く
+		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
+		{
+			continue;
+		}
+
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
+			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 			if (stageData[a].stageTileData[b].isFold == true && stageData[a].stageTileData[b].FoldDirection == direction)
 			{
+				//方向ごとに格納していく
 				switch (direction)
 				{
 				case BodyType::up:
