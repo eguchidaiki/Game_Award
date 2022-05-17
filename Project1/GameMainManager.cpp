@@ -20,7 +20,7 @@ GameMainManager::~GameMainManager()
 
 void GameMainManager::Init()
 {
-	BackHandle = TexManager::LoadTexture("Resources/background03.png");
+	BackHandle = TexManager::LoadTexture("Resources/vvgkh4.png");
 	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
 	this->Back.Create(BackHandle);
 
@@ -83,19 +83,15 @@ void GameMainManager::GameInstanceUpdate()
 
 	player->SetBodyStatus(PlayerBodyStatus);
 
-	bool IsFolds[4] = {
-		player->IsLeftFold,
-		player->IsUpFold,
-		player->IsRightFold,
-		player->IsDownFold,
-	};
+	IsFolds[0] = player->IsLeftFold;
+	IsFolds[1] = player->IsUpFold;
+	IsFolds[2] = player->IsRightFold;
+	IsFolds[3] = player->IsDownFold;
 
-	bool IsOpens[4] = {
-		player->IsLeftOpen,
-		player->IsUpOpen,
-		player->IsRightOpen,
-		player->IsDownOpen,
-	};
+	IsOpens[0] = player->IsLeftOpen;
+	IsOpens[1] = player->IsUpOpen;
+	IsOpens[2] = player->IsRightOpen;
+	IsOpens[3] = player->IsDownOpen;
 
 	if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
 	{
@@ -177,8 +173,8 @@ void GameMainManager::GameInstanceDraw()
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
 	Raki_DX12B::Get()->ClearDepthBuffer();
-	ui.Draw();
 	stage->Draw();
 	player->Draw(stage->drawOffsetX, stage->drawOffsetY);
 	tutorial.Draw(tutorialOffsetX, tutorialOffsetY);
+	ui.Draw();
 }
