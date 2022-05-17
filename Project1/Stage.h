@@ -113,6 +113,7 @@ public: //定数
 
 	static const int lineWidth;         //線の太さ
 	static const int foldLineCount;     //折れ目の間隔
+	static const XMFLOAT4 backColor[4]; //ステージの何もない場所の色
 	static const XMFLOAT4 lineColor[4]; //線の色
 
 	RVector3 offset = { 0,0,0 };
@@ -269,9 +270,11 @@ public: //メンバ関数
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
 	// ステージを折る
-	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData,int datasize);
+	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize);
 	// ステージを開く
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData, int datasize);
+	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& moveStageData, size_t datasize);
 
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
