@@ -66,6 +66,7 @@ public: //サブクラス
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
+		//ステージの構成(CSVのステージの情報)の中で1になっている順番
 		char stageNumber = 0;
 		char offsetX = 0;
 		char offsetY = 0;
@@ -83,6 +84,16 @@ public: //サブクラス
 		std::vector<RVector3> easePos = {};
 
 		bool isTop = true;
+
+		//相対的な位置
+		int RelativePositionFold = -1;
+		int RelativePositionOpen = -1;
+
+		//どのステージのタイルなのか
+		int StageGroup = -1;
+
+		//折られている場合の方向
+		int FoldDirection = -1;
 	};
 	struct StageData
 	{
@@ -156,8 +167,25 @@ public: //メンバ関数
 	// 内部データ全削除
 	void DataClear();
 
-	// 任意の座標が任意のステージタイルにいるかどうか
-	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
+	// 任意の座標が任意のステージにいるかどうか
+	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
+
+	//プレイヤーがどのタイルにいるか
+	bool IsPlayerTile(const size_t& stageNumber, const size_t& TileNumber);
+
+	//onplayerstageを設定(折る時)
+	void SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber,std::vector<size_t>& onplayerstage, 
+		std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
+
+	//onplayerstageを設定(開く時)
+	void SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage,
+		std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
+
+	//ステージの中で指定した方向のoffset血を比べる
+	XMFLOAT2 ReturnMostOffset(const unsigned char& direction, const size_t& stageNumber);
+
+	//ステージグループのセッティング
+	void SetStageGroup();
 
 	// プレイヤーのx軸上の開始位置を取得
 	inline static int GetStartPlayerPosX() { return startPlayerPosX; }
@@ -233,14 +261,20 @@ public: //メンバ関数
 	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	//指定した場所のステージタイルにプレイヤーがいるかどうか
+	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
+	//任意の座標がステージタイルにいるのか
+	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
 	// ステージを折る
-	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
+	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize);
 	// ステージを開く
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData);
+	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& moveStageData, size_t datasize);
 
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
@@ -250,7 +284,7 @@ private:
 		const int offsetX, const int offsetY);
 
 	// イージングの初期化
-	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);
+	void EaseingInit(const size_t& moveStage, const size_t& moveTile, const int& direction);
 	// イージングの更新
 	void EaseingUpdate();
 	// 一番上のステージタイルを探す

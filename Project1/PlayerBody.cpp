@@ -881,7 +881,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 	if (this->Body_Type == direction)
 	{
-		return true;
+		return false;
 	}
 
 	int BlockCount = 0;
@@ -901,7 +901,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 			//左下
@@ -915,7 +915,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 			//右上
@@ -929,7 +929,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 			//右下
@@ -943,23 +943,13 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 		}
 	}
 
-	if (this->Body_Type == direction)
-	{
-		return true;
-	}
-
-	if (BlockCount > 0)
-	{
-		return false;
-	}
-
-	return true;
+	return false;
 }
 
 void PlayerBody::IsAroundBlock()

@@ -341,8 +341,8 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	ImGui::Text("flag:%d", Player_IsAction);
+	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	//ImGui::Text("flag:%d", Player_IsAction);
 	//ImGui::Text("1:%d", Body_One.AfterBodyFoldCount);
 	//ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
 	//ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
@@ -355,7 +355,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();
+	//ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
@@ -1173,6 +1173,36 @@ void Player::BodySetUp(const unsigned char foldCount[4])
 		playerTile[3] != 0, BodyType::down);
 }
 
+bool Player::IsPlayerStageOnly()
+{
+	int onlycount = 0;
+
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (stage->IsPositionTile(CenterPosition, i, j))
+			{
+				if (stage->GetStageTileDataSize(i) <= 1)
+				{
+					onlycount++;
+				}
+				else
+				{
+					onlycount = 0;
+				}
+			}
+		}
+	}
+
+	if (onlycount > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void Player::Fold()
 {
 	//足を上げ終わったら折る
@@ -1876,7 +1906,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
-					return false;
+					return true;
 				}
 			}
 			//左下
@@ -1889,7 +1919,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
-					return false;
+					return true;
 				}
 			}
 			//右上
@@ -1902,7 +1932,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
-					return false;
+					return true;
 				}
 			}
 			//右下
@@ -1915,43 +1945,43 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
-					return false;
+					return true;
 				}
 			}
 		}
 	}
 
-	return true;
+	return false;
 }
 
 bool Player::IsDirectionFoldAll(BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == false && Body_One.Body_Type != foldtype)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == true && Body_One.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == false && Body_Two.Body_Type != foldtype)
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == true && Body_Two.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == false && Body_Three.Body_Type != foldtype)
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == true && Body_Three.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == false && Body_Four.Body_Type != foldtype)
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == true && Body_Four.Body_Type != foldtype)
 	{
 		BodyCanFoldCount++;
 	}
 
 	bool ReverseHitFace = IsReverseHitFace(foldtype);
 
-	if (ReverseHitFace == false && BodyCanFoldCount > 0)
+	if (ReverseHitFace == true || BodyCanFoldCount > 0)
 	{
 		return false;
 	}
-	else
+	else if(ReverseHitFace == false && BodyCanFoldCount == 0)
 	{
 		return true;
 	}
