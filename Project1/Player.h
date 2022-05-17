@@ -176,6 +176,9 @@ public: //メンバ変数
 	float JumpSpeed;
 	float FallSpeed;
 
+	//「顔じゃなくて体のどこかが引っかかっているときにジャンプしかできない」flag
+	bool IsJumpOnly = false;
+
 	//ジャンプ入力保持
 	bool IsInitJump = false;
 

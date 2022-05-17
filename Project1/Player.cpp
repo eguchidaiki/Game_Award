@@ -108,7 +108,7 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		if (Player_IsAction == false)
 		{
-			FallSpeed += 0.1f;
+			FallSpeed += 0.2f;
 		}
 
 		if (FallSpeed > 0)
@@ -123,7 +123,7 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		if (FallSpeed < 5.0)
 		{
-			FallSpeed += 0.1f;
+			FallSpeed += 0.2f;
 		}
 	}
 
@@ -347,7 +347,6 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
 	//ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
 	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
-	//ImGui::Text("IsInitJump:%d", IsInitJump);
 	//ImGui::Text("x:%f", CenterPosition.x);
 	//ImGui::Text("y:%f", CenterPosition.y);
 	//ImGui::Text("z:%f", CenterPosition.z);
@@ -410,7 +409,7 @@ void Player::Key_Move()
 	if (actFlag->Jump() && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -4.1f;
+		FallSpeed = -5.0f;
 	}
 }
 
@@ -426,13 +425,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::left))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 	if (actFlag->FoldUp())
 	{ //上に折る
@@ -443,13 +435,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::up))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 	if (actFlag->FoldRight())
 	{ //右に折る
@@ -460,13 +445,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::right))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 	if (actFlag->FoldDown())
 	{ //下に折る
@@ -477,13 +455,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::down))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 
 	//開く入力
@@ -493,13 +464,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::left))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsLeftOpen = true;
-		//	return;
-		//}
 	}
 	if (actFlag->OpenUp())
 	{ //上に開く
@@ -507,13 +471,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::up))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsUpOpen = true;
-		//	return;
-		//}
 	}
 	if (actFlag->OpenRight())
 	{ //右に開く
@@ -521,13 +478,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::right))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsRightOpen = true;
-		//	return;
-		//}
 	}
 	if (actFlag->OpenDown())
 	{ //下に開く
@@ -535,13 +485,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsDownOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::down))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsDownOpen = true;
-		//	return;
-		//}
 	}
 }
 
@@ -1150,21 +1093,6 @@ void Player::BodySetUp(const unsigned char foldCount[4])
 	static size_t j = 0;
 
 	j = 0;
-
-	//for (size_t i = 0; i < sizeof(bodyTile) / sizeof(bodyTile[0]); i++)
-	//{
-	//	bodyTile[i] = -1;
-
-	//	for (; j < 4; j++)
-	//	{
-	//		if (foldCount[j] != 0)
-	//		{
-	//			bodyTile[i] = j;
-	//			j++;
-	//			break;
-	//		}
-	//	}
-	//}
 
 	BodySetUp(
 		playerTile[0] != 0, BodyType::left,
@@ -1835,6 +1763,14 @@ bool Player::IsFall()
 
 	if (FallCount > 0)
 	{
+		if (IsFaceFall == false)
+		{
+			IsJumpOnly = false;
+		}
+		else
+		{
+			IsJumpOnly = true;
+		}
 		return false;
 	}
 	else

@@ -571,12 +571,12 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyStartPos.y + ((BodySize + 8) - 1.0f);
+		BodyDown = BodyStartPos.y + ((BodySize) - 1.0f);
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyEndPos.y + ((BodySize + 8) - 1.0f);
+		BodyDown = BodyEndPos.y + ((BodySize) - 1.0f);
 	}
 
 	//四辺をブロックサイズで割った数
