@@ -470,6 +470,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	SpriteManager::Get()->SetCommonBeginDraw();
 
+	MapchipSpriteEmpty.Draw();
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < 15; j++)
@@ -477,9 +478,8 @@ void Stage::Draw(const int offsetX, const int offsetY)
 			AllBlockSprite[i][j].Draw();
 		}
 	}
-
 	MapchipSpriteGoal.Draw();
-	MapchipSpriteEmpty.Draw();
+	
 	lineSprite.Draw();
 }
 
