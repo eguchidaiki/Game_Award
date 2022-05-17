@@ -12,6 +12,7 @@ namespace
 	static int PlayerOffsetX = 0;
 	static int PlayerOffsetY = 0;
 
+	static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
 	static Stage* stage = Stage::Get();
 }
 
@@ -111,8 +112,19 @@ void Player::Update(int offsetX, int offsetY)
 			FallSpeed += 0.2f;
 		}
 
+		if (Leftjump == true)
+		{
+			CenterPosition.x -= 2.0f;
+		}
+		if (Rightjump == true)
+		{
+			CenterPosition.x += 2.0f;
+		}
+
 		if (FallSpeed > 0)
 		{
+			Leftjump = false;
+			Rightjump = false;
 			IsJump = false;
 			IsAllFall = true;
 		}
@@ -380,18 +392,39 @@ void Player::Key_Move()
 	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
 
 	//左右移動
-	if (actFlag->MoveRight() && Player_IsAction == false)
+	if (IsJumpOnly == false)
 	{
-		CenterPosition.x += SideMoveSpeed;
-		IsLeft = false;
-		IsRight = true;
-	}
+		if (actFlag->MoveRight() && Player_IsAction == false)
+		{
+			CenterPosition.x += SideMoveSpeed;
+			IsLeft = false;
+			IsRight = true;
+		}
 
-	if (actFlag->MoveLeft() && Player_IsAction == false)
+		if (actFlag->MoveLeft() && Player_IsAction == false)
+		{
+			CenterPosition.x -= SideMoveSpeed;
+			IsLeft = true;
+			IsRight = false;
+		}
+	}
+	else
 	{
-		CenterPosition.x -= SideMoveSpeed;
-		IsLeft = true;
-		IsRight = false;
+		if (IsJump == false && inputManger->LeftTrigger() && IsInputjump == true)
+		{
+			Leftjump = true;
+			Rightjump = false;
+			IsJump = true;
+			FallSpeed = -5.0f;
+		}
+
+		if (IsJump == false && inputManger->RightTrigger() && IsInputjump == true)
+		{
+			Rightjump = true;
+			Leftjump = false;
+			IsJump = true;
+			FallSpeed = -5.0f;
+		}
 	}
 
 	//ジャンプ入力できるかどうか
@@ -1582,7 +1615,7 @@ void Player::IsHitPlayerBody()
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
 						jumpCountRight += IsRight;
 					}
 				}
@@ -1620,7 +1653,7 @@ void Player::IsHitPlayerBody()
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
 						jumpCountRight += IsRight;
 					}
 				}
@@ -1763,13 +1796,17 @@ bool Player::IsFall()
 
 	if (FallCount > 0)
 	{
-		if (IsFaceFall == false)
+		if (IsDownBody == true && Body_Four.BodyIsFall)
 		{
-			IsJumpOnly = false;
+			IsJumpOnly = true;
+		}
+		else if (IsDownBody == false && IsFaceFall)
+		{
+			IsJumpOnly = true;
 		}
 		else
 		{
-			IsJumpOnly = true;
+			IsJumpOnly = false;
 		}
 		return false;
 	}
@@ -1917,7 +1954,7 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 	{
 		return false;
 	}
-	else if(ReverseHitFace == false && BodyCanFoldCount == 0)
+	else if (ReverseHitFace == false && BodyCanFoldCount == 0)
 	{
 		return true;
 	}
@@ -1980,12 +2017,12 @@ void Player::IsdownBody()
 {
 	int DownBodyCount = 0;
 
-	if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::down && Body_Two.IsFold == false)
+	if (Body_Two.IsActivate && Body_Two.Body_Type == BodyType::down && Body_Two.IsFold == false)
 	{
 		DownBodyCount++;
 	}
 
-	if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down && Body_Four.IsFold == false)
+	if (Body_Four.IsActivate && Body_Four.Body_Type == BodyType::down && Body_Four.IsFold == false)
 	{
 		DownBodyCount++;
 	}
