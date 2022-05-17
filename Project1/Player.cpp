@@ -12,6 +12,7 @@ namespace
 	static int PlayerOffsetX = 0;
 	static int PlayerOffsetY = 0;
 
+	static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
 	static Stage* stage = Stage::Get();
 }
 
@@ -108,7 +109,16 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		if (Player_IsAction == false)
 		{
-			FallSpeed += 0.1f;
+			FallSpeed += 0.2f;
+		}
+
+		if (Leftjump == true)
+		{
+			CenterPosition.x -= 1.5f;
+		}
+		if (Rightjump == true)
+		{
+			CenterPosition.x += 1.5f;
 		}
 
 		if (FallSpeed > 0)
@@ -123,7 +133,15 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		if (FallSpeed < 5.0)
 		{
-			FallSpeed += 0.1f;
+			FallSpeed += 0.2f;
+		}
+		if (Leftjump == true)
+		{
+			CenterPosition.x -= 1.5f;
+		}
+		if (Rightjump == true)
+		{
+			CenterPosition.x += 1.5f;
 		}
 	}
 
@@ -347,7 +365,6 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
 	//ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
 	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
-	//ImGui::Text("IsInitJump:%d", IsInitJump);
 	//ImGui::Text("x:%f", CenterPosition.x);
 	//ImGui::Text("y:%f", CenterPosition.y);
 	//ImGui::Text("z:%f", CenterPosition.z);
@@ -381,23 +398,46 @@ void Player::Key_Move()
 	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
 
 	//左右移動
-	if (actFlag->MoveRight() && Player_IsAction == false)
+	if (IsJumpOnly == false)
 	{
-		CenterPosition.x += SideMoveSpeed;
-		IsLeft = false;
-		IsRight = true;
-	}
+		if (actFlag->MoveRight() && Player_IsAction == false)
+		{
+			CenterPosition.x += SideMoveSpeed;
+			IsLeft = false;
+			IsRight = true;
+		}
 
-	if (actFlag->MoveLeft() && Player_IsAction == false)
+		if (actFlag->MoveLeft() && Player_IsAction == false)
+		{
+			CenterPosition.x -= SideMoveSpeed;
+			IsLeft = true;
+			IsRight = false;
+		}
+	}
+	else
 	{
-		CenterPosition.x -= SideMoveSpeed;
-		IsLeft = true;
-		IsRight = false;
+		if (IsJump == false && inputManger->Left() && IsInputjump == true)
+		{
+			Leftjump = true;
+			Rightjump = false;
+			IsJump = true;
+			FallSpeed = -5.0f;
+		}
+
+		if (IsJump == false && inputManger->Right() && IsInputjump == true)
+		{
+			Rightjump = true;
+			Leftjump = false;
+			IsJump = true;
+			FallSpeed = -5.0f;
+		}
 	}
 
 	//ジャンプ入力できるかどうか
 	if (IsJump == false && IsFall() == false)
 	{
+		Leftjump = false;
+		Rightjump = false;
 		IsInputjump = true;
 		FallSpeed = 0.0f;
 	}
@@ -410,7 +450,7 @@ void Player::Key_Move()
 	if (actFlag->Jump() && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -4.1f;
+		FallSpeed = -5.0f;
 	}
 }
 
@@ -426,13 +466,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::left))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 	if (actFlag->FoldUp())
 	{ //上に折る
@@ -443,13 +476,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::up))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 	if (actFlag->FoldRight())
 	{ //右に折る
@@ -460,13 +486,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::right))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 	if (actFlag->FoldDown())
 	{ //下に折る
@@ -477,13 +496,6 @@ void Player::Key_FoldOpen()
 			leg.Set();
 			return;
 		}
-		//if (IsBodysFold(BodyType::down))
-		//{
-		//	Player_IsAction = true;
-		//	IsLeftFold = true;
-		//	leg.Set();
-		//	return;
-		//}
 	}
 
 	//開く入力
@@ -493,13 +505,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::left))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsLeftOpen = true;
-		//	return;
-		//}
 	}
 	if (actFlag->OpenUp())
 	{ //上に開く
@@ -507,13 +512,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::up))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsUpOpen = true;
-		//	return;
-		//}
 	}
 	if (actFlag->OpenRight())
 	{ //右に開く
@@ -521,13 +519,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::right))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsRightOpen = true;
-		//	return;
-		//}
 	}
 	if (actFlag->OpenDown())
 	{ //下に開く
@@ -535,13 +526,6 @@ void Player::Key_FoldOpen()
 		IsOpenCountStart = true;
 		IsDownOpen = true;
 		return;
-		//if (IsBodysOpen(BodyType::down))
-		//{
-		//	OpenCount = 0;
-		//	IsOpenCountStart = true;
-		//	IsDownOpen = true;
-		//	return;
-		//}
 	}
 }
 
@@ -1151,21 +1135,6 @@ void Player::BodySetUp(const unsigned char foldCount[4])
 
 	j = 0;
 
-	//for (size_t i = 0; i < sizeof(bodyTile) / sizeof(bodyTile[0]); i++)
-	//{
-	//	bodyTile[i] = -1;
-
-	//	for (; j < 4; j++)
-	//	{
-	//		if (foldCount[j] != 0)
-	//		{
-	//			bodyTile[i] = j;
-	//			j++;
-	//			break;
-	//		}
-	//	}
-	//}
-
 	BodySetUp(
 		playerTile[0] != 0, BodyType::left,
 		playerTile[1] != 0, BodyType::up,
@@ -1654,7 +1623,7 @@ void Player::IsHitPlayerBody()
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
 						jumpCountRight += IsRight;
 					}
 				}
@@ -1692,7 +1661,7 @@ void Player::IsHitPlayerBody()
 					}
 					else if (BuriedX < BuriedY)
 					{
-						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
+						CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
 						jumpCountRight += IsRight;
 					}
 				}
@@ -1835,6 +1804,18 @@ bool Player::IsFall()
 
 	if (FallCount > 0)
 	{
+		if (IsDownBody == true && Body_Four.BodyIsFall)
+		{
+			IsJumpOnly = true;
+		}
+		else if (IsDownBody == false && IsFaceFall)
+		{
+			IsJumpOnly = true;
+		}
+		else
+		{
+			IsJumpOnly = false;
+		}
 		return false;
 	}
 	else
@@ -1981,7 +1962,7 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 	{
 		return false;
 	}
-	else if(ReverseHitFace == false && BodyCanFoldCount == 0)
+	else if (ReverseHitFace == false && BodyCanFoldCount == 0)
 	{
 		return true;
 	}
@@ -2044,12 +2025,12 @@ void Player::IsdownBody()
 {
 	int DownBodyCount = 0;
 
-	if (Body_Two.IsActivate == true && Body_Two.Body_Type == BodyType::down && Body_Two.IsFold == false)
+	if (Body_Two.IsActivate && Body_Two.Body_Type == BodyType::down && Body_Two.IsFold == false)
 	{
 		DownBodyCount++;
 	}
 
-	if (Body_Four.IsActivate == true && Body_Four.Body_Type == BodyType::down && Body_Four.IsFold == false)
+	if (Body_Four.IsActivate && Body_Four.Body_Type == BodyType::down && Body_Four.IsFold == false)
 	{
 		DownBodyCount++;
 	}

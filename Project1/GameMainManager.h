@@ -34,6 +34,9 @@ public:
 	int changecount = 0;
 	bool Ischangecount = false;
 
+	bool IsFolds[4];
+	bool IsOpens[4];
+
 	GameMainManager();
 	~GameMainManager();
 
