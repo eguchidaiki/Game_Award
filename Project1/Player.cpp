@@ -114,17 +114,15 @@ void Player::Update(int offsetX, int offsetY)
 
 		if (Leftjump == true)
 		{
-			CenterPosition.x -= 2.0f;
+			CenterPosition.x -= 1.5f;
 		}
 		if (Rightjump == true)
 		{
-			CenterPosition.x += 2.0f;
+			CenterPosition.x += 1.5f;
 		}
 
 		if (FallSpeed > 0)
 		{
-			Leftjump = false;
-			Rightjump = false;
 			IsJump = false;
 			IsAllFall = true;
 		}
@@ -136,6 +134,14 @@ void Player::Update(int offsetX, int offsetY)
 		if (FallSpeed < 5.0)
 		{
 			FallSpeed += 0.2f;
+		}
+		if (Leftjump == true)
+		{
+			CenterPosition.x -= 1.5f;
+		}
+		if (Rightjump == true)
+		{
+			CenterPosition.x += 1.5f;
 		}
 	}
 
@@ -430,6 +436,8 @@ void Player::Key_Move()
 	//ジャンプ入力できるかどうか
 	if (IsJump == false && IsFall() == false)
 	{
+		Leftjump = false;
+		Rightjump = false;
 		IsInputjump = true;
 		FallSpeed = 0.0f;
 	}
