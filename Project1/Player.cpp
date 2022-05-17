@@ -416,7 +416,7 @@ void Player::Key_Move()
 	}
 	else
 	{
-		if (IsJump == false && inputManger->LeftTrigger() && IsInputjump == true)
+		if (IsJump == false && inputManger->Left() && IsInputjump == true)
 		{
 			Leftjump = true;
 			Rightjump = false;
@@ -424,7 +424,7 @@ void Player::Key_Move()
 			FallSpeed = -5.0f;
 		}
 
-		if (IsJump == false && inputManger->RightTrigger() && IsInputjump == true)
+		if (IsJump == false && inputManger->Right() && IsInputjump == true)
 		{
 			Rightjump = true;
 			Leftjump = false;
