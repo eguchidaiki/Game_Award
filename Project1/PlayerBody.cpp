@@ -571,12 +571,12 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyStartPos.y + ((BodySize + 8) - 1.0f);
+		BodyDown = BodyStartPos.y + ((BodySize) - 1.0f);
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyEndPos.y + ((BodySize + 8) - 1.0f);
+		BodyDown = BodyEndPos.y + ((BodySize) - 1.0f);
 	}
 
 	//四辺をブロックサイズで割った数
@@ -881,7 +881,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 	if (this->Body_Type == direction)
 	{
-		return true;
+		return false;
 	}
 
 	int BlockCount = 0;
@@ -901,7 +901,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 			//左下
@@ -915,7 +915,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 			//右上
@@ -929,7 +929,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 			//右下
@@ -943,23 +943,13 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 				{
-					BlockCount++;
+					return true;
 				}
 			}
 		}
 	}
 
-	if (this->Body_Type == direction)
-	{
-		return true;
-	}
-
-	if (BlockCount > 0)
-	{
-		return false;
-	}
-
-	return true;
+	return false;
 }
 
 void PlayerBody::IsAroundBlock()

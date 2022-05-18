@@ -32,8 +32,6 @@ enum MapchipData
 	DOWNU = 43,
 };
 
-class Player;
-
 //パーティクル派生クラス
 class ParticleSingle : public ParticlePrototype
 {
@@ -66,6 +64,7 @@ public: //サブクラス
 	struct StageTileData
 	{
 		char* mapchip = nullptr;
+		//ステージの構成(CSVのステージの情報)の中で1になっている順番
 		char stageNumber = 0;
 		char offsetX = 0;
 		char offsetY = 0;
@@ -83,6 +82,16 @@ public: //サブクラス
 		std::vector<RVector3> easePos = {};
 
 		bool isTop = true;
+
+		//相対的な位置
+		int RelativePositionFold = -1;
+		int RelativePositionOpen = -1;
+
+		//どのステージのタイルなのか
+		int StageGroup = -1;
+
+		//折られている場合の方向
+		int FoldDirection = -1;
 	};
 	struct StageData
 	{
@@ -102,9 +111,18 @@ public: //定数
 
 	static const int lineWidth;         //線の太さ
 	static const int foldLineCount;     //折れ目の間隔
+	static const XMFLOAT4 backColor[4]; //ステージの何もない場所の色
 	static const XMFLOAT4 lineColor[4]; //線の色
 
 	RVector3 offset = { 0,0,0 };
+
+public: //静的メンバ関数
+	// プレイヤーのX軸上の開始位置を取得
+	static inline int GetStartPlayerPosX() { return startPlayerPosX; }
+	// プレイヤーのY軸上の開始位置を取得
+	static inline int GetStartPlayerPosY() { return startPlayerPosY; }
+	// プレイヤーの折れる回数の初期状態を取得
+	static void GetInitFoldCount(unsigned char foldCount[4]);
 
 public: //静的メンバ変数
 	static int drawOffsetX;
@@ -112,6 +130,7 @@ public: //静的メンバ変数
 private:
 	static int startPlayerPosX;
 	static int startPlayerPosY;
+	static char nowPlayerStage; //プレイヤーがいるステージ
 	static unsigned char initFoldCount[4];
 
 public: //メンバ関数
@@ -155,15 +174,26 @@ public: //メンバ関数
 	// 内部データ全削除
 	void DataClear();
 
-	// 任意の座標が任意のステージタイルにいるかどうか
-	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
+	// 任意の座標が任意のステージにいるかどうか
+	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
 
-	// プレイヤーのx軸上の開始位置を取得
-	inline static int GetStartPlayerPosX() { return startPlayerPosX; }
-	// プレイヤーのx軸上の開始位置を取得
-	inline static int GetStartPlayerPosY() { return startPlayerPosY; }
-	// プレイヤーの折れる回数の初期状態を取得
-	static void GetInitFoldCount(unsigned char foldCount[4]);
+	//プレイヤーがどのタイルにいるか
+	bool IsPlayerTile(const size_t& stageNumber, const size_t& TileNumber);
+
+	//onplayerstageを設定(折る時)
+	void SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage,
+								  std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
+
+	//onplayerstageを設定(開く時)
+	void SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage,
+								  std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
+
+	//ステージの中で指定した方向のoffset血を比べる
+	XMFLOAT2 ReturnMostOffset(const unsigned char& direction, const size_t& stageNumber);
+
+	//ステージグループのセッティング
+	void SetStageGroup();
+
 	// ステージタイルのデータを取得
 	inline StageTileData* GetStageTileData(const size_t& stageNumber, const size_t& stageTileNumber);
 	// ステージのデータを取得
@@ -228,28 +258,38 @@ public: //メンバ関数
 	}
 	//引数で取ったマップチップがブロックかどうか
 	bool IsMapchipBlocks(char mapchip);
+	// プレイヤーがいるステージを取得
+	char GetPositionStage(const RVector3& playerPos);
 	// 任意の座標からどのステージタイルにいるかを取得
 	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	//指定した場所のステージタイルにプレイヤーがいるかどうか
+	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
+	//任意の座標がステージタイルにいるのか
+	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
 	// ステージを折る
-	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData);
+	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize);
 	// ステージを開く
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData);
+	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& moveStageData, size_t datasize);
 
+	// ステージタイルの描画
+	int StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset);
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-		const int offsetX, const int offsetY);
+				 const int offsetX, const int offsetY);
 	// 枠線の描画
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-		const int offsetX, const int offsetY);
+				  const int offsetX, const int offsetY);
 
 	// イージングの初期化
-	void EaseingInit(const size_t& onPlayerStage, const size_t& moveStageData, const int& direction);
+	void EaseingInit(const size_t& moveStage, const size_t& moveTile, const int& direction);
 	// イージングの更新
 	void EaseingUpdate();
 	// 一番上のステージタイルを探す
@@ -260,7 +300,6 @@ private: //メンバ変数
 	std::vector<StageData> initStageData;
 
 	char* reverseMapchip;
-
 
 	//折り目の画像ハンドル
 	UINT lineHandle;

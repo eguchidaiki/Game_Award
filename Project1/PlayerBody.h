@@ -64,6 +64,11 @@ public: //メンバ関数
 	void IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
 
 	/// <summary>
+	/// 場外判定(体)
+	/// </summary>
+	void IsOutsideBody();
+
+	/// <summary>
 	/// 反転したタイルと体の四隅の判定
 	/// </summary>
 	/// <param name="stage">ステージデータ</param>
