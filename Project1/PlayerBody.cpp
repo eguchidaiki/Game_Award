@@ -576,7 +576,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 		BodyDown = BodyEndPos.y;
 		if (this->Body_Type == BodyType::down && this->IsOpen)
 		{
-			//BodyAndLegDown = BodyDown + 9;
+			BodyAndLegDown = BodyDown + 8;
 		}
 	}
 	else
@@ -585,7 +585,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 		BodyDown = BodyStartPos.y;
 		if (this->Body_Type == BodyType::down && this->IsOpen)
 		{
-			//BodyAndLegDown = BodyDown + 9;
+			BodyAndLegDown = BodyDown + 8;
 		}
 	}
 
@@ -683,7 +683,14 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
-					BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
+					if (BodyAndLegDown != -1)
+					{
+						BuriedY = (BodyAndLegDown - 60) - (BodyAndLegdown_mapchip * 60);
+					}
+					else
+					{
+						BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
+					}
 
 					if (BuriedX > BuriedY)
 					{
@@ -761,7 +768,14 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
-					BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
+					if (BodyAndLegDown != -1)
+					{
+						BuriedY = (BodyAndLegDown - 60) - (BodyAndLegdown_mapchip * 60);
+					}
+					else
+					{
+						BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
+					}
 
 					if (BuriedX > BuriedY)
 					{
