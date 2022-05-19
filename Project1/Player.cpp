@@ -152,6 +152,7 @@ void Player::Update(int offsetX, int offsetY)
 	}
 
 	//顔の当たり判定
+	IsOutsideFace();
 	IsHitPlayerBody();
 	IsAroundBlock();
 
@@ -228,24 +229,28 @@ void Player::Update(int offsetX, int offsetY)
 	if (Body_One.IsActivate == true)
 	{
 		Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_One.Update(CenterPosition);
 		Body_One.IsAroundBlock();
 	}
 	if (Body_Two.IsActivate == true)
 	{
 		Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Two.Update(CenterPosition);
 		Body_Two.IsAroundBlock();
 	}
 	if (Body_Three.IsActivate == true)
 	{
 		Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Three.Update(CenterPosition);
 		Body_Three.IsAroundBlock();
 	}
 	if (Body_Four.IsActivate == true)
 	{
 		Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Four.Update(CenterPosition);
 		Body_Four.IsAroundBlock();
 	}
@@ -1531,15 +1536,6 @@ void Player::IsHitPlayerBody()
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
-	if ((CenterPosition.x - 25) <= stage->offset.x)
-	{
-		CenterPosition.x = 25;
-	}
-	if ((CenterPosition.y - 25) <= stage->offset.y)
-	{
-		CenterPosition.y = 25;
-	}
-
 	//顔の四隅との当たり判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -1774,6 +1770,80 @@ void Player::IsHitPlayerBody()
 	else
 	{
 		IsFaceFall = true;
+	}
+}
+
+void Player::IsOutsideFace()
+{
+	//ステージの数
+	size_t i = 0;
+	//タイルの数
+	size_t j = 0;
+
+	float FaceLeft = CenterPosition.x - 25;
+	float FaceUp = CenterPosition.y - 25;
+	float FaceRight = CenterPosition.x + 25;
+	float FaceDown = CenterPosition.y + 25;
+	float FaceAndLegDown = CenterPosition.y + 33;
+
+	size_t NowStage;
+	size_t NowTile;
+	stage->GetPositionTile(CenterPosition, &NowStage, &NowTile);
+	
+	float NowLeft = stage->GetStageOffsetX(NowStage, NowTile) * stage->blockSize;
+	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
+	float NowUp = stage->GetStageOffsetY(NowStage, NowTile) * stage->blockSize;
+	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
+
+	//顔の四隅との場外判定
+	for (i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (i == NowStage && j == NowTile)
+			{
+				continue;
+			}
+			if (NowUp == stage->GetStageOffsetY(i, j) * stage->blockSize)
+			{
+				if (NowLeft == (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				{
+					NowLeft = stage->GetStageOffsetX(i, j) * stage->blockSize;
+				}
+				if (NowRight == (stage->GetStageOffsetX(i, j)) * stage->blockSize)
+				{
+					NowRight = (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+				}
+			}
+			if (NowLeft == stage->GetStageOffsetX(i, j) * stage->blockSize)
+			{
+				if (NowUp == (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				{
+					NowUp = stage->GetStageOffsetY(i, j) * stage->blockSize;
+				}
+				if (NowDown == (stage->GetStageOffsetY(i, j)) * stage->blockSize)
+				{
+					NowDown = (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+				}
+			}
+		}
+	}
+
+	if (NowLeft >= FaceLeft)
+	{
+		CenterPosition.x = NowLeft + 25;
+	}
+	if (NowRight <= FaceRight)
+	{
+		CenterPosition.x = NowRight - 25;
+	}
+	if (NowUp >= FaceUp)
+	{
+		CenterPosition.y = NowUp + 25;
+	}
+	if (NowDown <= FaceDown)
+	{
+		CenterPosition.y = NowDown - 25;
 	}
 }
 

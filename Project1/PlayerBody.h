@@ -66,7 +66,7 @@ public: //メンバ関数
 	/// <summary>
 	/// 場外判定(体)
 	/// </summary>
-	void IsOutsideBody();
+	void IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
 
 	/// <summary>
 	/// 反転したタイルと体の四隅の判定

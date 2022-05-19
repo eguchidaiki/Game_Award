@@ -613,17 +613,6 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
-	if (BodyLeft < stage->offset.x)
-	{
-		center->x = stage->offset.x + (center->x - BodyLeft);
-		iscolide = true;
-	}
-	if (BodyUp < stage->offset.y)
-	{
-		center->y = stage->offset.y + (center->y - BodyUp);
-		iscolide = true;
-	}
-
 	//体の四隅とブロックとの判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -810,6 +799,113 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	else
 	{
 		BodyIsFall = true;
+	}
+}
+
+void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide)
+{
+	Update(*center);
+
+	//体の中心
+	RVector3 BodyCenterPos = { 0,0,0 };
+
+	//体の四辺
+	float BodyLeft;
+	float BodyRight;
+	float BodyUp;
+	float BodyDown;
+
+	//StartPosとEndPosの位置関係によって上下左右の設定を変える
+	if (BodyStartPos.x < BodyEndPos.x)
+	{
+		BodyCenterPos.x = BodyStartPos.x + HalfBodySize;
+		BodyLeft = BodyStartPos.x;
+		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+	}
+	else
+	{
+		BodyCenterPos.x = BodyEndPos.x + HalfBodySize;
+		BodyLeft = BodyEndPos.x;
+		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+	}
+
+	if (BodyStartPos.y < BodyEndPos.y)
+	{
+		BodyCenterPos.y = BodyStartPos.y + HalfBodySize;
+		BodyUp = BodyStartPos.y;
+		BodyDown = BodyStartPos.y + ((BodySize)-1.0f);
+	}
+	else
+	{
+		BodyCenterPos.y = BodyEndPos.y + HalfBodySize;
+		BodyUp = BodyEndPos.y;
+		BodyDown = BodyEndPos.y + ((BodySize)-1.0f);
+	}
+
+	//ステージの数
+	size_t i = 0;
+	//タイルの数
+	size_t j = 0;
+
+	size_t NowStage;
+	size_t NowTile;
+	stage->GetPositionTile(BodyCenterPos, &NowStage, &NowTile);
+
+	float NowLeft = stage->GetStageOffsetX(NowStage, NowTile) * stage->blockSize;
+	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
+	float NowUp = stage->GetStageOffsetY(NowStage, NowTile) * stage->blockSize;
+	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
+
+	//体の四隅との場外判定
+	for (i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (i == NowStage && j == NowTile)
+			{
+				continue;
+			}
+			if (NowUp == stage->GetStageOffsetY(i, j) * stage->blockSize)
+			{
+				if (NowLeft == (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				{
+					NowLeft = stage->GetStageOffsetX(i, j) * stage->blockSize;
+				}
+				if (NowRight == (stage->GetStageOffsetX(i, j)) * stage->blockSize)
+				{
+					NowRight = (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+				}
+			}
+			if (NowLeft == stage->GetStageOffsetX(i, j) * stage->blockSize)
+			{
+				if (NowUp == (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				{
+					NowUp = stage->GetStageOffsetY(i, j) * stage->blockSize;
+				}
+				if (NowDown == (stage->GetStageOffsetY(i, j)) * stage->blockSize)
+				{
+					NowDown = (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+				}
+			}
+		}
+	}
+
+	if (NowLeft >= BodyLeft)
+	{
+		center->x = NowLeft + (center->x - BodyLeft);
+	}
+	if (NowRight <= BodyRight)
+	{
+		center->x = NowRight - (BodyRight - center->x) - 1;
+	}
+	if (NowUp >= BodyUp)
+	{
+		center->y = NowUp + (center->y - BodyUp);
+		FallSpeed = 0.0f;
+	}
+	if (NowDown <= BodyDown)
+	{
+		center->y = NowDown - (BodyDown - center->y) - 1;
 	}
 }
 
