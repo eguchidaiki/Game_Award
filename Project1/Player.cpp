@@ -425,7 +425,7 @@ void Player::Key_Move()
 			Leftjump = true;
 			Rightjump = false;
 			IsJump = true;
-			FallSpeed = -5.0f;
+			FallSpeed = -5.1f;
 		}
 
 		if (IsJump == false && inputManger->Right() && IsInputjump == true)
@@ -433,7 +433,7 @@ void Player::Key_Move()
 			Rightjump = true;
 			Leftjump = false;
 			IsJump = true;
-			FallSpeed = -5.0f;
+			FallSpeed = -5.1f;
 		}
 	}
 
@@ -454,7 +454,7 @@ void Player::Key_Move()
 	if (actFlag->Jump() && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -5.0f;
+		FallSpeed = -5.1f;
 	}
 }
 
