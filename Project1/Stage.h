@@ -182,11 +182,11 @@ public: //メンバ関数
 
 	//onplayerstageを設定(折る時)
 	void SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage,
-								  std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
+		std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
 
 	//onplayerstageを設定(開く時)
 	void SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage,
-								  std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
+		std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction);
 
 	//ステージの中で指定した方向のoffset血を比べる
 	XMFLOAT2 ReturnMostOffset(const unsigned char& direction, const size_t& stageNumber);
@@ -220,6 +220,16 @@ public: //メンバ関数
 	inline char GetStageTileOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
+	}
+	// ステージタイルのX軸のオフセットを返す
+	inline char GetStageOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].offsetX + stageData[stageNumber].offsetX;
+	}
+	// ステージタイルのY軸のオフセットを返す
+	inline char GetStageOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY + stageData[stageNumber].offsetY;
 	}
 	// ステージタイルの幅を取得
 	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
@@ -274,20 +284,20 @@ public: //メンバ関数
 private:
 	// ステージを折る
 	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
-			 const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize);
+		const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize);
 	// ステージを開く
 	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
-			 const size_t& moveStageData, size_t datasize);
+		const size_t& moveStageData, size_t datasize);
 
 	// ステージタイルの描画
 	// saturationColorが1だと元の色で表示する
 	void StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-				 const int offsetX, const int offsetY);
+		const int offsetX, const int offsetY);
 	// 枠線の描画
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-				  const int offsetX, const int offsetY);
+		const int offsetX, const int offsetY);
 
 	// イージングの初期化
 	void EaseingInit(const size_t& moveStage, const size_t& moveTile, const int& direction);
