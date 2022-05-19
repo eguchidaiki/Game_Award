@@ -31,16 +31,19 @@ void Title::Update()
 	int user_select_index = static_cast<int>(user_selecting);
 	if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_DOWN) && user_selecting == is_start) { user_select_index++; }
 	if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_UP) && user_selecting == is_end) { user_select_index--; }
+	if (Input::isKeyTrigger(DIK_DOWN) && user_selecting == is_start) { user_select_index++; }
+	if (Input::isKeyTrigger(DIK_UP) && user_selecting == is_end) { user_select_index--; }
+
 	user_selecting = static_cast<NOW_SELECTING>(user_select_index);
 
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { mSceneChanger->ChangeScene(eScene_Game); }
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) { mSceneChanger->ChangeScene(eScene_Game); }
 
 		break;
 	case Title::is_end:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) { mSceneChanger->EndAplication(); }
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) { mSceneChanger->EndAplication(); }
 
 		break;
 	default:
