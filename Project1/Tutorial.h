@@ -36,4 +36,5 @@ private:
 	Sprite moveSprite;
 	Sprite foldSprite;
 
+	XMFLOAT2 spriteSize;
 };
