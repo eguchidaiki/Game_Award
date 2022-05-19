@@ -562,18 +562,18 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	if (BodyStartPos.x < BodyEndPos.x)
 	{
 		BodyLeft = BodyStartPos.x;
-		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+		BodyRight = BodyEndPos.x;
 	}
 	else
 	{
 		BodyLeft = BodyEndPos.x;
-		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+		BodyRight = BodyStartPos.x;
 	}
 
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyStartPos.y + ((BodySize)-1.0f);
+		BodyDown = BodyEndPos.y;
 		if (this->Body_Type == BodyType::down && this->IsOpen)
 		{
 			//BodyAndLegDown = BodyDown + 9;
@@ -582,7 +582,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	else
 	{
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyEndPos.y + ((BodySize)-1.0f);
+		BodyDown = BodyStartPos.y;
 		if (this->Body_Type == BodyType::down && this->IsOpen)
 		{
 			//BodyAndLegDown = BodyDown + 9;
@@ -894,9 +894,9 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	size_t NowTile;
 	stage->GetPositionTile(BodyCenterPos, &NowStage, &NowTile);
 
-	float NowLeft = stage->GetStageOffsetX(NowStage, NowTile) * stage->blockSize;
+	float NowLeft = stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize;
 	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
-	float NowUp = stage->GetStageOffsetY(NowStage, NowTile) * stage->blockSize;
+	float NowUp = stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize;
 	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
 
 	//体の四隅との場外判定
@@ -908,26 +908,26 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			{
 				continue;
 			}
-			if (NowUp == stage->GetStageOffsetY(i, j) * stage->blockSize)
+			if (NowUp == stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (NowLeft == (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (NowLeft == (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
-					NowLeft = stage->GetStageOffsetX(i, j) * stage->blockSize;
+					NowLeft = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
-				if (NowRight == (stage->GetStageOffsetX(i, j)) * stage->blockSize)
+				if (NowRight == (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 				{
-					NowRight = (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+					NowRight = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
-			if (NowLeft == stage->GetStageOffsetX(i, j) * stage->blockSize)
+			if (NowLeft == stage->GetStageTileOffsetX(i, j) * stage->blockSize)
 			{
-				if (NowUp == (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (NowUp == (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
 				{
-					NowUp = stage->GetStageOffsetY(i, j) * stage->blockSize;
+					NowUp = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
 				}
-				if (NowDown == (stage->GetStageOffsetY(i, j)) * stage->blockSize)
+				if (NowDown == (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
 				{
-					NowDown = (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+					NowDown = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
 		}
