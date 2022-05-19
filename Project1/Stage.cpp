@@ -983,6 +983,9 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				x = mapchipPos % stageData[i].stageTileData[j].width;
 				y = mapchipPos / stageData[i].stageTileData[j].width;
 
+				startPlayerPosX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
+				startPlayerPosY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
+
 				end = true;
 				break;
 			}
