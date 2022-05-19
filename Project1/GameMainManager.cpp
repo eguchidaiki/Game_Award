@@ -163,7 +163,7 @@ void GameMainManager::SetGameToSelect()
 	IsGoSelect = false;
 	changecount = 0;
 
-	tutorial.ResetTutorial();
+	tutorial.Init();
 }
 
 void GameMainManager::GameInstanceDraw()
