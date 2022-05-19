@@ -640,7 +640,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 		}
 	}
 	MapchipSpriteGoal.Draw();
-	
+
 	lineSprite.Draw();
 }
 
@@ -1063,6 +1063,10 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 		return 0;
 	}
 
+	size_t NowStage = -1;
+	size_t NowTile = -1;
+	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
+
 	//Open専用のコンテナに格納
 	SetOnPlayerStageTileFold(stagenumber, onplayerstage, movestagetile, movestagedata, direction);
 
@@ -1422,6 +1426,12 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
+			if (stageData[NowStage].stageTileData[NowTile].offsetX == most.x &&
+				stageData[NowStage].stageTileData[NowTile].offsetY == most.y)
+			{
+				continue;
+			}
+
 			switch (direction)
 			{
 			case BodyType::up:

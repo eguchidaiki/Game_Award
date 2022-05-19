@@ -221,6 +221,16 @@ public: //メンバ関数
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
 	}
+	// ステージタイルのX軸のオフセットを返す
+	inline char GetStageOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].offsetX + stageData[stageNumber].offsetX;
+	}
+	// ステージタイルのY軸のオフセットを返す
+	inline char GetStageOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
+	{
+		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY + stageData[stageNumber].offsetY;
+	}
 	// ステージタイルの幅を取得
 	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
