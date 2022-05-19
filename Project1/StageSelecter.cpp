@@ -1,6 +1,7 @@
 ﻿#include "StageSelecter.h"
 #include <string>
 
+#include <Raki_WinAPI.h>
 #include <Raki_imguiMgr.h>
 
 #include "Stage.h"
@@ -273,8 +274,8 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		{
 			//stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
 			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2;
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}

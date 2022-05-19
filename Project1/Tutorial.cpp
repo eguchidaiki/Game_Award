@@ -90,16 +90,17 @@ void Tutorial::Draw(int offsetX, int offsetY)
 		return;
 	}
 
+	XMFLOAT2 offset = { player->CenterPosition.x + offsetX, player->CenterPosition.y + offsetY };
 	bool isPlayerUpBody = player->Body_Two.IsActivate && player->Body_Two.IsOpen;
 
 	if (isMoveTutorial)
 	{
-		moveSprite.DrawSprite(static_cast<float>(offsetX) - 50.0f, static_cast<float>(offsetY) - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+		moveSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
 		moveSprite.Draw();
 	}
 	if (isFoldTutorial)
 	{
-		foldSprite.DrawSprite(static_cast<float>(offsetX) - 50.0f, static_cast<float>(offsetY) - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+		foldSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
 		foldSprite.Draw();
 	}
 }
