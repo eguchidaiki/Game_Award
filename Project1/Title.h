@@ -37,10 +37,19 @@ public:
 
 	// ゲームループで使う変数の宣言
 
+	enum NOW_SELECTING
+	{
+		is_start,
+		is_end,
+	};
+	NOW_SELECTING user_selecting;
 
 	const int drawOffsetX = 320, drawOffsetY = 45;
 	//タイトルのメインスプライト
 	Sprite titleMainSprite;
+
+	//カーソル
+	Sprite cursor;
 
 	const int MENUICON_START_X = 500;
 	const int MENUICON_START_Y = 470;
