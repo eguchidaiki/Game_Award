@@ -20,8 +20,6 @@ public: //メンバ関数
 	void StartTutorial();
 	// チュートリアル中かどうか
 	inline bool GetTutorialFlag() { return isTutorial; }
-	//チュートリアルのリセット
-	void ResetTutorial();
 
 public: //メンバ変数
 	bool isFirstOnly;

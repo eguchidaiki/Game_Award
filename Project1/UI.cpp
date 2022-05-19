@@ -1,6 +1,7 @@
 #include "UI.h"
 #include "Player.h"
 #include "Stage.h"
+#include "Raki_Input.h"
 
 namespace
 {
@@ -30,7 +31,7 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 
 	IsInButton();
 
-	if (IsResetPress && Input::isMouseClickTrigger(0))
+	if ((IsResetPress && Input::isMouseClickTrigger(0)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_X))
 	{
 		stage->Reset(PlayerTile);
 		player->Init();
@@ -38,12 +39,12 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 
 		if (StageNum == 0)
 		{
-			tutorial->ResetTutorial();
+			tutorial->Init();
 			tutorial->isTutorial = true;
 		}
 	}
 
-	if (IsPausePress && Input::isMouseClickTrigger(0))
+	if ((IsPausePress && Input::isMouseClickTrigger(0)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_R))
 	{
 		*Isback = true;
 	}
