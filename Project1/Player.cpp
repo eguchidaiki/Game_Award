@@ -363,23 +363,22 @@ void Player::Draw(int offsetX, int offsetY)
 
 	//goalParticle.Draw();
 
-#ifdef _DEBUG
-	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	//ImGui::Text("flag:%d", IsLeftBlockFace);
-	//ImGui::Text("1:%d", IsRightBlockFace);
-	//ImGui::Text("2:%d", IsUpBlockFace);
-	//ImGui::Text("3:%d", IsDownBlockFace);
-	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
-	//ImGui::Text("x:%f", CenterPosition.x);
-	//ImGui::Text("y:%f", CenterPosition.y);
-	//ImGui::Text("z:%f", CenterPosition.z);
-	//ImGui::Text("IsLeftSlide:%d", IsLeftSlide);
-	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
-	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
-	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	//ImguiMgr::Get()->EndDrawImgui();
-#endif // _DEBUG
-
+//#ifdef _DEBUG
+//	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+//	ImGui::Text("flag:%d", IsLeftBlockFace);
+//	ImGui::Text("1:%d", IsRightBlockFace);
+//	ImGui::Text("2:%d", IsUpBlockFace);
+//	ImGui::Text("3:%d", IsDownBlockFace);
+//	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
+//	//ImGui::Text("x:%f", CenterPosition.x);
+//	//ImGui::Text("y:%f", CenterPosition.y);
+//	//ImGui::Text("z:%f", CenterPosition.z);
+//	//ImGui::Text("IsLeftSlide:%d", IsLeftSlide);
+//	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
+//	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
+//	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
+//	ImguiMgr::Get()->EndDrawImgui();
+//#endif // _DEBUG
 
 }
 
