@@ -394,139 +394,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	for (j = 0; j < stageData[nowPlayerStage].stageTileData.size(); j++)
 	{
-		for (mapchipPos = 0; mapchipPos < stageData[nowPlayerStage].stageTileData[j].size; mapchipPos++)
-		{
-			x = mapchipPos % stageData[nowPlayerStage].stageTileData[j].width;
-			y = mapchipPos / stageData[nowPlayerStage].stageTileData[j].width;
-
-			pos1.x = stageData[nowPlayerStage].stageTileData[j].drawLeftUp[mapchipPos].x + drawOffset.x;
-			pos1.y = stageData[nowPlayerStage].stageTileData[j].drawLeftUp[mapchipPos].y + drawOffset.y;
-			pos1.z = stageData[nowPlayerStage].stageTileData[j].drawLeftUp[mapchipPos].z;
-			pos2.x = stageData[nowPlayerStage].stageTileData[j].drawRightDown[mapchipPos].x + drawOffset.x;
-			pos2.y = stageData[nowPlayerStage].stageTileData[j].drawRightDown[mapchipPos].y + drawOffset.y;
-			pos2.z = stageData[nowPlayerStage].stageTileData[j].drawRightDown[mapchipPos].z;
-
-			switch (stageData[nowPlayerStage].stageTileData[j].mapchip[mapchipPos])
-			{
-			case MapchipData::EMPTY_STAGE:
-			{
-				continue;
-				break;
-			}
-			case MapchipData::BLOCK:
-			{
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][0].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-			}
-			case MapchipData::GOAL:
-			{
-				// 色設定
-				Sprite::SetSpriteColorParam(backColor[nowPlayerStage % 4].x, backColor[nowPlayerStage % 4].y,
-											backColor[nowPlayerStage % 4].z, backColor[nowPlayerStage % 4].w);
-				MapchipSpriteEmpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-			}
-			case MapchipData::HORIZONTAL:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][1].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::VERTICAL:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][2].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::LEFTONLY:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::UPONLY:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::RIGHTONLY:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::DOWNONLY:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][6].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::LEFTL:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::UPL:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::RIGHTL:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::DOWNL:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::LEFTU:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::UPU:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::RIGHTU:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::DOWNU:
-				// 色の初期化
-				Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-				AllBlockSprite[nowPlayerStage][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::NONE:
-			case MapchipData::START:
-			default:
-			{
-				// 色設定
-				Sprite::SetSpriteColorParam(backColor[nowPlayerStage % 4].x, backColor[nowPlayerStage % 4].y,
-											backColor[nowPlayerStage % 4].z, backColor[nowPlayerStage % 4].w);
-				MapchipSpriteEmpty.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-			}
-			}
-		}
+		StageTileDraw(nowPlayerStage, j, drawOffset, 1.1f);
 	}
 
 	// 色設定
@@ -2055,7 +1923,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	return 0;
 }
 
-int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor)
+void Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor)
 {
 	static RVector3 pos1 = {}, pos2 = {};
 	static XMFLOAT4 color = {};
@@ -2193,8 +2061,6 @@ int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumbe
 		}
 		}
 	}
-
-	return 0;
 }
 
 int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,

@@ -16,7 +16,8 @@ Tutorial::Tutorial() :
 	isMoveTutorial(false),
 	isFoldTutorial(false),
 	isFirst(true),
-	isFirstOnly(false)
+	isFirstOnly(false),
+	spriteSize{ 230.0f, 97.0f }
 {
 	Init();
 }
@@ -91,12 +92,12 @@ void Tutorial::Draw(int offsetX, int offsetY)
 
 	if (isMoveTutorial)
 	{
-		moveSprite.DrawSprite(static_cast<float>(offsetX), static_cast<float>(offsetY));
+		moveSprite.DrawSprite(static_cast<float>(offsetX) - 50.0f, static_cast<float>(offsetY) - (spriteSize.y + 10.0f));
 		moveSprite.Draw();
 	}
 	if (isFoldTutorial)
 	{
-		foldSprite.DrawSprite(static_cast<float>(offsetX), static_cast<float>(offsetY));
+		foldSprite.DrawSprite(static_cast<float>(offsetX) - 50.0f, static_cast<float>(offsetY) - (spriteSize.y + 10.0f));
 		foldSprite.Draw();
 	}
 }
@@ -105,12 +106,12 @@ void Tutorial::Create()
 {
 	if ((moveSprite.spdata->size.x <= 0) || (moveSprite.spdata->size.y <= 0))
 	{
-		moveHandle = TexManager::LoadTexture("./Resources/tutorialMove.png");
+		moveHandle = TexManager::LoadTexture("./Resources/idouUI.png");
 		moveSprite.Create(moveHandle);
 	}
 	if ((foldSprite.spdata->size.x <= 0) || (foldSprite.spdata->size.y <= 0))
 	{
-		foldHandle = TexManager::LoadTexture("./Resources/tutorialFold.png");
+		foldHandle = TexManager::LoadTexture("./Resources/oruUI.png");
 		foldSprite.Create(foldHandle);
 	}
 }
