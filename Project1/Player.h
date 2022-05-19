@@ -91,12 +91,6 @@ public: //メンバ関数
 	//有効化されている体の数を取得
 	int ActivateBodyCount();
 
-	//Body配列の中で指定した方向に折れる体があるかどうか
-	bool IsBodysFold(BodyType FoldType);
-
-	//Body配列の中で指定した方向に開ける体があるかどうか
-	bool IsBodysOpen(BodyType OpenType);
-
 	//顔の下に体があるかどうか
 	void IsdownBody();
 
@@ -105,6 +99,9 @@ public: //メンバ関数
 
 	//ブロックに邪魔されずにスライドできるかどうか
 	void IsSlideBlock();
+
+	//ブロックに邪魔されずにスライドできるかどうか
+	bool IsOpenBlock(BodyType opentype);
 
 public: //メンバ変数
 	//床の高さ
@@ -132,8 +129,6 @@ public: //メンバ変数
 	PlayerBody Body_Two;
 	PlayerBody Body_Three;
 	PlayerBody Body_Four;
-
-	//PlayerBody Bodys[4];
 
 	//上がふさがっていないか
 	bool IsUpBlocked;

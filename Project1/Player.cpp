@@ -152,6 +152,7 @@ void Player::Update(int offsetX, int offsetY)
 	}
 
 	//顔の当たり判定
+	IsOutsideFace();
 	IsHitPlayerBody();
 	IsAroundBlock();
 
@@ -228,24 +229,28 @@ void Player::Update(int offsetX, int offsetY)
 	if (Body_One.IsActivate == true)
 	{
 		Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_One.Update(CenterPosition);
 		Body_One.IsAroundBlock();
 	}
 	if (Body_Two.IsActivate == true)
 	{
 		Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Two.Update(CenterPosition);
 		Body_Two.IsAroundBlock();
 	}
 	if (Body_Three.IsActivate == true)
 	{
 		Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Three.Update(CenterPosition);
 		Body_Three.IsAroundBlock();
 	}
 	if (Body_Four.IsActivate == true)
 	{
 		Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+		Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 		Body_Four.Update(CenterPosition);
 		Body_Four.IsAroundBlock();
 	}
@@ -359,11 +364,11 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	//ImGui::Text("flag:%d", Player_IsAction);
-	//ImGui::Text("1:%d", Body_One.AfterBodyFoldCount);
-	//ImGui::Text("2:%d", Body_Two.AfterBodyFoldCount);
-	//ImGui::Text("3:%d", Body_Three.AfterBodyFoldCount);
+	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	ImGui::Text("flag:%d", IsLeftBlockFace);
+	ImGui::Text("1:%d", IsRightBlockFace);
+	ImGui::Text("2:%d", IsUpBlockFace);
+	ImGui::Text("3:%d", IsDownBlockFace);
 	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
 	//ImGui::Text("x:%f", CenterPosition.x);
 	//ImGui::Text("y:%f", CenterPosition.y);
@@ -372,7 +377,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	//ImguiMgr::Get()->EndDrawImgui();
+	ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
@@ -499,28 +504,28 @@ void Player::Key_FoldOpen()
 	}
 
 	//開く入力
-	if (actFlag->OpenLeft())
+	if (actFlag->OpenLeft() && IsOpenBlock(BodyType::left))
 	{ //左に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsLeftOpen = true;
 		return;
 	}
-	if (actFlag->OpenUp())
+	if (actFlag->OpenUp() && IsOpenBlock(BodyType::up))
 	{ //上に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsUpOpen = true;
 		return;
 	}
-	if (actFlag->OpenRight())
+	if (actFlag->OpenRight() && IsOpenBlock(BodyType::right))
 	{ //右に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
 		IsRightOpen = true;
 		return;
 	}
-	if (actFlag->OpenDown())
+	if (actFlag->OpenDown() && IsOpenBlock(BodyType::down))
 	{ //下に開く
 		OpenCount = 0;
 		IsOpenCountStart = true;
@@ -1531,15 +1536,6 @@ void Player::IsHitPlayerBody()
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
-	if ((CenterPosition.x - 25) <= stage->offset.x)
-	{
-		CenterPosition.x = 25;
-	}
-	if ((CenterPosition.y - 25) <= stage->offset.y)
-	{
-		CenterPosition.y = 25;
-	}
-
 	//顔の四隅との当たり判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -1560,6 +1556,7 @@ void Player::IsHitPlayerBody()
 					if (BuriedX > BuriedY)
 					{
 						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
+						FallSpeed = 0.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
@@ -1620,6 +1617,7 @@ void Player::IsHitPlayerBody()
 					if (BuriedX > BuriedY)
 					{
 						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
+						FallSpeed = 0.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
@@ -1774,6 +1772,81 @@ void Player::IsHitPlayerBody()
 	else
 	{
 		IsFaceFall = true;
+	}
+}
+
+void Player::IsOutsideFace()
+{
+	//ステージの数
+	size_t i = 0;
+	//タイルの数
+	size_t j = 0;
+
+	float FaceLeft = CenterPosition.x - 25;
+	float FaceUp = CenterPosition.y - 25;
+	float FaceRight = CenterPosition.x + 25;
+	float FaceDown = CenterPosition.y + 25;
+	float FaceAndLegDown = CenterPosition.y + 33;
+
+	size_t NowStage;
+	size_t NowTile;
+	stage->GetPositionTile(CenterPosition, &NowStage, &NowTile);
+	
+	float NowLeft = stage->GetStageOffsetX(NowStage, NowTile) * stage->blockSize;
+	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
+	float NowUp = stage->GetStageOffsetY(NowStage, NowTile) * stage->blockSize;
+	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
+
+	//顔の四隅との場外判定
+	for (i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (i == NowStage && j == NowTile)
+			{
+				continue;
+			}
+			if (NowUp == stage->GetStageOffsetY(i, j) * stage->blockSize)
+			{
+				if (NowLeft == (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				{
+					NowLeft = stage->GetStageOffsetX(i, j) * stage->blockSize;
+				}
+				if (NowRight == (stage->GetStageOffsetX(i, j)) * stage->blockSize)
+				{
+					NowRight = (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+				}
+			}
+			if (NowLeft == stage->GetStageOffsetX(i, j) * stage->blockSize)
+			{
+				if (NowUp == (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				{
+					NowUp = stage->GetStageOffsetY(i, j) * stage->blockSize;
+				}
+				if (NowDown == (stage->GetStageOffsetY(i, j)) * stage->blockSize)
+				{
+					NowDown = (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+				}
+			}
+		}
+	}
+
+	if (NowLeft >= FaceLeft)
+	{
+		CenterPosition.x = NowLeft + 25;
+	}
+	if (NowRight <= FaceRight)
+	{
+		CenterPosition.x = NowRight - 25;
+	}
+	if (NowUp >= FaceUp)
+	{
+		CenterPosition.y = NowUp + 25;
+		FallSpeed = 0.0f;
+	}
+	if (NowDown <= FaceDown)
+	{
+		CenterPosition.y = NowDown - 25;
 	}
 }
 
@@ -1992,35 +2065,6 @@ int Player::ActivateBodyCount()
 	return count;
 }
 
-bool Player::IsBodysFold(BodyType FoldType)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		/*if (Bodys[i].IsActivate == true &&
-			Bodys[i].Body_Type == FoldType &&
-			Bodys[i].IsOpen == true)
-		{
-			return true;
-		}*/
-	}
-	return false;
-}
-
-bool Player::IsBodysOpen(BodyType OpenType)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		/*if (Bodys[i].IsActivate == true &&
-			Bodys[i].Body_Type == OpenType &&
-			Bodys[i].IsFold == true &&
-			Bodys[i].AfterBodyFoldCount <= 0)
-		{
-			return true;
-		}*/
-	}
-	return false;
-}
-
 void Player::IsdownBody()
 {
 	int DownBodyCount = 0;
@@ -2069,18 +2113,35 @@ void Player::IsAroundBlock()
 	int X_mapchip_tile;
 	int Y_mapchip_tile;
 
+	//顔の四辺
+	float FaceLeft = CenterPosition.x - 25;
+	float FaceUp = CenterPosition.y - 25;
+	float FaceRight = CenterPosition.x + 25;
+	float FaceDown = CenterPosition.y + 25;
+
+	//上下左右(プレイヤーの顔)
+	int Faceleft_mapchip = (int)(FaceLeft - stage->offset.x) / 60;
+	int Faceup_mapchip = (int)(FaceUp - stage->offset.y) / 60;
+	int Faceright_mapchip = (int)(FaceRight - stage->offset.x) / 60;
+	int Facedown_mapchip = (int)(FaceDown - stage->offset.y) / 60;
+
 	//マップチップの座標
 	int mapchipPos = 0;
+
+	IsLeftBlockFace = false;
+	IsRightBlockFace = false;
+	IsUpBlockFace = false;
+	IsDownBlockFace = false;
 
 	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
 		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			//左隣
-			if (stage->IsPositionTile({ NextLeft,CenterPosition.y,0.0 }, i, j))
+			//左隣(上)
+			if (stage->IsPositionTile({ NextLeft,FaceUp,0.0 }, i, j))
 			{
 				X_mapchip_tile = NextLeft_mapchip % stage->GetStageTileWidth(i, j);
-				Y_mapchip_tile = Center_Y_mapchip % stage->GetStageTileHeight(i, j);
+				Y_mapchip_tile = Faceup_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
@@ -2088,17 +2149,27 @@ void Player::IsAroundBlock()
 				{
 					IsLeftBlockFace = true;
 				}
-				else
+			}
+
+			//左隣(下)
+			if (stage->IsPositionTile({ NextLeft,FaceDown,0.0 }, i, j))
+			{
+				X_mapchip_tile = NextLeft_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = Facedown_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					IsLeftBlockFace = false;
+					IsLeftBlockFace = true;
 				}
 			}
 
-			//右隣
-			if (stage->IsPositionTile({ NextRight,CenterPosition.y,0.0 }, i, j))
+			//右隣(上)
+			if (stage->IsPositionTile({ NextRight,FaceUp,0.0 }, i, j))
 			{
 				X_mapchip_tile = NextRight_mapchip % stage->GetStageTileWidth(i, j);
-				Y_mapchip_tile = Center_Y_mapchip % stage->GetStageTileHeight(i, j);
+				Y_mapchip_tile = Faceup_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
 				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
@@ -2106,16 +2177,26 @@ void Player::IsAroundBlock()
 				{
 					IsRightBlockFace = true;
 				}
-				else
+			}
+
+			//右隣(下)
+			if (stage->IsPositionTile({ NextRight,FaceDown,0.0 }, i, j))
+			{
+				X_mapchip_tile = NextRight_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = Facedown_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					IsRightBlockFace = false;
+					IsRightBlockFace = true;
 				}
 			}
 
-			//上隣
-			if (stage->IsPositionTile({ CenterPosition.x,NextUp,0.0 }, i, j))
+			//上隣(左)
+			if (stage->IsPositionTile({ FaceLeft,NextUp,0.0 }, i, j))
 			{
-				X_mapchip_tile = Center_X_mapchip % stage->GetStageTileWidth(i, j);
+				X_mapchip_tile = Faceleft_mapchip % stage->GetStageTileWidth(i, j);
 				Y_mapchip_tile = NextUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
@@ -2124,16 +2205,26 @@ void Player::IsAroundBlock()
 				{
 					IsUpBlockFace = true;
 				}
-				else
+			}
+
+			//上隣(右)
+			if (stage->IsPositionTile({ FaceRight,NextUp,0.0 }, i, j))
+			{
+				X_mapchip_tile = Faceright_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextUp_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					IsUpBlockFace = false;
+					IsUpBlockFace = true;
 				}
 			}
 
-			//下隣
-			if (stage->IsPositionTile({ CenterPosition.x,NextDown,0.0 }, i, j))
+			//下隣(左)
+			if (stage->IsPositionTile({ FaceLeft,NextDown,0.0 }, i, j))
 			{
-				X_mapchip_tile = Center_X_mapchip % stage->GetStageTileWidth(i, j);
+				X_mapchip_tile = Faceleft_mapchip % stage->GetStageTileWidth(i, j);
 				Y_mapchip_tile = NextDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
@@ -2142,9 +2233,19 @@ void Player::IsAroundBlock()
 				{
 					IsDownBlockFace = true;
 				}
-				else
+			}
+
+			//下隣(右)
+			if (stage->IsPositionTile({ FaceRight,NextDown,0.0 }, i, j))
+			{
+				X_mapchip_tile = Faceright_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = NextDown_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					IsDownBlockFace = false;
+					IsDownBlockFace = true;
 				}
 			}
 		}
@@ -2203,4 +2304,94 @@ void Player::IsSlideBlock()
 			IsRightSlide = false;
 		}
 	}
+}
+
+bool Player::IsOpenBlock(BodyType opentype)
+{
+	switch (opentype)
+	{
+	case BodyType::left:
+	{
+		if (IsLeftBlockFace && IsRightBlockFace)
+		{
+			return false;
+		}
+
+		if (IsLeftBlockFace)
+		{
+			if (Body_Two.IsActivate && Body_Two.IsOpen && Body_Two.IsRightBlock)
+			{
+				return false;
+			}
+			if (Body_Four.IsActivate && Body_Four.IsOpen && Body_Four.IsRightBlock)
+			{
+				return false;
+			}
+		}
+
+		break;
+	}
+	case BodyType::up:
+	{
+		if (IsUpBlockFace && IsDownBlockFace)
+		{
+			return false;
+		}
+
+		if (IsUpBlockFace)
+		{
+			if (Body_One.IsActivate && Body_One.IsOpen && Body_One.IsDownBlock)
+			{
+				return false;
+			}
+			if (Body_Three.IsActivate && Body_Three.IsOpen && Body_Three.IsDownBlock)
+			{
+				return false;
+			}
+		}
+		break;
+	}
+	case BodyType::right:
+	{
+		if (IsLeftBlockFace && IsRightBlockFace)
+		{
+			return false;
+		}
+
+		if (IsRightBlockFace)
+		{
+			if (Body_Two.IsActivate && Body_Two.IsOpen && Body_Two.IsLeftBlock)
+			{
+				return false;
+			}
+			if (Body_Four.IsActivate && Body_Four.IsOpen && Body_Four.IsLeftBlock)
+			{
+				return false;
+			}
+		}
+		break;
+	}
+	case BodyType::down:
+	{
+		if (IsUpBlockFace && IsDownBlockFace)
+		{
+			return false;
+		}
+
+		if (IsDownBlockFace)
+		{
+			if (Body_One.IsActivate && Body_One.IsOpen && Body_One.IsUpBlock)
+			{
+				return false;
+			}
+			if (Body_Three.IsActivate && Body_Three.IsOpen && Body_Three.IsUpBlock)
+			{
+				return false;
+			}
+		}
+		break;
+	}
+	}
+
+	return true;
 }
