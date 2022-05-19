@@ -175,6 +175,6 @@ void GameMainManager::GameInstanceDraw()
 	Raki_DX12B::Get()->ClearDepthBuffer();
 	stage->Draw();
 	player->Draw(stage->drawOffsetX, stage->drawOffsetY);
-	tutorial.Draw(player->CenterPosition.x, player->CenterPosition.y);
+	tutorial.Draw(stage->drawOffsetX, stage->drawOffsetY);
 	ui.Draw();
 }

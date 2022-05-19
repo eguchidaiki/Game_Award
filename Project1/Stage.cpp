@@ -568,16 +568,16 @@ void Stage::LoadBlocksHandle()
 		case 0:
 		{
 			//青色のブロックの画像ハンドル
-			AllBlockHandle[0][0] = TexManager::LoadTexture(BasePath + Bule + fileType);
-			AllBlockHandle[0][1] = TexManager::LoadTexture(BasePath + Bule + Horizontal + fileType);
-			AllBlockHandle[0][2] = TexManager::LoadTexture(BasePath + Bule + Vertical + fileType);
-			AllBlockHandle[0][3] = TexManager::LoadTexture(BasePath + Bule + "_I_Left" + fileType);
-			AllBlockHandle[0][4] = TexManager::LoadTexture(BasePath + Bule + "_I_Up" + fileType);
-			AllBlockHandle[0][5] = TexManager::LoadTexture(BasePath + Bule + "_I_Right" + fileType);
-			AllBlockHandle[0][6] = TexManager::LoadTexture(BasePath + Bule + "_I_Down" + fileType);
-			AllBlockHandle[0][7] = TexManager::LoadTexture(BasePath + Bule + "_L_Left" + fileType);
-			AllBlockHandle[0][8] = TexManager::LoadTexture(BasePath + Bule + "_L_Up" + fileType);
-			AllBlockHandle[0][9] = TexManager::LoadTexture(BasePath + Bule + "_L_right" + fileType);
+			AllBlockHandle[0][ 0] = TexManager::LoadTexture(BasePath + Bule + fileType);
+			AllBlockHandle[0][ 1] = TexManager::LoadTexture(BasePath + Bule + Horizontal + fileType);
+			AllBlockHandle[0][ 2] = TexManager::LoadTexture(BasePath + Bule + Vertical + fileType);
+			AllBlockHandle[0][ 3] = TexManager::LoadTexture(BasePath + Bule + "_I_Left" + fileType);
+			AllBlockHandle[0][ 4] = TexManager::LoadTexture(BasePath + Bule + "_I_Up" + fileType);
+			AllBlockHandle[0][ 5] = TexManager::LoadTexture(BasePath + Bule + "_I_Right" + fileType);
+			AllBlockHandle[0][ 6] = TexManager::LoadTexture(BasePath + Bule + "_I_Down" + fileType);
+			AllBlockHandle[0][ 7] = TexManager::LoadTexture(BasePath + Bule + "_L_Left" + fileType);
+			AllBlockHandle[0][ 8] = TexManager::LoadTexture(BasePath + Bule + "_L_Up" + fileType);
+			AllBlockHandle[0][ 9] = TexManager::LoadTexture(BasePath + Bule + "_L_right" + fileType);
 			AllBlockHandle[0][10] = TexManager::LoadTexture(BasePath + Bule + "_L_Down" + fileType);
 			AllBlockHandle[0][11] = TexManager::LoadTexture(BasePath + Bule + "_U_Left" + fileType);
 			AllBlockHandle[0][12] = TexManager::LoadTexture(BasePath + Bule + "_U_Up" + fileType);
@@ -2028,25 +2028,25 @@ void Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumb
 		case MapchipData::LEFTU:
 			// 色の初期化
 			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-			AllBlockSprite[stageNumber][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			AllBlockSprite[stageNumber][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 			break;
 
 		case MapchipData::UPU:
 			// 色の初期化
 			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-			AllBlockSprite[stageNumber][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			AllBlockSprite[stageNumber][12].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 			break;
 
 		case MapchipData::RIGHTU:
 			// 色の初期化
 			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-			AllBlockSprite[stageNumber][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			AllBlockSprite[stageNumber][13].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 			break;
 
 		case MapchipData::DOWNU:
 			// 色の初期化
 			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-			AllBlockSprite[stageNumber][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			AllBlockSprite[stageNumber][14].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 			break;
 
 		case MapchipData::NONE:
