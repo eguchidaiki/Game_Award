@@ -9,6 +9,7 @@
 namespace
 {
 	static Stage* stage = Stage::Get();
+	static Player* player = Player::Get();
 }
 
 const float PlayerBody::BodySize = 50.0f;
@@ -555,28 +556,37 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	float BodyRight;
 	float BodyUp;
 	float BodyDown;
+	float BodyAndLegDown = -1;
 
 	//StartPosとEndPosの位置関係によって上下左右の設定を変える
 	if (BodyStartPos.x < BodyEndPos.x)
 	{
 		BodyLeft = BodyStartPos.x;
-		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+		BodyRight = BodyEndPos.x;
 	}
 	else
 	{
 		BodyLeft = BodyEndPos.x;
-		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+		BodyRight = BodyStartPos.x;
 	}
 
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyStartPos.y + ((BodySize)-1.0f);
+		BodyDown = BodyEndPos.y;
+		if (this->Body_Type == BodyType::down && this->IsOpen)
+		{
+			//BodyAndLegDown = BodyDown + 9;
+		}
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyEndPos.y + ((BodySize)-1.0f);
+		BodyDown = BodyStartPos.y;
+		if (this->Body_Type == BodyType::down && this->IsOpen)
+		{
+			//BodyAndLegDown = BodyDown + 9;
+		}
 	}
 
 	//四辺をブロックサイズで割った数
@@ -584,12 +594,14 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	int BodyUp_mapchip = (int)(BodyUp - stage->offset.y) / 60;
 	int BodyRight_mapchip = (int)(BodyRight - stage->offset.x) / 60;
 	int BodyDown_mapchip = (int)(BodyDown - stage->offset.y) / 60;
+	int BodyAndLegdown_mapchip = (int)(BodyAndLegDown - stage->offset.y) / 60;
 
 	//タイル内のマップチップ座標
 	int BodyLeft_mapchip_tile;
 	int BodyUp_mapchip_tile;
 	int BodyRight_mapchip_tile;
 	int BodyDown_mapchip_tile;
+	int BodyAndLegdown_mapchip_tile;
 
 	//押し出す方向を決めるための距離
 	float BuriedX = 0;
@@ -657,8 +669,17 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
+				BodyAndLegdown_mapchip_tile = BodyAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
+				if (BodyAndLegDown != -1)
+				{
+					mapchipPos = (BodyAndLegdown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
+				}
+				else
+				{
+					mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
+				}
+
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
@@ -666,8 +687,14 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 					if (BuriedX > BuriedY)
 					{
-						center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
-						//IsHitDown = true;
+						if (BodyAndLegDown != -1)
+						{
+							center->y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - center->y);
+						}
+						else
+						{
+							center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
+						}
 						FallCount++;
 						Player::Get()->IsInitJump = false;
 					}
@@ -720,8 +747,17 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
+				BodyAndLegdown_mapchip_tile = BodyAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
 
-				mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (BodyAndLegDown != -1)
+				{
+					mapchipPos = (BodyAndLegdown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				}
+				else
+				{
+					mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				}
+
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
@@ -729,7 +765,14 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 					if (BuriedX > BuriedY)
 					{
-						center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
+						if (BodyAndLegDown != -1)
+						{
+							center->y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - center->y);
+						}
+						else
+						{
+							center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
+						}
 						//IsHitDown = true;
 						FallCount++;
 						Player::Get()->IsInitJump = false;
@@ -851,9 +894,9 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	size_t NowTile;
 	stage->GetPositionTile(BodyCenterPos, &NowStage, &NowTile);
 
-	float NowLeft = stage->GetStageOffsetX(NowStage, NowTile) * stage->blockSize;
+	float NowLeft = stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize;
 	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
-	float NowUp = stage->GetStageOffsetY(NowStage, NowTile) * stage->blockSize;
+	float NowUp = stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize;
 	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
 
 	//体の四隅との場外判定
@@ -865,26 +908,26 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			{
 				continue;
 			}
-			if (NowUp == stage->GetStageOffsetY(i, j) * stage->blockSize)
+			if (NowUp == stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (NowLeft == (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (NowLeft == (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
-					NowLeft = stage->GetStageOffsetX(i, j) * stage->blockSize;
+					NowLeft = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
-				if (NowRight == (stage->GetStageOffsetX(i, j)) * stage->blockSize)
+				if (NowRight == (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 				{
-					NowRight = (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+					NowRight = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
-			if (NowLeft == stage->GetStageOffsetX(i, j) * stage->blockSize)
+			if (NowLeft == stage->GetStageTileOffsetX(i, j) * stage->blockSize)
 			{
-				if (NowUp == (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (NowUp == (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
 				{
-					NowUp = stage->GetStageOffsetY(i, j) * stage->blockSize;
+					NowUp = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
 				}
-				if (NowDown == (stage->GetStageOffsetY(i, j)) * stage->blockSize)
+				if (NowDown == (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
 				{
-					NowDown = (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+					NowDown = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
 		}
