@@ -47,6 +47,14 @@ private:
 	std::array<Sprite, 20> selectImg_1_4;
 	std::array<Sprite, 20> selectImg_5_8;
 	std::array<Sprite, 20> selectImg_9_12;
+	std::array<Sprite, 20> selectImg_13_16;
+	//番号
+	std::array<Sprite, 20> stageNumIcon;
+	//ステージ背景
+	std::array<Sprite, 20> stageBack;
+
+	//カーソル
+	Sprite selectCursor;
 
 	Sprite SelectLeft;
 	Sprite SelectRight;
@@ -57,10 +65,27 @@ private:
 		page_1_4,
 		page_5_8,
 		page_9_12,
+		page_13_16,
+		page_17_20,
 	};
 	STAGE_PAGE nowpage;		//現在のページ
 	STAGE_PAGE nextpage;	//前のページ
 	STAGE_PAGE displayPage;	//表示するページ
+
+	enum NOW_SELECTING
+	{
+		//戻る
+		UI_BACK,
+		//ステージアイコン
+		UI_STAGEBOX_1,
+		UI_STAGEBOX_2,
+		UI_STAGEBOX_3,
+		UI_STAGEBOX_4,
+		//進む
+		UI_FRONT,
+	};
+	NOW_SELECTING user_selecting;
+	void Changing_UI_Number();
 
 	enum PAGE_MOVE_DIR
 	{
@@ -90,6 +115,12 @@ private:
 	const int NUMBOX_SPACE = 65;
 	void CheckLoadStage(int boxnum);
 	void CheckToStageChangeInput();
+
+
+	//描画関数系
+	void DrawCursor();
+
+
 
 };
 

@@ -1,6 +1,7 @@
 ﻿#include "StageSelecter.h"
 #include <string>
 
+#include <Raki_WinAPI.h>
 #include <Raki_imguiMgr.h>
 
 #include "Stage.h"
@@ -33,6 +34,9 @@ void StageSelecter::Init()
 	nowpage = page_1_4;
 	nextpage = nowpage;
 
+	//ステージ1を選択中
+	user_selecting = UI_STAGEBOX_1;
+
 	nowDisplayNum = 0;
 }
 
@@ -64,6 +68,14 @@ void StageSelecter::Draw()
 		selectImg_9_12[nowDisplayNum].DrawSprite(0, 0);
 		selectImg_9_12[nowDisplayNum].Draw();
 		break;
+	case StageSelecter::page_13_16:
+		selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
+		selectImg_13_16[nowDisplayNum].Draw();
+		break;
+
+	case StageSelecter::page_17_20:
+		selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
+		selectImg_13_16[nowDisplayNum].Draw();
 	default:
 		break;
 	}
@@ -100,6 +112,9 @@ void StageSelecter::Draw()
 	}
 	SelectRight.Draw();
 
+	//カーソル描画
+	DrawCursor();
+
 }
 
 void StageSelecter::Finalize()
@@ -113,6 +128,20 @@ void StageSelecter::Finalize()
 //	//Audio::PlayLoadedSound(menuBGM);
 //}
 
+void StageSelecter::Changing_UI_Number()
+{
+	//入力によってインクリメント、デクリメント
+	int select_number = static_cast<int>(user_selecting);
+	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT)) {
+		if (user_selecting != UI_BACK) { select_number--; }
+	}
+
+	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT)) {
+		if (user_selecting != UI_FRONT) { select_number++; }
+	}
+	user_selecting = static_cast<NOW_SELECTING>(select_number);
+}
+
 void StageSelecter::LoadSprite()
 {
 	std::string fullImgPath = "Resources/selectAnime/";
@@ -121,10 +150,12 @@ void StageSelecter::LoadSprite()
 	std::string page_1_4 = "1-4/";
 	std::string page_5_8 = "5-8/";
 	std::string page_9_12 = "9-12/";
+	std::string page_13_16 = "13-16/";
 
 	std::string imageName_1_4 = "select1-4 ";
 	std::string imageName_5_8 = "select5-8 ";
 	std::string imageName_9_12 = "select9-12 ";
+	std::string imageName_13_16 = "select13-16 ";
 
 	for (int i = 0; i < 20; i++)
 	{
@@ -134,12 +165,15 @@ void StageSelecter::LoadSprite()
 		std::string fullpath_1_4 = fullImgPath + page_1_4 + imageName_1_4 + fullnumber + filename;
 		std::string fullpath_5_8 = fullImgPath + page_5_8 + imageName_5_8 + fullnumber + filename;
 		std::string fullpath_9_12 = fullImgPath + page_9_12 + imageName_9_12 + fullnumber + filename;
+		std::string fullpath_13_16 = fullImgPath + page_13_16 + imageName_13_16 + fullnumber + filename;
 
 		selectImg_1_4[i].Create(TexManager::LoadTexture(fullpath_1_4));
 		selectImg_5_8[i].Create(TexManager::LoadTexture(fullpath_5_8));
 		selectImg_9_12[i].Create(TexManager::LoadTexture(fullpath_9_12));
+		selectImg_13_16[i].Create(TexManager::LoadTexture(fullpath_13_16));
 	}
 
+	selectCursor.Create(TexManager::LoadTexture("Resources/cursor02.png"));
 	SelectLeft.Create(TexManager::LoadTexture(fullImgPath + "SelectLeft" + filename));
 	SelectRight.Create(TexManager::LoadTexture(fullImgPath + "SelectRight" + filename));
 }
@@ -152,72 +186,51 @@ void StageSelecter::CheckToPageChangeInput()
 		return;
 	}
 
-	float mouse_x = Input::getMousePos().x;
-	float mouse_y = Input::getMousePos().y;
+	//入力に応じてUI番号変更
+	Changing_UI_Number();
 
-	if (state == is_selecting)
+	switch (user_selecting)
 	{
-		//繝壹・繧ｸ驕ｷ遘ｻ縺吶ｋ縺ｮ縺具ｼ・
-		bool isMove = false;
-		if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626
-			&& Input::isMouseClickTrigger(MOUSE_L))
-		{
-			switch (nowpage)
-			{
-			case StageSelecter::page_1_4:
-				nextpage = page_5_8;
-				isMove = true;
-				break;
-			case StageSelecter::page_5_8:
-				nextpage = page_9_12;
-				isMove = true;
-				break;
-			case StageSelecter::page_9_12:
-				break;
-			default:
-				break;
-			}
-			if (isMove) { pageMoveDir = is_front; }
-
+	case StageSelecter::UI_BACK:
+		//最初のページでないときにBACK
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) && nowpage != page_1_4) {
+			//移動方向設定
+			pageMoveDir = is_back;
+			//次ページ設定
+			int pageNum = static_cast<int>(nextpage);
+			pageNum--;
+			nextpage = static_cast<STAGE_PAGE>(pageNum);
 		}
-		else if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626
-			&& Input::isMouseClickTrigger(MOUSE_L))
-		{
-			switch (nowpage)
-			{
-			case StageSelecter::page_1_4:
-				break;
-			case StageSelecter::page_5_8:
-				nextpage = page_1_4;
-				isMove = true;
-				break;
-			case StageSelecter::page_9_12:
-				nextpage = page_5_8;
-				isMove = true;
-				break;
-			default:
-				break;
-			}
-			if (isMove) { pageMoveDir = is_back; }
+		break;
+	case StageSelecter::UI_FRONT:
+		//最後のページでないときにFRONT
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) && nowpage != page_17_20) {
+			//移動方向設定
+			pageMoveDir = is_front;
+			//次ページ設定
+			int pageNum = static_cast<int>(nextpage);
+			pageNum++;
+			nextpage = static_cast<STAGE_PAGE>(pageNum);
 		}
+		break;
+	default:
+		break;
 	}
 
 }
 
 void StageSelecter::PageChange()
 {
-	//繝壹・繧ｸ蛻・ｊ譖ｿ縺域ｼ泌・縺ｮ蜃ｦ逅・
 
-	//繝壹・繧ｸ縺悟､峨ｏ繧九→縺・
 	if (nowpage != nextpage)
 	{
 		animationFrame++;
-		//谺｡縺ｮ繝壹・繧ｸ
+
 		if (pageMoveDir == is_front)
 		{
-			//貍泌・荳ｭ縺ｯ迴ｾ蝨ｨ繝壹・繧ｸ繧定｡ｨ遉ｺ
+
 			displayPage = nowpage;
-			//貍泌・蠕・ｩ・
+
 			state = is_pageChange_waiting;
 			if (animationFrame % perFrame == 0)
 			{
@@ -225,34 +238,36 @@ void StageSelecter::PageChange()
 			}
 			if (nowDisplayNum >= 20)
 			{
-				//謠冗判縺吶ｋ繧・▽繧貞・繧頑崛縺・
+
 				displayPage = nextpage;
-				//迴ｾ蝨ｨ繝壹・繧ｸ繧定ｨｭ螳・
+
 				nowpage = nextpage;
-				//蛻晄悄蛹・
+
 				nowDisplayNum = 0;
-				//蜈･蜉帙ｒ蜿嶺ｻ・
+				//最後のページのときは最終フレームで固定
+				if (displayPage == STAGE_PAGE::page_17_20) {
+					nowDisplayNum = 19;
+				}
+
 				state = is_selecting;
 
 				animationFrame = 0;
 			}
 		}
-		//蜑阪・繝壹・繧ｸ
 		else
 		{
-			//繝壹・繧ｸ驕ｷ遘ｻ蛻､螳壹↓縺吶ｋ繧ｿ繧､繝溘Φ繧ｰ縺ｧ荳区ｺ門ｙ繧偵☆繧・
 			if (state != is_pageChange_waiting)
 			{
 				state = is_pageChange_waiting;
 				nowDisplayNum = 19;
 				displayPage = nextpage;
 			}
-			//繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ騾ｲ陦・
+
 			if (animationFrame % perFrame == 0)
 			{
 				nowDisplayNum--;
 			}
-			//貍泌・邨ゆｺ・
+
 			if (nowDisplayNum <= 0)
 			{
 				nowDisplayNum = 0;
@@ -273,8 +288,8 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		{
 			//stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
 			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2;
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2;
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -303,7 +318,6 @@ void StageSelecter::CheckLoadStage(int boxnum)
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		break;
-
 
 
 	case StageSelecter::page_5_8:
@@ -387,55 +401,84 @@ void StageSelecter::CheckLoadStage(int boxnum)
 
 void StageSelecter::CheckToStageChangeInput()
 {
-	//驕ｸ謚樔ｸｭ莉･螟悶・縺昴ｂ縺昴ｂ螳溯｡後＠縺ｪ縺・
 	if (state != is_selecting)
 	{
 		return;
 	}
 
-	//蜷・・繝・け繧ｹ縺ｮ蟾ｦ蛛ｴ蠎ｧ讓吶ｒ險育ｮ・
+	bool selected = false;
+	int select_Stage_num = 0;
+	switch (user_selecting)
+	{
+	case StageSelecter::UI_STAGEBOX_1:
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+			select_Stage_num = 0;
+			selected = true;
+		}
+		break;
+	case StageSelecter::UI_STAGEBOX_2:
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+			select_Stage_num = 1;
+			selected = true;
+		}
+		break;
+	case StageSelecter::UI_STAGEBOX_3:
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+			select_Stage_num = 2;
+			selected = true;
+		}
+		break;
+	case StageSelecter::UI_STAGEBOX_4:
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+			select_Stage_num = 3;
+			selected = true;
+		}
+		break;
+	default:
+		break;
+	}
+	if (selected) { 
+		CheckLoadStage(select_Stage_num);
+		state = is_stageSelected_waiting; 
+
+		//これでステージ開始
+		isChanging_GameMain = true;
+	}
+
+}
+
+void StageSelecter::DrawCursor()
+{
 	std::array<int, 4> boxLeft;
 	for (int i = 0; i < 4; i++)
 	{
 		boxLeft[i] = NUMBOX_START_X + (NUMBOX_SIZE * i) + (NUMBOX_SPACE * i);
 	}
 
-	int selectingBoxNum = 0;
-	bool isHit = false;
-	//繧ｯ繝ｪ繝・け譎ゅ↓縺ｩ縺ｮ繝懊ャ繧ｯ繧ｹ繧偵け繝ｪ繝・け縺励※縺・ｋ縺区ｱゅａ繧・
-	if (Input::isMouseClickTrigger(MOUSE_L) == true)
+	switch (user_selecting)
 	{
-		int mouse_x = static_cast<int>(Input::getMousePos().x);
-		int mouse_y = static_cast<int>(Input::getMousePos().y);
-
-		//繧ｹ繝・・繧ｸ縺ｫ繝偵ャ繝医＠縺ｦ縺・ｋ
-		for (int i = 0; i < 4; i++)
-		{
-			if (mouse_x > boxLeft[i] && mouse_x < boxLeft[i] + NUMBOX_SIZE && mouse_y > NUMBOX_START_Y && mouse_y < NUMBOX_START_Y + NUMBOX_SIZE)
-			{
-				selectingBoxNum = i;
-				//繧ｲ繝ｼ繝譛ｬ邱ｨ縺ｸ縺ｮ驕ｷ遘ｻ繧定ｨｱ蜿ｯ
-				isChanging_GameMain = true;
-				//繝偵ャ繝・
-				isHit = true;
-				//繧ｹ繝・・繧ｸ驕ｷ遘ｻ髢句ｧ・
-				state = is_stageSelected_waiting;
-				break;
-			}
-		}
-		//荳蛟九ｂ繝偵ャ繝医＠縺ｦ縺・↑縺・ｴ蜷医・邨ゆｺ・
-		if (!isHit) { return; }
-	}
-	else
-	{//蜈･蜉帙′縺ｪ縺・↑繧臥ｵゆｺ・
-		return;
+	case StageSelecter::UI_BACK:
+		selectCursor.DrawSprite(29 + 67, 623 + 67);
+		break;
+	case StageSelecter::UI_STAGEBOX_1:
+		selectCursor.DrawSprite(boxLeft[0] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
+		break;
+	case StageSelecter::UI_STAGEBOX_2:
+		selectCursor.DrawSprite(boxLeft[1] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
+		break;
+	case StageSelecter::UI_STAGEBOX_3:
+		selectCursor.DrawSprite(boxLeft[2] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
+		break;
+	case StageSelecter::UI_STAGEBOX_4:
+		selectCursor.DrawSprite(boxLeft[3] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
+		break;
+	case StageSelecter::UI_FRONT:
+		selectCursor.DrawSprite(1184 + 67, 623 + 67);
+		break;
+	default:
+		break;
 	}
 
-	//繧ｯ繝ｪ繝・け縺輔ｌ縺ｦ縺・ｋ繝懊ャ繧ｯ繧ｹ縺ｨ縲∫樟蝨ｨ縺ｮ繝壹・繧ｸ縺九ｉ縲√←縺ｮ繧ｹ繝・・繧ｸ縺ｫ遘ｻ蜍輔☆繧九・縺九ｒ豎ゅａ繧・
-	if (isHit)
-	{
-		CheckLoadStage(selectingBoxNum);
-		SelectStageNum = selectingBoxNum;
-	}
+	selectCursor.Draw();
 
 }
