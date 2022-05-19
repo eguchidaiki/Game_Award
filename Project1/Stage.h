@@ -291,7 +291,7 @@ private:
 
 	// ステージタイルの描画
 	// saturationColorが1だと元の色で表示する
-	int StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
+	void StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
 				 const int offsetX, const int offsetY);
