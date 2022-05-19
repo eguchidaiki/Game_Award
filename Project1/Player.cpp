@@ -1556,6 +1556,7 @@ void Player::IsHitPlayerBody()
 					if (BuriedX > BuriedY)
 					{
 						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
+						FallSpeed = 0.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
@@ -1616,6 +1617,7 @@ void Player::IsHitPlayerBody()
 					if (BuriedX > BuriedY)
 					{
 						CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
+						FallSpeed = 0.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
@@ -1840,6 +1842,7 @@ void Player::IsOutsideFace()
 	if (NowUp >= FaceUp)
 	{
 		CenterPosition.y = NowUp + 25;
+		FallSpeed = 0.0f;
 	}
 	if (NowDown <= FaceDown)
 	{
