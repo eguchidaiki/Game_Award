@@ -1785,11 +1785,7 @@ void Player::IsOutsideFace()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (i == NowStage && j == NowTile)
-			{
-				continue;
-			}
-			if (NowUp == stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+			if (stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize == stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
 				if (NowLeft == (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
@@ -1800,7 +1796,7 @@ void Player::IsOutsideFace()
 					NowRight = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
-			if (NowLeft == stage->GetStageTileOffsetX(i, j) * stage->blockSize)
+			if (stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize == stage->GetStageTileOffsetX(i, j) * stage->blockSize)
 			{
 				if (NowUp == (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
 				{
