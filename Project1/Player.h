@@ -23,6 +23,8 @@ public: //メンバ関数
 	void Update(int offsetX, int offsetY);
 	// 描画
 	void Draw(int offsetX, int offsetY);
+	//体の描画
+	void DrawBodys(int offsetX, int offsetY);
 	// 生成
 	void Create();
 
