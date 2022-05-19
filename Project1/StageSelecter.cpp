@@ -119,24 +119,22 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
-	/*Audio::StopLoadedSound(menuBGM);*/
-}
 
-//void StageSelecter::PlayAudio()
-//{
-//	//再生
-//	//Audio::PlayLoadedSound(menuBGM);
-//}
+}
 
 void StageSelecter::Changing_UI_Number()
 {
 	//入力によってインクリメント、デクリメント
 	int select_number = static_cast<int>(user_selecting);
-	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT)) {
+	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT) || 
+		Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT) || 
+		Input::isKeyTrigger(DIK_LEFT)) {
 		if (user_selecting != UI_BACK) { select_number--; }
 	}
 
-	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT)) {
+	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT) || 
+		Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT) ||
+		Input::isKeyTrigger(DIK_RIGHT)) {
 		if (user_selecting != UI_FRONT) { select_number++; }
 	}
 	user_selecting = static_cast<NOW_SELECTING>(select_number);
@@ -201,6 +199,15 @@ void StageSelecter::CheckToPageChangeInput()
 			pageNum--;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
 		}
+		else if (Input::isKeyTrigger(DIK_RETURN) && nowpage != page_1_4) {
+			//移動方向設定
+			pageMoveDir = is_back;
+			//次ページ設定
+			int pageNum = static_cast<int>(nextpage);
+			pageNum--;
+			nextpage = static_cast<STAGE_PAGE>(pageNum);
+		}
+
 		break;
 	case StageSelecter::UI_FRONT:
 		//最後のページでないときにFRONT
@@ -212,6 +219,15 @@ void StageSelecter::CheckToPageChangeInput()
 			pageNum++;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
 		}
+		else if (Input::isKeyTrigger(DIK_RETURN) && nowpage != page_17_20) {
+			//移動方向設定
+			pageMoveDir = is_front;
+			//次ページ設定
+			int pageNum = static_cast<int>(nextpage);
+			pageNum++;
+			nextpage = static_cast<STAGE_PAGE>(pageNum);
+		}
+
 		break;
 	default:
 		break;
@@ -288,32 +304,32 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		{
 			//stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
 			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2;
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 1);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 500.0f;
-			stagePtr->drawOffsetY = 75.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 1);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 3);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 1);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -324,32 +340,32 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 4);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -361,32 +377,32 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 3);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = 0.0f;
-			stagePtr->drawOffsetY = 0.0f;
+			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
+			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -411,25 +427,25 @@ void StageSelecter::CheckToStageChangeInput()
 	switch (user_selecting)
 	{
 	case StageSelecter::UI_STAGEBOX_1:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
 			select_Stage_num = 0;
 			selected = true;
 		}
 		break;
 	case StageSelecter::UI_STAGEBOX_2:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
 			select_Stage_num = 1;
 			selected = true;
 		}
 		break;
 	case StageSelecter::UI_STAGEBOX_3:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
 			select_Stage_num = 2;
 			selected = true;
 		}
 		break;
 	case StageSelecter::UI_STAGEBOX_4:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) {
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
 			select_Stage_num = 3;
 			selected = true;
 		}
