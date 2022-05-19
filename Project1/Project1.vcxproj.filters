@@ -90,6 +90,12 @@
     <ClCompile Include="PlayerFoot.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="GoalEffect.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="StageFractureEffect.cpp">
+      <Filter>Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -154,6 +160,12 @@
     </ClInclude>
     <ClInclude Include="PlayerFoot.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="StageFractureEffect.h">
+      <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalEffect.h">
+      <Filter>Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
