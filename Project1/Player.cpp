@@ -112,11 +112,11 @@ void Player::Update(int offsetX, int offsetY)
 			FallSpeed += 0.2f;
 		}
 
-		if (Leftjump == true)
+		if (Leftjump == true && Player_IsAction == false)
 		{
 			CenterPosition.x -= 1.5f;
 		}
-		if (Rightjump == true)
+		if (Rightjump == true && Player_IsAction == false)
 		{
 			CenterPosition.x += 1.5f;
 		}
@@ -364,11 +364,11 @@ void Player::Draw(int offsetX, int offsetY)
 	//goalParticle.Draw();
 
 #ifdef _DEBUG
-	ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
-	ImGui::Text("flag:%d", IsLeftBlockFace);
-	ImGui::Text("1:%d", IsRightBlockFace);
-	ImGui::Text("2:%d", IsUpBlockFace);
-	ImGui::Text("3:%d", IsDownBlockFace);
+	//ImguiMgr::Get()->StartDrawImgui("IsGoal state", 0.0f, 100.0f);
+	//ImGui::Text("flag:%d", IsLeftBlockFace);
+	//ImGui::Text("1:%d", IsRightBlockFace);
+	//ImGui::Text("2:%d", IsUpBlockFace);
+	//ImGui::Text("3:%d", IsDownBlockFace);
 	//ImGui::Text("4:%d", Body_Four.AfterBodyFoldCount);
 	//ImGui::Text("x:%f", CenterPosition.x);
 	//ImGui::Text("y:%f", CenterPosition.y);
@@ -377,7 +377,7 @@ void Player::Draw(int offsetX, int offsetY)
 	//ImGui::Text("IsRightSlide:%d", IsRightSlide);
 	//ImGui::Text("IsUpSlide:%d", IsUpSlide);
 	//ImGui::Text("IsDownSlide:%d", IsDownSlide);
-	ImguiMgr::Get()->EndDrawImgui();
+	//ImguiMgr::Get()->EndDrawImgui();
 #endif // _DEBUG
 
 
@@ -1791,10 +1791,10 @@ void Player::IsOutsideFace()
 	size_t NowStage;
 	size_t NowTile;
 	stage->GetPositionTile(CenterPosition, &NowStage, &NowTile);
-	
-	float NowLeft = stage->GetStageOffsetX(NowStage, NowTile) * stage->blockSize;
+
+	float NowLeft = stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize;
 	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
-	float NowUp = stage->GetStageOffsetY(NowStage, NowTile) * stage->blockSize;
+	float NowUp = stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize;
 	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
 
 	//顔の四隅との場外判定
@@ -1806,26 +1806,26 @@ void Player::IsOutsideFace()
 			{
 				continue;
 			}
-			if (NowUp == stage->GetStageOffsetY(i, j) * stage->blockSize)
+			if (NowUp == stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (NowLeft == (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (NowLeft == (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
-					NowLeft = stage->GetStageOffsetX(i, j) * stage->blockSize;
+					NowLeft = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
-				if (NowRight == (stage->GetStageOffsetX(i, j)) * stage->blockSize)
+				if (NowRight == (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 				{
-					NowRight = (stage->GetStageOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+					NowRight = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
-			if (NowLeft == stage->GetStageOffsetX(i, j) * stage->blockSize)
+			if (NowLeft == stage->GetStageTileOffsetX(i, j) * stage->blockSize)
 			{
-				if (NowUp == (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (NowUp == (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
 				{
-					NowUp = stage->GetStageOffsetY(i, j) * stage->blockSize;
+					NowUp = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
 				}
-				if (NowDown == (stage->GetStageOffsetY(i, j)) * stage->blockSize)
+				if (NowDown == (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
 				{
-					NowDown = (stage->GetStageOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+					NowDown = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
 		}
