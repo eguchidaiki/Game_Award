@@ -562,30 +562,30 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	if (BodyStartPos.x < BodyEndPos.x)
 	{
 		BodyLeft = BodyStartPos.x;
-		BodyRight = BodyEndPos.x;
+		BodyRight = BodyEndPos.x - 1;
 	}
 	else
 	{
 		BodyLeft = BodyEndPos.x;
-		BodyRight = BodyStartPos.x;
+		BodyRight = BodyStartPos.x - 1;
 	}
 
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyEndPos.y;
+		BodyDown = BodyEndPos.y - 1;
 		if (this->Body_Type == BodyType::down && this->IsOpen)
 		{
-			BodyAndLegDown = BodyDown + 8;
+			BodyAndLegDown = BodyDown + 9;
 		}
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyStartPos.y;
+		BodyDown = BodyStartPos.y - 1;
 		if (this->Body_Type == BodyType::down && this->IsOpen)
 		{
-			BodyAndLegDown = BodyDown + 8;
+			BodyAndLegDown = BodyDown + 9;
 		}
 	}
 
@@ -647,19 +647,18 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitUp == false)
 						{
-							center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
-							//IsHitUp = true;
+							center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp) + 1;
+							FallSpeed = 0.0f;
+							IsHitUp = true;
 						}
-						FallSpeed = 0.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-
-							//IsHitLeft = true;
 							JumpCountLeft += Player::Get()->IsLeft;
+							IsHitLeft = true;
 						}
 					}
 				}
@@ -694,25 +693,29 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 					if (BuriedX > BuriedY)
 					{
-						if (BodyAndLegDown != -1)
+						if (IsHitDown == false)
 						{
-							center->y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - center->y);
+							if (BodyAndLegDown != -1)
+							{
+								center->y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - center->y) - 1;
+							}
+							else
+							{
+								center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y) - 1;
+							}
+							FallCount++;
+							Player::Get()->IsInitJump = false;
+							IsHitDown = true;
 						}
-						else
-						{
-							center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
-						}
-						FallCount++;
-						Player::Get()->IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitLeft == false)
 						{
 							center->x = (BodyLeft_mapchip + 1) * 60 + (center->x - BodyLeft);
-							//IsHitLeft = true;
 							JumpCountLeft += Player::Get()->IsLeft;
 							Player::Get()->IsInitJump = false;
+							IsHitLeft = true;
 						}
 					}
 				}
@@ -733,17 +736,17 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitUp == false)
 						{
-							center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
-							//IsHitUp = true;
+							center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp) + 1;
+							FallSpeed = 0.0f;
+							IsHitUp = true;
 						}
-						FallSpeed = 0.0f;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 						{
-							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x) - 1;
-							//IsHitRight = true;
+							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x);
+							IsHitRight = true;
 							jumpCountRight += Player::Get()->IsRight;
 						}
 					}
@@ -779,24 +782,27 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 					if (BuriedX > BuriedY)
 					{
-						if (BodyAndLegDown != -1)
+						if (IsHitDown == false)
 						{
-							center->y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - center->y);
+							if (BodyAndLegDown != -1)
+							{
+								center->y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - center->y) - 1;
+							}
+							else
+							{
+								center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y) - 1;
+							}
+							FallCount++;
+							Player::Get()->IsInitJump = false;
+							IsHitDown = true;
 						}
-						else
-						{
-							center->y = (BodyDown_mapchip * 60) - (BodyDown - center->y);
-						}
-						//IsHitDown = true;
-						FallCount++;
-						Player::Get()->IsInitJump = false;
 					}
 					else if (BuriedX < BuriedY)
 					{
 						if (IsHitRight == false)
 						{
 							center->x = (BodyRight_mapchip * 60) - (BodyRight - center->x) - 1;
-							//IsHitRight = true;
+							IsHitRight = true;
 							jumpCountRight += Player::Get()->IsRight;
 						}
 					}
@@ -882,26 +888,26 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	{
 		BodyCenterPos.x = BodyStartPos.x + HalfBodySize;
 		BodyLeft = BodyStartPos.x;
-		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+		BodyRight = BodyEndPos.x - 1;
 	}
 	else
 	{
 		BodyCenterPos.x = BodyEndPos.x + HalfBodySize;
 		BodyLeft = BodyEndPos.x;
-		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+		BodyRight = BodyStartPos.x - 1;
 	}
 
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyCenterPos.y = BodyStartPos.y + HalfBodySize;
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyStartPos.y + ((BodySize)-1.0f);
+		BodyDown = BodyEndPos.y - 1;
 	}
 	else
 	{
 		BodyCenterPos.y = BodyEndPos.y + HalfBodySize;
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyEndPos.y + ((BodySize)-1.0f);
+		BodyDown = BodyStartPos.y - 1;
 	}
 
 	//ステージの数
