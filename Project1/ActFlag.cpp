@@ -65,7 +65,7 @@ bool ActFlag::FoldUp()
 {
 	if (player->Player_IsAction == false && player->Body_Two.IsActivate &&
 		player->Body_Two.IsFold == false && !player->Body_Two.IsAction &&
-		inputManger->SubUpTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldUpTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -111,7 +111,7 @@ bool ActFlag::FoldDown()
 {
 	if (player->Player_IsAction == false && player->Body_Four.IsActivate &&
 		player->Body_Four.IsFold == false && !player->Body_Four.IsAction &&
-		inputManger->SubDownTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldDownTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -163,7 +163,7 @@ bool ActFlag::FoldLeft()
 {
 	if (player->Player_IsAction == false && player->Body_One.IsActivate &&
 		player->Body_One.IsFold == false && !player->Body_One.IsAction &&
-		inputManger->SubLeftTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldLeftTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -215,7 +215,7 @@ bool ActFlag::FoldRight()
 {
 	if (player->Player_IsAction == false && player->Body_Three.IsActivate &&
 		player->Body_Three.IsFold == false && !player->Body_Three.IsAction &&
-		inputManger->SubRightTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldRightTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -272,7 +272,7 @@ bool ActFlag::OpenUp()
 
 	if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
 		player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
-		player->IsUpBlocked && inputManger->SubUpTrigger() && !player->IsPlayerStageOnly())
+		player->IsUpBlocked && inputManger->OpenUpTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -325,7 +325,7 @@ bool ActFlag::OpenDown()
 
 	if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
 		player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction &&
-		inputManger->SubDownTrigger() && !player->IsPlayerStageOnly())
+		inputManger->OpenDownTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -372,7 +372,7 @@ bool ActFlag::OpenLeft()
 
 	if (player->Body_One.IsActivate && player->Body_One.IsFold &&
 		player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction &&
-		inputManger->SubLeftTrigger() && !player->IsPlayerStageOnly())
+		inputManger->OpenLeftTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}
@@ -425,7 +425,7 @@ bool ActFlag::OpenRight()
 
 	if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
 		player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction &&
-		inputManger->SubRightTrigger() && !player->IsPlayerStageOnly())
+		inputManger->OpenRightTrigger() && !player->IsPlayerStageOnly())
 	{
 		return true;
 	}

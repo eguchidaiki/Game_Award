@@ -232,3 +232,43 @@ bool InputManger::ResetReturn()
 {
 	return Input::isKeyReleased(DIK_R);
 }
+
+bool InputManger::FoldLeftTrigger()
+{
+	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_RIGHT);
+}
+
+bool InputManger::FoldUpTrigger()
+{
+	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_DOWN);
+}
+
+bool InputManger::FoldRightTrigger()
+{
+	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_LEFT);
+}
+
+bool InputManger::FoldDownTrigger()
+{
+	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_UP);
+}
+
+bool InputManger::OpenLeftTrigger()
+{
+	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_LEFT);
+}
+
+bool InputManger::OpenUpTrigger()
+{
+	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_UP);
+}
+
+bool InputManger::OpenRightTrigger()
+{
+	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_RIGHT);
+}
+
+bool InputManger::OpenDownTrigger()
+{
+	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_DOWN);
+}
