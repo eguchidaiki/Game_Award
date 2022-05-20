@@ -1290,7 +1290,7 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 		//プレイヤーがいないステージは省く
 		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
 		{
-			continue;
+			//continue;
 		}
 
 		XMFLOAT2 most = ReturnMostOffset(direction, a);
@@ -1434,7 +1434,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 		//プレイヤーがいないステージは省く
 		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
 		{
-			continue;
+			//continue;
 		}
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)

@@ -69,6 +69,7 @@ void Player::Init()
 	IsJump = false;
 	Player_IsAction = false;
 	IsColide = false;
+	IsGoal = false;
 
 	Body_One.Create();
 	Body_Two.Create();
@@ -1725,10 +1726,6 @@ void Player::IsHitPlayerBody()
 					if (GoalCount >= 4)
 					{
 						IsGoal = true;
-					}
-					else
-					{
-						IsGoal = false;
 					}
 				}
 			}
