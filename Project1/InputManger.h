@@ -110,4 +110,16 @@ public: //メンバ関数
 	bool ResetTrigger();
 	// リセット(離した瞬間の判定)
 	bool ResetReturn();
+
+	//折る操作のトリガー
+	bool FoldLeftTrigger();
+	bool FoldUpTrigger();
+	bool FoldRightTrigger();
+	bool FoldDownTrigger();
+
+	//開く操作のトリガー
+	bool OpenLeftTrigger();
+	bool OpenUpTrigger();
+	bool OpenRightTrigger();
+	bool OpenDownTrigger();
 };
