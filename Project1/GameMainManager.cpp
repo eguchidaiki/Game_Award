@@ -172,7 +172,7 @@ void GameMainManager::GameInstanceDraw()
 	SpriteManager::Get()->SetCommonBeginDraw();
 	Back.DrawExtendSprite(0, 0, 1280, 720);
 	Back.Draw();
-	Raki_DX12B::Get()->ClearDepthBuffer();
+
 	stage->Draw();
 	player->Draw(stage->drawOffsetX, stage->drawOffsetY);
 	tutorial.Draw(stage->drawOffsetX, stage->drawOffsetY);

@@ -69,11 +69,6 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 
-	//”wŒi‚Éí‚É‚¢‚é
-	Raki_DX12B::Get()->StartDrawRenderTarget();
-
-	Raki_DX12B::Get()->StartDrawBackbuffer();
-
 	switch (nowState)
 	{
 	case GameScene::is_Select:
@@ -89,6 +84,4 @@ void GameScene::Draw()
 		break;
 	}
 
-	//•`‰æI—¹
-	Raki_DX12B::Get()->CloseDraw();
 }

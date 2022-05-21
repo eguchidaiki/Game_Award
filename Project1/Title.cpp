@@ -57,8 +57,6 @@ void Title::Update()
 //描画
 void Title::Draw()
 {
-	Raki_DX12B::Get()->StartDrawRenderTarget();
-	Raki_DX12B::Get()->StartDrawBackbuffer();
 
 
 
@@ -79,6 +77,4 @@ void Title::Draw()
 	}
 	cursor.Draw();
 
-	//描画終了
-	Raki_DX12B::Get()->CloseDraw();
 }

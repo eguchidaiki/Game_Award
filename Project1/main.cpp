@@ -10,6 +10,7 @@
 
 #include "ActFlag.h"
 #include "InputManger.h"
+#include "RenderTargetManager.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -73,7 +74,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         smgr->Update();
 
+        RenderTargetManager::GetInstance()->CrearAndStartDraw();
+
         smgr->Draw();
+
+        RenderTargetManager::GetInstance()->SwapChainBufferFlip();
 
         FPS::Get()->run();
     }
