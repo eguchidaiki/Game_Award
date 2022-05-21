@@ -159,7 +159,7 @@ public: //メンバ関数
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
 	// ステージを折る・開く
-	int FoldAndOpen(const RVector3& playerPos, unsigned char foldCount[4], bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
+	int FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
 
 	/// <summary>
 	/// ステージがどう折れるかの予測
@@ -283,11 +283,11 @@ public: //メンバ関数
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
 private:
 	// ステージを折る
-	int Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
-		const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize);
+	int Fold(const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile,
+			 const size_t& moveStageData, size_t datasize);
 	// ステージを開く
-	int Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage,
-		const size_t& moveStageData, size_t datasize);
+	int Open(const unsigned char& direction, const size_t& onPlayerStage,
+			 const size_t& moveStageData, size_t datasize);
 
 	// ステージタイルの描画
 	// saturationColorが1だと元の色で表示する
