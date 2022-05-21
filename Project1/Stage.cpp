@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "NY_random.h"
 #include <Raki_DX12B.h>
+#include <Raki_Input.h>
 
 #define EF (-1) //Error Function
 

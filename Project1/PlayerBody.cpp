@@ -863,6 +863,16 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	{
 		BodyIsFall = true;
 	}
+
+	//移動速度の調整
+	if (IsHitLeft || IsHitRight)
+	{
+		player->SideMoveSpeed = 0;
+	}
+	else
+	{
+		player->SideMoveSpeed = 2.0f;
+	}
 }
 
 void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide)
@@ -952,6 +962,28 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 				}
 			}
 		}
+	}
+
+	IsOutSideLeft = false;
+	IsOutSideRight = false;
+	IsOutSideUp = false;
+	IsOutSideDown = false;
+
+	if (NowLeft + 30 <= BodyLeft)
+	{
+		IsOutSideLeft = true;
+	}
+	if (NowRight + 30 >= BodyRight)
+	{
+		IsOutSideRight = true;
+	}
+	if (NowUp + 30 <= BodyUp)
+	{
+		IsOutSideUp = true;
+	}
+	if (NowDown + 30 >= BodyDown)
+	{
+		IsOutSideDown = true;
 	}
 
 	if (NowLeft >= BodyLeft)
