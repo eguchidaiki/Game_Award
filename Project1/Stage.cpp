@@ -703,7 +703,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
-int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
+int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
 	static char direction = -1;
 	static size_t onPlayerStageTile = -1;
@@ -763,7 +763,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	{
 		if (player->leg.FootIsAction == false && BodyStatus[direction] == false)
 		{
-			if (Fold(playerTile, direction, stagenumber[a], onplayerstage[a], movestagedata[a], onplayerstage.size()) != EF)
+			if (Fold(direction, stagenumber[a], onplayerstage[a], movestagedata[a], onplayerstage.size()) != EF)
 			{
 				isAct = true;
 			}
@@ -775,7 +775,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, unsigned char playerTile[4], b
 	{
 		if (OpenCount >= 2 && IsOpens[direction] == true)
 		{
-			if (Open(playerTile, direction, stagenumber[a], movestagedataOpen[a], onplayerstageOpen.size()) != EF)
+			if (Open(direction, stagenumber[a], movestagedataOpen[a], onplayerstageOpen.size()) != EF)
 			{
 				isAct = true;
 			}
@@ -1535,10 +1535,10 @@ void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDa
 	}
 }
 
-int Stage::Fold(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize)
+int Stage::Fold(const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile, const size_t& moveStageData, size_t datasize)
 {
 	//そもそも折れない用だったらreturn
-	if (playerTile[direction] <= 0)
+	if (player->playerTile[direction] <= 0)
 	{
 		return EF;
 	}
@@ -1640,15 +1640,15 @@ int Stage::Fold(unsigned char playerTile[4], const unsigned char& direction, con
 	if (datacount >= datasize)
 	{
 		datacount = 0;
-		playerTile[direction]--;
+		player->playerTile[direction]--;
 	}
 
 	return 0;
 }
 
-int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData, size_t datasize)
+int Stage::Open(const unsigned char& direction, const size_t& onPlayerStage, const size_t& moveStageData, size_t datasize)
 {
-	if (playerTile[direction] > 0)
+	if (player->playerTile[direction] > 0)
 	{
 		return EF;
 	}
@@ -1733,7 +1733,7 @@ int Stage::Open(unsigned char playerTile[4], const unsigned char& direction, con
 	if (datacount >= datasize)
 	{
 		datacount = 0;
-		playerTile[direction]++;
+		player->playerTile[direction]++;
 	}
 
 	return 0;
