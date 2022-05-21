@@ -10,7 +10,7 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 	camera->SetViewStatusEyeTargetUp(eye, target, up);
 
 	stage->Create();
-	stage->LoadStage("./Resources/stage/test.csv", player->playerTile);
+	stage->LoadStage("./Resources/stage/stage1.csv", player->playerTile);
 	stage->drawOffsetX = 0.0f;
 	stage->drawOffsetY = 0.0f;
 	player->Init();

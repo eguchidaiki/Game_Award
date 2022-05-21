@@ -99,7 +99,7 @@ void GameMainManager::GameInstanceUpdate()
 	}
 
 	stage->Updata();
-	stage->FoldAndOpen(player->CenterPosition, player->playerTile, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+	stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
 	//ステージとの連動のため開く処理はこっちでやる
 	if (player->OpenCount >= 2)
