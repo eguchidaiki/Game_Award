@@ -92,6 +92,9 @@ public: //サブクラス
 
 		//折られている場合の方向
 		int FoldDirection = -1;
+
+		//上に重なっている枚数
+		int Overlap = 0;
 	};
 	struct StageData
 	{
@@ -173,6 +176,9 @@ public: //メンバ関数
 	void Reset(unsigned char foldCount[4]);
 	// 内部データ全削除
 	void DataClear();
+
+	//上に重なっている枚数の設定
+	void SetOverlap();
 
 	// 任意の座標が任意のステージにいるかどうか
 	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
