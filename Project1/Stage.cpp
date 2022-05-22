@@ -1062,7 +1062,7 @@ void Stage::SetOverlap()
 			if (stageData[a].stageTileData[b].offsetX != initStageData[a].stageTileData[b].offsetX ||
 				stageData[a].stageTileData[b].offsetY != initStageData[a].stageTileData[b].offsetY)
 			{
-				MoveTiles.push_back({ a,b });
+				MoveTiles.push_back({ static_cast<float>(a), static_cast<float>(b) });
 			}
 		}
 	}
@@ -1120,6 +1120,12 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 	for (int a = 0; a < stageData.size(); a++)
 	{
+		//プレイヤーがいないステージは省く
+		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
+		{
+			continue;
+		}
+
 		XMFLOAT2 most = ReturnMostOffset(direction, a);
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
@@ -1258,12 +1264,16 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	//テンプレfor文
 	for (int a = 0; a < stageData.size(); a++)
 	{
-		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		//プレイヤーがいないステージは省く
+		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
 		{
-			//タイルが折られている&&折られた方向が開く方向と一致&&Overlapが0
+			continue;
+		}
+
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 			if (stageData[a].stageTileData[b].isFold == true &&
-				stageData[a].stageTileData[b].FoldDirection == direction &&
-				stageData[a].stageTileData[b].Overlap)
+				stageData[a].stageTileData[b].FoldDirection == direction)
 			{
 				//方向ごとに格納していく
 				switch (direction)
@@ -2216,78 +2226,6 @@ int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, co
 		break;
 	}
 	}
-
-	return 0;
-}
-
-int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-	const int offsetX, const int offsetY)
-{
-	static int posX = 0, posY = 0;
-	static XMFLOAT2 pos1 = {}, pos2 = {};
-
-	switch (direction)
-	{
-	case BodyType::up:
-	{
-		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
-		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
-
-		pos1.x = static_cast<float>(posX * blockSize - lineWidth);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize;
-		pos2.y = static_cast<float>(posY * blockSize - lineWidth);
-
-		break;
-	}
-	case BodyType::down:
-	{
-		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
-		posY = static_cast<int>(stageData[stageNumber].stageTileData[stageTileNumber].height) + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
-
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX + stageData[stageNumber].stageTileData[stageTileNumber].width) * blockSize + lineWidth;
-		pos2.y = static_cast<float>(posY * blockSize + lineWidth);
-
-		break;
-	}
-	case BodyType::left:
-	{
-		posX = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
-		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
-
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize);
-		pos2.x = static_cast<float>(posX * blockSize - lineWidth);
-		pos2.y = static_cast<float>(posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize + lineWidth;
-
-		break;
-	}
-	case BodyType::right:
-	{
-		posX = static_cast<int>(stageData[stageNumber].stageTileData[stageTileNumber].width) + stageData[stageNumber].stageTileData[stageTileNumber].offsetX;
-		posY = 0 + stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
-
-		pos1.x = static_cast<float>(posX * blockSize);
-		pos1.y = static_cast<float>(posY * blockSize - lineWidth);
-		pos2.x = static_cast<float>(posX * blockSize + lineWidth);
-		pos2.y = static_cast<float>(posY + stageData[stageNumber].stageTileData[stageTileNumber].height) * blockSize;
-
-		break;
-	}
-	default:
-	{
-		return EF;
-		break;
-	}
-	}
-	pos1.x += static_cast<float>(offsetX);
-	pos1.y += static_cast<float>(offsetY);
-	pos2.x += static_cast<float>(offsetX);
-	pos2.y += static_cast<float>(offsetY);
-
-	lineSprite.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 
 	return 0;
 }
