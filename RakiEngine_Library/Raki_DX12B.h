@@ -31,7 +31,7 @@ private: // エイリアス
 	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	Raki_DX12B() {};
-	~Raki_DX12B() {};
+	~Raki_DX12B();
 
 public:
 	//--------------------メンバ関数--------------------//
@@ -72,7 +72,7 @@ public:
 	void StartDrawRenderTarget();
 
 	//描画処理終了
-	void CloseDraw();
+	void CloseDraw(IDXGISwapChain4 *sc);
 
 	/// <summary>
 	/// 従来の描画終了
@@ -101,6 +101,10 @@ public:
 	/// <returns></returns>
 	ID3D12Device *GetDevice() { return device.Get(); }
 
+	IDXGIFactory6* GetDXGIFactory() { return dxgiFactory.Get(); }
+
+	ID3D12CommandQueue* GetCmdQueue() { return commandQueue.Get(); }
+
 	/// <summary>
 	/// imgui用デスクリプタヒープのゲッタ
 	/// </summary>
@@ -113,6 +117,8 @@ public:
 	/// <returns></returns>
 	ID3D12DescriptorHeap *GetMuliPassSrvDescHeap() { return mpSrvHeap.Get(); }
 
+	IDXGISwapChain4* GetSwapChain() { return swapchain.Get(); }
+
 
 	void ManualRelease() {
 		dxgiFactory.ReleaseAndGetAddressOf();
@@ -120,7 +126,6 @@ public:
 		commandAllocator.ReleaseAndGetAddressOf();
 		commandList.ReleaseAndGetAddressOf();
 		commandQueue.ReleaseAndGetAddressOf();
-		swapchain.ReleaseAndGetAddressOf();
 		depthBuffer.ReleaseAndGetAddressOf();
 		rtvHeaps.ReleaseAndGetAddressOf();
 		dsvHeap.ReleaseAndGetAddressOf();

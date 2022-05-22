@@ -54,7 +54,7 @@ typedef struct SpriteData
 	ComPtr<ID3D12Resource> constBuff;//定数バッファ
 	UINT texNumber;//マネージャーに保存されたリソースの番号
 
-	XMFLOAT2 size = { 0.0f, 0.0f };//スプライトサイズ
+	XMFLOAT2 size;//スプライトサイズ
 
 	float rotation = 0.0f;//z軸回転角
 	XMFLOAT3 position = { 0.0f,0.0f,0.0f };//座標
@@ -73,8 +73,7 @@ typedef struct SpriteData
 	{
 
 	}
-	~SpriteData()
-	{
+	~SpriteData(){
 		insWorldMatrixes.clear();
 		insWorldMatrixes.shrink_to_fit();
 	}
@@ -96,8 +95,7 @@ private:
 	ComPtr<ID3D12PipelineState> mpPipeline;
 	ComPtr<ID3D12RootSignature> mpRootsig;
 
-	SpriteManager(int window_width, int window_height)
-	{
+	SpriteManager(int window_width, int window_height) {
 		//ビューポート行列初期化
 		matViewport.r[0].m128_f32[0] = window_width / 2;
 		matViewport.r[1].m128_f32[1] = -window_height / 2;
@@ -109,32 +107,33 @@ private:
 	SpriteManager() {};
 	~SpriteManager() {};
 
-public:
+public: 
 	//共通ビューポート行列
 	XMMATRIX matViewport{};
 
-	void CreateSpriteManager(ID3D12Device* dev, ID3D12GraphicsCommandList* cmd, int window_w, int window_h);
+	void CreateSpriteManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd, int window_w, int window_h);
 	//スプライトのグラフィックスパイプラインを生成
 	void CreateSpritePipeline();
 	//スプライト共通のグラフィックスコマンドをセット
 	void SetCommonBeginDraw();
 	//マルチパスリソース描画用グラフィクスコマンド
 	void SetCommonBeginDrawmpResource();
+	//マルチテクスチャ用
+	void SetCommonBeginDrawRTex(int handle);
 
 	//インスタンス取得
-	static SpriteManager* Get()
-	{
+	static SpriteManager *Get() {
 		static SpriteManager mgr;
 		return &mgr;
 	}
 
 	//描画に必要なポインタ
-	ID3D12Device* dev;
-	ID3D12GraphicsCommandList* cmd;
+	ID3D12Device *dev;
+	ID3D12GraphicsCommandList *cmd;
 
 	//コピーコンストラクタ、代入演算子無効化
-	SpriteManager& operator=(const SpriteManager& obj) = delete;
-	SpriteManager(const SpriteManager& obj) = delete;
+	SpriteManager &operator=(const SpriteManager &obj) = delete;
+	SpriteManager(const SpriteManager &obj) = delete;
 
 };
 
