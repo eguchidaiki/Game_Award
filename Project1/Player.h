@@ -102,7 +102,7 @@ public: //メンバ関数
 	//ブロックに邪魔されずにスライドできるかどうか
 	void IsSlideBlock();
 
-	//ブロックに邪魔されずにスライドできるかどうか
+	//ブロックに邪魔されずに開けるかどうか
 	bool IsOpenBlock(BodyType opentype);
 
 public: //メンバ変数
@@ -158,6 +158,18 @@ public: //メンバ変数
 	bool IsRightBlockFace;
 	bool IsUpBlockFace;
 	bool IsDownBlockFace;
+
+	//上下左右の衝突判定
+	bool IsHitLeft = false;
+	bool IsHitUp = false;
+	bool IsHitRight = false;
+	bool IsHitDown = false;
+
+	//上下左右の外枠判定
+	bool IsOutSideLeft = false;
+	bool IsOutSideUp = false;
+	bool IsOutSideRight = false;
+	bool IsOutSideDown = false;
 
 	//開くまでに数フレーム空ける用
 	int OpenCount = 0;

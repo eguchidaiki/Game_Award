@@ -122,6 +122,12 @@ public: //メンバ変数
 	bool IsUpBlock;
 	bool IsDownBlock;
 
+	//上下左右の外枠判定
+	bool IsOutSideLeft = false;
+	bool IsOutSideUp = false;
+	bool IsOutSideRight = false;
+	bool IsOutSideDown = false;
+
 	//反転したタイルとの当たり判定
 	BodyType IsReverse;
 	bool IsCanFold;
