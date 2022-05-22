@@ -691,6 +691,14 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 	for (i = 0; i < stageData.size(); i++)
 	{
+		for (j = 0; j < stageData[i].stageTileData.size(); j++)
+		{
+			SetOverlap(i, j);
+		}
+	}
+
+	for (i = 0; i < stageData.size(); i++)
+	{
 		initStageData.push_back(stageData[i]);
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
@@ -700,6 +708,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 			initStageData[i].stageTileData[j].mapchip = initMapchip;
 		}
 	}
+
 
 	return 0;
 }
@@ -986,6 +995,8 @@ void Stage::Reset(unsigned char foldCount[4])
 			stageData[i].stageTileData[j].stageEase.splineIndex = 0;
 			stageData[i].stageTileData[j].stageEase.timeRate = 0.0f;
 			stageData[i].stageTileData[j].isFold = false;
+
+			stageData[i].stageTileData[j].Overlap = initStageData[i].stageTileData[j].Overlap;
 		}
 	}
 
@@ -1050,19 +1061,35 @@ void Stage::DataClear()
 	ContainerClear(initStageData);
 }
 
-void Stage::SetOverlap()
+void Stage::SetOverlap(size_t stagenum, size_t tilenum)
 {
-	std::vector<XMFLOAT2> MoveTiles = {};
-
-	//テンプレfor文
 	for (int a = 0; a < stageData.size(); a++)
 	{
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
-			if (stageData[a].stageTileData[b].offsetX != initStageData[a].stageTileData[b].offsetX ||
-				stageData[a].stageTileData[b].offsetY != initStageData[a].stageTileData[b].offsetY)
+			if (a == stagenum && b == tilenum)
 			{
-				MoveTiles.push_back({ static_cast<float>(a), static_cast<float>(b) });
+				continue;
+			}
+			if (GetStageTileOffsetX(a, b) + 1 <= (GetStageTileOffsetX(stagenum, tilenum) + GetStageTileWidth(stagenum, tilenum)) - 1 &&
+				(GetStageTileOffsetX(a, b) + GetStageTileWidth(a, b)) - 1 >= GetStageTileOffsetX(stagenum, tilenum) &&
+				GetStageTileOffsetY(a, b) + 1 <= (GetStageTileOffsetY(stagenum, tilenum) + GetStageTileHeight(stagenum, tilenum)) - 1 &&
+				(GetStageTileOffsetY(a, b) + GetStageTileHeight(a, b)) - 1 >= GetStageTileOffsetY(stagenum, tilenum))
+			{
+				if (stageData[a].stageTileData[b].StageGroup < stageData[stagenum].stageTileData[tilenum].StageGroup &&
+					stageData[a].stageTileData[b].IsOverSet == false)
+				{
+					stageData[a].stageTileData[b].Overlap++;
+					stageData[a].stageTileData[b].IsOverSet = true;
+					break;
+				}
+				if (stageData[a].stageTileData[b].StageGroup > stageData[stagenum].stageTileData[tilenum].StageGroup &&
+					stageData[stagenum].stageTileData[tilenum].IsOverSet == false)
+				{
+					stageData[stagenum].stageTileData[tilenum].Overlap++;
+					stageData[stagenum].stageTileData[tilenum].IsOverSet = true;
+					break;
+				}
 			}
 		}
 	}
@@ -1921,7 +1948,7 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 
 	// 色設定
 	Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * saturationColor, lineColor[stageNumber % 4].y * saturationColor,
-								lineColor[stageNumber % 4].z * saturationColor, lineColor[stageNumber % 4].w * saturationColor);
+		lineColor[stageNumber % 4].z * saturationColor, lineColor[stageNumber % 4].w * saturationColor);
 
 	// 折り目・枠線の描画
 	for (j = 0; j < stageData[stageNumber].stageTileData.size(); j++)
@@ -1934,18 +1961,18 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
 				FoldDraw(stageNumber, j, BodyType::left,
-						 static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
 				FlameDraw(stageNumber, j, BodyType::left,
-						  static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
 			FlameDraw(stageNumber, j, BodyType::left,
-					  static_cast<int>(offset.x), static_cast<int>(offset.y));
+				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
 		if (static_cast<size_t>(stageData[stageNumber].stageTileData[j].stageNumber % stageData[stageNumber].width) + 1 < stageData[stageNumber].width)
 		{
@@ -1955,18 +1982,18 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
 				FoldDraw(stageNumber, j, BodyType::right,
-						 static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
 				FlameDraw(stageNumber, j, BodyType::right,
-						  static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
 			FlameDraw(stageNumber, j, BodyType::right,
-					  static_cast<int>(offset.x), static_cast<int>(offset.y));
+				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
 		if (static_cast<INT64>(stageData[stageNumber].stageTileData[j].stageNumber / stageData[stageNumber].width) - 1 >= 0)
 		{
@@ -1976,18 +2003,18 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
 				FoldDraw(stageNumber, j, BodyType::up,
-						 static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
 				FlameDraw(stageNumber, j, BodyType::up,
-						  static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
 			FlameDraw(stageNumber, j, BodyType::up,
-					  static_cast<int>(offset.x), static_cast<int>(offset.y));
+				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
 		if (static_cast<size_t>(stageData[stageNumber].stageTileData[j].stageNumber / stageData[stageNumber].width) + 1 < stageData[stageNumber].height)
 		{
@@ -1997,18 +2024,18 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
 				FoldDraw(stageNumber, j, BodyType::down,
-						 static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
 				FlameDraw(stageNumber, j, BodyType::down,
-						  static_cast<int>(offset.x), static_cast<int>(offset.y));
+					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
 			FlameDraw(stageNumber, j, BodyType::down,
-					  static_cast<int>(offset.x), static_cast<int>(offset.y));
+				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
 	}
 
@@ -2016,7 +2043,7 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 }
 
 int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-					 const int offsetX, const int offsetY)
+	const int offsetX, const int offsetY)
 {
 	if (stageNumber >= stageData.size())
 	{
