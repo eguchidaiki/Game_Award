@@ -224,19 +224,19 @@ void Player::Update(int offsetX, int offsetY)
 	leg.Update(FootUpPosition, IsDownBody, 1);
 
 	//それぞれの体のアップデート処理(有効化されているときのみ)
-	
+
 	Body_One.Update(CenterPosition);
 	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsAroundBlock();
-	
+
 	Body_Two.Update(CenterPosition);
 	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.IsAroundBlock();
-	
+
 	Body_Three.Update(CenterPosition);
 	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.IsAroundBlock();
-	
+
 	Body_Four.Update(CenterPosition);
 	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
@@ -1614,7 +1614,6 @@ void Player::IsHitPlayerBody()
 							CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
 							FallCount++;
 							IsInitJump = false;
-							FallSpeed = 0.0f;
 							IsHitDown = true;
 						}
 					}
@@ -1681,7 +1680,6 @@ void Player::IsHitPlayerBody()
 							CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
 							FallCount++;
 							IsInitJump = false;
-							FallSpeed = 0.0f;
 							IsHitDown = true;
 						}
 					}
@@ -2069,19 +2067,19 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == true && Body_One.Body_Type != foldtype)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == true && Body_Two.Body_Type != foldtype)
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == true && Body_Three.Body_Type != foldtype)
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == true && Body_Four.Body_Type != foldtype)
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
