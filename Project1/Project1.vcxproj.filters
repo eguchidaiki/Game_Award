@@ -96,6 +96,24 @@
     <ClCompile Include="StageFractureEffect.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
+    <ClCompile Include="OriEffects.cpp">
+      <Filter>Effect\OriEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Ori_StarParticle.cpp">
+      <Filter>Effect\OriEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="OriParticle.cpp">
+      <Filter>Effect\OriEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalEffects.cpp">
+      <Filter>Effect\GoalEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalCracker.cpp">
+      <Filter>Effect\GoalEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="GoalPaperRain.cpp">
+      <Filter>Effect\GoalEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -166,6 +184,24 @@
     </ClInclude>
     <ClInclude Include="GoalEffect.h">
       <Filter>Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="OriEffects.h">
+      <Filter>Effect\OriEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Ori_StarParticle.h">
+      <Filter>Effect\OriEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="OriParticle.h">
+      <Filter>Effect\OriEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalEffects.h">
+      <Filter>Effect\GoalEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalCracker.h">
+      <Filter>Effect\GoalEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="GoalPaperRain.h">
+      <Filter>Effect\GoalEffect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -286,6 +322,12 @@
     </Filter>
     <Filter Include="Player">
       <UniqueIdentifier>{119f03a6-2661-4049-ad4d-e930682c77e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\OriEffect">
+      <UniqueIdentifier>{d0fe4f7e-dc12-48de-b9c9-27542def6eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effect\GoalEffect">
+      <UniqueIdentifier>{67410279-c528-4672-93df-c2729a2b2099}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
