@@ -1147,12 +1147,6 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 	for (int a = 0; a < stageData.size(); a++)
 	{
-		//プレイヤーがいないステージは省く
-		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
-		{
-			continue;
-		}
-
 		XMFLOAT2 most = ReturnMostOffset(direction, a);
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
@@ -1291,12 +1285,6 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	//テンプレfor文
 	for (int a = 0; a < stageData.size(); a++)
 	{
-		//プレイヤーがいないステージは省く
-		if (IsPositionStage(player->CenterPosition, a) == false || stageData[a].stageTileData.size() <= 1)
-		{
-			//continue;
-		}
-
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 			if (stageData[a].stageTileData[b].isFold == true &&

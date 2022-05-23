@@ -716,6 +716,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 							}
 							FallCount++;
 							Player::Get()->IsInitJump = false;
+							FallSpeed = 0.0f;
 							IsHitDown = true;
 						}
 					}
@@ -805,6 +806,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 							}
 							FallCount++;
 							Player::Get()->IsInitJump = false;
+							FallSpeed = 0.0f;
 							IsHitDown = true;
 						}
 					}

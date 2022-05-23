@@ -99,19 +99,6 @@ void Player::Update(int offsetX, int offsetY)
 	//キー移動
 	Key_Move();
 
-	//顔の当たり判定
-	IsOutsideFace();
-	IsHitPlayerBody();
-	IsAroundBlock();
-
-	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-
-	//移動速度を0にするかどうか
-	MoveSpeedUpdate();
-
 	//ジャンプ中の処理
 	if (IsJump == true)
 	{
@@ -158,6 +145,20 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		CenterPosition.y += FallSpeed;
 	}
+
+	//顔の当たり判定
+	IsOutsideFace();
+	IsHitPlayerBody();
+	IsAroundBlock();
+
+	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
+	//移動速度を0にするかどうか
+	MoveSpeedUpdate();
+
 
 	//キー折る・開く入力
 	Key_FoldOpen();
@@ -224,20 +225,20 @@ void Player::Update(int offsetX, int offsetY)
 
 	//それぞれの体のアップデート処理(有効化されているときのみ)
 	
-	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.Update(CenterPosition);
+	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsAroundBlock();
 	
-	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.Update(CenterPosition);
+	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.IsAroundBlock();
 	
-	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.Update(CenterPosition);
+	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.IsAroundBlock();
 	
-	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.Update(CenterPosition);
+	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
 
 	//ゴール演出
@@ -1613,6 +1614,7 @@ void Player::IsHitPlayerBody()
 							CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
 							FallCount++;
 							IsInitJump = false;
+							FallSpeed = 0.0f;
 							IsHitDown = true;
 						}
 					}
@@ -1679,6 +1681,7 @@ void Player::IsHitPlayerBody()
 							CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
 							FallCount++;
 							IsInitJump = false;
+							FallSpeed = 0.0f;
 							IsHitDown = true;
 						}
 					}
@@ -1942,6 +1945,7 @@ bool Player::IsFall()
 		{
 			IsJumpOnly = false;
 		}
+		FallSpeed = 0.0f;
 		return false;
 	}
 	else
