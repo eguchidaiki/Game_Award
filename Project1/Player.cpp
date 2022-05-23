@@ -99,6 +99,19 @@ void Player::Update(int offsetX, int offsetY)
 	//キー移動
 	Key_Move();
 
+	//顔の当たり判定
+	IsOutsideFace();
+	IsHitPlayerBody();
+	IsAroundBlock();
+
+	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
+	//移動速度を0にするかどうか
+	MoveSpeedUpdate();
+
 	//ジャンプ中の処理
 	if (IsJump == true)
 	{
@@ -145,11 +158,6 @@ void Player::Update(int offsetX, int offsetY)
 	{
 		CenterPosition.y += FallSpeed;
 	}
-
-	//顔の当たり判定
-	IsOutsideFace();
-	IsHitPlayerBody();
-	IsAroundBlock();
 
 	//キー折る・開く入力
 	Key_FoldOpen();
@@ -215,34 +223,22 @@ void Player::Update(int offsetX, int offsetY)
 	leg.Update(FootUpPosition, IsDownBody, 1);
 
 	//それぞれの体のアップデート処理(有効化されているときのみ)
-	if (Body_One.IsActivate == true)
-	{
-		Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_One.Update(CenterPosition);
-		Body_One.IsAroundBlock();
-	}
-	if (Body_Two.IsActivate == true)
-	{
-		Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_Two.Update(CenterPosition);
-		Body_Two.IsAroundBlock();
-	}
-	if (Body_Three.IsActivate == true)
-	{
-		Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_Three.Update(CenterPosition);
-		Body_Three.IsAroundBlock();
-	}
-	if (Body_Four.IsActivate == true)
-	{
-		Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-		Body_Four.Update(CenterPosition);
-		Body_Four.IsAroundBlock();
-	}
+	
+	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_One.Update(CenterPosition);
+	Body_One.IsAroundBlock();
+	
+	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Two.Update(CenterPosition);
+	Body_Two.IsAroundBlock();
+	
+	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Three.Update(CenterPosition);
+	Body_Three.IsAroundBlock();
+	
+	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Four.Update(CenterPosition);
+	Body_Four.IsAroundBlock();
 
 	//ゴール演出
 	if (IsGoal)
@@ -1066,6 +1062,42 @@ bool Player::IsPressInStage()
 	return false;
 }
 
+void Player::MoveSpeedUpdate()
+{
+	int NoMoveCount = 0;
+
+	if (IsHitLeft || IsHitRight)
+	{
+		NoMoveCount++;
+	}
+
+	if (Body_One.IsActivate && (Body_One.IsHitLeft || Body_One.IsHitRight))
+	{
+		NoMoveCount++;
+	}
+	if (Body_Two.IsActivate && (Body_Two.IsHitLeft || Body_Two.IsHitRight))
+	{
+		NoMoveCount++;
+	}
+	if (Body_Three.IsActivate && (Body_Three.IsHitLeft || Body_Three.IsHitRight))
+	{
+		NoMoveCount++;
+	}
+	if (Body_Four.IsActivate && (Body_Four.IsHitLeft || Body_Four.IsHitRight))
+	{
+		NoMoveCount++;
+	}
+
+	if (NoMoveCount > 0)
+	{
+		SideMoveSpeed = 0.0f;
+	}
+	else
+	{
+		SideMoveSpeed = 2.0f;
+	}
+}
+
 void Player::BodySetUp(bool one, int one_type, bool two, int two_type, bool three, int three_type, bool four, int four_type)
 {
 	Body_One.IsActivate = one;
@@ -1561,18 +1593,6 @@ void Player::IsHitPlayerBody()
 						}
 					}
 				}
-				if (Y_mapchip_tile > 0)
-				{
-					MapchipPos = (Y_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
-					{
-						IsUpBlocked = false;
-					}
-					else
-					{
-						IsUpBlocked = true;
-					}
-				}
 			}
 			//左下
 			if (stage->IsPositionTile({ FaceLeft, FaceAndLegDown, 0.0f }, i, j))
@@ -1636,18 +1656,6 @@ void Player::IsHitPlayerBody()
 							jumpCountRight += IsRight;
 							IsHitRight = true;
 						}
-					}
-				}
-				if (Y_mapchip_tile > 0)
-				{
-					MapchipPos = (Y_mapchip_tile - 1) * stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
-					{
-						IsUpBlocked = false;
-					}
-					else
-					{
-						IsUpBlocked = true;
 					}
 				}
 
@@ -1798,16 +1806,6 @@ void Player::IsHitPlayerBody()
 	if (FallCount == 0)
 	{
 		IsFaceFall = true;
-	}
-
-	//移動速度の調整
-	if (IsHitLeft || IsHitRight)
-	{
-		SideMoveSpeed = 0;
-	}
-	else
-	{
-		SideMoveSpeed = 2.0f;
 	}
 }
 
