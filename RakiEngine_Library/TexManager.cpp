@@ -77,7 +77,7 @@ UINT TexManager::LoadTexture(const char *filename)
     texresDesc.MipLevels        = (UINT16)textureData[useTexIndexNum].metaData.mipLevels;
     texresDesc.SampleDesc.Count = 1;
 
-    result = dev->CreateCommittedResource(//GPUリソース生成
+    result = RAKI_DX12B_DEV->CreateCommittedResource(//GPUリソース生成
         &texHeapProp,
         D3D12_HEAP_FLAG_NONE,
         &texresDesc,

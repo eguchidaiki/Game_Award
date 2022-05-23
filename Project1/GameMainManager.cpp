@@ -124,12 +124,16 @@ void GameMainManager::GameInstanceUpdate()
 		player->IsOpenCountStart = false;
 	}
 
+	//ゴールした判定？
 	if (player->IsGoal && !Ischangecount)
 	{
 		Ischangecount = true;
 		changecount = 0;
 	}
 
+	//ここにゴール演出、UI処理を入れる
+
+	//セレクトに遷移する処理？
 	if (Ischangecount)
 	{
 		changecount++;

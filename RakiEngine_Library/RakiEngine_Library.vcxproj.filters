@@ -156,6 +156,9 @@
     <ClCompile Include="RTex.cpp">
       <Filter>Graphic\Render</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleManager2D.cpp">
+      <Filter>Graphic\2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Raki_imguiMgr.h">
@@ -247,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="RTex.h">
       <Filter>Graphic\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager2D.h">
+      <Filter>Graphic\2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

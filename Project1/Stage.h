@@ -5,6 +5,9 @@
 #include "Sprite.h"
 #include "ParticleManager.h"
 
+//折るエフェクト
+#include "OriEffects.h"
+
 enum MapchipData
 {
 	EMPTY_STAGE = 0,
@@ -348,4 +351,7 @@ private: //メンバ変数
 	bool IsParticleTrigger;
 	ParticleManager* particleManager;
 	ParticleSingle* FoldParticle;
+
+	//折るエフェクト
+	OriEffects oriEffect;
 };
