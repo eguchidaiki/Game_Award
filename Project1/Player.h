@@ -50,6 +50,8 @@ public: //メンバ関数
 	//クリックした場所がステージ内かどうか
 	bool IsPressInStage();
 
+	//移動速度の制御
+	void MoveSpeedUpdate();
 
 	/// <summary>
 	/// どの体を有効化するか
