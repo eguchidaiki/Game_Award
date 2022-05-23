@@ -154,8 +154,6 @@ public: //メンバ関数
 	//ブロックスライトの生成
 	void CreateBlocksSprite();
 
-	//ブロックのスプライト読み込み
-
 	/// <summary>
 	/// ステージファイルの読み込み
 	/// </summary>
@@ -163,6 +161,8 @@ public: //メンバ関数
 	/// <param name="fileHandle"> ステージファイルのパス </param>
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
+
+	void SelectingStageTile();
 
 	// ステージを折る・開く
 	int FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
@@ -314,6 +314,10 @@ private:
 private: //メンバ変数
 	std::vector<StageData> stageData;
 	std::vector<StageData> initStageData;
+
+	StageTileData* SelectTile;
+	size_t selectStageNum = 0;
+	size_t selectTileNum = 0;
 
 	char* reverseMapchip;
 

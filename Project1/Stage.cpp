@@ -94,6 +94,8 @@ void Stage::Updata()
 	static int posX = 0;
 	static int posY = 0;
 
+	SelectingStageTile();
+
 	EaseingUpdate();
 
 	particleManager->Prototype_Update();
@@ -307,6 +309,30 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	LineDraw(nowPlayerStage, drawOffset, 1.1f);
 
+	AllBlockSprite[0][0].DrawExtendSprite(
+		SelectTile->offsetX * blockSize + drawOffset.x,
+		SelectTile->offsetY * blockSize + drawOffset.y,
+		SelectTile->offsetX * blockSize + 10 + drawOffset.x,
+		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
+
+	AllBlockSprite[1][0].DrawExtendSprite(
+		SelectTile->offsetX * blockSize + drawOffset.x,
+		SelectTile->offsetY * blockSize + drawOffset.y,
+		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
+		SelectTile->offsetY * blockSize + 10 + drawOffset.y);
+
+	AllBlockSprite[2][0].DrawExtendSprite(
+		(SelectTile->offsetX + SelectTile->width) * blockSize - 10 + drawOffset.x,
+		SelectTile->offsetY * blockSize + drawOffset.y,
+		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
+		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
+
+	AllBlockSprite[3][0].DrawExtendSprite(
+		SelectTile->offsetX * blockSize + drawOffset.x,
+		(SelectTile->offsetY + SelectTile->height) * blockSize - 10 + drawOffset.y,
+		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
+		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
+
 	// 色の初期化
 	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -315,7 +341,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 	SpriteManager::Get()->SetCommonBeginDraw();
 
 	MapchipSpriteEmpty.Draw();
-	for (i = 0; i < stageData.size(); i++)
+	for (i = 0; i < 4; i++)
 	{
 		for (j = 0; j < 15; j++)
 		{
@@ -709,8 +735,53 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 		}
 	}
 
+	SelectTile = &stageData[0].stageTileData[0];
 
 	return 0;
+}
+
+void Stage::SelectingStageTile()
+{
+	std::vector < XMFLOAT2 > AllTiles = {};
+
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			AllTiles.push_back({ (float)a,(float)b });
+		}
+	}
+
+	static int selectCount;
+
+	for (int c = 0; c < AllTiles.size(); c++)
+	{
+		if (static_cast<size_t>(AllTiles[c].x) == selectStageNum &&
+			static_cast<size_t>(AllTiles[c].y) == selectTileNum)
+		{
+			selectCount = c;
+		}
+	}
+
+	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_LB))
+	{
+		if (selectCount > 0)
+		{
+			selectCount--;
+		}
+	}
+
+	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_RB))
+	{
+		if (selectCount + 1 < AllTiles.size())
+		{
+			selectCount++;
+		}
+	}
+
+	selectStageNum = static_cast<size_t>(AllTiles[selectCount].x);
+	selectTileNum = static_cast<size_t>(AllTiles[selectCount].y);
+	SelectTile = &stageData[selectStageNum].stageTileData[selectTileNum];
 }
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
@@ -1000,6 +1071,9 @@ void Stage::Reset(unsigned char foldCount[4])
 		}
 	}
 
+	selectStageNum = 0;
+	selectTileNum = 0;
+
 	GetInitFoldCount(foldCount);
 }
 
@@ -1141,6 +1215,11 @@ bool Stage::IsPlayerTile(const size_t& stageNumber, const size_t& TileNumber)
 
 void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage, std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction)
 {
+	if (direction < 0)
+	{
+		return;
+	}
+
 	size_t NowStage = -1;
 	size_t NowTile = -1;
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
@@ -1278,6 +1357,11 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vector<size_t>& onplayerstage, std::vector<size_t>& movestagetile, std::vector<size_t>& moveStageData, const unsigned char& direction)
 {
+	if (direction < 0)
+	{
+		return;
+	}
+
 	size_t NowStage = -1;
 	size_t NowTile = -1;
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
