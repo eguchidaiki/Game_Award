@@ -161,7 +161,8 @@ void Player::Update(int offsetX, int offsetY)
 
 
 	//キー折る・開く入力
-	Key_FoldOpen();
+
+	//Key_FoldOpen();
 
 	//足を上げる演出が終わったら折る処理に入る
 	Fold();
@@ -473,33 +474,45 @@ void Player::Key_FoldOpen()
 	}
 
 	//開く入力
-	if (actFlag->OpenLeft() && IsOpenBlock(BodyType::left))
+	if (actFlag->OpenLeft())
 	{ //左に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsLeftOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::left))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsLeftOpen = true;
+			return;
+		}
 	}
-	if (actFlag->OpenUp() && IsOpenBlock(BodyType::up))
+	if (actFlag->OpenUp())
 	{ //上に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsUpOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::up))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsUpOpen = true;
+			return;
+		}
 	}
-	if (actFlag->OpenRight() && IsOpenBlock(BodyType::right))
+	if (actFlag->OpenRight())
 	{ //右に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsRightOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::right))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsRightOpen = true;
+			return;
+		}
 	}
-	if (actFlag->OpenDown() && IsOpenBlock(BodyType::down))
+	if (actFlag->OpenDown())
 	{ //下に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsDownOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::down))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsDownOpen = true;
+			return;
+		}
 	}
 }
 

@@ -167,6 +167,9 @@ public: //メンバ関数
 	// ステージを折る・開く
 	int FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
 
+	//セレクトしたタイルが指定の方向に折れるかどうか
+	bool IsTileFoldDirection(size_t stage, int direction);
+
 	/// <summary>
 	/// ステージがどう折れるかの予測
 	/// </summary>
@@ -344,6 +347,9 @@ private: //メンバ変数
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト
 	Sprite MapchipSpriteGoal;
+
+	//タイル選択アイコンのスプライト
+	Sprite SelectIconSprite[4];
 
 	bool IsParticleTrigger;
 	ParticleManager* particleManager;
