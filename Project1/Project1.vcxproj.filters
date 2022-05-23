@@ -240,6 +240,30 @@
     <None Include="Resources\stage\stage12.csv">
       <Filter>リソースファイル\Stage</Filter>
     </None>
+    <None Include="Resources\stage\stage20.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage13.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage14.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage15.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage16.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage17.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage18.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
+    <None Include="Resources\stage\stage19.csv">
+      <Filter>リソースファイル\Stage</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="リソースファイル">
