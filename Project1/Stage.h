@@ -95,6 +95,9 @@ public: //サブクラス
 
 		//上に重なっている枚数
 		int Overlap = 0;
+
+		//Overlapを設定したかどうか
+		bool IsOverSet = false;
 	};
 	struct StageData
 	{
@@ -177,8 +180,11 @@ public: //メンバ関数
 	// 内部データ全削除
 	void DataClear();
 
-	//上に重なっている枚数の設定
-	void SetOverlap();
+	//Overlapの設定
+	void SetOverlap(size_t stagenum, size_t tilenum);
+
+	//Overlapの更新
+	void UpdateOverlap();
 
 	// 任意の座標が任意のステージにいるかどうか
 	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
@@ -226,16 +232,6 @@ public: //メンバ関数
 	inline char GetStageTileOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY;
-	}
-	// ステージタイルのX軸のオフセットを返す
-	inline char GetStageOffsetX(const size_t& stageNumber, const size_t& stageTileNumber)
-	{
-		return stageData[stageNumber].stageTileData[stageTileNumber].offsetX + stageData[stageNumber].offsetX;
-	}
-	// ステージタイルのY軸のオフセットを返す
-	inline char GetStageOffsetY(const size_t& stageNumber, const size_t& stageTileNumber)
-	{
-		return stageData[stageNumber].stageTileData[stageTileNumber].offsetY + stageData[stageNumber].offsetY;
 	}
 	// ステージタイルの幅を取得
 	inline size_t GetStageTileWidth(const size_t& stageNumber, const size_t& stageTileNumber)
