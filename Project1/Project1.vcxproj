@@ -163,7 +163,6 @@
     <ClCompile Include="GoalEffect.cpp" />
     <ClCompile Include="GoalEffects.cpp" />
     <ClCompile Include="GoalPaperRain.cpp" />
-    <ClCompile Include="GoalParticle.cpp" />
     <ClCompile Include="InputManger.cpp" />
     <ClCompile Include="ISceneChanger.cpp" />
     <ClCompile Include="LoadFile.cpp" />
@@ -279,7 +278,6 @@
     <ClInclude Include="GoalEffect.h" />
     <ClInclude Include="GoalEffects.h" />
     <ClInclude Include="GoalPaperRain.h" />
-    <ClInclude Include="GoalParticle.h" />
     <ClInclude Include="InputManger.h" />
     <ClInclude Include="ISceneChanger.h" />
     <ClInclude Include="LoadFile.h" />

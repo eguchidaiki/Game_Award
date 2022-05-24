@@ -117,6 +117,12 @@ public: //メンバ関数
 	bool MenuTrigger();
 	// メニュー(離した瞬間の判定)
 	bool MenuReturn();
+	// ジャンプ
+	bool Jump();
+	// ジャンプ(押した瞬間の判定)
+	bool JumpTrigger();
+	// ジャンプ(離した瞬間の判定)
+	bool JumpReturn();
 
 	//折る操作のトリガー
 	bool FoldLeftTrigger();

@@ -49,8 +49,7 @@ Player::Player() :
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
-	leg{},
-	goalParticle{}
+	leg{}
 {
 }
 
@@ -87,8 +86,6 @@ void Player::Init()
 	IsRight = false;
 
 	IsStart = true;
-
-	goalParticle.Create();
 }
 
 void Player::Update(int offsetX, int offsetY)
@@ -245,13 +242,6 @@ void Player::Update(int offsetX, int offsetY)
 	Body_Four.Update(CenterPosition);
 	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
-
-	//ゴール演出
-	if (IsGoal)
-	{
-		goalParticle.Init({ 0.0f, 0.0f, 0.0f }, 1.0f, 10, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
-	}
-	goalParticle.Update();
 }
 
 void Player::Draw(int offsetX, int offsetY)

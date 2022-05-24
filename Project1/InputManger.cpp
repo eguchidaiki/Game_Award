@@ -249,6 +249,21 @@ bool InputManger::MenuReturn()
 	return isMenu && Input::isKeyReleased(DIK_ESCAPE) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_R);
 }
 
+bool InputManger::Jump()
+{
+	return Input::isKey(DIK_W) || Input::isXpadButtonPushing(XPAD_BUTTON_A);
+}
+
+bool InputManger::JumpTrigger()
+{
+	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_A);
+}
+
+bool InputManger::JumpReturn()
+{
+	return Input::isKeyReleased(DIK_W) || Input::isXpadButtonPushed(XPAD_BUTTON_A);
+}
+
 bool InputManger::FoldLeftTrigger()
 {
 	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_RIGHT);
