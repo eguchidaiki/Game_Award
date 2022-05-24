@@ -31,7 +31,9 @@ public: //静的メンバ関数
 	// マウスの入力状態更新
 	static void MouseInputUpdate();
 
-private: //静的メンバ変数
+public: //静的メンバ変数
+	static bool isMenu; //メニューの有無
+private:
 	static DirectX::XMFLOAT2 pressPos;
 	static DirectX::XMFLOAT2 releasePos;
 	static DirectX::XMFLOAT2 dragDis;
@@ -103,13 +105,18 @@ public: //メンバ関数
 	bool CancelTrigger();
 	// キャンセル(離した瞬間の判定)
 	bool CancelReturn();
-	/*以下キーボードオンリー*/
 	// リセット
 	bool Reset();
 	// リセット(押した瞬間の判定)
 	bool ResetTrigger();
 	// リセット(離した瞬間の判定)
 	bool ResetReturn();
+	// メニュー
+	bool Menu();
+	// メニュー(押した瞬間の判定)
+	bool MenuTrigger();
+	// メニュー(離した瞬間の判定)
+	bool MenuReturn();
 
 	//折る操作のトリガー
 	bool FoldLeftTrigger();

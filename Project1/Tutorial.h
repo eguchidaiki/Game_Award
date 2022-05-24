@@ -3,6 +3,15 @@
 
 class Tutorial
 {
+public: //サブクラス
+	enum TutorialState
+	{
+		NO_TUTORIAL,
+		MOVE, //移動のチュートリアル
+		JUMP, //ジャンプのチュートリアル
+		FOLD  //折るのチュートリアル
+	};
+
 public: //メンバ関数
 	Tutorial();
 	~Tutorial();
@@ -15,6 +24,8 @@ public: //メンバ関数
 	void Draw(int offsetX = 0, int offsetY = 0);
 	// 生成
 	void Create();
+	// リセット
+	void Reset();
 
 	// チュートリアルを開始する
 	void StartTutorial();
@@ -23,17 +34,18 @@ public: //メンバ関数
 
 public: //メンバ変数
 	bool isFirstOnly;
-	//画像ハンドル
+
+private:
 	bool isTutorial;
+	TutorialState tutorialState;
 	bool isMoveTutorial;
+	bool isJumpTutorial;
 	bool isFoldTutorial;
 	bool isFirst;
 
-private:
-	UINT moveHandle;
-	UINT foldHandle;
-
+	//画像ハンドル
 	Sprite moveSprite;
+	Sprite jumpSprite;
 	Sprite foldSprite;
 
 	XMFLOAT2 spriteSize;

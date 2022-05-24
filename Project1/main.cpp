@@ -66,14 +66,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         //更新
         InputManger::Update();
 
+        if (smgr->isEndApp()) { break; }
+
+        smgr->Update();
+
         if (InputManger::Get()->Escape())
         {
             break;
         }
-
-        if (smgr->isEndApp()) { break; }
-
-        smgr->Update();
 
         RenderTargetManager::GetInstance()->CrearAndStartDraw();
 

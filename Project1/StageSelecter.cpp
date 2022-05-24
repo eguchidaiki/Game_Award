@@ -89,24 +89,24 @@ void StageSelecter::Draw()
 	SelectRight.DrawSprite(1184, 623);
 	SelectRight.Draw();
 
-	float mouse_x = Input::getMousePos().x;
-	float mouse_y = Input::getMousePos().y;
+	//float mouse_x = Input::getMousePos().x;
+	//float mouse_y = Input::getMousePos().y;
 
-	if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626)
+	if /*(mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626)
 	{
 		SelectLeft.DrawExtendSprite(19, 613, 29 + 77, 623 + 77);
 	}
-	else
+	else*/(true)
 	{
 		SelectLeft.DrawSprite(29, 623);
 	}
 	SelectLeft.Draw();
 
-	if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626)
+	if /*(mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626)
 	{
 		SelectRight.DrawExtendSprite(1174, 613, 1184 + 77, 623 + 77);
 	}
-	else
+	else*/(true)
 	{
 		SelectRight.DrawSprite(1184, 623);
 	}
@@ -126,14 +126,12 @@ void StageSelecter::Changing_UI_Number()
 {
 	//入力によってインクリメント、デクリメント
 	int select_number = static_cast<int>(user_selecting);
-	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_LEFT) || 
-		Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT) || 
+	if (inputManager->LeftTrigger() ||
 		Input::isKeyTrigger(DIK_LEFT)) {
 		if (user_selecting != UI_BACK) { select_number--; }
 	}
 
-	if (Input::isXpadStickTilt(XPAD_LSTICK_DIR_RIGHT) || 
-		Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT) ||
+	if (inputManager->RightTrigger() ||
 		Input::isKeyTrigger(DIK_RIGHT)) {
 		if (user_selecting != UI_FRONT) { select_number++; }
 	}
@@ -191,15 +189,7 @@ void StageSelecter::CheckToPageChangeInput()
 	{
 	case StageSelecter::UI_BACK:
 		//最初のページでないときにBACK
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) && nowpage != page_1_4) {
-			//移動方向設定
-			pageMoveDir = is_back;
-			//次ページ設定
-			int pageNum = static_cast<int>(nextpage);
-			pageNum--;
-			nextpage = static_cast<STAGE_PAGE>(pageNum);
-		}
-		else if (Input::isKeyTrigger(DIK_RETURN) && nowpage != page_1_4) {
+		if (inputManager->DecisionTrigger() && nowpage != page_1_4) {
 			//移動方向設定
 			pageMoveDir = is_back;
 			//次ページ設定
@@ -211,15 +201,7 @@ void StageSelecter::CheckToPageChangeInput()
 		break;
 	case StageSelecter::UI_FRONT:
 		//最後のページでないときにFRONT
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) && nowpage != page_17_20) {
-			//移動方向設定
-			pageMoveDir = is_front;
-			//次ページ設定
-			int pageNum = static_cast<int>(nextpage);
-			pageNum++;
-			nextpage = static_cast<STAGE_PAGE>(pageNum);
-		}
-		else if (Input::isKeyTrigger(DIK_RETURN) && nowpage != page_17_20) {
+		if (inputManager->DecisionTrigger() && nowpage != page_17_20) {
 			//移動方向設定
 			pageMoveDir = is_front;
 			//次ページ設定
@@ -501,25 +483,25 @@ void StageSelecter::CheckToStageChangeInput()
 	switch (user_selecting)
 	{
 	case StageSelecter::UI_STAGEBOX_1:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
+		if (inputManager->DecisionTrigger()) {
 			select_Stage_num = 0;
 			selected = true;
 		}
 		break;
 	case StageSelecter::UI_STAGEBOX_2:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
+		if (inputManager->DecisionTrigger()) {
 			select_Stage_num = 1;
 			selected = true;
 		}
 		break;
 	case StageSelecter::UI_STAGEBOX_3:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
+		if (inputManager->DecisionTrigger()) {
 			select_Stage_num = 2;
 			selected = true;
 		}
 		break;
 	case StageSelecter::UI_STAGEBOX_4:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) {
+		if (inputManager->DecisionTrigger()) {
 			select_Stage_num = 3;
 			selected = true;
 		}
