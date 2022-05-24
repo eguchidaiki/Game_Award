@@ -70,6 +70,17 @@ inline const RVector3 lerp(const RVector3 &s, const RVector3 &e, const float t) 
 	return start * (1.0f - t) + end * t;
 }
 
+//速度、加速度系
+
+float CalcVelocityToForceAndMass(const float force, const float mass, float nowVel, float &acc);
+
+float CalcAccelToForceAndMass(const float force, const float mass);
+
+float CalcAccelToFramePerVel(float onesecmove);
+
+float CalcGravity(float start, float end, float v0, int time, float& v1);
+
+
 
 //RVector3を使用した、3次元線形補間
 namespace Rv3Ease {
@@ -264,3 +275,57 @@ namespace RV3Colider {
 	};
 
 };
+
+
+#pragma region XMFLOAT_OPERATOR
+
+inline const DirectX::XMFLOAT4 operator+(const DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x + rhs.x;
+	result.y = lhs.y + rhs.y;
+	result.z = lhs.z + rhs.z;
+	result.w = lhs.w + rhs.w;
+	return result;
+}
+
+inline void operator+=(DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	lhs.z += rhs.z;
+	lhs.w += rhs.w;
+}
+
+inline const DirectX::XMFLOAT4 operator-(DirectX::XMFLOAT4& lhs, const DirectX::XMFLOAT4& rhs) {
+	XMFLOAT4 result;
+	result.x = lhs.x - rhs.x;
+	result.y = lhs.y - rhs.y;
+	result.z = lhs.z - rhs.z;
+	result.w = lhs.w - rhs.w;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& lhs, const float a) {
+	XMFLOAT4 result;
+	result.x = lhs.x / a;
+	result.y = lhs.y / a;
+	result.z = lhs.z / a;
+	result.w = lhs.w / a;
+	return result;
+}
+
+inline const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const float a) {
+	XMFLOAT4 result;
+	result.x = lhs.x * a;
+	result.y = lhs.y * a;
+	result.z = lhs.z * a;
+	result.w = lhs.w * a;
+	return result;
+}
+
+
+
+
+
+
+
+#pragma endregion
