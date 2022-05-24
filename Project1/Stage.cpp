@@ -237,6 +237,7 @@ void Stage::Updata()
 							break;
 						}
 						default:
+						{
 							posX = static_cast<int>(stageData[i].stageTileData[j].easePos[mapchipPos].x);
 							posY = static_cast<int>(stageData[i].stageTileData[j].easePos[mapchipPos].y);
 
@@ -249,6 +250,7 @@ void Stage::Updata()
 							stageData[i].stageTileData[j].drawRightDown[mapchipPos].z =
 								static_cast<float>(stageData[i].stageTileData[j].easePos[mapchipPos].z + blockSize);
 							break;
+						}
 						}
 					}
 				}
@@ -868,7 +870,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 	//プレイヤーがいるタイルを選択していたら折れない
 	if (NowStage == selectStageNum && NowTile == selectTileNum)
 	{
-		return 0;
+		//return 0;
 	}
 
 	//Open専用のコンテナに格納
@@ -933,6 +935,10 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						player->IsUpFold = true;
 						player->leg.Set();
 					}
+					else
+					{
+						return false;
+					}
 				}
 				return true;
 			}
@@ -951,6 +957,10 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						player->Player_IsAction = true;
 						player->IsDownFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -973,7 +983,6 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 							player->Player_IsAction = true;
 							player->IsLeftFold = true;
 							player->leg.Set();
-							return true;
 						}
 						else
 						{
@@ -998,6 +1007,10 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						player->Player_IsAction = true;
 						player->IsRightFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;

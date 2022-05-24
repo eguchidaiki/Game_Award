@@ -133,10 +133,14 @@ void Player::Update(int offsetX, int offsetY)
 		if (Leftjump == true)
 		{
 			CenterPosition.x -= 1.5f;
+			IsLeft = true;
+			IsRight = false;
 		}
 		if (Rightjump == true)
 		{
 			CenterPosition.x += 1.5f;
+			IsLeft = false;
+			IsRight = true;
 		}
 	}
 
@@ -397,6 +401,9 @@ void Player::Key_Move()
 			Rightjump = false;
 			IsJump = true;
 			FallSpeed = -5.1f;
+
+			IsLeft = true;
+			IsRight = false;
 		}
 
 		if (IsJump == false && inputManger->Right() && IsInputjump == true)
@@ -405,6 +412,9 @@ void Player::Key_Move()
 			Leftjump = false;
 			IsJump = true;
 			FallSpeed = -5.1f;
+
+			IsLeft = false;
+			IsRight = true;
 		}
 	}
 
