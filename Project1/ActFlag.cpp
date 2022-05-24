@@ -65,7 +65,7 @@ bool ActFlag::FoldUp()
 {
 	if (player->Player_IsAction == false && player->Body_Two.IsActivate &&
 		player->Body_Two.IsFold == false && !player->Body_Two.IsAction &&
-		inputManger->FoldUpTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldUpTrigger())
 	{
 		return true;
 	}
@@ -111,7 +111,7 @@ bool ActFlag::FoldDown()
 {
 	if (player->Player_IsAction == false && player->Body_Four.IsActivate &&
 		player->Body_Four.IsFold == false && !player->Body_Four.IsAction &&
-		inputManger->FoldDownTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldDownTrigger())
 	{
 		return true;
 	}
@@ -163,7 +163,7 @@ bool ActFlag::FoldLeft()
 {
 	if (player->Player_IsAction == false && player->Body_One.IsActivate &&
 		player->Body_One.IsFold == false && !player->Body_One.IsAction &&
-		inputManger->FoldLeftTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldLeftTrigger())
 	{
 		return true;
 	}
@@ -215,7 +215,7 @@ bool ActFlag::FoldRight()
 {
 	if (player->Player_IsAction == false && player->Body_Three.IsActivate &&
 		player->Body_Three.IsFold == false && !player->Body_Three.IsAction &&
-		inputManger->FoldRightTrigger() && !player->IsPlayerStageOnly())
+		inputManger->FoldRightTrigger())
 	{
 		return true;
 	}
@@ -272,7 +272,7 @@ bool ActFlag::OpenUp()
 
 	if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
 		player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
-		player->IsUpBlocked && inputManger->OpenUpTrigger() && !player->IsPlayerStageOnly())
+		player->IsUpBlocked && inputManger->OpenUpTrigger())
 	{
 		return true;
 	}
@@ -317,15 +317,9 @@ bool ActFlag::OpenUp()
 
 bool ActFlag::OpenDown()
 {
-	// 折る処理中かどうか
-	if (player->IsDownOpen)
-	{
-		//return false;
-	}
-
 	if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
 		player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction &&
-		inputManger->OpenDownTrigger() && !player->IsPlayerStageOnly())
+		inputManger->OpenDownTrigger())
 	{
 		return true;
 	}
@@ -364,15 +358,9 @@ bool ActFlag::OpenDown()
 
 bool ActFlag::OpenLeft()
 {
-	// 折る処理中かどうか
-	if (player->IsLeftOpen)
-	{
-		//return false;
-	}
-
 	if (player->Body_One.IsActivate && player->Body_One.IsFold &&
 		player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction &&
-		inputManger->OpenLeftTrigger() && !player->IsPlayerStageOnly())
+		inputManger->OpenLeftTrigger())
 	{
 		return true;
 	}
@@ -417,15 +405,9 @@ bool ActFlag::OpenLeft()
 
 bool ActFlag::OpenRight()
 {
-	// 折る処理中かどうか
-	if (player->IsRightOpen)
-	{
-		//return false;
-	}
-
 	if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
 		player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction &&
-		inputManger->OpenRightTrigger() && !player->IsPlayerStageOnly())
+		inputManger->OpenRightTrigger())
 	{
 		return true;
 	}
