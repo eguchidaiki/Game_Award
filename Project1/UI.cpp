@@ -11,10 +11,10 @@ namespace
 
 void UI::Init(Tutorial* tutorial)
 {
-	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton01.png");
+	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton.png");
 	this->ResetUISprite.Create(ResetHandle);
 
-	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton01.png");
+	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton.png");
 	this->PauseUISprite.Create(PauseHandle);
 
 	ResetRot = 0;

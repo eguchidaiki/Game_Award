@@ -58,7 +58,7 @@ bool ActFlag::MoveRight()
 bool ActFlag::Jump()
 {
 	// キーボード&コントローラー入力
-	return (inputManger->UpTrigger() || Input::isXpadButtonPushTrigger(XPAD_BUTTON_A)) && !player->IsJumpOnly;
+	return inputManger->JumpTrigger() && !player->IsJumpOnly;
 }
 
 bool ActFlag::FoldUp()

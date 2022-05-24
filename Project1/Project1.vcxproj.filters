@@ -75,9 +75,6 @@
     <ClCompile Include="UI.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GoalParticle.cpp">
-      <Filter>Effect</Filter>
-    </ClCompile>
     <ClCompile Include="testParticle.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
@@ -165,9 +162,6 @@
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="testParticle.h">
-      <Filter>Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="GoalParticle.h">
       <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">

@@ -96,27 +96,6 @@ void Tutorial::Update()
 		break;
 	}
 	}
-	//if (isMoveTutorial == true)
-	//{
-	//	if (isMove)
-	//	{
-	//		isMoveTutorial = false;
-	//		isFoldTutorial = true;
-	//	}
-	//}
-	//else if (isFoldTutorial == true)
-	//{
-	//	if (isFold)
-	//	{
-	//		isFoldTutorial = false;
-	//	}
-	//}
-
-	//if (isMoveTutorial == false && isFoldTutorial == false)
-	//{
-	//	isFirst = false;
-	//	isTutorial = false;
-	//}
 }
 
 void Tutorial::Draw(int offsetX, int offsetY)
@@ -159,22 +138,6 @@ void Tutorial::Draw(int offsetX, int offsetY)
 		break;
 	}
 	}
-
-	//if (isMoveTutorial)
-	//{
-	//	moveSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
-	//	moveSprite.Draw();
-	//}
-	//if (isJumpTutorial)
-	//{
-	//	jumpSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
-	//	jumpSprite.Draw();
-	//}
-	//if (isFoldTutorial)
-	//{
-	//	foldSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
-	//	foldSprite.Draw();
-	//}
 }
 
 void Tutorial::Create()
@@ -186,7 +149,7 @@ void Tutorial::Create()
 	}
 	if ((jumpSprite.spdata->size.x <= 0) || (jumpSprite.spdata->size.y <= 0))
 	{
-		UINT jumpHandle = TexManager::LoadTexture("./Resources/stickJump05.png");
+		UINT jumpHandle = TexManager::LoadTexture("./Resources/jump/AJump1.png");
 		jumpSprite.Create(jumpHandle);
 	}
 	if ((foldSprite.spdata->size.x <= 0) || (foldSprite.spdata->size.y <= 0))
