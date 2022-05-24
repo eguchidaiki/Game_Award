@@ -99,19 +99,6 @@ void Player::Update(int offsetX, int offsetY)
 	//キー移動
 	Key_Move();
 
-	//顔の当たり判定
-	IsOutsideFace();
-	IsHitPlayerBody();
-	IsAroundBlock();
-
-	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-
-	//移動速度を0にするかどうか
-	MoveSpeedUpdate();
-
 	//ジャンプ中の処理
 	if (IsJump == true)
 	{
@@ -159,8 +146,23 @@ void Player::Update(int offsetX, int offsetY)
 		CenterPosition.y += FallSpeed;
 	}
 
+	//顔の当たり判定
+	IsOutsideFace();
+	IsHitPlayerBody();
+	IsAroundBlock();
+
+	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
+	//移動速度を0にするかどうか
+	MoveSpeedUpdate();
+
+
 	//キー折る・開く入力
-	Key_FoldOpen();
+
+	//Key_FoldOpen();
 
 	//足を上げる演出が終わったら折る処理に入る
 	Fold();
@@ -223,21 +225,21 @@ void Player::Update(int offsetX, int offsetY)
 	leg.Update(FootUpPosition, IsDownBody, 1);
 
 	//それぞれの体のアップデート処理(有効化されているときのみ)
-	
-	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
 	Body_One.Update(CenterPosition);
+	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsAroundBlock();
-	
-	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
 	Body_Two.Update(CenterPosition);
+	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.IsAroundBlock();
-	
-	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
 	Body_Three.Update(CenterPosition);
+	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.IsAroundBlock();
-	
-	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
+
 	Body_Four.Update(CenterPosition);
+	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
 
 	//ゴール演出
@@ -472,33 +474,45 @@ void Player::Key_FoldOpen()
 	}
 
 	//開く入力
-	if (actFlag->OpenLeft() && IsOpenBlock(BodyType::left))
+	if (actFlag->OpenLeft())
 	{ //左に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsLeftOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::left))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsLeftOpen = true;
+			return;
+		}
 	}
-	if (actFlag->OpenUp() && IsOpenBlock(BodyType::up))
+	if (actFlag->OpenUp())
 	{ //上に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsUpOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::up))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsUpOpen = true;
+			return;
+		}
 	}
-	if (actFlag->OpenRight() && IsOpenBlock(BodyType::right))
+	if (actFlag->OpenRight())
 	{ //右に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsRightOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::right))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsRightOpen = true;
+			return;
+		}
 	}
-	if (actFlag->OpenDown() && IsOpenBlock(BodyType::down))
+	if (actFlag->OpenDown())
 	{ //下に開く
-		OpenCount = 0;
-		IsOpenCountStart = true;
-		IsDownOpen = true;
-		return;
+		if (IsOpenBlock(BodyType::down))
+		{
+			OpenCount = 0;
+			IsOpenCountStart = true;
+			IsDownOpen = true;
+			return;
+		}
 	}
 }
 
@@ -1942,6 +1956,7 @@ bool Player::IsFall()
 		{
 			IsJumpOnly = false;
 		}
+		FallSpeed = 0.0f;
 		return false;
 	}
 	else
@@ -2065,19 +2080,19 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == true && Body_One.Body_Type != foldtype)
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == true && Body_Two.Body_Type != foldtype)
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == true && Body_Three.Body_Type != foldtype)
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}
-	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == true && Body_Four.Body_Type != foldtype)
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBody(foldtype) == true)
 	{
 		BodyCanFoldCount++;
 	}

@@ -5,6 +5,9 @@
 #include "Sprite.h"
 #include "ParticleManager.h"
 
+//折るエフェクト
+#include "OriEffects.h"
+
 enum MapchipData
 {
 	EMPTY_STAGE = 0,
@@ -154,8 +157,6 @@ public: //メンバ関数
 	//ブロックスライトの生成
 	void CreateBlocksSprite();
 
-	//ブロックのスプライト読み込み
-
 	/// <summary>
 	/// ステージファイルの読み込み
 	/// </summary>
@@ -164,8 +165,13 @@ public: //メンバ関数
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
+	void SelectingStageTile();
+
 	// ステージを折る・開く
 	int FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
+
+	//セレクトしたタイルが指定の方向に折れるかどうか
+	bool IsTileFoldDirection(size_t stage, int direction);
 
 	/// <summary>
 	/// ステージがどう折れるかの予測
@@ -315,6 +321,10 @@ private: //メンバ変数
 	std::vector<StageData> stageData;
 	std::vector<StageData> initStageData;
 
+	StageTileData* SelectTile;
+	size_t selectStageNum = 0;
+	size_t selectTileNum = 0;
+
 	char* reverseMapchip;
 
 	//折り目の画像ハンドル
@@ -341,7 +351,13 @@ private: //メンバ変数
 	//ゴールのスプライト
 	Sprite MapchipSpriteGoal;
 
+	//タイル選択アイコンのスプライト
+	Sprite SelectIconSprite[4];
+
 	bool IsParticleTrigger;
 	ParticleManager* particleManager;
 	ParticleSingle* FoldParticle;
+
+	//折るエフェクト
+	OriEffects oriEffect;
 };

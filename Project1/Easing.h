@@ -20,6 +20,7 @@ public: //ƒƒ“ƒo•Ï”
 	float addTime;
 
 	bool isMove;
+	bool isOldMove;
 
 	size_t splineIndex;
 };

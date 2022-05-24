@@ -42,6 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     NY_Object3DManager::Get()->CreateObject3DManager();
     SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(),
         rakiWinApp->window_width, rakiWinApp->window_height);
+
     TexManager::InitTexManager();
 
     //マウスを使えるようにする
