@@ -30,6 +30,8 @@ enum MapchipData
 	UPU = 41,
 	RIGHTU = 42,
 	DOWNU = 43,
+
+	NOFRAME = 50
 };
 
 //パーティクル派生クラス
@@ -289,10 +291,10 @@ public: //メンバ関数
 private:
 	// ステージを折る
 	int Fold(const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile,
-			 const size_t& moveStageData, size_t datasize);
+		const size_t& moveStageData, size_t datasize);
 	// ステージを開く
 	int Open(const unsigned char& direction, const size_t& onPlayerStage,
-			 const size_t& moveStageData, size_t datasize);
+		const size_t& moveStageData, size_t datasize);
 
 	// ステージタイルの描画
 	// saturationColorが1だと元の色で表示する
@@ -302,7 +304,7 @@ private:
 	int LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
 	// 枠線の描画
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-				  const int offsetX, const int offsetY);
+		const int offsetX, const int offsetY);
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
 		const int offsetX, const int offsetY);
@@ -328,7 +330,7 @@ private: //メンバ変数
 	UINT lineHandle;
 	//ブロックの画像ハンドル
 	//UINT BlocksHandle[4];
-	UINT AllBlockHandle[4][15];
+	UINT AllBlockHandle[4][16];
 	UINT Bule_BlocksHandle[15];
 	UINT Green_BlocksHandle[15];
 	UINT Red_BlocksHandle[15];
@@ -342,7 +344,7 @@ private: //メンバ変数
 	Sprite lineSprite;
 	//ブロックのスプライト
 	//Sprite MapchipSpriteBlocks[4];
-	Sprite AllBlockSprite[4][15];
+	Sprite AllBlockSprite[4][16];
 	//空白のスプライト
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト
