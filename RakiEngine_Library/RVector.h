@@ -322,10 +322,35 @@ inline const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& lhs, const flo
 	return result;
 }
 
+inline const DirectX::XMFLOAT4 operator-(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b)
+{
+	XMFLOAT4 result;
+	result.x = a.x - b.x;
+	result.y = a.y - b.y;
+	result.z = a.z - b.z;
+	result.w = a.w - b.w;
+	return result;
+}
 
+inline const DirectX::XMFLOAT4 operator*(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b)
+{
+	XMFLOAT4 result;
+	result.x = a.x * b.x;
+	result.y = a.y * b.y;
+	result.z = a.z * b.z;
+	result.w = a.w * b.w;
+	return result;
+}
 
-
-
+inline const DirectX::XMFLOAT4 operator/(const DirectX::XMFLOAT4& a, const DirectX::XMFLOAT4& b)
+{
+	XMFLOAT4 result;
+	result.x = a.x / b.x;
+	result.y = a.y / b.y;
+	result.z = a.z / b.z;
+	result.w = a.w / b.w;
+	return result;
+}
 
 
 #pragma endregion
