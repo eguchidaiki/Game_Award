@@ -711,6 +711,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				startPlayerPosX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
 				startPlayerPosY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
 
+				nowPlayerStage = i;
+
 				end = true;
 				break;
 			}

@@ -55,7 +55,7 @@ void Tutorial::Update()
 	static bool isFold = false;
 
 	isMove = player->IsWalk;
-	isJump = player->IsJump && ActFlag::Get()->Jump();
+	isJump = player->IsJump;
 	isFold = player->IsUpFold || player->IsDownFold ||
 		player->IsLeftFold || player->IsRightFold;
 

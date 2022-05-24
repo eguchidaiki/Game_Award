@@ -43,6 +43,7 @@ void GameScene::Update()
 			gamemain.SetSelectToGame(selecter.SelectStageNum);
 			selecter.isChanging_GameMain = false;
 			nowState = is_Game;
+			InputManger::isMenu = true;
 		}
 
 		break;
@@ -57,6 +58,7 @@ void GameScene::Update()
 			selecter.isChanging_GameMain = false;
 			selecter.state = selecter.is_selecting;
 			nowState = is_Select;
+			InputManger::isMenu = false;
 		}
 
 		break;
