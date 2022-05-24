@@ -1076,7 +1076,7 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 	if (this->Body_Type == direction)
 	{
-		return false;
+		//return false;
 	}
 
 	int BlockCount = 0;

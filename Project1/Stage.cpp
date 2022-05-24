@@ -238,6 +238,7 @@ void Stage::Updata()
 							break;
 						}
 						default:
+						{
 							posX = static_cast<int>(stageData[i].stageTileData[j].easePos[mapchipPos].x);
 							posY = static_cast<int>(stageData[i].stageTileData[j].easePos[mapchipPos].y);
 
@@ -250,6 +251,7 @@ void Stage::Updata()
 							stageData[i].stageTileData[j].drawRightDown[mapchipPos].z =
 								static_cast<float>(stageData[i].stageTileData[j].easePos[mapchipPos].z + blockSize);
 							break;
+						}
 						}
 					}
 				}
@@ -347,7 +349,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 	MapchipSpriteEmpty.Draw();
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 15; j++)
+		for (j = 0; j < 16; j++)
 		{
 			AllBlockSprite[i][j].Draw();
 		}
@@ -415,6 +417,7 @@ void Stage::LoadBlocksHandle()
 
 	std::string Horizontal = "_=";
 	std::string Vertical = "_ll";
+	std::string NoFrame = "_NoFrame";
 
 	for (i = 0; i < 4; i++)
 	{
@@ -438,6 +441,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[0][12] = TexManager::LoadTexture(BasePath + Bule + "_U_Up" + fileType);
 			AllBlockHandle[0][13] = TexManager::LoadTexture(BasePath + Bule + "_U_Right" + fileType);
 			AllBlockHandle[0][14] = TexManager::LoadTexture(BasePath + Bule + "_U_Down" + fileType);
+			AllBlockHandle[0][15] = TexManager::LoadTexture(BasePath + Bule + NoFrame + fileType);
 
 			break;
 		}
@@ -459,6 +463,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[1][12] = TexManager::LoadTexture(BasePath + Green + "_U_Up" + fileType);
 			AllBlockHandle[1][13] = TexManager::LoadTexture(BasePath + Green + "_U_Right" + fileType);
 			AllBlockHandle[1][14] = TexManager::LoadTexture(BasePath + Green + "_U_Down" + fileType);
+			AllBlockHandle[1][15] = TexManager::LoadTexture(BasePath + Green + NoFrame + fileType);
 			break;
 		}
 		case 2:
@@ -479,6 +484,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[2][12] = TexManager::LoadTexture(BasePath + Red + "_U_Up" + fileType);
 			AllBlockHandle[2][13] = TexManager::LoadTexture(BasePath + Red + "_U_Right" + fileType);
 			AllBlockHandle[2][14] = TexManager::LoadTexture(BasePath + Red + "_U_Down" + fileType);
+			AllBlockHandle[2][15] = TexManager::LoadTexture(BasePath + Red + NoFrame + fileType);
 			break;
 		}
 		case 3:
@@ -499,6 +505,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[3][12] = TexManager::LoadTexture(BasePath + Yellow + "_U_Up" + fileType);
 			AllBlockHandle[3][13] = TexManager::LoadTexture(BasePath + Yellow + "_U_Right" + fileType);
 			AllBlockHandle[3][14] = TexManager::LoadTexture(BasePath + Yellow + "_U_Down" + fileType);
+			AllBlockHandle[3][15] = TexManager::LoadTexture(BasePath + Yellow + NoFrame + fileType);
 			break;
 		}
 		default:
@@ -513,7 +520,7 @@ void Stage::CreateBlocksSprite()
 {
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 15; j++)
+		for (j = 0; j < 16; j++)
 		{
 			if ((AllBlockSprite[i][j].spdata->size.x <= 0) || (AllBlockSprite[i][j].spdata->size.y <= 0))
 			{
@@ -876,7 +883,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 	//プレイヤーがいるタイルを選択していたら折れない
 	if (NowStage == selectStageNum && NowTile == selectTileNum)
 	{
-		return 0;
+		//return 0;
 	}
 
 	//Open専用のコンテナに格納
@@ -941,6 +948,10 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						player->IsUpFold = true;
 						player->leg.Set();
 					}
+					else
+					{
+						return false;
+					}
 				}
 				return true;
 			}
@@ -959,6 +970,10 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						player->Player_IsAction = true;
 						player->IsDownFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -981,7 +996,6 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 							player->Player_IsAction = true;
 							player->IsLeftFold = true;
 							player->leg.Set();
-							return true;
 						}
 						else
 						{
@@ -1006,6 +1020,10 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						player->Player_IsAction = true;
 						player->IsRightFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -2120,6 +2138,12 @@ int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumbe
 			// 色の初期化
 			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 			AllBlockSprite[stageNumber][14].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::NOFRAME:
+			// 色の初期化
+			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
+			AllBlockSprite[stageNumber][15].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 			break;
 
 		case MapchipData::NONE:
