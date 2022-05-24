@@ -3,7 +3,7 @@
 #include "General.h"
 #include "Player.h"
 #include "NY_random.h"
-#include <Raki_DX12B.h>
+#include <Raki_WinAPI.h>
 #include <Raki_Input.h>
 
 #define EF (-1) //Error Function
@@ -680,6 +680,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	SetStageGroup();
 
 	// オフセット値の計算
+	x = 0;
+	y = 0;
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -694,8 +696,19 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 			stageData[i].stageTileData[j].offsetX += stageData[i].offsetX;
 			stageData[i].stageTileData[j].offsetY += stageData[i].offsetY;
+
+			if (x < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width)
+			{
+				x = stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width;
+			}
+			if (y < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height)
+			{
+				y = stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height;
+			}
 		}
 	}
+	drawOffsetX = Raki_WinAPI::window_width / 2 - static_cast<int>(halfBlockSize * x);
+	drawOffsetY = Raki_WinAPI::window_height / 2 - static_cast<int>(halfBlockSize * y);
 
 	static bool end = false;
 	end = false;
@@ -718,7 +731,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 				startPlayerPosX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
 				startPlayerPosY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
 
-				nowPlayerStage = i;
+				nowPlayerStage = static_cast<size_t>(i);
 
 				end = true;
 				break;
