@@ -12,6 +12,7 @@ Ori_StarParticle::~Ori_StarParticle()
 void Ori_StarParticle::Init()
 {
 	color.w = 1.0f;
+	e_color = { 1,1,1,0.0f };
 
 	rot = NY_random::floatrand_sl(360.0f, 0.0f);
 
@@ -29,13 +30,13 @@ void Ori_StarParticle::Init()
 	pos += vel * 10.0f;
 
 	scale = 1.0f;
-	s_scale = 1.0f;
-	e_scale = 5.0f;
+	s_scale = 3.0f;
+	e_scale = 3.0f;
 
 	drawsize.x = 16.0f;
 	drawsize.y = 16.0f;
 
-	endFrame = 20;
+	endFrame = 40;
 }
 
 void Ori_StarParticle::Update()
@@ -46,7 +47,7 @@ void Ori_StarParticle::Update()
 	float rate = static_cast<float>(nowFrame) / static_cast<float>(endFrame);
 
 	scale = s_scale + (e_scale - s_scale) * rate;
-	
+	color = s_color + (e_color - s_color) * rate;
 }
 
 ParticlePrototype2D* Ori_StarParticle::clone()
