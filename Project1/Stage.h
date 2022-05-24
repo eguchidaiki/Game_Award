@@ -153,6 +153,7 @@ public: //メンバ関数
 
 	//ブロックの画像ハンドルの読み込み
 	void LoadBlocksHandle();
+
 	//ブロックスライトの生成
 	void CreateBlocksSprite();
 
@@ -172,6 +173,9 @@ public: //メンバ関数
 	//セレクトしたタイルが指定の方向に折れるかどうか
 	bool IsTileFoldDirection(size_t stage, int direction);
 
+	//今いるタイルがほかのタイルと重なっているかどうか
+	bool IsNowTileOver(size_t stage, size_t tile);
+
 	/// <summary>
 	/// ステージがどう折れるかの予測
 	/// </summary>
@@ -182,6 +186,7 @@ public: //メンバ関数
 	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip);
 	// リセット
 	void Reset(unsigned char foldCount[4]);
+
 	// 内部データ全削除
 	void DataClear();
 
