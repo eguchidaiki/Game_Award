@@ -803,6 +803,20 @@ void Stage::SelectingStageTile()
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
+	//overlapの計算
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			if (!IsNowTileOver(a, b))
+			{
+				stageData[a].stageTileData[b].Overlap = 0;
+			}
+		}
+	}
+
+	SelectTile = &stageData[selectStageNum].stageTileData[selectTileNum];
+
 	int anyActionCount = 0;
 
 	for (int a = 0; a < stageData.size(); a++)
@@ -849,10 +863,14 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 	direction = -1;
 
-
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
-	if (stageData[selectStageNum].stageTileData[selectTileNum].isFold == false)
+	if (SelectTile->Overlap > 0)
+	{
+		return 0;
+	}
+
+	if (!SelectTile->isFold)
 	{
 		if (Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN) && IsTileFoldDirection(selectStageNum, BodyType::up))
 		{
@@ -960,8 +978,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetY < stageData[stage].stageTileData[tile].offsetY)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY)
 				{
 					if (player->IsDirectionFoldAll(BodyType::up))
 					{
@@ -983,8 +1000,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetY > stageData[stage].stageTileData[tile].offsetY)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY)
 				{
 					if (player->IsDirectionFoldAll(BodyType::down))
 					{
@@ -1006,8 +1022,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetX < stageData[stage].stageTileData[tile].offsetX)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX)
 				{
 					if (player->Player_IsAction == false && player->Body_One.IsActivate &&
 						player->Body_One.IsFold == false && !player->Body_One.IsAction)
@@ -1033,10 +1048,9 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetX > stageData[stage].stageTileData[tile].offsetX)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX)
 				{
-					if (player->IsDirectionFoldAll(BodyType::left))
+					if (player->IsDirectionFoldAll(BodyType::right))
 					{
 						player->Player_IsAction = true;
 						player->IsRightFold = true;
@@ -1068,9 +1082,9 @@ bool Stage::IsNowTileOver(size_t stage, size_t tile)
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
 			if (stageData[stage].stageTileData[tile].offsetX + 1 <= (stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) - 1 &&
-				stageData[a].stageTileData[b].offsetX + 1 >= (stageData[stage].stageTileData[tile].offsetX + stageData[stage].stageTileData[tile].width) - 1 &&
+				stageData[a].stageTileData[b].offsetX + 1 <= (stageData[stage].stageTileData[tile].offsetX + stageData[stage].stageTileData[tile].width) - 1 &&
 				stageData[stage].stageTileData[tile].offsetY + 1 <= (stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) - 1 &&
-				stageData[a].stageTileData[b].offsetY + 1 >= (stageData[stage].stageTileData[tile].offsetY + stageData[stage].stageTileData[tile].height) - 1)
+				stageData[a].stageTileData[b].offsetY + 1 <= (stageData[stage].stageTileData[tile].offsetY + stageData[stage].stageTileData[tile].height) - 1)
 			{
 				overcount++;
 			}

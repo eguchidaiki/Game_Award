@@ -557,6 +557,11 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 {
 	Update(*center);
 
+	if (IsFold || !IsActivate)
+	{
+		return;
+	}
+
 	//体の四辺
 	float BodyLeft;
 	float BodyRight;
@@ -580,7 +585,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	{
 		BodyUp = BodyStartPos.y;
 		BodyDown = BodyEndPos.y - 1;
-		if (this->Body_Type == BodyType::down && this->IsOpen)
+		if (this->Body_Type == BodyType::down)
 		{
 			BodyAndLegDown = BodyDown + 9;
 		}
@@ -589,7 +594,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	{
 		BodyUp = BodyEndPos.y;
 		BodyDown = BodyStartPos.y - 1;
-		if (this->Body_Type == BodyType::down && this->IsOpen)
+		if (this->Body_Type == BodyType::down)
 		{
 			BodyAndLegDown = BodyDown + 9;
 		}
@@ -630,11 +635,6 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
-
-	if (IsFold || !IsActivate)
-	{
-		return;
-	}
 
 	//体の四隅とブロックとの判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
