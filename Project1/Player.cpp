@@ -435,7 +435,7 @@ void Player::Key_Move()
 	if (actFlag->Jump() && IsInputjump == true)
 	{
 		IsJump = true;
-		FallSpeed = -5.1f;
+		FallSpeed = -5.4f;
 	}
 }
 
