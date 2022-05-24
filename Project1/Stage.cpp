@@ -1434,6 +1434,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	{
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
+			if (selectStageNum != a || selectTileNum != b)
+			{
+				continue;
+			}
 			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 			if (stageData[a].stageTileData[b].isFold == true &&
 				stageData[a].stageTileData[b].FoldDirection == direction)
@@ -1445,19 +1449,64 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 				{
 					stagenumber.push_back(a);
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);					break;
+					moveStageData.push_back(selectTileNum);
+					
+					if (IsPositionTile(player->CenterPosition, a, b))
+					{
+						if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
+							player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
+							player->IsUpBlocked)
+						{
+							if (player->IsOpenBlock(BodyType::up))
+							{
+								player->OpenCount = 0;
+								player->IsOpenCountStart = true;
+								player->IsUpOpen = true;
+							}
+						}
+					}
+					break;
 				}
 				case BodyType::down:
 				{
 					stagenumber.push_back(a);
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);					break;
+					moveStageData.push_back(selectTileNum);
+
+					if (IsPositionTile(player->CenterPosition, a, b))
+					{
+						if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
+							player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction)
+						{
+							if (player->IsOpenBlock(BodyType::down))
+							{
+								player->OpenCount = 0;
+								player->IsOpenCountStart = true;
+								player->IsDownOpen = true;
+							}
+						}
+					}
+					break;
 				}
 				case BodyType::left:
 				{
 					stagenumber.push_back(a);
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
+
+					if (IsPositionTile(player->CenterPosition, a, b))
+					{
+						if (player->Body_One.IsActivate && player->Body_One.IsFold &&
+							player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction)
+						{
+							if (player->IsOpenBlock(BodyType::left))
+							{
+								player->OpenCount = 0;
+								player->IsOpenCountStart = true;
+								player->IsLeftOpen = true;
+							}
+						}
+					}
 					break;
 				}
 				case BodyType::right:
@@ -1465,6 +1514,20 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					stagenumber.push_back(a);
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
+
+					if (IsPositionTile(player->CenterPosition, a, b))
+					{
+						if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
+							player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction)
+						{
+							if (player->IsOpenBlock(BodyType::right))
+							{
+								player->OpenCount = 0;
+								player->IsOpenCountStart = true;
+								player->IsRightOpen = true;
+							}
+						}
+					}
 					break;
 				}
 				default:
