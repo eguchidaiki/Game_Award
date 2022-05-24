@@ -87,6 +87,7 @@ void Stage::GetInitFoldCount(unsigned char foldCount[4])
 
 void Stage::Init()
 {
+
 }
 
 void Stage::Updata()
@@ -338,6 +339,9 @@ void Stage::Draw(const int offsetX, const int offsetY)
 	// 色の初期化
 	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 
+	//エフェクト描画
+	oriEffect.Draw();
+
 	particleManager->Prototype_Draw(EmptyHandle);
 
 	SpriteManager::Get()->SetCommonBeginDraw();
@@ -524,6 +528,8 @@ void Stage::CreateBlocksSprite()
 			}
 		}
 	}
+
+	oriEffect.Init();
 }
 
 int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
@@ -711,6 +717,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 				startPlayerPosX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
 				startPlayerPosY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
+
+				nowPlayerStage = i;
 
 				end = true;
 				break;
@@ -2073,6 +2081,7 @@ int Stage::Open(const unsigned char& direction, const size_t& onPlayerStage, con
 
 int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor)
 {
+
 	if (stageNumber >= stageData.size())
 	{
 		return EF;
@@ -2418,6 +2427,7 @@ int Stage::FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, c
 int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
 	const int offsetX, const int offsetY)
 {
+
 	if (stageNumber >= stageData.size())
 	{
 		return EF;
@@ -2710,6 +2720,13 @@ void Stage::EaseingUpdate()
 				else
 				{
 					stageData[i].stageTileData[j].stageEase.isMove = false;
+
+					//ここでパーティクル生成
+					float oriEffectPosX = static_cast<float>(stageData[i].stageTileData[j].offsetX) * static_cast<float>(blockSize)
+						+ stageData[i].stageTileData[j].width * static_cast<float>(blockSize / 2) + drawOffsetX;
+					float oriEffectPosY = static_cast<float>(stageData[i].stageTileData[j].offsetY) * static_cast<float>(blockSize)
+						+ stageData[i].stageTileData[j].height * static_cast<float>(blockSize / 2) + drawOffsetY;
+					oriEffect.Play(oriEffectPosX, oriEffectPosY);
 					break;
 				}
 			}

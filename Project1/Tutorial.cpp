@@ -1,6 +1,6 @@
 #include "Tutorial.h"
 #include "Player.h"
-#include "InputManger.h"
+#include "ActFlag.h"
 
 namespace
 {
@@ -8,12 +8,13 @@ Player* player = Player::Get();
 }
 
 Tutorial::Tutorial() :
-	moveHandle(0),
-	foldHandle(0),
 	moveSprite{},
+	jumpSprite{},
 	foldSprite{},
 	isTutorial(false),
+	tutorialState(TutorialState::NO_TUTORIAL),
 	isMoveTutorial(false),
+	isJumpTutorial(false),
 	isFoldTutorial(false),
 	isFirst(true),
 	isFirstOnly(false),
@@ -29,6 +30,7 @@ Tutorial::~Tutorial()
 void Tutorial::Init()
 {
 	isTutorial = false;
+	tutorialState = TutorialState::NO_TUTORIAL;
 	isMoveTutorial = true;
 	isFoldTutorial = false;
 	isFirst = true;
@@ -49,33 +51,72 @@ void Tutorial::Update()
 	}
 
 	static bool isMove = false;
+	static bool isJump = false;
 	static bool isFold = false;
 
 	isMove = player->IsWalk;
+	isJump = player->IsJump;
 	isFold = player->IsUpFold || player->IsDownFold ||
 		player->IsLeftFold || player->IsRightFold;
 
-	if (isMoveTutorial == true)
+	switch (tutorialState)
 	{
-		if (isMove)
-		{
-			isMoveTutorial = false;
-			isFoldTutorial = true;
-		}
-	}
-	else if (isFoldTutorial == true)
-	{
-		if (isFold)
-		{
-			isFoldTutorial = false;
-		}
-	}
-
-	if (isMoveTutorial == false && isFoldTutorial == false)
+	case TutorialState::NO_TUTORIAL:
 	{
 		isFirst = false;
 		isTutorial = false;
+		break;
 	}
+	case TutorialState::MOVE:
+	{
+		if (isMove)
+		{
+			tutorialState = TutorialState::JUMP;
+		}
+		break;
+	}
+	case TutorialState::JUMP:
+	{
+		if (isJump)
+		{
+			tutorialState = TutorialState::FOLD;
+		}
+		break;
+	}
+	case TutorialState::FOLD:
+	{
+		if (isFold)
+		{
+			tutorialState = TutorialState::NO_TUTORIAL;
+		}
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	//if (isMoveTutorial == true)
+	//{
+	//	if (isMove)
+	//	{
+	//		isMoveTutorial = false;
+	//		isFoldTutorial = true;
+	//	}
+	//}
+	//else if (isFoldTutorial == true)
+	//{
+	//	if (isFold)
+	//	{
+	//		isFoldTutorial = false;
+	//	}
+	//}
+
+	//if (isMoveTutorial == false && isFoldTutorial == false)
+	//{
+	//	isFirst = false;
+	//	isTutorial = false;
+	//}
 }
 
 void Tutorial::Draw(int offsetX, int offsetY)
@@ -93,30 +134,73 @@ void Tutorial::Draw(int offsetX, int offsetY)
 	XMFLOAT2 offset = { player->CenterPosition.x + offsetX, player->CenterPosition.y + offsetY };
 	bool isPlayerUpBody = player->Body_Two.IsActivate && player->Body_Two.IsOpen;
 
-	if (isMoveTutorial)
+	switch (tutorialState)
+	{
+	case TutorialState::MOVE:
 	{
 		moveSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
 		moveSprite.Draw();
+		break;
 	}
-	if (isFoldTutorial)
+	case TutorialState::JUMP:
+	{
+		jumpSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+		jumpSprite.Draw();
+		break;
+	}
+	case TutorialState::FOLD:
 	{
 		foldSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
 		foldSprite.Draw();
+		break;
 	}
+	default:
+	{
+		break;
+	}
+	}
+
+	//if (isMoveTutorial)
+	//{
+	//	moveSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+	//	moveSprite.Draw();
+	//}
+	//if (isJumpTutorial)
+	//{
+	//	jumpSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+	//	jumpSprite.Draw();
+	//}
+	//if (isFoldTutorial)
+	//{
+	//	foldSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+	//	foldSprite.Draw();
+	//}
 }
 
 void Tutorial::Create()
 {
 	if ((moveSprite.spdata->size.x <= 0) || (moveSprite.spdata->size.y <= 0))
 	{
-		moveHandle = TexManager::LoadTexture("./Resources/idouUI.png");
+		UINT moveHandle = TexManager::LoadTexture("./Resources/idouUI.png");
 		moveSprite.Create(moveHandle);
+	}
+	if ((jumpSprite.spdata->size.x <= 0) || (jumpSprite.spdata->size.y <= 0))
+	{
+		UINT jumpHandle = TexManager::LoadTexture("./Resources/stickJump05.png");
+		jumpSprite.Create(jumpHandle);
 	}
 	if ((foldSprite.spdata->size.x <= 0) || (foldSprite.spdata->size.y <= 0))
 	{
-		foldHandle = TexManager::LoadTexture("./Resources/oruUI.png");
+		UINT foldHandle = TexManager::LoadTexture("./Resources/oruUI.png");
 		foldSprite.Create(foldHandle);
 	}
+}
+
+void Tutorial::Reset()
+{
+	isTutorial = true;
+	tutorialState = TutorialState::MOVE;
+	isFirst = true;
 }
 
 void Tutorial::StartTutorial()
@@ -133,6 +217,7 @@ void Tutorial::StartTutorial()
 	}
 
 	isTutorial = true;
+	tutorialState = TutorialState::MOVE;
 	isMoveTutorial = true;
 	isFoldTutorial = false;
 }
