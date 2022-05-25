@@ -2169,7 +2169,7 @@ void Player::IsOutsideFace()
 	}
 	else
 	{
-		NowDown = Downwall.y;
+		NowDown = Downwall.x;
 	}
 
 	IsOutSideLeft = false;
