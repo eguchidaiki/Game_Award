@@ -660,7 +660,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitUp == false)
 							{
-								player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp) + 1;
+								player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp);
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
@@ -670,7 +670,6 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 							if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
 							{
 								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								JumpCountLeft += player->IsLeft;
 								IsHitLeft = true;
 							}
 						}
@@ -692,10 +691,9 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitDown == false)
 							{
-								player->CenterPosition.y = (BodyDown_mapchip * 60) - (BodyDown - player->CenterPosition.y) - 1;
+								player->CenterPosition.y = (BodyDown_mapchip * 60) - (BodyDown - player->CenterPosition.y);
 								FallCount++;
 								player->IsInitJump = false;
-								player->FallSpeed = 0.0f;
 								IsHitDown = true;
 							}
 						}
@@ -704,7 +702,6 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 							if (IsHitLeft == false)
 							{
 								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								JumpCountLeft += player->IsLeft;
 								player->IsInitJump = false;
 								IsHitLeft = true;
 							}
@@ -727,7 +724,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitUp == false)
 							{
-								center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp) + 1;
+								center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
@@ -736,9 +733,8 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
 							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 1;
+								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 0.3;
 								IsHitRight = true;
-								jumpCountRight += player->IsRight;
 							}
 						}
 					}
@@ -759,10 +755,9 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitDown == false)
 							{
-								player->CenterPosition.y = (BodyDown_mapchip * 60) - (BodyDown - player->CenterPosition.y) - 1;
+								player->CenterPosition.y = (BodyDown_mapchip * 60) - (BodyDown - player->CenterPosition.y);
 								FallCount++;
 								player->IsInitJump = false;
-								player->FallSpeed = 0.0f;
 								IsHitDown = true;
 							}
 						}
@@ -770,9 +765,8 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitRight == false)
 							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 1;
+								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 0.3;
 								IsHitRight = true;
-								jumpCountRight += player->IsRight;
 							}
 						}
 					}
@@ -803,17 +797,16 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitUp == false)
 							{
-								player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp) + 1;
+								player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp);
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
 						}
 						else if (BuriedX < BuriedY)
 						{
-							if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
+							if (IsHitLeft == false)
 							{
 								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								JumpCountLeft += player->IsLeft;
 								IsHitLeft = true;
 							}
 						}
@@ -835,10 +828,9 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitDown == false)
 							{
-								player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y) - 1;
+								player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y) - 0.5;
 								FallCount++;
 								player->IsInitJump = false;
-								player->FallSpeed = 0.0f;
 								IsHitDown = true;
 							}
 						}
@@ -847,7 +839,6 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 							if (IsHitLeft == false)
 							{
 								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								JumpCountLeft += player->IsLeft;
 								player->IsInitJump = false;
 								IsHitLeft = true;
 							}
@@ -870,16 +861,16 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitUp == false)
 							{
-								center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp) + 1;
+								center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
 						}
 						else if (BuriedX < BuriedY)
 						{
-							if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
+							if (IsHitRight == false)
 							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 1;
+								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x);
 								IsHitRight = true;
 								jumpCountRight += player->IsRight;
 							}
@@ -902,10 +893,9 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitDown == false)
 							{
-								player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y) - 1;
+								player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y) - 0.5;
 								FallCount++;
 								player->IsInitJump = false;
-								player->FallSpeed = 0.0f;
 								IsHitDown = true;
 							}
 						}
@@ -913,9 +903,8 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 						{
 							if (IsHitRight == false)
 							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 1;
+								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x);
 								IsHitRight = true;
-								jumpCountRight += player->IsRight;
 							}
 						}
 					}
@@ -958,14 +947,6 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 				}
 			}
 		}
-	}
-
-	if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && Player::Get()->IsInitJump == false)
-	{
-		/*Player::Get()->IsJump = true;
-		Player::Get()->FallSpeed = -5.6f;
-		Player::Get()->IsWalk = true;
-		Player::Get()->IsInitJump = true;*/
 	}
 
 	if (FallCount > 0)

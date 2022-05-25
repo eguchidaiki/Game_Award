@@ -93,9 +93,6 @@ void Player::Update(int offsetX, int offsetY)
 	PlayerOffsetX = offsetX;
 	PlayerOffsetY = offsetY;
 
-	//移動速度を0にするかどうか
-	MoveSpeedUpdate();
-
 	//ジャンプ中の処理
 	if (IsJump == true)
 	{
@@ -121,14 +118,14 @@ void Player::Update(int offsetX, int offsetY)
 	}
 
 	//顔の当たり判定
+	IsAroundBlock();
 	IsOutsideFace();
 	IsHitPlayerBody();
-	IsAroundBlock();
 
+	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
-	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 
 	//落下判定
 	if (IsJump == false && IsFall() && Player_IsAction == false)
@@ -159,6 +156,9 @@ void Player::Update(int offsetX, int offsetY)
 
 	//キー移動
 	Key_Move();
+
+	//移動速度を0にするかどうか
+	MoveSpeedUpdate();
 
 	//足を上げる演出が終わったら折る処理に入る
 	Fold();
@@ -380,7 +380,7 @@ void Player::Key_Move()
 	}
 	else
 	{
-		if (IsJump == false && inputManger->Left() && IsInputjump == true)
+		if (IsJump == false && inputManger->LeftTrigger() && IsInputjump == true)
 		{
 			Leftjump = true;
 			Rightjump = false;
@@ -391,7 +391,7 @@ void Player::Key_Move()
 			IsRight = false;
 		}
 
-		if (IsJump == false && inputManger->Right() && IsInputjump == true)
+		if (IsJump == false && inputManger->RightTrigger() && IsInputjump == true)
 		{
 			Rightjump = true;
 			Leftjump = false;
@@ -1075,26 +1075,58 @@ void Player::MoveSpeedUpdate()
 {
 	int NoMoveCount = 0;
 
-	if (IsHitLeft || IsHitRight)
+	if (actFlag->MoveLeft() && IsHitLeft)
+	{
+		NoMoveCount++;
+	}
+	if (actFlag->MoveRight() && IsHitRight)
 	{
 		NoMoveCount++;
 	}
 
-	if (Body_One.IsActivate && (Body_One.IsHitLeft || Body_One.IsHitRight))
+	if (Body_One.IsActivate)
 	{
-		NoMoveCount++;
+		if (actFlag->MoveLeft() && Body_One.IsHitLeft)
+		{
+			NoMoveCount++;
+		}
+		if (actFlag->MoveRight() && Body_One.IsHitRight)
+		{
+			NoMoveCount++;
+		}
 	}
-	if (Body_Two.IsActivate && (Body_Two.IsHitLeft || Body_Two.IsHitRight))
+	if (Body_Two.IsActivate)
 	{
-		NoMoveCount++;
+		if (actFlag->MoveLeft() && Body_Two.IsHitLeft)
+		{
+			NoMoveCount++;
+		}
+		if (actFlag->MoveRight() && Body_Two.IsHitRight)
+		{
+			NoMoveCount++;
+		}
 	}
-	if (Body_Three.IsActivate && (Body_Three.IsHitLeft || Body_Three.IsHitRight))
+	if (Body_Three.IsActivate)
 	{
-		NoMoveCount++;
+		if (actFlag->MoveLeft() && Body_Three.IsHitLeft)
+		{
+			NoMoveCount++;
+		}
+		if (actFlag->MoveRight() && Body_Three.IsHitRight)
+		{
+			NoMoveCount++;
+		}
 	}
-	if (Body_Four.IsActivate && (Body_Four.IsHitLeft || Body_Four.IsHitRight))
+	if (Body_Four.IsActivate)
 	{
-		NoMoveCount++;
+		if (actFlag->MoveLeft() && Body_Four.IsHitLeft)
+		{
+			NoMoveCount++;
+		}
+		if (actFlag->MoveRight() && Body_Four.IsHitRight)
+		{
+			NoMoveCount++;
+		}
 	}
 
 	if (NoMoveCount > 0)
@@ -1589,7 +1621,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitUp == false)
 							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
@@ -1598,7 +1630,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitLeft == false)
 							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 								JumpCountLeft += IsLeft;
 								IsHitLeft = true;
 							}
@@ -1631,7 +1663,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitLeft == false)
 							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 								JumpCountLeft += IsLeft;
 								IsHitLeft = true;
 							}
@@ -1654,7 +1686,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitUp == false)
 							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
@@ -1663,7 +1695,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitRight == false)
 							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
+								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
 								jumpCountRight += IsRight;
 								IsHitRight = true;
 							}
@@ -1697,7 +1729,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitRight == false)
 							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
+								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
 								jumpCountRight += IsRight;
 								IsHitRight = true;
 							}
@@ -1729,7 +1761,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitUp == false)
 							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
@@ -1738,7 +1770,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitLeft == false)
 							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 								JumpCountLeft += IsLeft;
 								IsHitLeft = true;
 							}
@@ -1771,7 +1803,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitLeft == false)
 							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 								JumpCountLeft += IsLeft;
 								IsHitLeft = true;
 							}
@@ -1794,7 +1826,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitUp == false)
 							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 26.0f;
+								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
 								FallSpeed = 0.0f;
 								IsHitUp = true;
 							}
@@ -1803,7 +1835,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitRight == false)
 							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
+								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
 								jumpCountRight += IsRight;
 								IsHitRight = true;
 							}
@@ -1837,7 +1869,7 @@ void Player::IsHitPlayerBody()
 						{
 							if (IsHitRight == false)
 							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 26.0f;
+								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
 								jumpCountRight += IsRight;
 								IsHitRight = true;
 							}

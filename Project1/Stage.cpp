@@ -1402,22 +1402,15 @@ void Stage::SetOverlap(size_t stagenum, size_t tilenum)
 				continue;
 			}
 			if (GetStageTileOffsetX(a, b) + 1 <= (GetStageTileOffsetX(stagenum, tilenum) + GetStageTileWidth(stagenum, tilenum)) - 1 &&
-				(GetStageTileOffsetX(a, b) + GetStageTileWidth(a, b)) - 1 >= GetStageTileOffsetX(stagenum, tilenum) &&
+				(GetStageTileOffsetX(a, b) + GetStageTileWidth(a, b)) - 1 >= GetStageTileOffsetX(stagenum, tilenum) + 1 &&
 				GetStageTileOffsetY(a, b) + 1 <= (GetStageTileOffsetY(stagenum, tilenum) + GetStageTileHeight(stagenum, tilenum)) - 1 &&
-				(GetStageTileOffsetY(a, b) + GetStageTileHeight(a, b)) - 1 >= GetStageTileOffsetY(stagenum, tilenum))
+				(GetStageTileOffsetY(a, b) + GetStageTileHeight(a, b)) - 1 >= GetStageTileOffsetY(stagenum, tilenum) + 1)
 			{
-				if (stageData[a].stageTileData[b].StageGroup < stageData[stagenum].stageTileData[tilenum].StageGroup &&
-					stageData[a].stageTileData[b].IsOverSet == false)
-				{
-					stageData[a].stageTileData[b].Overlap++;
-					stageData[a].stageTileData[b].IsOverSet = true;
-					break;
-				}
 				if (stageData[a].stageTileData[b].StageGroup > stageData[stagenum].stageTileData[tilenum].StageGroup &&
 					stageData[stagenum].stageTileData[tilenum].IsOverSet == false)
 				{
 					stageData[stagenum].stageTileData[tilenum].Overlap++;
-					stageData[stagenum].stageTileData[tilenum].IsOverSet = true;
+					//stageData[stagenum].stageTileData[tilenum].IsOverSet = true;
 					break;
 				}
 			}
@@ -1488,7 +1481,7 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
-			if (a == selectStageNum && b == selectTileNum)
+			if (a == selectStageNum && b == selectTileNum && SelectTile->Overlap == 0)
 			{
 				switch (direction)
 				{
