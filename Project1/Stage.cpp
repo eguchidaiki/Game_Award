@@ -1488,7 +1488,7 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
-			if (a == selectStageNum && b == selectTileNum)
+			if (a == selectStageNum && b == selectTileNum && SelectTile->Overlap == 0)
 			{
 				switch (direction)
 				{
