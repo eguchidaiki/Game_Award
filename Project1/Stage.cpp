@@ -1802,10 +1802,10 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 
 			if (stageTile.isFold == true)
 			{
-				continue;
+				//continue;
 			}
-			if (x >= stageTile.offsetX && x < stageTile.offsetX + stageTile.width &&
-				y >= stageTile.offsetY && y < stageTile.offsetY + stageTile.height)
+			if (x >= stageTile.offsetX && x <= stageTile.offsetX + stageTile.width &&
+				y >= stageTile.offsetY && y <= stageTile.offsetY + stageTile.height)
 			{
 				*stageNumber = i;
 				*stageTileNumber = j;

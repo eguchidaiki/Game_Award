@@ -2194,21 +2194,25 @@ void Player::IsOutsideFace()
 		IsOutSideDown = true;
 	}
 
+	float BuriedLeft = FaceLeft - NowLeft;
+	float BuriedUp = FaceUp - NowUp;
+	float BuriedRight = NowRight - FaceRight;
+	float BuriedDown = NowDown - FaceDown;
 
-	if (NowLeft >= FaceLeft)
+	if (NowLeft >= FaceLeft && ((BuriedLeft <= BuriedUp) || (BuriedLeft <= BuriedDown)))
 	{
 		CenterPosition.x = NowLeft + 26;
 	}
-	if (NowRight <= FaceRight)
+	if (NowRight <= FaceRight && ((BuriedRight <= BuriedUp) || (BuriedRight <= BuriedDown)))
 	{
 		CenterPosition.x = NowRight - 26;
 	}
-	if (NowUp >= FaceUp)
+	if (NowUp >= FaceUp && ((BuriedUp < BuriedLeft) || (BuriedUp < BuriedRight)))
 	{
 		CenterPosition.y = NowUp + 26;
 		FallSpeed = 0.0f;
 	}
-	if (NowDown <= FaceDown)
+	if (NowDown <= FaceDown && ((BuriedDown < BuriedLeft) || (BuriedDown < BuriedRight)))
 	{
 		CenterPosition.y = NowDown - 26;
 	}

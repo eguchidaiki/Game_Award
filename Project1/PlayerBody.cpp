@@ -1191,22 +1191,27 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 		IsOutSideDown = true;
 	}
 
-	if (NowLeft >= BodyLeft)
+	float BuriedLeft = BodyLeft - NowLeft;
+	float BuriedUp = BodyUp - NowUp;
+	float BuriedRight = NowRight - BodyRight;
+	float BuriedDown = NowDown - BodyDown;
+
+	if (NowLeft >= BodyLeft && ((BuriedLeft <= BuriedUp) || (BuriedLeft <= BuriedDown)))
 	{
 		center->x = NowLeft + (center->x - BodyLeft);
 	}
-	if (NowRight <= BodyRight)
+	if (NowRight <= BodyRight && ((BuriedRight <= BuriedUp) || (BuriedRight <= BuriedDown)))
 	{
-		center->x = NowRight - (BodyRight - center->x) - 1;
+		center->x = NowRight - (BodyRight - center->x);
 	}
-	if (NowUp >= BodyUp)
+	if (NowUp >= BodyUp && ((BuriedUp < BuriedLeft) || (BuriedUp < BuriedRight)))
 	{
 		center->y = NowUp + (center->y - BodyUp);
 		FallSpeed = 0.0f;
 	}
-	if (NowDown <= BodyDown)
+	if (NowDown <= BodyDown && ((BuriedDown < BuriedLeft) || (BuriedDown < BuriedRight)))
 	{
-		center->y = NowDown - (BodyDown - center->y) - 1;
+		center->y = NowDown - (BodyDown - center->y);
 	}
 }
 
