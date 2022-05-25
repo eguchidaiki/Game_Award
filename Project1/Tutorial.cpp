@@ -144,17 +144,17 @@ void Tutorial::Create()
 {
 	if ((moveSprite.spdata->size.x <= 0) || (moveSprite.spdata->size.y <= 0))
 	{
-		UINT moveHandle = TexManager::LoadTexture("./Resources/idouUI.png");
+		UINT moveHandle = TexManager::LoadTexture("./Resources/tutorial/idouUI.png");
 		moveSprite.Create(moveHandle);
 	}
 	if ((jumpSprite.spdata->size.x <= 0) || (jumpSprite.spdata->size.y <= 0))
 	{
-		UINT jumpHandle = TexManager::LoadTexture("./Resources/jump/AJump1.png");
+		UINT jumpHandle = TexManager::LoadTexture("./Resources/tutorial/jump/AJump1.png");
 		jumpSprite.Create(jumpHandle);
 	}
 	if ((foldSprite.spdata->size.x <= 0) || (foldSprite.spdata->size.y <= 0))
 	{
-		UINT foldHandle = TexManager::LoadTexture("./Resources/oruUI.png");
+		UINT foldHandle = TexManager::LoadTexture("./Resources/tutorial/oruUI.png");
 		foldSprite.Create(foldHandle);
 	}
 }

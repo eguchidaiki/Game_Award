@@ -377,7 +377,7 @@ void Stage::Create()
 
 	if ((MapchipSpriteGoal.spdata->size.x <= 0) || (MapchipSpriteGoal.spdata->size.y <= 0))
 	{
-		GoalHandle = TexManager::LoadTexture("Resources/goal.png");
+		GoalHandle = TexManager::LoadTexture("Resources/goal/goal1.png");
 		MapchipSpriteGoal.Create(GoalHandle);
 	}
 

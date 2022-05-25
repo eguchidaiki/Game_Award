@@ -208,12 +208,6 @@
     <Image Include="Resources\goal.png">
       <Filter>リソースファイル</Filter>
     </Image>
-    <Image Include="Resources\player.png">
-      <Filter>リソースファイル</Filter>
-    </Image>
-    <Image Include="Resources\playerBody02.png">
-      <Filter>リソースファイル</Filter>
-    </Image>
     <Image Include="Resources\stage_enpty.png">
       <Filter>リソースファイル</Filter>
     </Image>
