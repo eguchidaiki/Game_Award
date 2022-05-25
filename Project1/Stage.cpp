@@ -975,14 +975,30 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 bool Stage::IsTileFoldDirection(size_t stage, int direction)
 {
-	size_t NowStage = -1;
-	size_t NowTile = -1;
-	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
+	size_t NowStage = 0;
+	size_t NowTile = 0;
 
 	if (stageData[stage].stageTileData.size() <= 1)
 	{
 		return false;
 	}
+
+	// プレイヤーとカーソルが重なっているかどうかのチェック
+	for (i = 0; NowStage != -1; i++)
+	{
+		static size_t skipStage = 0;
+		skipStage = NowStage;
+
+		GetPositionTile(player->CenterPosition, &NowStage, &NowTile,
+						i != 0, skipStage);
+
+		if (NowStage == selectStageNum && NowTile == selectTileNum)
+		{
+			return false;
+		}
+	}
+
+	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
 	for (int tile = 0; tile < stageData[stage].stageTileData.size(); tile++)
 	{
@@ -1787,7 +1803,8 @@ char Stage::GetPositionStage(const RVector3& playerPos)
 	return nowPlayerStage;
 }
 
-void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber)
+void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+							bool isSkip, const size_t& skipStageNumber)
 {
 	*stageNumber = static_cast<size_t>(-1);
 	*stageTileNumber = static_cast<size_t>(-1);
@@ -1796,14 +1813,15 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 
 	for (i = 0; i < stageData.size(); i++)
 	{
+		if (isSkip && i <= skipStageNumber)
+		{
+			continue;
+		}
+
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			auto& stageTile = stageData[i].stageTileData[j];
 
-			if (stageTile.isFold == true)
-			{
-				//continue;
-			}
 			if (x >= stageTile.offsetX && x <= stageTile.offsetX + stageTile.width &&
 				y >= stageTile.offsetY && y <= stageTile.offsetY + stageTile.height)
 			{
@@ -1815,7 +1833,8 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 	}
 }
 
-void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber)
+void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+								bool isSkip, const size_t& skipStageNumber)
 {
 	*stageNumber = static_cast<size_t>(-1);
 	*stageTileNumber = static_cast<size_t>(-1);
@@ -1824,6 +1843,11 @@ void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, siz
 
 	for (i = 0; i < initStageData.size(); i++)
 	{
+		if (isSkip && i <= skipStageNumber)
+		{
+			continue;
+		}
+
 		for (j = 0; j < initStageData[i].stageTileData.size(); j++)
 		{
 			auto& stageTile = initStageData[i].stageTileData[j];
@@ -1924,7 +1948,7 @@ int Stage::Fold(const unsigned char& direction, const size_t& onPlayerStage, con
 	{
 		return EF;
 	}
-	//すでに動いいてるタイルを折ろうとしたら動きを止める
+	//すでに動いてるタイルを折ろうとしたら動きを止める
 	if (stageData[onPlayerStage].stageTileData[moveStageData].stageEase.isMove)
 	{
 		stageData[onPlayerStage].stageTileData[moveStageData].stageEase.isMove = false;
