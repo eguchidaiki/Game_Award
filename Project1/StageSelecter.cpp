@@ -1,7 +1,6 @@
 ﻿#include "StageSelecter.h"
 #include <string>
 
-#include <Raki_WinAPI.h>
 #include <Raki_imguiMgr.h>
 
 #include "Stage.h"
@@ -84,33 +83,39 @@ void StageSelecter::Draw()
 	ImGui::Text("pos x : %f    y : %f", Input::getMousePos().x, Input::getMousePos().y);
 	ImguiMgr::Get()->EndDrawImgui();*/
 
-	SelectLeft.DrawSprite(29, 623);
-	SelectLeft.Draw();
-	SelectRight.DrawSprite(1184, 623);
-	SelectRight.Draw();
+	if (nowpage != StageSelecter::page_1_4)
+	{
+		SelectLeft.DrawSprite(29, 623);
+		SelectLeft.Draw();
+	}
+	if (nowpage != StageSelecter::page_17_20)
+	{
+		SelectRight.DrawSprite(1184, 623);
+		SelectRight.Draw();
+	}
 
 	//float mouse_x = Input::getMousePos().x;
 	//float mouse_y = Input::getMousePos().y;
 
-	if /*(mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626)
+	/*if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626)
 	{
 		SelectLeft.DrawExtendSprite(19, 613, 29 + 77, 623 + 77);
 	}
-	else*/(true)
+	else
 	{
 		SelectLeft.DrawSprite(29, 623);
 	}
-	SelectLeft.Draw();
+	SelectLeft.Draw();*/
 
-	if /*(mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626)
+	/*if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626)
 	{
 		SelectRight.DrawExtendSprite(1174, 613, 1184 + 77, 623 + 77);
 	}
-	else*/(true)
+	else
 	{
 		SelectRight.DrawSprite(1184, 623);
 	}
-	SelectRight.Draw();
+	SelectRight.Draw();*/
 
 	//カーソル描画
 	DrawCursor();
@@ -126,14 +131,15 @@ void StageSelecter::Changing_UI_Number()
 {
 	//入力によってインクリメント、デクリメント
 	int select_number = static_cast<int>(user_selecting);
-	if (inputManager->LeftTrigger() ||
-		Input::isKeyTrigger(DIK_LEFT)) {
+	if (inputManager->LeftTrigger() || Input::isKeyTrigger(DIK_LEFT)) {
 		if (user_selecting != UI_BACK) { select_number--; }
 	}
 
-	if (inputManager->RightTrigger() ||
-		Input::isKeyTrigger(DIK_RIGHT)) {
-		if (user_selecting != UI_FRONT) { select_number++; }
+	if (inputManager->RightTrigger() || Input::isKeyTrigger(DIK_RIGHT)) {
+		if (user_selecting != UI_FRONT && (nowpage != StageSelecter::page_17_20 || user_selecting != UI_STAGEBOX_4))
+		{
+			select_number++;
+		}
 	}
 	user_selecting = static_cast<NOW_SELECTING>(select_number);
 }
@@ -196,6 +202,7 @@ void StageSelecter::CheckToPageChangeInput()
 			int pageNum = static_cast<int>(nextpage);
 			pageNum--;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
+			user_selecting = StageSelecter::UI_STAGEBOX_4;
 		}
 
 		break;
@@ -208,6 +215,7 @@ void StageSelecter::CheckToPageChangeInput()
 			int pageNum = static_cast<int>(nextpage);
 			pageNum++;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
+			user_selecting = StageSelecter::UI_STAGEBOX_1;
 		}
 
 		break;
@@ -286,32 +294,24 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		{
 			//stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
 			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 1);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 1);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 3);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 1);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -322,32 +322,24 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 4);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -359,32 +351,24 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 3);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -396,32 +380,24 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage13.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 3);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage14.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage15.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage16.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
@@ -433,32 +409,24 @@ void StageSelecter::CheckLoadStage(int boxnum)
 		if (boxnum == 0)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage17.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 3);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 1)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage18.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else if (boxnum == 2)
 		{
 			stagePtr->LoadStage("./Resources/stage/stage19.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
 		else
 		{
 			stagePtr->LoadStage("./Resources/stage/stage20.csv", playerPtr->playerTile);
-			stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-			stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 			playerPtr->Init();
 			playerPtr->BodySetUp(playerPtr->playerTile);
 		}
