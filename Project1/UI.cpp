@@ -31,7 +31,7 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 
 	IsInButton();
 
-	if ((IsResetPress && Input::isMouseClickTrigger(0)) || InputManger::Get()->Reset())
+	if ((IsResetPress && Input::isMouseClickTrigger(0)) || InputManger::Get()->ResetTrigger())
 	{
 		stage->Reset(PlayerTile);
 		player->Init();

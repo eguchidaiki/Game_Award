@@ -2000,49 +2000,176 @@ void Player::IsOutsideFace()
 	//タイルの数
 	size_t j = 0;
 
+	size_t NowStage = 0;
+	size_t NowTile = 0;
+
+	stage->GetPositionTile(CenterPosition, &NowStage, &NowTile);
+
 	float FaceLeft = CenterPosition.x - 25;
 	float FaceUp = CenterPosition.y - 25;
 	float FaceRight = CenterPosition.x + 25;
 	float FaceDown = CenterPosition.y + 25;
 	float FaceAndLegDown = CenterPosition.y + 33;
 
-	size_t NowStage;
-	size_t NowTile;
-	stage->GetPositionTile(CenterPosition, &NowStage, &NowTile);
+	size_t sub_stage = 0;
+	size_t sub_tile = 0;
 
-	float NowLeft = stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize;
-	float NowRight = NowLeft + (stage->GetStageTileWidth(NowStage, NowTile) * stage->blockSize);
-	float NowUp = stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize;
-	float NowDown = NowUp + (stage->GetStageTileHeight(NowStage, NowTile) * stage->blockSize);
+	stage->GetPositionTile({ FaceLeft,FaceUp,0 }, &sub_stage, &sub_tile);
+	XMFLOAT2 LeftUpTile = { (float)sub_stage,(float)sub_tile };
+
+	stage->GetPositionTile({ FaceLeft,FaceAndLegDown,0 }, &sub_stage, &sub_tile);
+	XMFLOAT2 LeftDownTile = { (float)sub_stage,(float)sub_tile };
+
+	stage->GetPositionTile({ FaceRight,FaceUp,0 }, &sub_stage, &sub_tile);
+	XMFLOAT2 RightUpTile = { (float)sub_stage,(float)sub_tile };
+
+	stage->GetPositionTile({ FaceRight,FaceAndLegDown,0 }, &sub_stage, &sub_tile);
+	XMFLOAT2 RightDownTile = { (float)sub_stage,(float)sub_tile };
+
+	//現時点での四隅のタイルをセット
+	XMFLOAT2 Leftwall =
+	{
+		(float)stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize,
+		(float)stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize
+	};
+	XMFLOAT2 Rightwall =
+	{
+		(float)(stage->GetStageTileOffsetX(NowStage, NowTile) + stage->GetStageTileWidth(NowStage, NowTile)) * stage->blockSize,
+		(float)(stage->GetStageTileOffsetX(NowStage, NowTile) + stage->GetStageTileWidth(NowStage, NowTile)) * stage->blockSize
+	};
+	XMFLOAT2 Upwall =
+	{
+		(float)stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize,
+		(float)stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize
+	};
+	XMFLOAT2 Downwall =
+	{
+		(float)(stage->GetStageTileOffsetY(NowStage, NowTile) + stage->GetStageTileHeight(NowStage, NowTile)) * stage->blockSize,
+		(float)(stage->GetStageTileOffsetY(NowStage, NowTile) + stage->GetStageTileHeight(NowStage, NowTile)) * stage->blockSize
+	};
+
+	float NowLeft = Leftwall.x;
+	float NowRight = Rightwall.x;
+	float NowUp = Upwall.x;
+	float NowDown = Downwall.x;
 
 	//顔の四隅との場外判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			if (stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize == stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+			//左のoffset計算(左上)
+			if (FaceUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+				FaceUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (NowLeft == (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (Leftwall.x > stage->GetStageTileOffsetX(i, j) * stage->blockSize)
 				{
-					NowLeft = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
-				}
-				if (NowRight == (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
-				{
-					NowRight = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+					Leftwall.x = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
 			}
-			if (stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize == stage->GetStageTileOffsetX(i, j) * stage->blockSize)
+			//左のoffset計算(左下)
+			if (FaceDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+				FaceDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (NowUp == (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (Leftwall.y > (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 				{
-					NowUp = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
+					Leftwall.y = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
-				if (NowDown == (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
+			}
+
+			//右のoffset計算(右上)
+			if (FaceUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+				FaceUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+			{
+				if (Rightwall.x < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
-					NowDown = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+					Rightwall.x = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+				}
+			}
+			//右のoffset計算(右下)
+			if (FaceDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+				FaceDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+			{
+				if (Rightwall.y < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				{
+					Rightwall.y = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+				}
+			}
+
+			//上のoffset計算(左上)
+			if (FaceLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+				FaceLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
+			{
+				if (Upwall.x > stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+				{
+					Upwall.x = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
+				}
+			}
+			//上のoffset計算(右上)
+			if (FaceRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+				FaceRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
+			{
+				if (Upwall.y > (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
+				{
+					Upwall.y = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
+				}
+			}
+
+			//下のoffset計算(左下)
+			if (FaceLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+				FaceLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
+			{
+				if (Downwall.x < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				{
+					Downwall.x = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+				}
+			}
+			//下のoffset計算(右下)
+			if (FaceRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+				FaceRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
+			{
+				if (Downwall.y < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				{
+					Downwall.y = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
 		}
+	}
+
+	if (Leftwall.x > Leftwall.y)
+	{
+		NowLeft = Leftwall.y;
+	}
+	else
+	{
+		NowLeft = Leftwall.x;
+	}
+
+	if (Rightwall.x < Rightwall.y)
+	{
+		NowRight = Rightwall.y;
+	}
+	else
+	{
+		NowRight = Rightwall.x;
+	}
+
+	if (Upwall.x > Upwall.y)
+	{
+		NowUp = Upwall.y;
+	}
+	else
+	{
+		NowUp = Upwall.x;
+	}
+
+	if (Downwall.x < Downwall.y)
+	{
+		NowDown = Downwall.y;
+	}
+	else
+	{
+		NowDown = Downwall.x;
 	}
 
 	IsOutSideLeft = false;
@@ -2050,15 +2177,15 @@ void Player::IsOutsideFace()
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 30 <= FaceLeft)
+	if (NowLeft + 25 <= FaceLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 30 >= FaceRight)
+	if (NowRight + 25 >= FaceRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 30 <= FaceUp)
+	if (NowUp + 25 <= FaceUp)
 	{
 		IsOutSideUp = true;
 	}
@@ -2067,23 +2194,27 @@ void Player::IsOutsideFace()
 		IsOutSideDown = true;
 	}
 
+	float BuriedLeft = FaceLeft - NowLeft;
+	float BuriedUp = FaceUp - NowUp;
+	float BuriedRight = NowRight - FaceRight;
+	float BuriedDown = NowDown - FaceDown;
 
-	if (NowLeft >= FaceLeft)
+	if (NowLeft >= FaceLeft && ((BuriedLeft <= BuriedUp) || (BuriedLeft <= BuriedDown)))
 	{
-		CenterPosition.x = NowLeft + 25;
+		CenterPosition.x = NowLeft + 26;
 	}
-	if (NowRight <= FaceRight)
+	if (NowRight <= FaceRight && ((BuriedRight <= BuriedUp) || (BuriedRight <= BuriedDown)))
 	{
-		CenterPosition.x = NowRight - 25;
+		CenterPosition.x = NowRight - 26;
 	}
-	if (NowUp >= FaceUp)
+	if (NowUp >= FaceUp && ((BuriedUp < BuriedLeft) || (BuriedUp < BuriedRight)))
 	{
-		CenterPosition.y = NowUp + 25;
+		CenterPosition.y = NowUp + 26;
 		FallSpeed = 0.0f;
 	}
-	if (NowDown <= FaceDown)
+	if (NowDown <= FaceDown && ((BuriedDown < BuriedLeft) || (BuriedDown < BuriedRight)))
 	{
-		CenterPosition.y = NowDown - 25;
+		CenterPosition.y = NowDown - 26;
 	}
 }
 
