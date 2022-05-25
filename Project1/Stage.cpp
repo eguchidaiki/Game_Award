@@ -347,6 +347,7 @@ void Stage::Draw(const int offsetX, const int offsetY)
 	SpriteManager::Get()->SetCommonBeginDraw();
 
 	MapchipSpriteEmpty.Draw();
+	MapchipSpriteGoal.Draw();
 	for (i = 0; i < 4; i++)
 	{
 		for (j = 0; j < 16; j++)
@@ -354,7 +355,6 @@ void Stage::Draw(const int offsetX, const int offsetY)
 			AllBlockSprite[i][j].Draw();
 		}
 	}
-	MapchipSpriteGoal.Draw();
 
 	lineSprite.Draw();
 
@@ -1751,6 +1751,11 @@ bool Stage::IsMapchipBlocks(char mapchip)
 		return true;
 	}
 
+	if (mapchip == MapchipData::NOFRAME)
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -1843,6 +1848,32 @@ bool Stage::IsPositionInitTile(size_t StageNum, size_t StageTileNum)
 	{
 		return true;
 	}
+	return false;
+}
+
+bool Stage::IsAnyTile(const RVector3& center)
+{
+	float left;
+	float up;
+	float right;
+	float down;
+
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			left = (float)stageData[a].stageTileData[b].offsetX * blockSize;
+			up = (float)stageData[a].stageTileData[b].offsetY * blockSize;
+			right = left + blockSize * (float)stageData[a].stageTileData[b].width;
+			down = up + blockSize * (float)stageData[a].stageTileData[b].height;
+
+			if (center.x >= left && center.x <= right && center.y >= up && center.y <= down)
+			{
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
