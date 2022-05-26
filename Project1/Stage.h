@@ -197,7 +197,7 @@ public: //メンバ関数
 	void SetOverlap(size_t stagenum, size_t tilenum);
 
 	//Overlapの更新
-	void UpdateOverlap();
+	void UpdateOverlap() {}
 
 	// 任意の座標が任意のステージにいるかどうか
 	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
@@ -286,9 +286,11 @@ public: //メンバ関数
 	// プレイヤーがいるステージを取得
 	char GetPositionStage(const RVector3& playerPos);
 	// 任意の座標からどのステージタイルにいるかを取得
-	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+						 bool isSkip = false, const size_t& skipStageNumber = 0);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
-	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+							 bool isSkip = false, const size_t& skipStageNumber = 0);
 	//指定した場所のステージタイルにプレイヤーがいるかどうか
 	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
 	//任意の座標がどこかのタイルにいたらtrue
