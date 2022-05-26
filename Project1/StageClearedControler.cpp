@@ -1,5 +1,10 @@
 #include "StageClearedControler.h"
-#include <Raki_Input.h>
+#include "InputManger.h"
+
+namespace
+{
+InputManger* inputManger = InputManger::Get();
+}
 
 void StageClearedControler::Init()
 {
@@ -27,7 +32,7 @@ void StageClearedControler::Init()
 }
 
 void StageClearedControler::Update()
-{	
+{
 	Update_CheckControlStates();
 
 	Update_ControlMain();
@@ -86,7 +91,7 @@ void StageClearedControler::Update_CheckControlStates()
 			//UI選択有効化
 			ctrl_state = CONTROL_ACTIVE;
 		}
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A))
+		if (inputManger->DecisionTrigger())
 		{
 			frameCount = DIRECTING_FRAME;
 		}
@@ -94,12 +99,12 @@ void StageClearedControler::Update_CheckControlStates()
 		break;
 	case StageClearedControler::CONTROL_ACTIVE:
 		//UI選択の入力（どっちを選択してるか？）
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT)) { user_selecting = 0; }
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT)) { user_selecting = 1; }
+		if (inputManger->LeftTrigger()) { user_selecting = 0; }
+		if (inputManger->RightTrigger()) { user_selecting = 1; }
 		_user_selecting = static_cast<STAGE_CLEARED_USER_SELECTING>(user_selecting);
 
 		//UI選択された
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A))
+		if (inputManger->DecisionTrigger())
 		{
 			//ボタン押した
 			if (user_selecting == 0) { _go_next_button.UI_Push(); }
@@ -111,8 +116,6 @@ void StageClearedControler::Update_CheckControlStates()
 		break;
 
 	case StageClearedControler::CONTROL_UI_SELECTED:
-
-
 
 		break;
 
@@ -207,7 +210,7 @@ void UI_Button::Update()
 void UI_Button::Draw(float centerX, float centerY, float x_scale, float y_scale)
 {
 	uiSprite.DrawExtendSprite(centerX - width * x_scale, centerY - height * y_scale,
-		centerX + width * x_scale, centerY + height * y_scale);
+							  centerX + width * x_scale, centerY + height * y_scale);
 	uiSprite.Draw();
 }
 
