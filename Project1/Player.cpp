@@ -59,7 +59,6 @@ Player::~Player()
 
 void Player::Init()
 {
-	Create();
 	CenterPosition.x = static_cast<float>(Stage::GetStartPlayerPosX() * Stage::blockSize + Stage::halfBlockSize);
 	CenterPosition.y = static_cast<float>(Stage::GetStartPlayerPosY() * Stage::blockSize + Stage::halfBlockSize);
 
@@ -70,17 +69,11 @@ void Player::Init()
 	IsColide = false;
 	IsGoal = false;
 
-	Body_One.Create();
-	Body_Two.Create();
-	Body_Three.Create();
-	Body_Four.Create();
-
 	Body_One.Init(CenterPosition, BodyType::left);
 	Body_Two.Init(CenterPosition, BodyType::up);
 	Body_Three.Init(CenterPosition, BodyType::right);
 	Body_Four.Init(CenterPosition, BodyType::down);
 
-	FaceLeg.Create();
 	IsLeft = true;
 	IsRight = false;
 
@@ -333,6 +326,13 @@ void Player::Create()
 		FaceHandle[1] = TexManager::LoadTexture("Resources/chara02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
 	}
+
+	Body_One.Create();
+	Body_Two.Create();
+	Body_Three.Create();
+	Body_Four.Create();
+
+	FaceLeg.Create();
 }
 
 void Player::Key_Move()

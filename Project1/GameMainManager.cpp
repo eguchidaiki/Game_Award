@@ -107,34 +107,10 @@ void GameMainManager::GameInstanceUpdate()
 			IsStart = true;
 		}
 
-
-
-	player->Update(stage->drawOffsetX, stage->drawOffsetY);
-	bool PlayerBodyStatus[4] = {};
-
-	player->SetBodyStatus(PlayerBodyStatus);
-
-	IsFolds[0] = player->IsLeftFold;
-	IsFolds[1] = player->IsUpFold;
-	IsFolds[2] = player->IsRightFold;
-	IsFolds[3] = player->IsDownFold;
-
-		tutorial.Update();
-
-		//各ステージの処理
 		player->Update(stage->drawOffsetX, stage->drawOffsetY);
 		bool PlayerBodyStatus[4] = {};
 
 		player->SetBodyStatus(PlayerBodyStatus);
-
-
-	if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
-	{
-		int test = 0;
-	}
-
-	stage->Updata();
-	stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->FaceLeg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
 		IsFolds[0] = player->IsLeftFold;
 		IsFolds[1] = player->IsUpFold;
@@ -146,51 +122,61 @@ void GameMainManager::GameInstanceUpdate()
 		IsOpens[2] = player->IsRightOpen;
 		IsOpens[3] = player->IsDownOpen;
 
+		tutorial.Update();
+
+		player->SetBodyStatus(PlayerBodyStatus);
+
+
+		if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
+		{
+			int test = 0;
+		}
 
 		stage->Updata();
-		stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+		stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->FaceLeg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
 
-	//ステージとの連動のため開く処理はこっちでやる
-	if (player->OpenCount >= 2)
-	{
-		if (player->IsLeftOpen == true)
+		//ステージとの連動のため開く処理はこっちでやる
+		if (player->OpenCount >= 2)
 		{
-			player->IsLeftOpen = false;
+			if (player->IsLeftOpen == true)
+			{
+				player->IsLeftOpen = false;
+			}
+			if (player->IsUpOpen == true)
+			{
+				player->IsUpOpen = false;
+			}
+			if (player->IsRightOpen == true)
+			{
+				player->IsRightOpen = false;
+			}
+			if (player->IsDownOpen == true)
+			{
+				player->IsDownOpen = false;
+			}
+			player->OpenCount = 0;
+			player->IsOpenCountStart = false;
 		}
-		if (player->IsUpOpen == true)
+
+		//ゴールした判定？
+		if (player->IsGoal && !Ischangecount)
 		{
-			player->IsUpOpen = false;
+			Ischangecount = true;
+			changecount = 0;
 		}
-		if (player->IsRightOpen == true)
+
+		//ここにゴール演出、UI処理を入れる
+
+		//セレクトに遷移する処理(仮)
+		if (Ischangecount)
 		{
-			player->IsRightOpen = false;
-		}
-		if (player->IsDownOpen == true)
-		{
-			player->IsDownOpen = false;
-		}
-		player->OpenCount = 0;
-		player->IsOpenCountStart = false;
-	}
+			changecount++;
 
-	//ゴールした判定？
-	if (player->IsGoal && !Ischangecount)
-	{
-		Ischangecount = true;
-		changecount = 0;
-	}
-
-	//ここにゴール演出、UI処理を入れる
-
-	//セレクトに遷移する処理(仮)
-	if (Ischangecount)
-	{
-		changecount++;
-
-		if (changecount > 20)
-		{
-			IsGoSelect = true;
+			if (changecount > 20)
+			{
+				IsGoSelect = true;
+			}
 		}
 	}
 }
