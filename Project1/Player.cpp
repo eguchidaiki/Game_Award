@@ -101,15 +101,6 @@ void Player::Update(int offsetX, int offsetY)
 			FallSpeed += 0.2f;
 		}
 
-		if (Leftjump == true && Player_IsAction == false)
-		{
-			CenterPosition.x -= 1.5f;
-		}
-		if (Rightjump == true && Player_IsAction == false)
-		{
-			CenterPosition.x += 1.5f;
-		}
-
 		if (FallSpeed > 0)
 		{
 			IsJump = false;
@@ -133,18 +124,6 @@ void Player::Update(int offsetX, int offsetY)
 		if (FallSpeed < 5.0)
 		{
 			FallSpeed += 0.2f;
-		}
-		if (Leftjump == true)
-		{
-			CenterPosition.x -= 1.5f;
-			IsLeft = true;
-			IsRight = false;
-		}
-		if (Rightjump == true)
-		{
-			CenterPosition.x += 1.5f;
-			IsLeft = false;
-			IsRight = true;
 		}
 	}
 
@@ -362,52 +341,23 @@ void Player::Key_Move()
 	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
 
 	//左右移動
-	if (IsJumpOnly == false)
+	if (actFlag->MoveRight() && Player_IsAction == false)
 	{
-		if (actFlag->MoveRight() && Player_IsAction == false)
-		{
-			CenterPosition.x += SideMoveSpeed;
-			IsLeft = false;
-			IsRight = true;
-		}
-
-		if (actFlag->MoveLeft() && Player_IsAction == false)
-		{
-			CenterPosition.x -= SideMoveSpeed;
-			IsLeft = true;
-			IsRight = false;
-		}
+		CenterPosition.x += SideMoveSpeed;
+		IsLeft = false;
+		IsRight = true;
 	}
-	else
+
+	if (actFlag->MoveLeft() && Player_IsAction == false)
 	{
-		if (IsJump == false && inputManger->LeftTrigger() && IsInputjump == true)
-		{
-			Leftjump = true;
-			Rightjump = false;
-			IsJump = true;
-			FallSpeed = -5.1f;
-
-			IsLeft = true;
-			IsRight = false;
-		}
-
-		if (IsJump == false && inputManger->RightTrigger() && IsInputjump == true)
-		{
-			Rightjump = true;
-			Leftjump = false;
-			IsJump = true;
-			FallSpeed = -5.1f;
-
-			IsLeft = false;
-			IsRight = true;
-		}
+		CenterPosition.x -= SideMoveSpeed;
+		IsLeft = true;
+		IsRight = false;
 	}
 
 	//ジャンプ入力できるかどうか
 	if (IsJump == false && IsFall() == false)
 	{
-		Leftjump = false;
-		Rightjump = false;
 		IsInputjump = true;
 		FallSpeed = 0.0f;
 	}
@@ -2248,29 +2198,6 @@ bool Player::IsFall()
 
 	if (FallCount > 0)
 	{
-		if (IsDownBody)
-		{
-			if (Body_Four.IsActivate && Body_Four.BodyIsFall)
-			{
-				IsJumpOnly = true;
-			}
-			else
-			{
-				IsJumpOnly = false;
-			}
-		}
-		else
-		{
-			if (IsFaceFall)
-			{
-				IsJumpOnly = true;
-			}
-			else
-			{
-				IsJumpOnly = false;
-			}
-		}
-
 		return false;
 	}
 	else
