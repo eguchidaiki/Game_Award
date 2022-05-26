@@ -18,7 +18,8 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
-
+    //明示的開放
+    spdata.reset();
 }
 
 void Sprite::SetSpriteColorParam(float r, float g, float b, float a)
