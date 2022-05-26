@@ -14,8 +14,8 @@ void GoalPaperRain::Init()
 	float spawnPosRate = pos.x / 1280.0f; //どのあたりかを割合で算出
 	float veldig = 180.0f * spawnPosRate; //上から進入角度を求める
 
-	vel.x = cosf(veldig * 3.14f / 180.0f);
-	vel.y = sinf(veldig * 3.14f / 180.0f);
+	vel.x = cosf(veldig - 90.0f * 3.14f / 180.0f);
+	vel.y = sinf(veldig - 90.0f * 3.14f / 180.0f);
 	vel.z = 0.0f;
 
 	//速度補正
@@ -32,6 +32,7 @@ void GoalPaperRain::Init()
 	//色
 	color = { NY_random::floatrand_sl(1.0f, 0.0f) ,NY_random::floatrand_sl(1.0f, 0.0f) ,NY_random::floatrand_sl(1.0f, 0.0f) ,1.0f };
 
+	endFrame = 180;
 }
 
 void GoalPaperRain::Update()

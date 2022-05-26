@@ -18,22 +18,22 @@ public:
 	void IsInButton();
 
 	//private:
-	UINT ResetHandle;
+	UINT ResetHandle = 0;
 	Sprite ResetUISprite;
 
-	UINT PauseHandle;
+	UINT PauseHandle = 0;
 	Sprite PauseUISprite;
 
-	bool IsResetPress;
-	bool IsPausePress;
+	bool IsResetPress = false;
+	bool IsPausePress = false;
 
-	float ResetRot;
-	float ResetAddRot;
-	float PauseRot;
-	float PauseAddRot;
+	float ResetRot = 0.0f;
+	float ResetAddRot = 0.0f;
+	float PauseRot = 0.0f;
+	float PauseAddRot = 0.0f;
 
-	XMFLOAT2 mousePos;
+	XMFLOAT2 mousePos = { 0.0f, 0.0f };
 
 	//チュートリアルクラスポインター
-	Tutorial* tutorial;
+	Tutorial* tutorial = nullptr;
 };

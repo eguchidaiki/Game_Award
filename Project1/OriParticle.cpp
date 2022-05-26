@@ -22,8 +22,8 @@ void OriParticle::Init()
 
 	//速度ベクトル補正
 	float power = NY_random::floatrand_sl(20.0f, 10.0f);
-	vel.y = sinf((rot-90.0f) * (3.14 / 180.0f));
-	vel.x = cosf((rot-90.0f) * (3.14 / 180.0f));
+	vel.y = sinf((rot-90.0f) * (3.14f / 180.0f));
+	vel.x = cosf((rot-90.0f) * (3.14f / 180.0f));
 	vel.z = 0.0f;
 	vel *= power;
 

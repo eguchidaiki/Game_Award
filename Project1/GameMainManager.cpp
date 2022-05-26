@@ -10,7 +10,12 @@ namespace
 	Player* player = Player::Get();
 }
 
-GameMainManager::GameMainManager()
+GameMainManager::GameMainManager() :
+	BackHandle(0),
+	IsFolds{},
+	IsOpens{},
+	IsStart(false),
+	selecterPtr(nullptr)
 {
 }
 
@@ -20,16 +25,17 @@ GameMainManager::~GameMainManager()
 
 void GameMainManager::Init()
 {
-	BackHandle = TexManager::LoadTexture("Resources/vvgkh4.png");
-	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
+	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	this->Back.Create(BackHandle);
 
 	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
-	playBGM = Audio::LoadSound_wav("Resource/sound/BGM/bgm02.wav");
+	playBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm02.wav");
 
 	ui.Init(&tutorial);
 
 	tutorial.Create();
+
+	stageClearCtrl.Init();
 }
 
 void GameMainManager::Update()
@@ -37,13 +43,50 @@ void GameMainManager::Update()
 	//ゲーム内インスタンスの更新処理（ようは俺が作ってないクラスの更新処理。ややこしくなるからラップした）
 	GameInstanceUpdate();
 
-	//クリアフラグが立ったら遷移演出、セレクトに移動する処理を書きたい所存
+	//ゴールした判定？
+	if (player->IsGoal)
+	{
+		//UIコントロール有効化
+		stageClearCtrl.ControlActivate();
+	}
 
+	//クリア後コントロールが遷移を許可したら
+	if (stageClearCtrl.isAllowSwitching) {
+		switch (stageClearCtrl._user_selecting)
+		{
+		case StageClearedControler::STAGE_CLEARED_USER_SELECTING::USER_SELECT_NEXT:
+			//次のステージ実行準備
+			SetSelectToGame(NowScene + 1);
+			break;
+
+		case StageClearedControler::STAGE_CLEARED_USER_SELECTING::USER_SELECT_BACK:
+			IsGoSelect = true;
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	if (Ischangecount)
+	{
+		changecount++;
+
+		if (changecount > 20)
+		{
+			IsGoSelect = true;
+		}
+	}
+
+	//クリアフラグが立ったら遷移演出、セレクトに移動する処理を書きたい所存
+	stageClearCtrl.Update();
 }
 
 void GameMainManager::Draw()
 {
 	GameInstanceDraw();
+
+	stageClearCtrl.Draw();
 }
 
 void GameMainManager::Finalize()
@@ -52,18 +95,19 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
-	ui.Update(player->playerTile, &Ischangecount, NowScene);
-
-	if (IsStart == false)
+	if (!player->IsGoal)
 	{
-		stage->Reset(player->playerTile);
-		player->Init();
-		player->BodySetUp(player->playerTile);
-		IsStart = true;
-	}
+		ui.Update(player->playerTile, &Ischangecount, NowScene);
+
+		if (IsStart == false)
+		{
+			stage->Reset(player->playerTile);
+			player->Init();
+			player->BodySetUp(player->playerTile);
+			IsStart = true;
+		}
 
 
-	tutorial.Update();
 
 	player->Update(stage->drawOffsetX, stage->drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
@@ -75,10 +119,14 @@ void GameMainManager::GameInstanceUpdate()
 	IsFolds[2] = player->IsRightFold;
 	IsFolds[3] = player->IsDownFold;
 
-	IsOpens[0] = player->IsLeftOpen;
-	IsOpens[1] = player->IsUpOpen;
-	IsOpens[2] = player->IsRightOpen;
-	IsOpens[3] = player->IsDownOpen;
+		tutorial.Update();
+
+		//各ステージの処理
+		player->Update(stage->drawOffsetX, stage->drawOffsetY);
+		bool PlayerBodyStatus[4] = {};
+
+		player->SetBodyStatus(PlayerBodyStatus);
+
 
 	if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
 	{
@@ -87,6 +135,21 @@ void GameMainManager::GameInstanceUpdate()
 
 	stage->Updata();
 	stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->FaceLeg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+
+		IsFolds[0] = player->IsLeftFold;
+		IsFolds[1] = player->IsUpFold;
+		IsFolds[2] = player->IsRightFold;
+		IsFolds[3] = player->IsDownFold;
+
+		IsOpens[0] = player->IsLeftOpen;
+		IsOpens[1] = player->IsUpOpen;
+		IsOpens[2] = player->IsRightOpen;
+		IsOpens[3] = player->IsDownOpen;
+
+
+		stage->Updata();
+		stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+
 
 	//ステージとの連動のため開く処理はこっちでやる
 	if (player->OpenCount >= 2)
@@ -140,6 +203,10 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	changecount = 0;
 	IsStart = false;
 	NowScene = SelectStageNum;
+	stageClearCtrl.Init();
+
+	//ステージ番号から
+	selecterPtr->LoadStage(SelectStageNum);
 
 	if (NowScene == 0)
 	{
