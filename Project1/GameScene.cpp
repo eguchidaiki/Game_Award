@@ -16,9 +16,11 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 
 	nowState = is_Select;
 
-	selecter.Init();
-	gamemain.selecterPtr = &selecter;
-	gamemain.Init();
+	selecter.reset(new StageSelecter);
+	selecter->Init();
+	gamemain.reset(new GameMainManager);
+	gamemain->selecterPtr = selecter.get();
+	gamemain->Init();
 
 }
 
@@ -37,11 +39,11 @@ void GameScene::Update()
 	{
 	case GameScene::is_Select:
 		//ステージセレクト画面の処理
-		selecter.Update();
-		if (selecter.GetMoveGameMain())
+		selecter->Update();
+		if (selecter->GetMoveGameMain())
 		{
-			gamemain.SetSelectToGame(selecter.SelectStageNum);
-			selecter.isChanging_GameMain = false;
+			gamemain->SetSelectToGame(selecter->SelectStageNum);
+			selecter->isChanging_GameMain = false;
 			nowState = is_Game;
 			InputManger::isMenu = true;
 		}
@@ -51,12 +53,12 @@ void GameScene::Update()
 
 	case GameScene::is_Game:
 		//ゲーム本編の処理
-		gamemain.Update();
-		if (gamemain.IsGoSelect == true)
+		gamemain->Update();
+		if (gamemain->IsGoSelect == true)
 		{
-			gamemain.SetGameToSelect();
-			selecter.isChanging_GameMain = false;
-			selecter.state = selecter.is_selecting;
+			gamemain->SetGameToSelect();
+			selecter->isChanging_GameMain = false;
+			selecter->state = selecter->is_selecting;
 			nowState = is_Select;
 			InputManger::isMenu = false;
 		}
@@ -75,11 +77,11 @@ void GameScene::Draw()
 	{
 	case GameScene::is_Select:
 		//ステージセレクト画面の処理
-		selecter.Draw();
+		selecter->Draw();
 
 		break;
 	case GameScene::is_Game:
-		gamemain.Draw();
+		gamemain->Draw();
 
 		break;
 	default:

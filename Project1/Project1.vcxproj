@@ -173,6 +173,7 @@
     <ClCompile Include="PlayerBody.cpp" />
     <ClCompile Include="PlayerFoot.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SceneChangeDirection.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="StageClearedControler.cpp" />
@@ -287,6 +288,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="PlayerFoot.h" />
+    <ClInclude Include="SceneChangeDirection.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="StageClearedControler.h" />
@@ -298,6 +300,9 @@
     <ClInclude Include="Tutorial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2019_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\RakiEngine_Library\RakiEngine_Library.vcxproj">
       <Project>{5daf280f-eb78-444e-9339-07922a4d2d19}</Project>
     </ProjectReference>
@@ -306,6 +311,8 @@
     <Image Include="Resources\backSin.png" />
     <Image Include="Resources\block.png" />
     <Image Include="Resources\goal.png" />
+    <Image Include="Resources\player.png" />
+    <Image Include="Resources\playerBody02.png" />
     <Image Include="Resources\playerLegs.png" />
     <Image Include="Resources\playerSub.png" />
     <Image Include="Resources\stage_enpty.png" />
