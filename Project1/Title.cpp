@@ -16,7 +16,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 {
 	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
 
-	cursor.Create(TexManager::LoadTexture("Resources/cursor02.png"));
+	cursor.Create(TexManager::LoadTexture("Resources/titleAUI.png"));
 }
 
 //初期化
@@ -70,10 +70,10 @@ void Title::Draw()
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y);
+		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y * 0);
 		break;
 	case Title::is_end:
-		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X , MENUICON_START_Y + MENUICON_SIZE_Y * 2 + MENUICON_OFFSET);
+		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y * 1 + MENUICON_OFFSET);
 		break;
 	default:
 		break;
