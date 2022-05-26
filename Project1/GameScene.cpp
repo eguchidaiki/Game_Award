@@ -19,7 +19,9 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 	nowState = is_Select;
 
 	selecter.Init();
+	gamemain.selecterPtr = &selecter;
 	gamemain.Init();
+
 }
 
 //‰Šú‰»

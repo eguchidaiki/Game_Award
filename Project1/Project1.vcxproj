@@ -176,7 +176,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="stage.cpp" />
-    <ClCompile Include="StageFractureEffect.cpp" />
+    <ClCompile Include="StageClearedControler.cpp" />
     <ClCompile Include="StageSelecter.cpp" />
     <ClCompile Include="testParticle.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -291,7 +291,7 @@
     <ClInclude Include="PlayerFoot.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="stage.h" />
-    <ClInclude Include="StageFractureEffect.h" />
+    <ClInclude Include="StageClearedControler.h" />
     <ClInclude Include="StageSelecter.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="testParticle.h" />

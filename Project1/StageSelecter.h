@@ -42,7 +42,13 @@ public:
 	};
 	NOW_SELECTER_STATE state;
 
+	void GoNextStage();
+
+	void LoadStage(int stagenum);
+
 private:
+	int _nowStageNumber = 0;
+
 	//ステージ選択画面のリソース
 	std::array<Sprite, 20> selectImg_1_4;
 	std::array<Sprite, 20> selectImg_5_8;
@@ -116,10 +122,8 @@ private:
 	void CheckLoadStage(int boxnum);
 	void CheckToStageChangeInput();
 
-
 	//描画関数系
 	void DrawCursor();
-
 
 
 };

@@ -1,0 +1,217 @@
+#include "StageClearedControler.h"
+#include <Raki_Input.h>
+
+void StageClearedControler::Init()
+{
+
+	//演出初期化
+	goalEffect.reset(new GoalEffects);
+	goalEffect->Init();
+
+	//UI初期化
+	_go_select_button.Init(60, TexManager::LoadTexture("Resources/back.png"), 200, 90);
+	x1 = 1280.0f / 3.0f;
+	y1 = 720 * (2.0f / 3.0f);
+	_go_next_button.Init(60, TexManager::LoadTexture("Resources/next.png"), 200, 90);
+	x2 = 1280.0f * (2.0f / 3.0f);
+	y2 = 720 * (2.0f / 3.0f);
+
+	//入力禁止
+	ctrl_state = CONTROL_NOT_ALLOW;
+	//最初にユーザーが選んでるやつ
+	_user_selecting = USER_SELECT_NEXT;
+
+	frameCount = 0;
+
+	isAllowSwitching = false;
+}
+
+void StageClearedControler::Update()
+{	
+	Update_CheckControlStates();
+
+	Update_ControlMain();
+
+	//選択が確認できたら、演出を切る
+
+}
+
+void StageClearedControler::Draw()
+{
+	if (ctrl_state == CONTROL_NOT_ALLOW) { return; }
+
+	//このクラス内の描画リソースは、操作が禁止されてないときは常に描画される
+
+	//ゴール演出描画
+	goalEffect->Draw();
+
+	//UI描画
+	Draw_UI();
+
+}
+
+void StageClearedControler::ControlActivate()
+{
+	if (ctrl_state != CONTROL_NOT_ALLOW) { return; }
+
+	//演出状態に移行
+	ctrl_state = CONTROL_ACTIVE;
+
+
+	goalEffect->Play();
+}
+
+void StageClearedControler::ControlDisable()
+{
+	//コントロール無効化
+	ctrl_state = CONTROL_NOT_ALLOW;
+}
+
+void StageClearedControler::Update_CheckControlStates()
+{
+	//キャストしてこのタイミングでは整数で扱うようにする
+	int user_selecting = static_cast<int>(_user_selecting);
+
+	//状態遷移の判定を行う
+	switch (ctrl_state)
+	{
+	case StageClearedControler::CONTROL_NOT_ALLOW:
+		//特になし（Active関数が呼ばれるまで）
+		break;
+	case StageClearedControler::CONTROL_DIRECING:
+		//規定フレーム経過、または入力を検知
+		frameCount++;
+		if (frameCount < DIRECTING_FRAME)
+		{
+			//UI選択有効化
+			ctrl_state = CONTROL_ACTIVE;
+		}
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A))
+		{
+			frameCount = DIRECTING_FRAME;
+		}
+
+		break;
+	case StageClearedControler::CONTROL_ACTIVE:
+		//UI選択の入力（どっちを選択してるか？）
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT)) { user_selecting = 0; }
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT)) { user_selecting = 1; }
+		_user_selecting = static_cast<STAGE_CLEARED_USER_SELECTING>(user_selecting);
+
+		//UI選択された
+		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A))
+		{
+			//ボタン押した
+			if (user_selecting == 0) { _go_next_button.UI_Push(); }
+			if (user_selecting == 1) { _go_select_button.UI_Push(); }
+
+			ctrl_state = CONTROL_UI_SELECTED;
+		}
+
+		break;
+
+	case StageClearedControler::CONTROL_UI_SELECTED:
+
+
+
+		break;
+
+	default:
+		break;
+	}
+}
+
+void StageClearedControler::Update_ControlMain()
+{
+	switch (ctrl_state)
+	{
+	case StageClearedControler::CONTROL_NOT_ALLOW:
+		//何もしない
+		break;
+
+	case StageClearedControler::CONTROL_DIRECING:
+		//イージングするならここに
+
+
+
+		break;
+
+	case StageClearedControler::CONTROL_ACTIVE:
+		//選択中、入力以外更新
+
+
+		break;
+
+	case StageClearedControler::CONTROL_UI_SELECTED:
+		//UI選択後更新処理
+
+		//次ステージへの移動許可
+		if (_go_next_button.isFunctionActivate || _go_select_button.isFunctionActivate) { isAllowSwitching = true; }
+
+		break;
+
+	default:
+		break;
+	}
+
+	//UI更新
+	_go_next_button.Update();
+	_go_select_button.Update();
+
+}
+
+void StageClearedControler::Draw_UI()
+{
+	switch (_user_selecting)
+	{
+	case StageClearedControler::USER_SELECT_NEXT:
+		_go_next_button.Draw(x1, y1, SELECTING_SCALE, SELECTING_SCALE);
+		_go_select_button.Draw(x2, y2);
+		break;
+	case StageClearedControler::USER_SELECT_BACK:
+		_go_next_button.Draw(x1, y1);
+		_go_select_button.Draw(x2, y2, SELECTING_SCALE, SELECTING_SCALE);
+		break;
+	default:
+		break;
+	}
+}
+
+void UI_Button::Init(int activateTimerag, UINT graphHandle, float baseWidth, float baseHeight)
+{
+	this->activateTimerag = activateTimerag;
+	uiSprite.Create(graphHandle);
+	width = baseWidth / 2.0f;
+	height = baseHeight / 2.0f;
+
+	isUserPushed = false;
+	isFunctionActivate = false;
+}
+
+void UI_Button::Update()
+{
+
+	//押されたか
+	if (isUserPushed) {
+		count++;
+		if (count > activateTimerag) {
+			isFunctionActivate = true;
+		}
+	}
+	//押されていないか
+	else {
+
+	}
+}
+
+void UI_Button::Draw(float centerX, float centerY, float x_scale, float y_scale)
+{
+	uiSprite.DrawExtendSprite(centerX - width * x_scale, centerY - height * y_scale,
+		centerX + width * x_scale, centerY + height * y_scale);
+	uiSprite.Draw();
+}
+
+void UI_Button::UI_Push()
+{
+	isUserPushed = true;
+}

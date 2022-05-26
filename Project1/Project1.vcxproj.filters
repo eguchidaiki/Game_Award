@@ -39,40 +39,10 @@
     <ClCompile Include="main.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="BaseScene.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameMainManager.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameScene.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
     <ClCompile Include="InputManger.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ISceneChanger.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadFile.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneManager.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="stage.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="StageSelecter.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Title.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Tutorial.cpp">
-      <Filter>ソースファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
     <ClCompile Include="GoalParticle.cpp">
@@ -82,37 +52,67 @@
       <Filter>Effect</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Player</Filter>
+      <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerBody.cpp">
-      <Filter>Player</Filter>
+      <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="PlayerFoot.cpp">
-      <Filter>Player</Filter>
+      <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClCompile>
     <ClCompile Include="GoalEffect.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
-    <ClCompile Include="StageFractureEffect.cpp">
-      <Filter>Effect</Filter>
-    </ClCompile>
     <ClCompile Include="OriEffects.cpp">
-      <Filter>Effect\OriEffect</Filter>
+      <Filter>Scene\gameMain\effect\OriEffect</Filter>
     </ClCompile>
     <ClCompile Include="Ori_StarParticle.cpp">
-      <Filter>Effect\OriEffect</Filter>
+      <Filter>Scene\gameMain\effect\OriEffect</Filter>
     </ClCompile>
     <ClCompile Include="OriParticle.cpp">
-      <Filter>Effect\OriEffect</Filter>
+      <Filter>Scene\gameMain\effect\OriEffect</Filter>
     </ClCompile>
     <ClCompile Include="GoalEffects.cpp">
-      <Filter>Effect\GoalEffect</Filter>
+      <Filter>Scene\gameMain\effect\GoalEffect</Filter>
     </ClCompile>
     <ClCompile Include="GoalCracker.cpp">
-      <Filter>Effect\GoalEffect</Filter>
+      <Filter>Scene\gameMain\effect\GoalEffect</Filter>
     </ClCompile>
     <ClCompile Include="GoalPaperRain.cpp">
-      <Filter>Effect\GoalEffect</Filter>
+      <Filter>Scene\gameMain\effect\GoalEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="stage.cpp">
+      <Filter>Scene\gameMain\gameObject\stage</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
+      <Filter>Scene\gameMain</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMainManager.cpp">
+      <Filter>Scene\gameMain\control</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneChanger.cpp">
+      <Filter>Scene\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Scene\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="StageSelecter.cpp">
+      <Filter>Scene\stageSelect\control</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Scene\gameMain\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>Scene\gameMain\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadFile.cpp">
+      <Filter>Scene\gameMain\control</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseScene.cpp">
+      <Filter>Scene\manager</Filter>
+    </ClCompile>
+    <ClCompile Include="StageClearedControler.cpp">
+      <Filter>Scene\gameMain\control</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,46 +122,13 @@
     <ClInclude Include="Easing.h">
       <Filter>Effect</Filter>
     </ClInclude>
-    <ClInclude Include="BaseScene.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameMainManager.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameScene.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="General.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="InputManger.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ISceneChanger.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadFile.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneManager.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="stage.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="StageSelecter.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Task.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Title.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Tutorial.h">
-      <Filter>ヘッダーファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
       <Filter>ヘッダーファイル</Filter>
     </ClInclude>
     <ClInclude Include="testParticle.h">
@@ -171,37 +138,70 @@
       <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
+      <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerBody.h">
-      <Filter>Player</Filter>
+      <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="PlayerFoot.h">
-      <Filter>Player</Filter>
-    </ClInclude>
-    <ClInclude Include="StageFractureEffect.h">
-      <Filter>Effect</Filter>
+      <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClInclude>
     <ClInclude Include="GoalEffect.h">
       <Filter>Effect</Filter>
     </ClInclude>
     <ClInclude Include="OriEffects.h">
-      <Filter>Effect\OriEffect</Filter>
+      <Filter>Scene\gameMain\effect\OriEffect</Filter>
     </ClInclude>
     <ClInclude Include="Ori_StarParticle.h">
-      <Filter>Effect\OriEffect</Filter>
+      <Filter>Scene\gameMain\effect\OriEffect</Filter>
     </ClInclude>
     <ClInclude Include="OriParticle.h">
-      <Filter>Effect\OriEffect</Filter>
+      <Filter>Scene\gameMain\effect\OriEffect</Filter>
     </ClInclude>
     <ClInclude Include="GoalEffects.h">
-      <Filter>Effect\GoalEffect</Filter>
+      <Filter>Scene\gameMain\effect\GoalEffect</Filter>
     </ClInclude>
     <ClInclude Include="GoalCracker.h">
-      <Filter>Effect\GoalEffect</Filter>
+      <Filter>Scene\gameMain\effect\GoalEffect</Filter>
     </ClInclude>
     <ClInclude Include="GoalPaperRain.h">
-      <Filter>Effect\GoalEffect</Filter>
+      <Filter>Scene\gameMain\effect\GoalEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="stage.h">
+      <Filter>Scene\gameMain\gameObject\stage</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMainManager.h">
+      <Filter>Scene\gameMain\control</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
+      <Filter>Scene\gameMain</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>Scene\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseScene.h">
+      <Filter>Scene\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ISceneChanger.h">
+      <Filter>Scene\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Scene\manager</Filter>
+    </ClInclude>
+    <ClInclude Include="StageSelecter.h">
+      <Filter>Scene\stageSelect\control</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Scene\gameMain\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>Scene\gameMain\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadFile.h">
+      <Filter>Scene\gameMain\control</Filter>
+    </ClInclude>
+    <ClInclude Include="StageClearedControler.h">
+      <Filter>Scene\gameMain\control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -320,14 +320,44 @@
     <Filter Include="リソースファイル\Stage">
       <UniqueIdentifier>{4f5edd65-77b5-4947-b508-2858f31800cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{119f03a6-2661-4049-ad4d-e930682c77e8}</UniqueIdentifier>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{2ad5bd0c-bb44-40c7-bfa5-8de7ab677e4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect\OriEffect">
+    <Filter Include="Scene\stageSelect">
+      <UniqueIdentifier>{b921942e-ab8d-441b-b55b-e9fba6223f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain">
+      <UniqueIdentifier>{8eb110b3-a0d5-4e71-877c-4e097176c2a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\gameObject">
+      <UniqueIdentifier>{d919dfb6-45ba-4d25-8682-69a20a5345f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\effect">
+      <UniqueIdentifier>{3d93f00d-50f5-475b-ba02-52d47bda0a44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\control">
+      <UniqueIdentifier>{d4415fe8-351f-484f-a4ab-83e9ccccc9a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\effect\OriEffect">
       <UniqueIdentifier>{d0fe4f7e-dc12-48de-b9c9-27542def6eb3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Effect\GoalEffect">
+    <Filter Include="Scene\gameMain\effect\GoalEffect">
       <UniqueIdentifier>{67410279-c528-4672-93df-c2729a2b2099}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\gameObject\stage">
+      <UniqueIdentifier>{0a395263-9960-4a7e-bc16-b5bc0ada2bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\gameObject\Player">
+      <UniqueIdentifier>{119f03a6-2661-4049-ad4d-e930682c77e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\manager">
+      <UniqueIdentifier>{c5092605-3ac9-46ce-8b93-76fa0d4b0798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\stageSelect\control">
+      <UniqueIdentifier>{add94400-2563-44c2-9f47-abd617756830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\gameMain\UI">
+      <UniqueIdentifier>{c7a7654b-d973-4152-a04f-12a2398ce9de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
