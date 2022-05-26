@@ -55,6 +55,7 @@ private:
 
 	//ÉJÅ[É\Éã
 	Sprite selectCursor;
+	const int cursorSpriteCount = 4;
 
 	Sprite SelectLeft;
 	Sprite SelectRight;
@@ -113,6 +114,10 @@ private:
 	const int NUMBOX_START_Y = 325;
 	const int NUMBOX_SIZE = 129;
 	const int NUMBOX_SPACE = 65;
+	const int PAGEMOVE_LEFT_X = 29;
+	const int PAGEMOVE_RIGHT_X = 1184;
+	const int PAGEMOVE_Y = 623;
+	const int PAGEMOVE_SIZE = 67;
 	void CheckLoadStage(int boxnum);
 	void CheckToStageChangeInput();
 

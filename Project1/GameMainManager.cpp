@@ -20,8 +20,7 @@ GameMainManager::~GameMainManager()
 
 void GameMainManager::Init()
 {
-	BackHandle = TexManager::LoadTexture("Resources/vvgkh4.png");
-	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
+	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	this->Back.Create(BackHandle);
 
 	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
