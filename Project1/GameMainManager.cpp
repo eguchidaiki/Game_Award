@@ -191,7 +191,7 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	//ステージ番号から
 	selecterPtr->LoadStage(SelectStageNum);
 
-	if (NowScene == 0)
+	if (NowScene == 1)
 	{
 		tutorial.StartTutorial();
 	}
