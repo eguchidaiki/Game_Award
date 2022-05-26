@@ -803,6 +803,10 @@ void Stage::SelectingStageTile()
 
 	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_LB))
 	{
+		if (selectCount == 0)
+		{
+			selectCount = AllTiles.size();
+		}
 		if (selectCount > 0)
 		{
 			selectCount--;
@@ -811,9 +815,13 @@ void Stage::SelectingStageTile()
 
 	if (Input::isXpadButtonPushTrigger(XPAD_TRIGGER_RB))
 	{
-		if (selectCount + 1 < AllTiles.size())
+		if (selectCount < AllTiles.size())
 		{
 			selectCount++;
+		}
+		if (selectCount > AllTiles.size() - 1)
+		{
+			selectCount = 0;
 		}
 	}
 
