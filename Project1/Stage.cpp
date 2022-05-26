@@ -1548,6 +1548,8 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	size_t NowTile = -1;
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
+	StageTileData* playertiles = &stageData[NowStage].stageTileData[NowTile];
+
 	//テンプレfor文
 	for (int a = 0; a < stageData.size(); a++)
 	{
@@ -1570,7 +1572,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetX <= stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) &&
+							playertiles->offsetX + playertiles->width >= stageData[a].stageTileData[b].offsetX))
 					{
 						if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
 							player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
@@ -1592,7 +1597,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetX <= stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) &&
+							playertiles->offsetX + playertiles->width >= stageData[a].stageTileData[b].offsetX))
 					{
 						if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
 							player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction)
@@ -1613,7 +1621,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetY <= stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) &&
+							playertiles->offsetY + playertiles->height >= stageData[a].stageTileData[b].offsetY))
 					{
 						if (player->Body_One.IsActivate && player->Body_One.IsFold &&
 							player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction)
@@ -1634,7 +1645,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetY <= stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) &&
+							playertiles->offsetY + playertiles->height >= stageData[a].stageTileData[b].offsetY))
 					{
 						if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
 							player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction)

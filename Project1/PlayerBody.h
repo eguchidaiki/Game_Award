@@ -3,6 +3,7 @@
 #include <RVector.h>
 #include "Easing.h"
 #include "Sprite.h"
+#include "PlayerFoot.h"
 
 class Stage;
 class Player;

@@ -1,6 +1,4 @@
 #pragma once
-#include "PlayerBody.h"
-//#include "Vector3.h"
 #include "Easing.h"
 #include "Sprite.h"
 #include<RVector.h>

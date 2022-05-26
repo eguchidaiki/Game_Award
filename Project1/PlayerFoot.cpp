@@ -1,5 +1,4 @@
 #include "PlayerFoot.h"
-#include "PlayerBody.h"
 
 PlayerFoot::PlayerFoot() :
 	FootLeftUpPosition{},
