@@ -115,9 +115,10 @@ void Audio::PlayLoadedSound(const SoundData &soundData)
 {
     HRESULT result;
 
-    result = soundData.source->Stop();
-    result = soundData.source->FlushSourceBuffers();
-    result = soundData.source->SetVolume(volume);
+    XAUDIO2_VOICE_STATE state;
+    soundData.source->GetState(&state);
+    if (state.BuffersQueued != 0) { return; }
+
     //波形データ再生
     result = soundData.source->SubmitSourceBuffer(&soundData.buf);
     result = soundData.source->Start();
