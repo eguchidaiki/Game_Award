@@ -4,6 +4,9 @@
 #include "Raki_imguiMgr.h"
 #include "Tutorial.h"
 
+#include "StageSelecter.h"
+#include "StageClearedControler.h"
+
 #include <Audio.h>
 
 class GameMainManager
@@ -13,7 +16,6 @@ private:
 	UINT BackHandle;
 	Sprite Back;
 	const int tutorialOffsetX = 320, tutorialOffsetY = 45;
-
 
 	//BGM
 	SoundData menuBGM;
@@ -37,6 +39,8 @@ public:
 	bool IsFolds[4];
 	bool IsOpens[4];
 
+	StageSelecter* selecterPtr;
+
 	GameMainManager();
 	~GameMainManager();
 
@@ -51,5 +55,6 @@ private:
 	void GameInstanceUpdate();
 	void GameInstanceDraw();
 
+	StageClearedControler stageClearCtrl;
 };
 
