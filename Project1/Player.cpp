@@ -49,7 +49,7 @@ Player::Player() :
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
-	leg{}
+	FaceLeg{}
 {
 }
 
@@ -80,8 +80,8 @@ void Player::Init()
 	Body_Three.Init(CenterPosition, BodyType::right);
 	Body_Four.Init(CenterPosition, BodyType::down);
 
-	leg.Create();
-	leg.Init();
+	FaceLeg.Create();
+	FaceLeg.Init();
 	IsLeft = true;
 	IsRight = false;
 
@@ -143,14 +143,14 @@ void Player::Update(int offsetX, int offsetY)
 	Fold();
 
 	//PlayerIsactionのfalse条件
-	if (leg.FootIsAction == false &&
+	if (FaceLeg.FootIsAction == false &&
 		Body_One.IsAction == false &&
 		Body_Two.IsAction == false &&
 		Body_Three.IsAction == false &&
 		Body_Four.IsAction == false)
 	{
 		Player_IsAction = false;
-		leg.IsFootUp = false;
+		FaceLeg.IsFootUp = false;
 	}
 
 	if (IsOpenCountStart == true)
@@ -197,7 +197,7 @@ void Player::Update(int offsetX, int offsetY)
 		};
 	}
 
-	leg.Update(FootUpPosition, IsDownBody, 1);
+	FaceLeg.Update(FootUpPosition, IsDownBody, 1);
 
 	//それぞれの体のアップデート処理(有効化されているときのみ)
 
@@ -220,7 +220,7 @@ void Player::Update(int offsetX, int offsetY)
 
 void Player::Draw(int offsetX, int offsetY)
 {
-	leg.Draw(offsetX, offsetY, IsLeft, IsRight);
+	FaceLeg.Draw(offsetX, offsetY, IsLeft, IsRight);
 	if (IsLeft)
 	{
 		if (Player_IsAction)
@@ -383,7 +383,7 @@ void Player::Key_FoldOpen()
 		{
 			Player_IsAction = true;
 			IsLeftFold = true;
-			leg.Set();
+			FaceLeg.Set();
 			return;
 		}
 	}
@@ -393,7 +393,7 @@ void Player::Key_FoldOpen()
 		{
 			Player_IsAction = true;
 			IsUpFold = true;
-			leg.Set();
+			FaceLeg.Set();
 			return;
 		}
 	}
@@ -403,7 +403,7 @@ void Player::Key_FoldOpen()
 		{
 			Player_IsAction = true;
 			IsRightFold = true;
-			leg.Set();
+			FaceLeg.Set();
 			return;
 		}
 	}
@@ -413,7 +413,7 @@ void Player::Key_FoldOpen()
 		{
 			Player_IsAction = true;
 			IsDownFold = true;
-			leg.Set();
+			FaceLeg.Set();
 			return;
 		}
 	}
@@ -737,7 +737,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 				{
 					Player_IsAction = true;
 					IsLeftFold = true;
-					leg.Set();
+					FaceLeg.Set();
 					return;
 				}
 				if (((Body_Three.IsActivate == true && Body_Three.IsFold == true &&
@@ -758,7 +758,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 				{
 					Player_IsAction = true;
 					IsRightFold = true;
-					leg.Set();
+					FaceLeg.Set();
 					return;
 				}
 				if ((Body_One.IsActivate == true && Body_One.IsFold == true &&
@@ -783,7 +783,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					Player_IsAction = true;
 					IsUpFold = true;
 					IsWalk = false;
-					leg.Set();
+					FaceLeg.Set();
 					return;
 				}
 				if ((Body_Four.IsActivate == true && Body_Four.IsFold == true &&
@@ -806,7 +806,7 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					Player_IsAction = true;
 					IsDownFold = true;
 					IsWalk = false;
-					leg.Set();
+					FaceLeg.Set();
 					return;
 				}
 				if ((Body_Two.IsActivate == true && Body_Two.IsFold == true &&
@@ -1175,7 +1175,7 @@ bool Player::IsPlayerStageOnly()
 void Player::Fold()
 {
 	//足を上げ終わったら折る
-	if (leg.FootIsAction == false)
+	if (FaceLeg.FootIsAction == false)
 	{
 		if (IsLeftFold == true)
 		{

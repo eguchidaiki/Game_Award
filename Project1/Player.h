@@ -217,7 +217,7 @@ public: //メンバ変数
 	bool IsDownBody;
 
 	//足
-	PlayerFoot leg;
+	PlayerFoot FaceLeg;
 
 	//描画用スプライト
 	Sprite PlayerSprite;

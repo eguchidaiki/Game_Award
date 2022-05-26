@@ -65,19 +65,6 @@ void GameMainManager::GameInstanceUpdate()
 
 	tutorial.Update();
 
-	//各ステージの処理
-#ifdef _DEBUG
-	if (Input::isKeyTrigger(DIK_1))
-	{
-		stage->LoadStage("./Resources/stage/test.csv", player->playerTile);
-		stage->drawOffsetX = 200.0f;
-		stage->drawOffsetY = 0.0f;
-		player->Init();
-		player->BodySetUp(player->playerTile);
-	}
-
-#endif // _DEBUG
-
 	player->Update(stage->drawOffsetX, stage->drawOffsetY);
 	bool PlayerBodyStatus[4] = {};
 
@@ -93,13 +80,13 @@ void GameMainManager::GameInstanceUpdate()
 	IsOpens[2] = player->IsRightOpen;
 	IsOpens[3] = player->IsDownOpen;
 
-	if (player->leg.FootIsAction == false && player->Body_Three.IsFold == true)
+	if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
 	{
 		int test = 0;
 	}
 
 	stage->Updata();
-	stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->leg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+	stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->FaceLeg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
 
 	//ステージとの連動のため開く処理はこっちでやる
 	if (player->OpenCount >= 2)
