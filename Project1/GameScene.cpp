@@ -11,6 +11,7 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 
 	stage->Create();
 	stage->LoadStage("./Resources/stage/stage1.csv", player->playerTile);
+	player->Create();
 	player->Init();
 	player->BodySetUp(player->playerTile);
 
