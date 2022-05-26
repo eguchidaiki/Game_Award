@@ -509,6 +509,7 @@ void Sprite::InstanceUpdate()
     auto result = spdata->vertInsBuff->Map(0, nullptr, (void **)&insmap);
     for (int i = 0; i < spdata->insWorldMatrixes.size(); i++) {
         insmap[i].worldmat = spdata->insWorldMatrixes[i].worldmat * camera->GetMatrixProjection2D();
+        insmap[i].uvOffset = spdata->insWorldMatrixes[i].uvOffset;
         insmap[i].drawsize = spdata->insWorldMatrixes[i].drawsize;
         insmap[i].color = spdata->insWorldMatrixes[i].color;
     }
