@@ -400,8 +400,6 @@ void StageSelecter::LoadStage(int stagenum)
 	string stageFullPath = stageFilePath + stageNumber + filename;
 
 	stagePtr->LoadStage(stageFullPath.c_str(), playerPtr->playerTile);
-	stagePtr->drawOffsetX = Raki_WinAPI::window_width / 2 - (5 * Stage::halfBlockSize * 2);
-	stagePtr->drawOffsetY = Raki_WinAPI::window_height / 2 - (5 * Stage::halfBlockSize * 2);
 	playerPtr->Init();
 	playerPtr->BodySetUp(playerPtr->playerTile);
 }
