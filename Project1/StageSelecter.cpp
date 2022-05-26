@@ -498,7 +498,10 @@ void StageSelecter::DrawCursor()
 	switch (user_selecting)
 	{
 	case StageSelecter::UI_BACK:
-		selectCursor.DrawSprite(29 + 67, 623 + 67);
+		selectCursor.DrawSprite(29, 623); //左上
+		selectCursor.DrawSprite(29 + 67, 623);
+		selectCursor.DrawSprite(29, 623 + 67);
+		selectCursor.DrawSprite(29 + 67, 623 + 67); //右下
 		break;
 	case StageSelecter::UI_STAGEBOX_1:
 		selectCursor.DrawSprite(boxLeft[0] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
