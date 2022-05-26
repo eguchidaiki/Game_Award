@@ -127,6 +127,15 @@ void StageSelecter::Finalize()
 
 }
 
+void StageSelecter::GoNextStage()
+{
+	if (_nowStageNumber == 20) { return; }
+
+	_nowStageNumber++;
+
+	LoadStage(_nowStageNumber);
+}
+
 void StageSelecter::Changing_UI_Number()
 {
 	//入力によってインクリメント、デクリメント
@@ -287,156 +296,11 @@ void StageSelecter::PageChange()
 
 void StageSelecter::CheckLoadStage(int boxnum)
 {
-	switch (nowpage)
-	{
-	case StageSelecter::page_1_4:
-		if (boxnum == 0)
-		{
-			//stagePtr->LoadStage("./Resources/stage/stage1_test.csv", playerPtr->playerTile);
-			stagePtr->LoadStage("./Resources/stage/stage1.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 1)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage2.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 2)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage3.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else
-		{
-			stagePtr->LoadStage("./Resources/stage/stage4.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		break;
+	int pageNumber = static_cast<int>(nowpage);
 
+	int LoadStageNumber = (pageNumber * 4) + (boxnum * 4) + 1;
 
-	case StageSelecter::page_5_8:
-		if (boxnum == 0)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage5.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 1)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage6.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 2)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage7.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else
-		{
-			stagePtr->LoadStage("./Resources/stage/stage8.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		break;
-
-
-
-	case StageSelecter::page_9_12:
-		if (boxnum == 0)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage9.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 1)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage10.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 2)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage11.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else
-		{
-			stagePtr->LoadStage("./Resources/stage/stage12.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		break;
-
-
-
-	case StageSelecter::page_13_16:
-		if (boxnum == 0)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage13.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 1)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage14.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 2)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage15.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else
-		{
-			stagePtr->LoadStage("./Resources/stage/stage16.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		break;
-
-
-
-	case StageSelecter::page_17_20:
-		if (boxnum == 0)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage17.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 1)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage18.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else if (boxnum == 2)
-		{
-			stagePtr->LoadStage("./Resources/stage/stage19.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		else
-		{
-			stagePtr->LoadStage("./Resources/stage/stage20.csv", playerPtr->playerTile);
-			playerPtr->Init();
-			playerPtr->BodySetUp(playerPtr->playerTile);
-		}
-		break;
-
-
-	default:
-		break;
-	}
-
+	SelectStageNum = LoadStageNumber;
 }
 
 void StageSelecter::CheckToStageChangeInput()
@@ -524,4 +388,18 @@ void StageSelecter::DrawCursor()
 
 	selectCursor.Draw();
 
+}
+
+void StageSelecter::LoadStage(int stagenum)
+{
+	string stageNumber = std::to_string(stagenum);
+
+	string stageFilePath = "./Resources/stage/stage";
+	string filename = ".csv";
+
+	string stageFullPath = stageFilePath + stageNumber + filename;
+
+	stagePtr->LoadStage(stageFullPath.c_str(), playerPtr->playerTile);
+	playerPtr->Init();
+	playerPtr->BodySetUp(playerPtr->playerTile);
 }
