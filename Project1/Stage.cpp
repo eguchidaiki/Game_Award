@@ -893,9 +893,12 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 	if (!SelectTile->isFold)
 	{
-		if (Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN) && IsTileFoldDirection(selectStageNum, BodyType::up))
+		if (Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN))
 		{
-			direction = BodyType::up;
+			if (IsTileFoldDirection(selectStageNum, BodyType::up))
+			{
+				direction = BodyType::up;
+			}
 		}
 		else if (Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_UP) && IsTileFoldDirection(selectStageNum, BodyType::down))
 		{
@@ -977,28 +980,12 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 {
 	size_t NowStage = 0;
 	size_t NowTile = 0;
+	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
 	if (stageData[stage].stageTileData.size() <= 1)
 	{
 		return false;
 	}
-
-	// プレイヤーとカーソルが重なっているかどうかのチェック
-	for (i = 0; NowStage != -1; i++)
-	{
-		static size_t skipStage = 0;
-		skipStage = NowStage;
-
-		GetPositionTile(player->CenterPosition, &NowStage, &NowTile,
-						i != 0, skipStage);
-
-		if (NowStage == selectStageNum && NowTile == selectTileNum)
-		{
-			return false;
-		}
-	}
-
-	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
 	for (int tile = 0; tile < stageData[stage].stageTileData.size(); tile++)
 	{
@@ -1015,7 +1002,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetY < stageData[stage].stageTileData[tile].offsetY)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY)
+					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY &&
+					selectStageNum == NowStage)
 				{
 					if (player->IsDirectionFoldAll(BodyType::up))
 					{
@@ -1037,7 +1025,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetY > stageData[stage].stageTileData[tile].offsetY)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY)
+					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY &&
+					selectStageNum == NowStage)
 				{
 					if (player->IsDirectionFoldAll(BodyType::down))
 					{
@@ -1059,7 +1048,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetX < stageData[stage].stageTileData[tile].offsetX)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX)
+					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX &&
+					selectStageNum == NowStage)
 				{
 					if (player->Player_IsAction == false && player->Body_One.IsActivate &&
 						player->Body_One.IsFold == false && !player->Body_One.IsAction)
@@ -1085,7 +1075,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetX > stageData[stage].stageTileData[tile].offsetX)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX)
+					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX &&
+					selectStageNum == NowStage)
 				{
 					if (player->IsDirectionFoldAll(BodyType::right))
 					{
@@ -1829,7 +1820,7 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 	{
 		if (isSkip && i <= skipStageNumber)
 		{
-			continue;
+			//continue;
 		}
 
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -1841,7 +1832,7 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 			{
 				*stageNumber = i;
 				*stageTileNumber = j;
-				return;
+				//return;
 			}
 		}
 	}
