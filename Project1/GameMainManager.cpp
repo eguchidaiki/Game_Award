@@ -10,7 +10,12 @@ namespace
 	Player* player = Player::Get();
 }
 
-GameMainManager::GameMainManager()
+GameMainManager::GameMainManager() :
+	BackHandle(0),
+	IsFolds{},
+	IsOpens{},
+	IsStart(false),
+	selecterPtr(nullptr)
 {
 }
 
@@ -20,8 +25,7 @@ GameMainManager::~GameMainManager()
 
 void GameMainManager::Init()
 {
-	BackHandle = TexManager::LoadTexture("Resources/vvgkh4.png");
-	//BackHandle = TexManager::LoadTexture("Resources/backSin.png");
+	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	this->Back.Create(BackHandle);
 
 	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
@@ -42,10 +46,8 @@ void GameMainManager::Update()
 	//ゴールした判定？
 	if (player->IsGoal)
 	{
-		Ischangecount = true;
 		//UIコントロール有効化
 		stageClearCtrl.ControlActivate();
-		changecount = 0;
 	}
 
 	//クリア後コントロールが遷移を許可したら
@@ -63,6 +65,16 @@ void GameMainManager::Update()
 
 		default:
 			break;
+		}
+	}
+
+	if (Ischangecount)
+	{
+		changecount++;
+
+		if (changecount > 20)
+		{
+			IsGoSelect = true;
 		}
 	}
 
@@ -103,8 +115,6 @@ void GameMainManager::GameInstanceUpdate()
 		if (Input::isKeyTrigger(DIK_1))
 		{
 			stage->LoadStage("./Resources/stage/test.csv", player->playerTile);
-			stage->drawOffsetX = 200.0f;
-			stage->drawOffsetY = 0.0f;
 			player->Init();
 			player->BodySetUp(player->playerTile);
 		}
