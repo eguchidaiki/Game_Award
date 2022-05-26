@@ -6,8 +6,8 @@
 
 namespace
 {
-	Stage* stage = Stage::Get();
-	Player* player = Player::Get();
+Stage* stage = Stage::Get();
+Player* player = Player::Get();
 }
 
 GameMainManager::GameMainManager() :
@@ -107,6 +107,9 @@ void GameMainManager::GameInstanceUpdate()
 			IsStart = true;
 		}
 
+		tutorial.Update();
+
+		//各ステージの処理
 		player->Update(stage->drawOffsetX, stage->drawOffsetY);
 		bool PlayerBodyStatus[4] = {};
 
@@ -164,6 +167,46 @@ void GameMainManager::GameInstanceUpdate()
 		{
 			Ischangecount = true;
 			changecount = 0;
+		}
+
+		//ここにゴール演出、UI処理を入れる
+
+		if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
+		{
+			int test = 0;
+		}
+
+		stage->Updata();
+		stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->FaceLeg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
+
+		//ステージとの連動のため開く処理はこっちでやる
+		if (player->OpenCount >= 2)
+		{
+			if (player->IsLeftOpen == true)
+			{
+				player->IsLeftOpen = false;
+			}
+			if (player->IsUpOpen == true)
+			{
+				player->IsUpOpen = false;
+			}
+			if (player->IsRightOpen == true)
+			{
+				player->IsRightOpen = false;
+			}
+			if (player->IsDownOpen == true)
+			{
+				player->IsDownOpen = false;
+			}
+			player->OpenCount = 0;
+			player->IsOpenCountStart = false;
+		}
+
+		//ゴールした判定？
+		if (player->IsGoal && !Ischangecount)
+		{
+			//UIコントロール有効化
+			stageClearCtrl.ControlActivate();
 		}
 
 		//ここにゴール演出、UI処理を入れる
