@@ -39,8 +39,8 @@ public:
     };
     NowGameState nowState = is_Select;
 
-    StageSelecter selecter;
-    GameMainManager gamemain;
+    std::shared_ptr<StageSelecter> selecter;
+    std::shared_ptr<GameMainManager> gamemain;
 
 
 

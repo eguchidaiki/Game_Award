@@ -45,6 +45,12 @@
     <ClCompile Include="Title.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>ソースファイル</Filter>
+    </ClCompile>
     <ClCompile Include="GoalParticle.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
@@ -134,9 +140,6 @@
     <ClInclude Include="testParticle.h">
       <Filter>Effect</Filter>
     </ClInclude>
-    <ClInclude Include="GoalParticle.h">
-      <Filter>Effect</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Scene\gameMain\gameObject\Player</Filter>
     </ClInclude>
@@ -212,12 +215,6 @@
       <Filter>リソースファイル</Filter>
     </Image>
     <Image Include="Resources\goal.png">
-      <Filter>リソースファイル</Filter>
-    </Image>
-    <Image Include="Resources\player.png">
-      <Filter>リソースファイル</Filter>
-    </Image>
-    <Image Include="Resources\playerBody02.png">
       <Filter>リソースファイル</Filter>
     </Image>
     <Image Include="Resources\stage_enpty.png">

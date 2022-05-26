@@ -1,0 +1,11 @@
+diff a/Project1/Stage.cpp b/Project1/Stage.cpp	(rejected hunks)
+@@ -1037,8 +1037,7 @@
+ 			if (SelectTile->offsetY > stageData[stage].stageTileData[tile].offsetY)
+ 			{
+ 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
+-					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY &&
+-					selectStageNum == NowStage)
++					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY)
+ 				{
+ 					if (player->IsDirectionFoldAll(BodyType::down))
+ 					{
