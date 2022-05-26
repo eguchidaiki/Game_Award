@@ -14,6 +14,8 @@ using namespace myImgui;
 
 Title::Title(ISceneChanger* changer) : BaseScene(changer)
 {
+	user_selecting = NOW_SELECTING::is_start;
+
 	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
 
 	cursor.Create(TexManager::LoadTexture("Resources/titleAUI.png"));
@@ -60,9 +62,6 @@ void Title::Update()
 //描画
 void Title::Draw()
 {
-
-
-
 	SpriteManager::Get()->SetCommonBeginDraw();
 	titleMainSprite.DrawSprite(0, 0);
 	titleMainSprite.Draw();

@@ -183,8 +183,8 @@ void StageSelecter::LoadSprite()
 		selectImg_9_12[i].Create(TexManager::LoadTexture(fullpath_9_12));
 		selectImg_13_16[i].Create(TexManager::LoadTexture(fullpath_13_16));
 	}
-
-	selectCursor.Create(TexManager::LoadTexture("Resources/cursor02.png"));
+	selectCursor.CreateAndSetDivisionUVOffsets(cursorSpriteCount, 4, 1, 50, 50, TexManager::LoadTexture("Resources/UI/Cursor/stageSelect.png"));
+	//selectCursor.Create(TexManager::LoadTexture("Resources/UI/Cursor.png"));
 	SelectLeft.Create(TexManager::LoadTexture(fullImgPath + "SelectLeft" + filename));
 	SelectRight.Create(TexManager::LoadTexture(fullImgPath + "SelectRight" + filename));
 }
@@ -211,7 +211,6 @@ void StageSelecter::CheckToPageChangeInput()
 			int pageNum = static_cast<int>(nextpage);
 			pageNum--;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
-			user_selecting = StageSelecter::UI_STAGEBOX_4;
 		}
 
 		break;
@@ -224,7 +223,6 @@ void StageSelecter::CheckToPageChangeInput()
 			int pageNum = static_cast<int>(nextpage);
 			pageNum++;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
-			user_selecting = StageSelecter::UI_STAGEBOX_1;
 		}
 
 		break;
@@ -253,7 +251,6 @@ void StageSelecter::PageChange()
 			}
 			if (nowDisplayNum >= 20)
 			{
-
 				displayPage = nextpage;
 
 				nowpage = nextpage;
@@ -267,6 +264,8 @@ void StageSelecter::PageChange()
 				state = is_selecting;
 
 				animationFrame = 0;
+
+				user_selecting = StageSelecter::UI_STAGEBOX_1;
 			}
 		}
 		else
@@ -289,6 +288,7 @@ void StageSelecter::PageChange()
 				state = is_selecting;
 				nowpage = nextpage;
 				animationFrame = 0;
+				user_selecting = StageSelecter::UI_STAGEBOX_4;
 			}
 		}
 	}
@@ -359,35 +359,55 @@ void StageSelecter::DrawCursor()
 		boxLeft[i] = NUMBOX_START_X + (NUMBOX_SIZE * i) + (NUMBOX_SPACE * i);
 	}
 
-	switch (user_selecting)
+	for (int i = 0; i < cursorSpriteCount; i++)
 	{
-	case StageSelecter::UI_BACK:
-		selectCursor.DrawSprite(29, 623); //左上
-		selectCursor.DrawSprite(29 + 67, 623);
-		selectCursor.DrawSprite(29, 623 + 67);
-		selectCursor.DrawSprite(29 + 67, 623 + 67); //右下
-		break;
-	case StageSelecter::UI_STAGEBOX_1:
-		selectCursor.DrawSprite(boxLeft[0] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
-		break;
-	case StageSelecter::UI_STAGEBOX_2:
-		selectCursor.DrawSprite(boxLeft[1] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
-		break;
-	case StageSelecter::UI_STAGEBOX_3:
-		selectCursor.DrawSprite(boxLeft[2] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
-		break;
-	case StageSelecter::UI_STAGEBOX_4:
-		selectCursor.DrawSprite(boxLeft[3] + NUMBOX_SIZE, NUMBOX_START_Y + NUMBOX_SIZE);
-		break;
-	case StageSelecter::UI_FRONT:
-		selectCursor.DrawSprite(1184 + 67, 623 + 67);
-		break;
-	default:
-		break;
+		static float x = 0.0f, y = 0.0f;
+		selectCursor.uvOffsetHandle = i;
+
+		switch (user_selecting)
+		{
+		case StageSelecter::UI_BACK:
+			x = PAGEMOVE_LEFT_X + PAGEMOVE_SIZE * (i / 2);
+			y = PAGEMOVE_Y + PAGEMOVE_SIZE * (i % 2);
+			selectCursor.DrawExtendSprite(x - PAGEMOVE_SIZE / 4.0f, y - PAGEMOVE_SIZE / 4.0f,
+										  x + PAGEMOVE_SIZE / 4.0f, y + PAGEMOVE_SIZE / 4.0f);
+			break;
+		case StageSelecter::UI_STAGEBOX_1:
+			x = boxLeft[0] + NUMBOX_SIZE * (i / 2);
+			y = NUMBOX_START_Y + NUMBOX_SIZE * (i % 2);
+			selectCursor.DrawExtendSprite(x - NUMBOX_SIZE / 4.0f, y - NUMBOX_SIZE / 4.0f,
+										  x + NUMBOX_SIZE / 4.0f, y + NUMBOX_SIZE / 4.0f);
+			break;
+		case StageSelecter::UI_STAGEBOX_2:
+			x = boxLeft[1] + NUMBOX_SIZE * (i / 2);
+			y = NUMBOX_START_Y + NUMBOX_SIZE * (i % 2);
+			selectCursor.DrawExtendSprite(x - NUMBOX_SIZE / 4.0f, y - NUMBOX_SIZE / 4.0f,
+										  x + NUMBOX_SIZE / 4.0f, y + NUMBOX_SIZE / 4.0f);
+			break;
+		case StageSelecter::UI_STAGEBOX_3:
+			x = boxLeft[2] + NUMBOX_SIZE * (i / 2);
+			y = NUMBOX_START_Y + NUMBOX_SIZE * (i % 2);
+			selectCursor.DrawExtendSprite(x - NUMBOX_SIZE / 4.0f, y - NUMBOX_SIZE / 4.0f,
+										  x + NUMBOX_SIZE / 4.0f, y + NUMBOX_SIZE / 4.0f);
+			break;
+		case StageSelecter::UI_STAGEBOX_4:
+			x = boxLeft[3] + NUMBOX_SIZE * (i / 2);
+			y = NUMBOX_START_Y + NUMBOX_SIZE * (i % 2);
+			selectCursor.DrawExtendSprite(x - NUMBOX_SIZE / 4.0f, y - NUMBOX_SIZE / 4.0f,
+										  x + NUMBOX_SIZE / 4.0f, y + NUMBOX_SIZE / 4.0f);
+			break;
+		case StageSelecter::UI_FRONT:
+			x = PAGEMOVE_RIGHT_X + PAGEMOVE_SIZE * (i / 2);
+			y = PAGEMOVE_Y + PAGEMOVE_SIZE * (i % 2);
+			selectCursor.DrawExtendSprite(x - PAGEMOVE_SIZE / 4.0f, y - PAGEMOVE_SIZE / 4.0f,
+										  x + PAGEMOVE_SIZE / 4.0f, y + PAGEMOVE_SIZE / 4.0f);
+			break;
+		default:
+			break;
+		}
 	}
 
 	selectCursor.Draw();
-
 }
 
 void StageSelecter::LoadStage(int stagenum)

@@ -12,11 +12,11 @@ class UI_Button
 {
 private:
 	//ボタンの描画サイズ
-	float width, height;
+	float width = 0.0f, height = 0.0f;
 	//スプライト
 	Sprite uiSprite;
 	//ユーザーが押してから処理を有効化するまでのラグ(frame数)
-	int activateTimerag;
+	int activateTimerag = 0;
 	//フレームカウント
 	int count = 0;
 
@@ -94,9 +94,9 @@ private:
 
 	//UIボタン
 	UI_Button _go_select_button;
-	float x1, y1;
+	float x1 = 0.0f, y1 = 0.0f;
 	UI_Button _go_next_button;
-	float x2, y2;
+	float x2 = 0.0f, y2 = 0.0f;
 
 	const float SELECTING_SCALE = 1.2f;
 

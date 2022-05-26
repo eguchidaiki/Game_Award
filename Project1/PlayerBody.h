@@ -152,4 +152,8 @@ public: //ƒƒ“ƒo•Ï”
 	UINT Bodyhandle;
 
 	Sprite BodySprite;
+
+	//‘«(‘Ìê—p)
+	PlayerFoot BodyLeg;
+	bool IsLegDraw = false;
 };

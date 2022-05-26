@@ -32,7 +32,7 @@ void GoalPaperRain::Init()
 	//F
 	color = { NY_random::floatrand_sl(1.0f, 0.0f) ,NY_random::floatrand_sl(1.0f, 0.0f) ,NY_random::floatrand_sl(1.0f, 0.0f) ,1.0f };
 
-	endFrame = 180.0f;
+	endFrame = 180;
 }
 
 void GoalPaperRain::Update()

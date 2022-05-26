@@ -227,6 +227,7 @@ bool InputManger::Reset()
 bool InputManger::ResetTrigger()
 {
 	return Input::isKeyTrigger(DIK_R) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_X);
+	//return Input::isKeyTrigger(DIK_R) || Input::isXpadButtonPushing(XPAD_BUTTON_X);
 }
 
 bool InputManger::ResetReturn()
