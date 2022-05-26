@@ -5,13 +5,18 @@
 #include "InputManger.h"
 #include "NY_random.h"
 
+namespace
+{
+static InputManger* inputManger = InputManger::Get();
+}
+
 using namespace myImgui;
 
 Title::Title(ISceneChanger* changer) : BaseScene(changer)
 {
 	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
 
-	cursor.Create(TexManager::LoadTexture("Resources/cursor02.png"));
+	cursor.Create(TexManager::LoadTexture("Resources/titleAUI.png"));
 }
 
 //初期化
@@ -29,21 +34,19 @@ void Title::Finalize()
 void Title::Update()
 {
 	int user_select_index = static_cast<int>(user_selecting);
-	if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_DOWN) && user_selecting == is_start) { user_select_index++; }
-	if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_UP) && user_selecting == is_end) { user_select_index--; }
-	if (Input::isKeyTrigger(DIK_DOWN) && user_selecting == is_start) { user_select_index++; }
-	if (Input::isKeyTrigger(DIK_UP) && user_selecting == is_end) { user_select_index--; }
+	if ((inputManger->DownTrigger() || Input::isKeyTrigger(DIK_DOWN)) && user_selecting == is_start) { user_select_index++; }
+	if ((inputManger->UpTrigger() || Input::isKeyTrigger(DIK_UP)) && user_selecting == is_end) { user_select_index--; }
 
 	user_selecting = static_cast<NOW_SELECTING>(user_select_index);
 
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) { mSceneChanger->ChangeScene(eScene_Game); }
+		if (inputManger->DecisionTrigger()) { mSceneChanger->ChangeScene(eScene_Game); }
 
 		break;
 	case Title::is_end:
-		if (Input::isXpadButtonPushTrigger(XPAD_BUTTON_A) || Input::isKeyReleased(DIK_RETURN)) { mSceneChanger->EndAplication(); }
+		if (inputManger->DecisionTrigger()) { mSceneChanger->EndAplication(); }
 
 		break;
 	default:
@@ -67,10 +70,10 @@ void Title::Draw()
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y);
+		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y * 0);
 		break;
 	case Title::is_end:
-		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X , MENUICON_START_Y + MENUICON_SIZE_Y * 2 + MENUICON_OFFSET);
+		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y * 1 + MENUICON_OFFSET);
 		break;
 	default:
 		break;

@@ -33,6 +33,8 @@ enum MapchipData
 	UPU = 41,
 	RIGHTU = 42,
 	DOWNU = 43,
+
+	NOFRAME = 50
 };
 
 //パーティクル派生クラス
@@ -154,6 +156,7 @@ public: //メンバ関数
 
 	//ブロックの画像ハンドルの読み込み
 	void LoadBlocksHandle();
+
 	//ブロックスライトの生成
 	void CreateBlocksSprite();
 
@@ -173,6 +176,9 @@ public: //メンバ関数
 	//セレクトしたタイルが指定の方向に折れるかどうか
 	bool IsTileFoldDirection(size_t stage, int direction);
 
+	//今いるタイルがほかのタイルと重なっているかどうか
+	bool IsNowTileOver(size_t stage, size_t tile);
+
 	/// <summary>
 	/// ステージがどう折れるかの予測
 	/// </summary>
@@ -183,6 +189,7 @@ public: //メンバ関数
 	int FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip);
 	// リセット
 	void Reset(unsigned char foldCount[4]);
+
 	// 内部データ全削除
 	void DataClear();
 
@@ -190,7 +197,7 @@ public: //メンバ関数
 	void SetOverlap(size_t stagenum, size_t tilenum);
 
 	//Overlapの更新
-	void UpdateOverlap();
+	void UpdateOverlap() {}
 
 	// 任意の座標が任意のステージにいるかどうか
 	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
@@ -279,11 +286,15 @@ public: //メンバ関数
 	// プレイヤーがいるステージを取得
 	char GetPositionStage(const RVector3& playerPos);
 	// 任意の座標からどのステージタイルにいるかを取得
-	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+						 bool isSkip = false, const size_t& skipStageNumber = 0);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
-	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber);
+	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+							 bool isSkip = false, const size_t& skipStageNumber = 0);
 	//指定した場所のステージタイルにプレイヤーがいるかどうか
 	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
+	//任意の座標がどこかのタイルにいたらtrue
+	bool IsAnyTile(const RVector3& center);
 	//任意の座標がステージタイルにいるのか
 	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
@@ -292,10 +303,10 @@ public: //メンバ関数
 private:
 	// ステージを折る
 	int Fold(const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile,
-			 const size_t& moveStageData, size_t datasize);
+		const size_t& moveStageData, size_t datasize);
 	// ステージを開く
 	int Open(const unsigned char& direction, const size_t& onPlayerStage,
-			 const size_t& moveStageData, size_t datasize);
+		const size_t& moveStageData, size_t datasize);
 
 	// ステージタイルの描画
 	// saturationColorが1だと元の色で表示する
@@ -305,7 +316,7 @@ private:
 	int LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
 	// 枠線の描画
 	int FlameDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
-				  const int offsetX, const int offsetY);
+		const int offsetX, const int offsetY);
 	// 折り目の描画
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
 		const int offsetX, const int offsetY);
@@ -331,7 +342,7 @@ private: //メンバ変数
 	UINT lineHandle;
 	//ブロックの画像ハンドル
 	//UINT BlocksHandle[4];
-	UINT AllBlockHandle[4][15];
+	UINT AllBlockHandle[4][16];
 	UINT Bule_BlocksHandle[15];
 	UINT Green_BlocksHandle[15];
 	UINT Red_BlocksHandle[15];
@@ -345,7 +356,7 @@ private: //メンバ変数
 	Sprite lineSprite;
 	//ブロックのスプライト
 	//Sprite MapchipSpriteBlocks[4];
-	Sprite AllBlockSprite[4][15];
+	Sprite AllBlockSprite[4][16];
 	//空白のスプライト
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト

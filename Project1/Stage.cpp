@@ -3,7 +3,7 @@
 #include "General.h"
 #include "Player.h"
 #include "NY_random.h"
-#include <Raki_DX12B.h>
+#include <Raki_WinAPI.h>
 #include <Raki_Input.h>
 
 #define EF (-1) //Error Function
@@ -238,6 +238,7 @@ void Stage::Updata()
 							break;
 						}
 						default:
+						{
 							posX = static_cast<int>(stageData[i].stageTileData[j].easePos[mapchipPos].x);
 							posY = static_cast<int>(stageData[i].stageTileData[j].easePos[mapchipPos].y);
 
@@ -250,6 +251,7 @@ void Stage::Updata()
 							stageData[i].stageTileData[j].drawRightDown[mapchipPos].z =
 								static_cast<float>(stageData[i].stageTileData[j].easePos[mapchipPos].z + blockSize);
 							break;
+						}
 						}
 					}
 				}
@@ -345,14 +347,14 @@ void Stage::Draw(const int offsetX, const int offsetY)
 	SpriteManager::Get()->SetCommonBeginDraw();
 
 	MapchipSpriteEmpty.Draw();
+	MapchipSpriteGoal.Draw();
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 15; j++)
+		for (j = 0; j < 16; j++)
 		{
 			AllBlockSprite[i][j].Draw();
 		}
 	}
-	MapchipSpriteGoal.Draw();
 
 	lineSprite.Draw();
 
@@ -375,7 +377,7 @@ void Stage::Create()
 
 	if ((MapchipSpriteGoal.spdata->size.x <= 0) || (MapchipSpriteGoal.spdata->size.y <= 0))
 	{
-		GoalHandle = TexManager::LoadTexture("Resources/goal.png");
+		GoalHandle = TexManager::LoadTexture("Resources/goal/goal1.png");
 		MapchipSpriteGoal.Create(GoalHandle);
 	}
 
@@ -415,6 +417,7 @@ void Stage::LoadBlocksHandle()
 
 	std::string Horizontal = "_=";
 	std::string Vertical = "_ll";
+	std::string NoFrame = "_NoFrame";
 
 	for (i = 0; i < 4; i++)
 	{
@@ -438,6 +441,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[0][12] = TexManager::LoadTexture(BasePath + Bule + "_U_Up" + fileType);
 			AllBlockHandle[0][13] = TexManager::LoadTexture(BasePath + Bule + "_U_Right" + fileType);
 			AllBlockHandle[0][14] = TexManager::LoadTexture(BasePath + Bule + "_U_Down" + fileType);
+			AllBlockHandle[0][15] = TexManager::LoadTexture(BasePath + Bule + NoFrame + fileType);
 
 			break;
 		}
@@ -459,6 +463,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[1][12] = TexManager::LoadTexture(BasePath + Green + "_U_Up" + fileType);
 			AllBlockHandle[1][13] = TexManager::LoadTexture(BasePath + Green + "_U_Right" + fileType);
 			AllBlockHandle[1][14] = TexManager::LoadTexture(BasePath + Green + "_U_Down" + fileType);
+			AllBlockHandle[1][15] = TexManager::LoadTexture(BasePath + Green + NoFrame + fileType);
 			break;
 		}
 		case 2:
@@ -479,6 +484,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[2][12] = TexManager::LoadTexture(BasePath + Red + "_U_Up" + fileType);
 			AllBlockHandle[2][13] = TexManager::LoadTexture(BasePath + Red + "_U_Right" + fileType);
 			AllBlockHandle[2][14] = TexManager::LoadTexture(BasePath + Red + "_U_Down" + fileType);
+			AllBlockHandle[2][15] = TexManager::LoadTexture(BasePath + Red + NoFrame + fileType);
 			break;
 		}
 		case 3:
@@ -499,6 +505,7 @@ void Stage::LoadBlocksHandle()
 			AllBlockHandle[3][12] = TexManager::LoadTexture(BasePath + Yellow + "_U_Up" + fileType);
 			AllBlockHandle[3][13] = TexManager::LoadTexture(BasePath + Yellow + "_U_Right" + fileType);
 			AllBlockHandle[3][14] = TexManager::LoadTexture(BasePath + Yellow + "_U_Down" + fileType);
+			AllBlockHandle[3][15] = TexManager::LoadTexture(BasePath + Yellow + NoFrame + fileType);
 			break;
 		}
 		default:
@@ -513,7 +520,7 @@ void Stage::CreateBlocksSprite()
 {
 	for (i = 0; i < 4; i++)
 	{
-		for (j = 0; j < 15; j++)
+		for (j = 0; j < 16; j++)
 		{
 			if ((AllBlockSprite[i][j].spdata->size.x <= 0) || (AllBlockSprite[i][j].spdata->size.y <= 0))
 			{
@@ -673,6 +680,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	SetStageGroup();
 
 	// オフセット値の計算
+	x = 0;
+	y = 0;
 	for (i = 0; i < stageData.size(); i++)
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
@@ -687,8 +696,19 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 			stageData[i].stageTileData[j].offsetX += stageData[i].offsetX;
 			stageData[i].stageTileData[j].offsetY += stageData[i].offsetY;
+
+			if (x < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width)
+			{
+				x = stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width;
+			}
+			if (y < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height)
+			{
+				y = stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height;
+			}
 		}
 	}
+	drawOffsetX = Raki_WinAPI::window_width / 2 - static_cast<int>(halfBlockSize * x);
+	drawOffsetY = Raki_WinAPI::window_height / 2 - static_cast<int>(halfBlockSize * y);
 
 	static bool end = false;
 	end = false;
@@ -710,6 +730,8 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 
 				startPlayerPosX = static_cast<int>(x + stageData[i].stageTileData[j].offsetX);
 				startPlayerPosY = static_cast<int>(y + stageData[i].stageTileData[j].offsetY);
+
+				nowPlayerStage = static_cast<size_t>(i);
 
 				end = true;
 				break;
@@ -802,6 +824,49 @@ void Stage::SelectingStageTile()
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
+	//overlapの計算
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			if (!IsNowTileOver(a, b))
+			{
+				stageData[a].stageTileData[b].Overlap = 0;
+			}
+		}
+	}
+
+	SelectTile = &stageData[selectStageNum].stageTileData[selectTileNum];
+
+	int anyActionCount = 0;
+
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			StageTileData* tile = &stageData[a].stageTileData[b];
+			if (tile->stageEase.isMove)
+			{
+				anyActionCount++;
+			}
+		}
+	}
+
+	//ステージかプレイヤーのどっちかがアクション中だったら何もしない
+	if (anyActionCount > 0 || player->Player_IsAction)
+	{
+		return 0;
+	}
+
+	static size_t NowStage = -1;
+	static size_t NowTile = -1;
+
+	static size_t OldStage = -1;
+	static size_t OldTile = -1;
+
+	OldStage = NowStage;
+	OldTile = NowTile;
+
 	static char direction = -1;
 	static size_t onPlayerStageTile = -1;
 	static size_t moveStageTile = 0;
@@ -819,11 +884,14 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 	direction = -1;
 
-	size_t NowStage = -1;
-	size_t NowTile = -1;
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
-	if (stageData[selectStageNum].stageTileData[selectTileNum].isFold == false)
+	if (SelectTile->Overlap > 0)
+	{
+		return 0;
+	}
+
+	if (!SelectTile->isFold)
 	{
 		if (Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN) && IsTileFoldDirection(selectStageNum, BodyType::up))
 		{
@@ -871,8 +939,9 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 		return 0;
 	}
 
-	//プレイヤーがいるタイルを選択していたら折れない
-	if (NowStage == selectStageNum && NowTile == selectTileNum)
+	//プレイヤーがいるタイルを選択していたら折れない(重なっていない時)
+	if (!IsNowTileOver(NowStage, NowTile) &&
+		NowStage == selectStageNum && NowTile == selectTileNum)
 	{
 		return 0;
 	}
@@ -906,14 +975,30 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 bool Stage::IsTileFoldDirection(size_t stage, int direction)
 {
-	size_t NowStage = -1;
-	size_t NowTile = -1;
-	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
+	size_t NowStage = 0;
+	size_t NowTile = 0;
 
 	if (stageData[stage].stageTileData.size() <= 1)
 	{
 		return false;
 	}
+
+	// プレイヤーとカーソルが重なっているかどうかのチェック
+	for (i = 0; NowStage != -1; i++)
+	{
+		static size_t skipStage = 0;
+		skipStage = NowStage;
+
+		GetPositionTile(player->CenterPosition, &NowStage, &NowTile,
+						i != 0, skipStage);
+
+		if (NowStage == selectStageNum && NowTile == selectTileNum)
+		{
+			return false;
+		}
+	}
+
+	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
 	for (int tile = 0; tile < stageData[stage].stageTileData.size(); tile++)
 	{
@@ -930,14 +1015,17 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetY < stageData[stage].stageTileData[tile].offsetY)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY)
 				{
 					if (player->IsDirectionFoldAll(BodyType::up))
 					{
 						player->Player_IsAction = true;
 						player->IsUpFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -949,14 +1037,17 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetY > stageData[stage].stageTileData[tile].offsetY)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY)
 				{
 					if (player->IsDirectionFoldAll(BodyType::down))
 					{
 						player->Player_IsAction = true;
 						player->IsDownFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -968,8 +1059,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetX < stageData[stage].stageTileData[tile].offsetX)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX)
 				{
 					if (player->Player_IsAction == false && player->Body_One.IsActivate &&
 						player->Body_One.IsFold == false && !player->Body_One.IsAction)
@@ -979,7 +1069,6 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 							player->Player_IsAction = true;
 							player->IsLeftFold = true;
 							player->leg.Set();
-							return true;
 						}
 						else
 						{
@@ -996,14 +1085,17 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 			if (SelectTile->offsetX > stageData[stage].stageTileData[tile].offsetX)
 			{
 				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX &&
-					selectStageNum == NowStage)
+					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX)
 				{
-					if (player->IsDirectionFoldAll(BodyType::left))
+					if (player->IsDirectionFoldAll(BodyType::right))
 					{
 						player->Player_IsAction = true;
 						player->IsRightFold = true;
 						player->leg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -1016,6 +1108,34 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 	}
 
 	return false;
+}
+
+bool Stage::IsNowTileOver(size_t stage, size_t tile)
+{
+	int overcount = 0;
+
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			if (stageData[stage].stageTileData[tile].offsetX + 1 <= (stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) - 1 &&
+				stageData[a].stageTileData[b].offsetX + 1 <= (stageData[stage].stageTileData[tile].offsetX + stageData[stage].stageTileData[tile].width) - 1 &&
+				stageData[stage].stageTileData[tile].offsetY + 1 <= (stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) - 1 &&
+				stageData[a].stageTileData[b].offsetY + 1 <= (stageData[stage].stageTileData[tile].offsetY + stageData[stage].stageTileData[tile].height) - 1)
+			{
+				overcount++;
+			}
+		}
+	}
+
+	if (overcount > 1)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direction, char** returnMapchip)
@@ -1298,22 +1418,15 @@ void Stage::SetOverlap(size_t stagenum, size_t tilenum)
 				continue;
 			}
 			if (GetStageTileOffsetX(a, b) + 1 <= (GetStageTileOffsetX(stagenum, tilenum) + GetStageTileWidth(stagenum, tilenum)) - 1 &&
-				(GetStageTileOffsetX(a, b) + GetStageTileWidth(a, b)) - 1 >= GetStageTileOffsetX(stagenum, tilenum) &&
+				(GetStageTileOffsetX(a, b) + GetStageTileWidth(a, b)) - 1 >= GetStageTileOffsetX(stagenum, tilenum) + 1 &&
 				GetStageTileOffsetY(a, b) + 1 <= (GetStageTileOffsetY(stagenum, tilenum) + GetStageTileHeight(stagenum, tilenum)) - 1 &&
-				(GetStageTileOffsetY(a, b) + GetStageTileHeight(a, b)) - 1 >= GetStageTileOffsetY(stagenum, tilenum))
+				(GetStageTileOffsetY(a, b) + GetStageTileHeight(a, b)) - 1 >= GetStageTileOffsetY(stagenum, tilenum) + 1)
 			{
-				if (stageData[a].stageTileData[b].StageGroup < stageData[stagenum].stageTileData[tilenum].StageGroup &&
-					stageData[a].stageTileData[b].IsOverSet == false)
-				{
-					stageData[a].stageTileData[b].Overlap++;
-					stageData[a].stageTileData[b].IsOverSet = true;
-					break;
-				}
 				if (stageData[a].stageTileData[b].StageGroup > stageData[stagenum].stageTileData[tilenum].StageGroup &&
 					stageData[stagenum].stageTileData[tilenum].IsOverSet == false)
 				{
 					stageData[stagenum].stageTileData[tilenum].Overlap++;
-					stageData[stagenum].stageTileData[tilenum].IsOverSet = true;
+					//stageData[stagenum].stageTileData[tilenum].IsOverSet = true;
 					break;
 				}
 			}
@@ -1384,7 +1497,7 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
-			if (a == selectStageNum && b == selectTileNum)
+			if (a == selectStageNum && b == selectTileNum && SelectTile->Overlap == 0)
 			{
 				switch (direction)
 				{
@@ -1435,6 +1548,8 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	size_t NowTile = -1;
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
+	StageTileData* playertiles = &stageData[NowStage].stageTileData[NowTile];
+
 	//テンプレfor文
 	for (int a = 0; a < stageData.size(); a++)
 	{
@@ -1456,8 +1571,11 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					stagenumber.push_back(a);
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
-					
-					if (IsPositionTile(player->CenterPosition, a, b))
+
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetX <= stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) &&
+							playertiles->offsetX + playertiles->width >= stageData[a].stageTileData[b].offsetX))
 					{
 						if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
 							player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
@@ -1479,7 +1597,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetX <= stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) &&
+							playertiles->offsetX + playertiles->width >= stageData[a].stageTileData[b].offsetX))
 					{
 						if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
 							player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction)
@@ -1500,7 +1621,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetY <= stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) &&
+							playertiles->offsetY + playertiles->height >= stageData[a].stageTileData[b].offsetY))
 					{
 						if (player->Body_One.IsActivate && player->Body_One.IsFold &&
 							player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction)
@@ -1521,7 +1645,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
 					moveStageData.push_back(selectTileNum);
 
-					if (IsPositionTile(player->CenterPosition, a, b))
+					if (IsPositionTile(player->CenterPosition, a, b) ||
+						(NowStage == a &&
+							(playertiles->offsetY <= stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) &&
+							playertiles->offsetY + playertiles->height >= stageData[a].stageTileData[b].offsetY))
 					{
 						if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
 							player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction)
@@ -1654,6 +1781,11 @@ bool Stage::IsMapchipBlocks(char mapchip)
 		return true;
 	}
 
+	if (mapchip == MapchipData::NOFRAME)
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -1685,7 +1817,8 @@ char Stage::GetPositionStage(const RVector3& playerPos)
 	return nowPlayerStage;
 }
 
-void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber)
+void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+							bool isSkip, const size_t& skipStageNumber)
 {
 	*stageNumber = static_cast<size_t>(-1);
 	*stageTileNumber = static_cast<size_t>(-1);
@@ -1694,12 +1827,17 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 
 	for (i = 0; i < stageData.size(); i++)
 	{
+		if (isSkip && i <= skipStageNumber)
+		{
+			continue;
+		}
+
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
 			auto& stageTile = stageData[i].stageTileData[j];
 
-			if (x >= stageTile.offsetX && x < stageTile.offsetX + stageTile.width &&
-				y >= stageTile.offsetY && y < stageTile.offsetY + stageTile.height)
+			if (x >= stageTile.offsetX && x <= stageTile.offsetX + stageTile.width &&
+				y >= stageTile.offsetY && y <= stageTile.offsetY + stageTile.height)
 			{
 				*stageNumber = i;
 				*stageTileNumber = j;
@@ -1709,7 +1847,8 @@ void Stage::GetPositionTile(const RVector3& center, size_t* stageNumber, size_t*
 	}
 }
 
-void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber)
+void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
+								bool isSkip, const size_t& skipStageNumber)
 {
 	*stageNumber = static_cast<size_t>(-1);
 	*stageTileNumber = static_cast<size_t>(-1);
@@ -1718,6 +1857,11 @@ void Stage::GetPositionInitTile(const RVector3& center, size_t* stageNumber, siz
 
 	for (i = 0; i < initStageData.size(); i++)
 	{
+		if (isSkip && i <= skipStageNumber)
+		{
+			continue;
+		}
+
 		for (j = 0; j < initStageData[i].stageTileData.size(); j++)
 		{
 			auto& stageTile = initStageData[i].stageTileData[j];
@@ -1742,6 +1886,32 @@ bool Stage::IsPositionInitTile(size_t StageNum, size_t StageTileNum)
 	{
 		return true;
 	}
+	return false;
+}
+
+bool Stage::IsAnyTile(const RVector3& center)
+{
+	float left;
+	float up;
+	float right;
+	float down;
+
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			left = (float)stageData[a].stageTileData[b].offsetX * blockSize;
+			up = (float)stageData[a].stageTileData[b].offsetY * blockSize;
+			right = left + blockSize * (float)stageData[a].stageTileData[b].width;
+			down = up + blockSize * (float)stageData[a].stageTileData[b].height;
+
+			if (center.x >= left && center.x <= right && center.y >= up && center.y <= down)
+			{
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
@@ -1792,7 +1962,7 @@ int Stage::Fold(const unsigned char& direction, const size_t& onPlayerStage, con
 	{
 		return EF;
 	}
-	//すでに動いいてるタイルを折ろうとしたら動きを止める
+	//すでに動いてるタイルを折ろうとしたら動きを止める
 	if (stageData[onPlayerStage].stageTileData[moveStageData].stageEase.isMove)
 	{
 		stageData[onPlayerStage].stageTileData[moveStageData].stageEase.isMove = false;
@@ -2118,6 +2288,12 @@ int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumbe
 			// 色の初期化
 			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 			AllBlockSprite[stageNumber][14].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::NOFRAME:
+			// 色の初期化
+			Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
+			AllBlockSprite[stageNumber][15].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 			break;
 
 		case MapchipData::NONE:

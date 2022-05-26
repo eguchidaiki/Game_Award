@@ -4,7 +4,6 @@
 #include <RVector.h>
 #include <TexManager.h>
 #include "Sprite.h"
-#include "GoalParticle.h"
 
 class Player final
 {
@@ -187,13 +186,6 @@ public: //メンバ変数
 	float JumpSpeed;
 	float FallSpeed;
 
-	//「顔じゃなくて体のどこかが引っかかっているときにジャンプしかできない」flag
-	bool IsJumpOnly = false;
-
-	//どっち向きにジャンプするか
-	bool Leftjump;
-	bool Rightjump;
-
 	//ジャンプ入力保持
 	bool IsInitJump = false;
 
@@ -234,9 +226,6 @@ public: //メンバ変数
 	//マウスのクリック座標
 	XMFLOAT2 PressPos = { 0, 0 };
 	XMFLOAT2 ReleasePos = { 0, 0 };
-
-	// ゴールパーティクル
-	GoalParticle goalParticle;
 
 	unsigned char playerTile[4] = { 0 };
 };

@@ -1,7 +1,7 @@
 #include "UI.h"
 #include "Player.h"
 #include "Stage.h"
-#include "Raki_Input.h"
+#include "InputManger.h"
 
 namespace
 {
@@ -11,10 +11,10 @@ namespace
 
 void UI::Init(Tutorial* tutorial)
 {
-	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton01.png");
+	ResetHandle = TexManager::LoadTexture("Resources/UI/resetButton.png");
 	this->ResetUISprite.Create(ResetHandle);
 
-	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton01.png");
+	PauseHandle = TexManager::LoadTexture("Resources/UI/pauseButton.png");
 	this->PauseUISprite.Create(PauseHandle);
 
 	ResetRot = 0;
@@ -27,11 +27,11 @@ void UI::Init(Tutorial* tutorial)
 
 void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 {
-	mousePos = Input::getMousePos();
+	//mousePos = Input::getMousePos();
 
 	IsInButton();
 
-	if ((IsResetPress && Input::isMouseClickTrigger(0)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_X))
+	if ((IsResetPress && Input::isMouseClickTrigger(0)) || InputManger::Get()->ResetTrigger())
 	{
 		stage->Reset(PlayerTile);
 		player->Init();
@@ -39,12 +39,11 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 
 		if (StageNum == 0)
 		{
-			tutorial->Init();
-			tutorial->isTutorial = true;
+			tutorial->Reset();
 		}
 	}
 
-	if ((IsPausePress && Input::isMouseClickTrigger(0)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_R))
+	if ((IsPausePress && Input::isMouseClickTrigger(0)) || InputManger::Get()->MenuTrigger())
 	{
 		*Isback = true;
 	}
