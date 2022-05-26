@@ -1021,7 +1021,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 					{
 						player->Player_IsAction = true;
 						player->IsUpFold = true;
-						player->leg.Set();
+						player->FaceLeg.Set();
 					}
 					else
 					{
@@ -1043,7 +1043,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 					{
 						player->Player_IsAction = true;
 						player->IsDownFold = true;
-						player->leg.Set();
+						player->FaceLeg.Set();
 					}
 					else
 					{
@@ -1068,7 +1068,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						{
 							player->Player_IsAction = true;
 							player->IsLeftFold = true;
-							player->leg.Set();
+							player->FaceLeg.Set();
 						}
 						else
 						{
@@ -1091,7 +1091,7 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 					{
 						player->Player_IsAction = true;
 						player->IsRightFold = true;
-						player->leg.Set();
+						player->FaceLeg.Set();
 					}
 					else
 					{
