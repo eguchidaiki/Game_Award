@@ -577,42 +577,7 @@ void Raki_DX12B::StartDraw2()
 
 void Raki_DX12B::StartDrawBackbuffer()
 {
-	////imgui描画開始
-	//ImGui_ImplDX12_NewFrame();
-	//ImGui_ImplWin32_NewFrame();
-	//ImGui::NewFrame();
 
-	////1パス用リソースをシェーダーリソースに戻す
-	//auto changeState = CD3DX12_RESOURCE_BARRIER::Transition(
-	//	mpResource.Get(),
-	//	D3D12_RESOURCE_STATE_RENDER_TARGET,
-	//	D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-	//);
-	//commandList->ResourceBarrier(1, &changeState);
-
-	//// バックバッファの番号を取得（2つなので0番か1番）
-	//UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
-
-	//auto temp = CD3DX12_RESOURCE_BARRIER::Transition(backBuffers[bbIndex].Get(), 
-	//	D3D12_RESOURCE_STATE_PRESENT, 
-	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-	//commandList->ResourceBarrier(1, &temp);
-
-	//// レンダーターゲットビュー用ディスクリプタヒープのハンドルを取得
-	//CD3DX12_CPU_DESCRIPTOR_HANDLE rtvH = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-	//	rtvHeaps->GetCPUDescriptorHandleForHeapStart(),
-	//	bbIndex,
-	//	device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV)
-	//);
-	//// 深度ステンシルビュー用デスクリプタヒープのハンドルを取得
-	//CD3DX12_CPU_DESCRIPTOR_HANDLE dsvH = CD3DX12_CPU_DESCRIPTOR_HANDLE(dsvHeap->GetCPUDescriptorHandleForHeapStart());
-	////バックバッファをレンダーターゲットにセット
-	//commandList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
-
-	//ClearDepthBuffer();
-	////クリア
-	//ClearRenderTarget();
 }
 
 void Raki_DX12B::StartDrawRenderTarget()
