@@ -298,7 +298,7 @@ void StageSelecter::CheckLoadStage(int boxnum)
 {
 	int pageNumber = static_cast<int>(nowpage);
 
-	int LoadStageNumber = (pageNumber * 4) + (boxnum * 4) + 1;
+	int LoadStageNumber = (pageNumber * 4) + (boxnum) + 1;
 
 	SelectStageNum = LoadStageNumber;
 }
