@@ -120,7 +120,7 @@ void GameMainManager::GameInstanceUpdate()
 
 	//ここにゴール演出、UI処理を入れる
 
-	//セレクトに遷移する処理？
+	//セレクトに遷移する処理(仮)
 	if (Ischangecount)
 	{
 		changecount++;

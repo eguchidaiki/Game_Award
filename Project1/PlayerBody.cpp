@@ -39,7 +39,8 @@ PlayerBody::PlayerBody() :
 	SlideDis(),
 	AfterBodyFoldCount(0),
 	BodyDistance(1),
-	Ease{}
+	Ease{},
+	BodyLeg{}
 {
 }
 
@@ -85,20 +86,59 @@ void PlayerBody::Update(RVector3& center)
 	Body_Fold(player->CenterPosition);
 
 	Body_Slide(player->CenterPosition);
+
+	if (IsFold || this->Body_Type == BodyType::up || this->Body_Type == BodyType::down)
+	{
+		IsLegDraw = false;
+	}
+	else
+	{
+		IsLegDraw = true;
+	}
+
+	//体の四辺
+	float BodyLeft;
+	float BodyDown;
+
+	//StartPosとEndPosの位置関係によって上下左右の設定を変える
+	if (BodyStartPos.x < BodyEndPos.x)
+	{
+		BodyLeft = BodyStartPos.x - 5;
+	}
+	else
+	{
+		BodyLeft = BodyEndPos.x - 5;
+	}
+
+	if (BodyStartPos.y < BodyEndPos.y)
+	{
+		BodyDown = BodyEndPos.y;
+	}
+	else
+	{
+		BodyDown = BodyStartPos.y;
+	}
+
+	RVector3 FootUpPosition = { BodyLeft,BodyDown,0.0f };
+
+	BodyLeg.Update(FootUpPosition, player->IsDownBody, 1);
 }
 
 void PlayerBody::Draw(int offsetX, int offsetY)
 {
-	if (IsActivate == true)
-	{
-		BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-			static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
-
-		BodySprite.Draw();
-	}
-	else
+	if (!IsActivate)
 	{
 		return;
+	}
+
+	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+
+	BodySprite.Draw();
+
+	if (IsLegDraw)
+	{
+		BodyLeg.Draw(offsetX, offsetY, player->IsLeft, player->IsRight);
 	}
 }
 
@@ -109,6 +149,8 @@ void PlayerBody::Create()
 		Bodyhandle = TexManager::LoadTexture("./Resources/playerSub.png");
 		BodySprite.Create(Bodyhandle);
 	}
+
+	BodyLeg.Create();
 }
 
 void PlayerBody::Body_Fold(RVector3& center)
@@ -585,19 +627,13 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	{
 		BodyUp = BodyStartPos.y;
 		BodyDown = BodyEndPos.y - 1;
-		if (this->Body_Type == BodyType::down)
-		{
-			BodyAndLegDown = BodyDown + 9;
-		}
+		BodyAndLegDown = BodyDown + 8;
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
 		BodyDown = BodyStartPos.y - 1;
-		if (this->Body_Type == BodyType::down)
-		{
-			BodyAndLegDown = BodyDown + 9;
-		}
+		BodyAndLegDown = BodyDown + 8;
 	}
 
 	//四辺をブロックサイズで割った数
@@ -636,276 +672,138 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	int JumpCountLeft = 0;
 	int jumpCountRight = 0;
 
+	BodyIsFall = false;
+
 	//体の四隅とブロックとの判定
-	if (this->Body_Type != BodyType::down)
+	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (i = 0; i < stage->GetStageDataSize(); i++)
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+			//左上
+			if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
 			{
-				//左上
-				if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
-					BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
+					BuriedY = (BodyUp_mapchip * 60) - BodyUp;
 
-					//今いる座標のマップチップを確認
-					mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
-						BuriedY = (BodyUp_mapchip * 60) - BodyUp;
-
-						if (BuriedX > BuriedY)
+						if (IsHitUp == false)
 						{
-							if (IsHitUp == false)
-							{
-								player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp);
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitLeft == false && Body_Type == BodyType::left || Body_Type == BodyType::up)
-							{
-								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								IsHitLeft = true;
-							}
+							player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp);
+							FallSpeed = 0.0f;
+							IsHitUp = true;
 						}
 					}
-				}
-				//左下
-				if (stage->IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
-				{
-					BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
-					BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
-
-					mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
+					else if (BuriedX < BuriedY)
 					{
-						BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
-						BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
-
-						if (BuriedX > BuriedY)
+						if (IsHitLeft == false)
 						{
-							if (IsHitDown == false)
-							{
-								player->CenterPosition.y = (BodyDown_mapchip * 60) - (BodyDown - player->CenterPosition.y);
-								FallCount++;
-								player->IsInitJump = false;
-								IsHitDown = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitLeft == false)
-							{
-								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								player->IsInitJump = false;
-								IsHitLeft = true;
-							}
-						}
-					}
-				}
-				//右上
-				if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
-				{
-					BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
-					BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
-
-					mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
-					{
-						BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
-						BuriedY = (BodyUp_mapchip * 60) - BodyUp;
-
-						if (BuriedX > BuriedY)
-						{
-							if (IsHitUp == false)
-							{
-								center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false && Body_Type == BodyType::right || Body_Type == BodyType::up)
-							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 0.3;
-								IsHitRight = true;
-							}
-						}
-					}
-				}
-				//右下
-				if (stage->IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
-				{
-					BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
-					BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
-
-					mapchipPos = (BodyDown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
-					{
-						BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
-						BuriedY = (BodyDown - 60) - (BodyDown_mapchip * 60);
-
-						if (BuriedX > BuriedY)
-						{
-							if (IsHitDown == false)
-							{
-								player->CenterPosition.y = (BodyDown_mapchip * 60) - (BodyDown - player->CenterPosition.y);
-								FallCount++;
-								player->IsInitJump = false;
-								IsHitDown = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x) - 0.3;
-								IsHitRight = true;
-							}
+							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
+							IsHitLeft = true;
 						}
 					}
 				}
 			}
-		}
-	}
-	else if (this->Body_Type == BodyType::down)
-	{
-		for (i = 0; i < stage->GetStageDataSize(); i++)
-		{
-			for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+			//左下
+			if (stage->IsPositionTile({ BodyLeft,BodyAndLegDown,0.0f }, i, j))
 			{
-				//左上
-				if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyAndLegdown_mapchip_tile = BodyAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
+
+				mapchipPos = (BodyAndLegdown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
-					BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
+					BuriedY = (BodyAndLegDown - 60) - (BodyAndLegdown_mapchip * 60);
 
-					//今いる座標のマップチップを確認
-					mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
-						BuriedY = (BodyUp_mapchip * 60) - BodyUp;
-
-						if (BuriedX > BuriedY)
+						if (IsHitDown == false)
 						{
-							if (IsHitUp == false)
-							{
-								player->CenterPosition.y = (BodyUp_mapchip + 1) * 60 + (player->CenterPosition.y - BodyUp);
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
+							FallCount++;
+							player->IsInitJump = false;
+							IsHitDown = true;
 						}
-						else if (BuriedX < BuriedY)
+					}
+					else if (BuriedX < BuriedY)
+					{
+						if (IsHitLeft == false)
 						{
-							if (IsHitLeft == false)
-							{
-								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								IsHitLeft = true;
-							}
+							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
+							player->IsInitJump = false;
+							IsHitLeft = true;
 						}
 					}
 				}
-				//左下
-				if (stage->IsPositionTile({ BodyLeft,BodyAndLegDown,0.0f }, i, j))
+			}
+			//右上
+			if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			{
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+
+				mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
-					BodyAndLegdown_mapchip_tile = BodyAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
+					BuriedY = (BodyUp_mapchip * 60) - BodyUp;
 
-					mapchipPos = (BodyAndLegdown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyLeft_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (BodyLeft_mapchip * 60) - BodyLeft;
-						BuriedY = (BodyAndLegDown - 60) - (BodyAndLegdown_mapchip * 60);
-
-						if (BuriedX > BuriedY)
+						if (IsHitUp == false)
 						{
-							if (IsHitDown == false)
-							{
-								player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y) - 0.5;
-								FallCount++;
-								player->IsInitJump = false;
-								IsHitDown = true;
-							}
+							center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
+							FallSpeed = 0.0f;
+							IsHitUp = true;
 						}
-						else if (BuriedX < BuriedY)
+					}
+					else if (BuriedX < BuriedY)
+					{
+						if (IsHitRight == false)
 						{
-							if (IsHitLeft == false)
-							{
-								player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
-								player->IsInitJump = false;
-								IsHitLeft = true;
-							}
+							player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x);
+							IsHitRight = true;
+							jumpCountRight += player->IsRight;
 						}
 					}
 				}
-				//右上
-				if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			}
+			//右下
+			if (stage->IsPositionTile({ BodyRight,BodyAndLegDown,0.0f }, i, j))
+			{
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyAndLegdown_mapchip_tile = BodyAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
+
+				mapchipPos = (BodyAndLegdown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
-					BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
-					BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
+					BuriedY = (BodyAndLegDown - 60) - (BodyAndLegdown_mapchip * 60);
 
-					mapchipPos = (BodyUp_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
-						BuriedY = (BodyUp_mapchip * 60) - BodyUp;
-
-						if (BuriedX > BuriedY)
+						if (IsHitDown == false)
 						{
-							if (IsHitUp == false)
-							{
-								center->y = (BodyUp_mapchip + 1) * 60 + (center->y - BodyUp);
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x);
-								IsHitRight = true;
-								jumpCountRight += player->IsRight;
-							}
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
+							FallCount++;
+							player->IsInitJump = false;
+							IsHitDown = true;
 						}
 					}
-				}
-				//右下
-				if (stage->IsPositionTile({ BodyRight,BodyAndLegDown,0.0f }, i, j))
-				{
-					BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
-					BodyAndLegdown_mapchip_tile = BodyAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
-
-					mapchipPos = (BodyAndLegdown_mapchip_tile)*stage->GetStageTileWidth(i, j) + (BodyRight_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
+					else if (BuriedX < BuriedY)
 					{
-						BuriedX = (BodyRight - 60) - (BodyRight_mapchip * 60);
-						BuriedY = (BodyAndLegDown - 60) - (BodyAndLegdown_mapchip * 60);
-
-						if (BuriedX > BuriedY)
+						if (IsHitRight == false)
 						{
-							if (IsHitDown == false)
-							{
-								player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y) - 0.5;
-								FallCount++;
-								player->IsInitJump = false;
-								IsHitDown = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x);
-								IsHitRight = true;
-							}
+							player->CenterPosition.x = (BodyRight_mapchip * 60) - (BodyRight - player->CenterPosition.x);
+							IsHitRight = true;
 						}
 					}
 				}
@@ -949,11 +847,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 		}
 	}
 
-	if (FallCount > 0)
-	{
-		BodyIsFall = false;
-	}
-	else
+	if (FallCount == 0)
 	{
 		BodyIsFall = true;
 	}

@@ -154,5 +154,6 @@ public: //ƒƒ“ƒo•Ï”
 	Sprite BodySprite;
 
 	//‘«(‘Ìê—p)
-	PlayerFoot BodyLeg = {};
+	PlayerFoot BodyLeg;
+	bool IsLegDraw = false;
 };

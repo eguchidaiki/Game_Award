@@ -81,7 +81,6 @@ void Player::Init()
 	Body_Four.Init(CenterPosition, BodyType::down);
 
 	FaceLeg.Create();
-	FaceLeg.Init();
 	IsLeft = true;
 	IsRight = false;
 
@@ -111,7 +110,6 @@ void Player::Update(int offsetX, int offsetY)
 	//顔の当たり判定
 	IsAroundBlock();
 	IsOutsideFace();
-	IsHitPlayerBody();
 
 	Body_Four.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsHitBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
@@ -126,6 +124,7 @@ void Player::Update(int offsetX, int offsetY)
 			FallSpeed += 0.2f;
 		}
 	}
+	IsHitPlayerBody();
 
 	//どの体にも引っかからなかったら落ちる
 	if (Player_IsAction == false)
@@ -1549,280 +1548,137 @@ void Player::IsHitPlayerBody()
 	IsFaceFall = false;
 
 	//顔の四隅との当たり判定
-	if (!IsDownBody)
+	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (i = 0; i < stage->GetStageDataSize(); i++)
+		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+			//左上
+			if (stage->IsPositionTile({ FaceLeft, FaceUp ,0.0f }, i, j))
 			{
-				//左上
-				if (stage->IsPositionTile({ FaceLeft, FaceUp ,0.0f }, i, j))
+				X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
-					X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (left_mapchip * 60) - FaceLeft;
+					BuriedY = (up_mapchip * 60) - FaceUp;
 
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (left_mapchip * 60) - FaceLeft;
-						BuriedY = (up_mapchip * 60) - FaceUp;
-
-						if (BuriedX > BuriedY)
+						if (IsHitUp == false)
 						{
-							if (IsHitUp == false)
-							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitLeft == false)
-							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
-								JumpCountLeft += IsLeft;
-								IsHitLeft = true;
-							}
+							CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
+							FallSpeed = 0.0f;
+							IsHitUp = true;
 						}
 					}
-				}
-				//左下
-				if (stage->IsPositionTile({ FaceLeft, FaceAndLegDown, 0.0f }, i, j))
-				{
-					X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = FaceAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
-
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
+					else if (BuriedX < BuriedY)
 					{
-						BuriedX = (left_mapchip * 60) - FaceLeft;
-						BuriedY = (FaceAndLegDown - 60) - (FaceAndLegdown_mapchip * 60);
-
-						if (BuriedX > BuriedY)
+						if (IsHitLeft == false)
 						{
-							if (IsHitDown == false)
-							{
-								CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
-								FallCount++;
-								IsInitJump = false;
-								IsHitDown = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitLeft == false)
-							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
-								JumpCountLeft += IsLeft;
-								IsHitLeft = true;
-							}
-						}
-					}
-				}
-				//右上
-				if (stage->IsPositionTile({ FaceRight, FaceUp, 0.0f }, i, j))
-				{
-					X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
-
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
-					{
-						BuriedX = (FaceRight - 60) - (right_mapchip * 60);
-						BuriedY = (up_mapchip * 60) - FaceUp;
-
-						if (BuriedX > BuriedY)
-						{
-							if (IsHitUp == false)
-							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
-								jumpCountRight += IsRight;
-								IsHitRight = true;
-							}
-						}
-					}
-
-				}
-				//右下
-				if (stage->IsPositionTile({ FaceRight, FaceAndLegDown, 0.0f }, i, j))
-				{
-					X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = FaceAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
-
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
-					{
-						BuriedX = (FaceRight - 60) - (right_mapchip * 60);
-						BuriedY = (FaceAndLegDown - 60) - (FaceAndLegdown_mapchip * 60);
-
-						if (BuriedX > BuriedY)
-						{
-							if (IsHitDown == false)
-							{
-								CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
-								FallCount++;
-								IsInitJump = false;
-								IsHitDown = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
-								jumpCountRight += IsRight;
-								IsHitRight = true;
-							}
+							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
+							JumpCountLeft += IsLeft;
+							IsHitLeft = true;
 						}
 					}
 				}
 			}
-		}
-	}
-	else if (IsDownBody)
-	{
-		for (i = 0; i < stage->GetStageDataSize(); i++)
-		{
-			for (j = 0; j < stage->GetStageTileDataSize(i); j++)
+			//左下
+			if (stage->IsPositionTile({ FaceLeft, FaceAndLegDown, 0.0f }, i, j))
 			{
-				//左上
-				if (stage->IsPositionTile({ FaceLeft, FaceUp ,0.0f }, i, j))
+				X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = FaceAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
-					X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (left_mapchip * 60) - FaceLeft;
+					BuriedY = (FaceAndLegDown - 60) - (FaceAndLegdown_mapchip * 60);
 
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (left_mapchip * 60) - FaceLeft;
-						BuriedY = (up_mapchip * 60) - FaceUp;
-
-						if (BuriedX > BuriedY)
+						if (IsHitDown == false)
 						{
-							if (IsHitUp == false)
-							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
+							CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
+							FallCount++;
+							IsInitJump = false;
+							IsHitDown = true;
 						}
-						else if (BuriedX < BuriedY)
+					}
+					else if (BuriedX < BuriedY)
+					{
+						if (IsHitLeft == false)
 						{
-							if (IsHitLeft == false)
-							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
-								JumpCountLeft += IsLeft;
-								IsHitLeft = true;
-							}
+							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
+							JumpCountLeft += IsLeft;
+							IsHitLeft = true;
 						}
 					}
 				}
-				//左下
-				if (stage->IsPositionTile({ FaceLeft, FaceDown, 0.0f }, i, j))
+			}
+			//右上
+			if (stage->IsPositionTile({ FaceRight, FaceUp, 0.0f }, i, j))
+			{
+				X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
-					X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (FaceRight - 60) - (right_mapchip * 60);
+					BuriedY = (up_mapchip * 60) - FaceUp;
 
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (left_mapchip * 60) - FaceLeft;
-						BuriedY = (FaceDown - 60) - (down_mapchip * 60);
-
-						if (BuriedX > BuriedY)
+						if (IsHitUp == false)
 						{
-							if (IsHitDown == false)
-							{
-								//CenterPosition.y = static_cast<float>(down_mapchip * stage->blockSize) - 26.0f;
-								//FallCount++;
-								//IsInitJump = false;
-								//IsHitDown = true;
-							}
+							CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
+							FallSpeed = 0.0f;
+							IsHitUp = true;
 						}
-						else if (BuriedX < BuriedY)
+					}
+					else if (BuriedX < BuriedY)
+					{
+						if (IsHitRight == false)
 						{
-							if (IsHitLeft == false)
-							{
-								CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
-								JumpCountLeft += IsLeft;
-								IsHitLeft = true;
-							}
+							CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
+							jumpCountRight += IsRight;
+							IsHitRight = true;
 						}
 					}
 				}
-				//右上
-				if (stage->IsPositionTile({ FaceRight, FaceUp, 0.0f }, i, j))
+
+			}
+			//右下
+			if (stage->IsPositionTile({ FaceRight, FaceAndLegDown, 0.0f }, i, j))
+			{
+				X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				Y_mapchip_tile = FaceAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
-					X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+					BuriedX = (FaceRight - 60) - (right_mapchip * 60);
+					BuriedY = (FaceAndLegDown - 60) - (FaceAndLegdown_mapchip * 60);
 
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
+					if (BuriedX > BuriedY)
 					{
-						BuriedX = (FaceRight - 60) - (right_mapchip * 60);
-						BuriedY = (up_mapchip * 60) - FaceUp;
-
-						if (BuriedX > BuriedY)
+						if (IsHitDown == false)
 						{
-							if (IsHitUp == false)
-							{
-								CenterPosition.y = static_cast<float>(up_mapchip + 1) * stage->blockSize + 25.0f;
-								FallSpeed = 0.0f;
-								IsHitUp = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
-								jumpCountRight += IsRight;
-								IsHitRight = true;
-							}
+							CenterPosition.y = static_cast<float>(FaceAndLegdown_mapchip * stage->blockSize) - 33.0f;
+							FallCount++;
+							IsInitJump = false;
+							IsHitDown = true;
 						}
 					}
-
-				}
-				//右下
-				if (stage->IsPositionTile({ FaceRight, FaceDown, 0.0f }, i, j))
-				{
-					X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-					Y_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
-
-					MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
-					if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
+					else if (BuriedX < BuriedY)
 					{
-						BuriedX = (FaceRight - 60) - (right_mapchip * 60);
-						BuriedY = (FaceDown - 60) - (down_mapchip * 60);
-
-						if (BuriedX > BuriedY)
+						if (IsHitRight == false)
 						{
-							if (IsHitDown == false)
-							{
-								//CenterPosition.y = static_cast<float>(down_mapchip * stage->blockSize) - 26.0f;
-								//FallCount++;
-								//IsInitJump = false;
-								//IsHitDown = true;
-							}
-						}
-						else if (BuriedX < BuriedY)
-						{
-							if (IsHitRight == false)
-							{
-								CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
-								jumpCountRight += IsRight;
-								IsHitRight = true;
-							}
+							CenterPosition.x = static_cast<float>(right_mapchip * stage->blockSize) - 25.0f;
+							jumpCountRight += IsRight;
+							IsHitRight = true;
 						}
 					}
 				}
@@ -1921,20 +1777,6 @@ void Player::IsHitPlayerBody()
 				}
 			}
 		}
-	}
-
-	if ((JumpCountLeft <= 1 && IsLeft && Body_Two.IsHitLeft) || (jumpCountRight <= 1 && IsRight && Body_Two.IsHitRight))
-	{
-		/*IsJump = false;
-		IsWalk = false;
-		IsInitJump = true;*/
-	}
-	else if (((JumpCountLeft > 0 && DiagonallyUpLeft == false) || (jumpCountRight > 0 && DiagonallyUpRight == false)) && IsInitJump == false)
-	{
-		/*IsJump = true;
-		FallSpeed = -5.6f;
-		IsWalk = true;
-		IsInitJump = true;*/
 	}
 
 	if (FallCount == 0)
@@ -2180,24 +2022,18 @@ bool Player::IsFall()
 	{
 		FallCount++;
 	}
-
-	if (IsDownBody)
+	if (Body_Four.IsActivate == true && Body_Four.BodyIsFall == false)
 	{
-		if (Body_Four.IsActivate == true && Body_Four.BodyIsFall == false)
-		{
-			FallCount++;
-		}
+		FallCount++;
 	}
-	else
+	if (IsFaceFall == false)
 	{
-		if (IsFaceFall == false)
-		{
-			FallCount++;
-		}
+		FallCount++;
 	}
 
 	if (FallCount > 0)
 	{
+		FallSpeed = 0.0f;
 		return false;
 	}
 	else
