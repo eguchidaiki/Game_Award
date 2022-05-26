@@ -1577,7 +1577,7 @@ void Player::IsHitPlayerBody()
 					{
 						if (IsHitLeft == false)
 						{
-							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
+							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 24.0f;
 							JumpCountLeft += IsLeft;
 							IsHitLeft = true;
 						}
@@ -1610,7 +1610,7 @@ void Player::IsHitPlayerBody()
 					{
 						if (IsHitLeft == false)
 						{
-							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
+							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 24.0f;
 							JumpCountLeft += IsLeft;
 							IsHitLeft = true;
 						}
