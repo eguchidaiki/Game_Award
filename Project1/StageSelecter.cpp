@@ -211,7 +211,6 @@ void StageSelecter::CheckToPageChangeInput()
 			int pageNum = static_cast<int>(nextpage);
 			pageNum--;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
-			user_selecting = StageSelecter::UI_STAGEBOX_4;
 		}
 
 		break;
@@ -224,7 +223,6 @@ void StageSelecter::CheckToPageChangeInput()
 			int pageNum = static_cast<int>(nextpage);
 			pageNum++;
 			nextpage = static_cast<STAGE_PAGE>(pageNum);
-			user_selecting = StageSelecter::UI_STAGEBOX_1;
 		}
 
 		break;
@@ -253,7 +251,6 @@ void StageSelecter::PageChange()
 			}
 			if (nowDisplayNum >= 20)
 			{
-
 				displayPage = nextpage;
 
 				nowpage = nextpage;
@@ -267,6 +264,8 @@ void StageSelecter::PageChange()
 				state = is_selecting;
 
 				animationFrame = 0;
+
+				user_selecting = StageSelecter::UI_STAGEBOX_1;
 			}
 		}
 		else
@@ -289,6 +288,7 @@ void StageSelecter::PageChange()
 				state = is_selecting;
 				nowpage = nextpage;
 				animationFrame = 0;
+				user_selecting = StageSelecter::UI_STAGEBOX_4;
 			}
 		}
 	}
