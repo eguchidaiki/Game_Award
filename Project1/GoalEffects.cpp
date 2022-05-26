@@ -32,6 +32,8 @@ void GoalEffects::Update()
 	for (int i = 0; i < 6; i++) {
 		rainParticle.Prototype_Add();
 	}
+
+	rainParticle.Prototype_Update();
 }
 
 void GoalEffects::Draw()
