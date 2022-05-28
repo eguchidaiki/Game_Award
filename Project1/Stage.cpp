@@ -43,6 +43,7 @@ const XMFLOAT4 Stage::lineColor[4] = {
 
 int Stage::drawOffsetX = 0;
 int Stage::drawOffsetY = 0;
+bool Stage::isMoveSelectCursor = false;
 int Stage::startPlayerPosX = 0;
 int Stage::startPlayerPosY = 0;
 char Stage::nowPlayerStage = 0;
@@ -97,6 +98,7 @@ void Stage::Updata()
 	static int posX = 0;
 	static int posY = 0;
 
+	isMoveSelectCursor = false;
 	SelectingStageTile();
 
 	EaseingUpdate();
@@ -816,6 +818,7 @@ void Stage::SelectingStageTile()
 			selectCount = 0;
 		}
 		Audio::PlayLoadedSound(selectSound);
+		isMoveSelectCursor = true;
 	}
 
 	selectStageNum = static_cast<size_t>(AllTiles[selectCount].x);
