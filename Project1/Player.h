@@ -4,6 +4,7 @@
 #include <RVector.h>
 #include <TexManager.h>
 #include "Sprite.h"
+#include <Audio.h>
 
 class Player final
 {
@@ -77,7 +78,7 @@ public: //メンバ関数
 	void IsOutsideFace();
 
 	//body_twoのみ引っかかっているかどうか(trueであればジャンプできない)
-	bool IsOnlyHitBody_Two();
+	bool IsOnlyHitBody_Two() {}
 
 	//各体・顔の落下判定
 	bool IsFall();
@@ -105,6 +106,11 @@ public: //メンバ関数
 
 	//ブロックに邪魔されずに開けるかどうか
 	bool IsOpenBlock(BodyType opentype);
+
+	// プレイヤーのサウンドの読み込み
+	void LoadPlayerSound();
+	// プレイヤーのサウンドデータの削除
+	void DeletePlayerSound();
 
 public: //メンバ変数
 	//床の高さ
@@ -228,4 +234,10 @@ public: //メンバ変数
 	XMFLOAT2 ReleasePos = { 0, 0 };
 
 	unsigned char playerTile[4] = { 0 };
+private:
+	// サウンド
+	SoundData jumpSound;    //ジャンプ時のSE
+	SoundData landingSound; //着地時のSE
+	SoundData runSound;     //歩いている時のSE
+	SoundData clearSound;   //クリア時のSE
 };
