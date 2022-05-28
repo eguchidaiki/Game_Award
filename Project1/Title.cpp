@@ -4,6 +4,7 @@
 
 #include "InputManger.h"
 #include "NY_random.h"
+#include "Raki_WinAPI.h" //無くても動く(どこでインクルードされてるか分からなかった)
 
 namespace
 {
@@ -18,7 +19,8 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 
 	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
 
-	cursor.Create(TexManager::LoadTexture("Resources/titleAUI.png"));
+	cursor.Create(TexManager::LoadTexture("Resources/wakuF01.png"));
+	ui.Create(TexManager::LoadTexture("Resources/selectButton.png"));
 }
 
 //初期化
@@ -69,14 +71,17 @@ void Title::Draw()
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y * 0);
+		cursor.DrawSprite(MENUICON_START_X - 18, MENUICON_START_Y - 15);
 		break;
 	case Title::is_end:
-		cursor.DrawSprite(MENUICON_START_X + MENUICON_SIZE_X, MENUICON_START_Y + MENUICON_SIZE_Y * 1 + MENUICON_OFFSET);
+		cursor.DrawSprite(MENUICON_START_X - 18, MENUICON_START_Y - 15 + MENUICON_SIZE_Y * 1 + MENUICON_OFFSET);
 		break;
 	default:
 		break;
 	}
 	cursor.Draw();
+
+	ui.DrawSprite(Raki_WinAPI::window_width - 248, MENUICON_START_Y + MENUICON_SIZE_Y * 2 + MENUICON_OFFSET);
+	ui.Draw();
 
 }

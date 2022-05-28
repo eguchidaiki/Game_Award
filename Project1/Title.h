@@ -50,6 +50,9 @@ public:
 
 	//カーソル
 	Sprite cursor;
+	const int cursorSpriteCount = 4;
+	//ボタン説明
+	Sprite ui;
 
 	const int MENUICON_START_X = 500;
 	const int MENUICON_START_Y = 470;
