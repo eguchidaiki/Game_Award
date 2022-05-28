@@ -352,16 +352,14 @@ private: //メンバ変数
 	//折り目の画像ハンドル
 	UINT lineHandle;
 	//ブロックの画像ハンドル
-	//UINT BlocksHandle[4];
 	UINT AllBlockHandle[4][16];
-	UINT Bule_BlocksHandle[15];
-	UINT Green_BlocksHandle[15];
-	UINT Red_BlocksHandle[15];
-	UINT Yellow_BlocksHandle[15];
 	//空白の画像ハンドル
 	UINT EmptyHandle;
 	//ゴールの画像ハンドル
 	UINT GoalHandle;
+
+	//選択しているステージのハンドル
+	UINT SelectFrameHandle;
 
 	//折り目のスプライト
 	Sprite lineSprite;

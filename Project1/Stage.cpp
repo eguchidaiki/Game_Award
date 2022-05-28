@@ -316,6 +316,9 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	LineDraw(nowPlayerStage, drawOffset, 1.1f);
 
+	// 色の初期化
+	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
+
 	SelectIconSprite[0].DrawExtendSprite(
 		SelectTile->offsetX * blockSize + drawOffset.x,
 		SelectTile->offsetY * blockSize + drawOffset.y,
@@ -339,9 +342,6 @@ void Stage::Draw(const int offsetX, const int offsetY)
 		(SelectTile->offsetY + SelectTile->height) * blockSize - 10 + drawOffset.y,
 		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
 		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
-
-	// 色の初期化
-	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 
 	//エフェクト描画
 	oriEffect.Draw();
@@ -397,9 +397,11 @@ void Stage::Create()
 		particleManager->Prototype_Set(FoldParticle);
 	}
 
+	SelectFrameHandle = TexManager::LoadTexture("Resources/Blocks/SelectFrame.png");
+
 	for (int a = 0; a < 4; a++)
 	{
-		SelectIconSprite[a].Create(AllBlockHandle[a][15]);
+		SelectIconSprite[a].Create(SelectFrameHandle);
 	}
 
 	LoadStageSound();
@@ -408,11 +410,6 @@ void Stage::Create()
 void Stage::LoadBlocksHandle()
 {
 	//画像ハンドルの読み込み
-	Bule_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Bule/blockB.png");//青
-	Green_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Green/blockG.png");//緑
-	Red_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Red/blockR.png");//赤
-	Yellow_BlocksHandle[0] = TexManager::LoadTexture("Resources/Blocks/Block_Yellow/blockY.png");//黄
-
 	std::string BasePath = "Resources/Blocks/";
 	std::string fileType = ".png";
 
