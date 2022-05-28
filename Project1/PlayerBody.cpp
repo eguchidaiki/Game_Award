@@ -1120,15 +1120,15 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	if ((Rightwall.x < BodyRight && (Buried_RU.x < Buried_RU.y)) || (Rightwall.y < BodyRight && (Buried_RD.x < Buried_RD.y)))
 	{
 		push = fabs(BodyRight - center->x);
-		center->x = NowRight - push;
+		center->x = NowRight - push - 1;
 	}
-	if ((Upwall.x >= BodyUp && (Buried_LU.x >= Buried_LU.y)) || (Upwall.y >= BodyUp && (Buried_RU.x >= Buried_RU.y)))
+	if ((Upwall.x > BodyUp && (Buried_LU.x > Buried_LU.y)) || (Upwall.y > BodyUp && (Buried_RU.x > Buried_RU.y)))
 	{
 		push = fabs(center->y - BodyUp);
-		center->y = NowUp + push;
+		center->y = NowUp + push + 1;
 		FallSpeed = 0.0f;
 	}
-	if ((Downwall.x <= BodyDown && (Buried_LD.x >= Buried_LD.y)) || (Downwall.y <= BodyDown && (Buried_RD.x >= Buried_RD.y)))
+	if ((Downwall.x < BodyDown && (Buried_LD.x > Buried_LD.y)) || (Downwall.y < BodyDown && (Buried_RD.x > Buried_RD.y)))
 	{
 		push = fabs(BodyDown - center->y);
 		center->y = NowDown - push;
