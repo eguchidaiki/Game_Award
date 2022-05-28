@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 *.wav
 app/
+Project1/Resources/sound.zip

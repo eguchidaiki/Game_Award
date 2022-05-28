@@ -637,19 +637,19 @@ void Sprite::DrawRotaSprite(float x1, float y1, float x2, float y2, float angle)
 
 }
 
-void Sprite::DrawRTexSprite(int handle, float x1, float y1, float x2, float y2)
+void Sprite::DrawRTexSprite(int handle, float x1, float y1, float x2, float y2, float angle)
 {
     //���W�����Ƃɕ��s�ړ��s����쐬
     XMMATRIX trans = XMMatrixTranslation(x1, y1, 0);
-    //��]�A�X�P�[�����O�͂Ȃ�
-    XMMATRIX norot = XMMatrixRotationZ(XMConvertToRadians(0.0f));
+    XMMATRIX rot = XMMatrixIdentity();
+    rot *= XMMatrixRotationZ(XMConvertToRadians(angle));
     XMMATRIX noScale = XMMatrixScaling(1.0f, 1.0f, 1.0f);
 
     //�s��R���e�i�Ɋi�[
     SpriteInstance ins = {};
 
     ins.worldmat = XMMatrixIdentity();
-    ins.worldmat *= norot;
+    ins.worldmat *= rot;
     ins.worldmat *= trans;
     ins.drawsize = { x2 - x1, y2 - y1 };
     //�s��R���e�i�Ɋi�[
