@@ -176,6 +176,7 @@ public: //メンバ関数
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
+	//同一ステージ内での位置関係を計算する
 	void SetFoldType(size_t stagenum);
 
 	//折るステージを選択
