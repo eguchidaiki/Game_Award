@@ -1,6 +1,6 @@
 #include "Tutorial.h"
 #include "Player.h"
-#include "ActFlag.h"
+#include "Stage.h"
 
 namespace
 {
@@ -53,11 +53,13 @@ void Tutorial::Update()
 	static bool isMove = false;
 	static bool isJump = false;
 	static bool isFold = false;
+	static bool isSelect = false;
 
 	isMove = player->IsWalk;
 	isJump = player->IsJump;
 	isFold = player->IsUpFold || player->IsDownFold ||
 		player->IsLeftFold || player->IsRightFold;
+	isSelect = Stage::isMoveSelectCursor;
 
 	switch (tutorialState)
 	{
@@ -79,7 +81,7 @@ void Tutorial::Update()
 	{
 		if (isJump)
 		{
-			tutorialState = TutorialState::FOLD;
+			tutorialState = TutorialState::SELECT;
 		}
 		break;
 	}
@@ -88,6 +90,14 @@ void Tutorial::Update()
 		if (isFold)
 		{
 			tutorialState = TutorialState::NO_TUTORIAL;
+		}
+		break;
+	}
+	case TutorialState::SELECT:
+	{
+		if (isSelect)
+		{
+			tutorialState = TutorialState::FOLD;
 		}
 		break;
 	}
@@ -133,6 +143,12 @@ void Tutorial::Draw(int offsetX, int offsetY)
 		foldSprite.Draw();
 		break;
 	}
+	case TutorialState::SELECT:
+	{
+		selectSprite.DrawSprite(offset.x - 50.0f, offset.y - (isPlayerUpBody * PlayerBody::BodySize + spriteSize.y + 10.0f));
+		selectSprite.Draw();
+		break;
+	}
 	default:
 	{
 		break;
@@ -156,6 +172,11 @@ void Tutorial::Create()
 	{
 		UINT foldHandle = TexManager::LoadTexture("./Resources/tutorial/oruUI.png");
 		foldSprite.Create(foldHandle);
+	}
+	if ((selectSprite.spdata->size.x <= 0) || (selectSprite.spdata->size.y <= 0))
+	{
+		UINT selectHandle = TexManager::LoadTexture("./Resources/tutorial/select.png");
+		selectSprite.Create(selectHandle);
 	}
 }
 

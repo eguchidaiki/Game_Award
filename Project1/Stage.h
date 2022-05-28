@@ -8,6 +8,9 @@
 //折るエフェクト
 #include "OriEffects.h"
 
+//サウンド
+#include <Audio.h>
+
 enum MapchipData
 {
 	EMPTY_STAGE = 0,
@@ -138,6 +141,8 @@ public: //静的メンバ関数
 public: //静的メンバ変数
 	static int drawOffsetX;
 	static int drawOffsetY;
+
+	static bool isMoveSelectCursor;
 private:
 	static int startPlayerPosX;
 	static int startPlayerPosY;
@@ -300,6 +305,11 @@ public: //メンバ関数
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
+
+	// ステージのサウンドの読み込み
+	void LoadStageSound();
+	// ステージのサウンドデータの削除
+	void DeleteStageSound();
 private:
 	// ステージを折る
 	int Fold(const unsigned char& direction, const size_t& onPlayerStage, const size_t& onPlayerStageTile,
@@ -371,4 +381,8 @@ private: //メンバ変数
 
 	//折るエフェクト
 	OriEffects oriEffect;
+
+	// サウンド
+	SoundData foldSound; //折る時のSE
+	SoundData selectSound; //枠線選択時のSE
 };

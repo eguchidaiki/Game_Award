@@ -107,13 +107,9 @@ void GameMainManager::GameInstanceUpdate()
 			IsStart = true;
 		}
 
-		tutorial.Update();
-
 		//各ステージの処理
 		player->Update(stage->drawOffsetX, stage->drawOffsetY);
 		bool PlayerBodyStatus[4] = {};
-
-		player->SetBodyStatus(PlayerBodyStatus);
 
 		IsFolds[0] = player->IsLeftFold;
 		IsFolds[1] = player->IsUpFold;
@@ -129,52 +125,8 @@ void GameMainManager::GameInstanceUpdate()
 
 		player->SetBodyStatus(PlayerBodyStatus);
 
-
-		if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
-		{
-			int test = 0;
-		}
-
 		stage->Updata();
 		stage->FoldAndOpen(player->CenterPosition, PlayerBodyStatus, player->FaceLeg.FootIsAction, IsFolds, player->OpenCount, IsOpens);
-
-
-		//ステージとの連動のため開く処理はこっちでやる
-		if (player->OpenCount >= 2)
-		{
-			if (player->IsLeftOpen == true)
-			{
-				player->IsLeftOpen = false;
-			}
-			if (player->IsUpOpen == true)
-			{
-				player->IsUpOpen = false;
-			}
-			if (player->IsRightOpen == true)
-			{
-				player->IsRightOpen = false;
-			}
-			if (player->IsDownOpen == true)
-			{
-				player->IsDownOpen = false;
-			}
-			player->OpenCount = 0;
-			player->IsOpenCountStart = false;
-		}
-
-		//ゴールした判定？
-		if (player->IsGoal && !Ischangecount)
-		{
-			Ischangecount = true;
-			changecount = 0;
-		}
-
-		//ここにゴール演出、UI処理を入れる
-
-		if (player->FaceLeg.FootIsAction == false && player->Body_Three.IsFold == true)
-		{
-			int test = 0;
-		}
 
 		//ステージとの連動のため開く処理はこっちでやる
 		if (player->OpenCount >= 2)
@@ -234,7 +186,7 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	//ステージ番号から
 	selecterPtr->LoadStage(SelectStageNum);
 
-	if (NowScene == 0)
+	if (NowScene == 1)
 	{
 		tutorial.StartTutorial();
 	}

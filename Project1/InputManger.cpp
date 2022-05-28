@@ -10,6 +10,8 @@ namespace
 }
 
 bool InputManger::isMenu = false;
+bool InputManger::isInversionX = false;
+bool InputManger::isInversionY = false;
 DirectX::XMFLOAT2 InputManger::pressPos = { 0.0f, 0.0f };
 DirectX::XMFLOAT2 InputManger::releasePos = { 0.0f, 0.0f };
 DirectX::XMFLOAT2 InputManger::dragDis = { 0.0f, 0.0f };
@@ -56,17 +58,17 @@ void InputManger::MouseInputUpdate()
 
 bool InputManger::Escape()
 {
-	return isMenu == false && (Input::isKey(DIK_ESCAPE) || Input::isXpadButtonPushing(XPAD_BUTTON_OPTION_L));
+	return (isMenu == false && (Input::isKey(DIK_ESCAPE)) || Input::isXpadButtonPushing(XPAD_BUTTON_OPTION_L));
 }
 
 bool InputManger::EscapeTrigger()
 {
-	return isMenu == false && (Input::isKeyTrigger(DIK_ESCAPE) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_L));
+	return (isMenu == false && (Input::isKeyTrigger(DIK_ESCAPE)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_L));
 }
 
 bool InputManger::EscapeReturn()
 {
-	return isMenu == false && (Input::isKeyReleased(DIK_ESCAPE) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_L));
+	return (isMenu == false && (Input::isKeyReleased(DIK_ESCAPE)) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_L));
 }
 
 bool InputManger::Up()
@@ -131,62 +133,62 @@ bool InputManger::RightReturn()
 
 bool InputManger::SubUp()
 {
-	return Input::isKey(DIK_UP) || Input::isXpadButtonPushing(XPAD_BUTTON_Y) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_UP);
+	return Input::isKey(DIK_UP) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_UP);
 }
 
 bool InputManger::SubUpTrigger()
 {
-	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_DOWN);
+	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_UP);
 }
 
 bool InputManger::SubUpReturn()
 {
-	return Input::isKeyReleased(DIK_UP) || Input::isXpadButtonPushed(XPAD_BUTTON_Y);
+	return Input::isKeyReleased(DIK_UP);
 }
 
 bool InputManger::SubDown()
 {
-	return Input::isKey(DIK_DOWN) || Input::isXpadButtonPushing(XPAD_BUTTON_A) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_DOWN);
+	return Input::isKey(DIK_DOWN) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_DOWN);
 }
 
 bool InputManger::SubDownTrigger()
 {
-	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_UP);
+	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN);
 }
 
 bool InputManger::SubDownReturn()
 {
-	return Input::isKeyReleased(DIK_DOWN) || Input::isXpadButtonPushed(XPAD_BUTTON_A);
+	return Input::isKeyReleased(DIK_DOWN);
 }
 
 bool InputManger::SubLeft()
 {
-	return Input::isKey(DIK_LEFT) || Input::isXpadButtonPushing(XPAD_BUTTON_X) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_LEFT);
+	return Input::isKey(DIK_LEFT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_LEFT);
 }
 
 bool InputManger::SubLeftTrigger()
 {
-	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_RIGHT);
+	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_LEFT);
 }
 
 bool InputManger::SubLeftReturn()
 {
-	return Input::isKeyReleased(DIK_LEFT) || Input::isXpadButtonPushed(XPAD_BUTTON_X);
+	return Input::isKeyReleased(DIK_LEFT);
 }
 
 bool InputManger::SubRight()
 {
-	return Input::isKey(DIK_RIGHT) || Input::isXpadButtonPushing(XPAD_BUTTON_B) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_RIGHT);
+	return Input::isKey(DIK_RIGHT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_RIGHT);
 }
 
 bool InputManger::SubRightTrigger()
 {
-	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTilt(XPAD_RSTICK_DIR_LEFT);
+	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_RIGHT);
 }
 
 bool InputManger::SubRightReturn()
 {
-	return Input::isKeyReleased(DIK_RIGHT) || Input::isXpadButtonPushed(XPAD_BUTTON_B);
+	return Input::isKeyReleased(DIK_RIGHT);
 }
 
 bool InputManger::Decision()
@@ -227,7 +229,6 @@ bool InputManger::Reset()
 bool InputManger::ResetTrigger()
 {
 	return Input::isKeyTrigger(DIK_R) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_X);
-	//return Input::isKeyTrigger(DIK_R) || Input::isXpadButtonPushing(XPAD_BUTTON_X);
 }
 
 bool InputManger::ResetReturn()
@@ -237,17 +238,17 @@ bool InputManger::ResetReturn()
 
 bool InputManger::Menu()
 {
-	return isMenu && Input::isKey(DIK_ESCAPE) || Input::isXpadButtonPushing(XPAD_BUTTON_OPTION_R);
+	return (isMenu && Input::isKey(DIK_ESCAPE)) || Input::isXpadButtonPushing(XPAD_BUTTON_OPTION_R);
 }
 
 bool InputManger::MenuTrigger()
 {
-	return isMenu && Input::isKeyTrigger(DIK_ESCAPE) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_R);
+	return (isMenu && Input::isKeyTrigger(DIK_ESCAPE)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_R);
 }
 
 bool InputManger::MenuReturn()
 {
-	return isMenu && Input::isKeyReleased(DIK_ESCAPE) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_R);
+	return (isMenu && Input::isKeyReleased(DIK_ESCAPE)) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_R);
 }
 
 bool InputManger::Jump()
@@ -267,40 +268,77 @@ bool InputManger::JumpReturn()
 
 bool InputManger::FoldLeftTrigger()
 {
-	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_RIGHT);
+	if (isInversionX)
+	{
+		return SubLeftTrigger();
+	}
+	return SubRightTrigger();
 }
 
 bool InputManger::FoldUpTrigger()
 {
-	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN);
+	if (isInversionY)
+	{
+		return SubUpTrigger();
+	}
+	return SubDownTrigger();
 }
 
 bool InputManger::FoldRightTrigger()
 {
-	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_LEFT);
+	if (isInversionX)
+	{
+		return SubRightTrigger();
+	}
+	return SubLeftTrigger();
 }
 
 bool InputManger::FoldDownTrigger()
 {
-	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_UP);
+	if (isInversionY)
+	{
+		return SubDownTrigger();
+	}
+	return SubUpTrigger();
 }
 
 bool InputManger::OpenLeftTrigger()
 {
-	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_LEFT);
+	if (isInversionX)
+	{
+		return SubRightTrigger();
+	}
+	return SubLeftTrigger();
 }
 
 bool InputManger::OpenUpTrigger()
 {
-	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_UP);
+	if (isInversionY)
+	{
+		return SubDownTrigger();
+	}
+	return SubUpTrigger();
 }
 
 bool InputManger::OpenRightTrigger()
 {
-	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_RIGHT);
+	if (isInversionX)
+	{
+		return SubLeftTrigger();
+	}
+	return SubRightTrigger();
 }
 
 bool InputManger::OpenDownTrigger()
 {
-	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN);
+	if (isInversionY)
+	{
+		return SubUpTrigger();
+	}
+	return SubDownTrigger();
+}
+
+bool InputManger::FoldSelectTrigger()
+{
+	return Input::isKeyTrigger(DIK_SPACE) || Input::isXpadButtonPushTrigger(XPAD_TRIGGER_RB);
 }
