@@ -343,6 +343,7 @@ private: //メンバ変数
 	std::vector<StageData> initStageData;
 
 	StageTileData* SelectTile;
+	StageData* SelectStage;
 	size_t selectStageNum = 0;
 	size_t selectTileNum = 0;
 

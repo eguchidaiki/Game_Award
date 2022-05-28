@@ -399,7 +399,7 @@ void Stage::Create()
 
 	for (int a = 0; a < 4; a++)
 	{
-		SelectIconSprite[a].Create(AllBlockHandle[a][0]);
+		SelectIconSprite[a].Create(AllBlockHandle[a][15]);
 	}
 
 	LoadStageSound();
@@ -790,7 +790,6 @@ void Stage::SelectingStageTile()
 
 	for (int a = 0; a < stageData.size(); a++)
 	{
-
 		AllTiles.push_back(a);
 	}
 
@@ -820,6 +819,8 @@ void Stage::SelectingStageTile()
 
 	selectStageNum = (AllTiles[selectCount]);
 	SelectTile = &stageData[selectStageNum].stageTileData[0];
+
+	SelectStage = &stageData[selectCount];
 }
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
