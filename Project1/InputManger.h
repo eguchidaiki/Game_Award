@@ -33,6 +33,9 @@ public: //静的メンバ関数
 
 public: //静的メンバ変数
 	static bool isMenu; //メニューの有無
+
+	static bool isInversionX; //X軸反転
+	static bool isInversionY; //Y軸反転
 private:
 	static DirectX::XMFLOAT2 pressPos;
 	static DirectX::XMFLOAT2 releasePos;
@@ -135,4 +138,7 @@ public: //メンバ関数
 	bool OpenUpTrigger();
 	bool OpenRightTrigger();
 	bool OpenDownTrigger();
+
+	//折る開くのセレクト
+	bool FoldSelectTrigger();
 };

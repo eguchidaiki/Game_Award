@@ -55,6 +55,7 @@ Player::Player() :
 
 Player::~Player()
 {
+	DeletePlayerSound();
 }
 
 void Player::Init()
@@ -116,6 +117,11 @@ void Player::Update(int offsetX, int offsetY)
 		{
 			FallSpeed += 0.2f;
 		}
+		else
+		{
+			Audio::volume = 0.75f;
+			Audio::PlayLoadedSound(landingSound);
+		}
 	}
 	IsHitPlayerBody();
 
@@ -123,6 +129,16 @@ void Player::Update(int offsetX, int offsetY)
 	if (Player_IsAction == false)
 	{
 		CenterPosition.y += FallSpeed;
+	}
+
+	if (IsWalk && IsJump == false && IsFall() == false)
+	{
+		Audio::volume = 0.75f;
+		Audio::PlayLoadedSound(runSound);
+	}
+	else
+	{
+		Audio::StopLoadedSound(runSound);
 	}
 
 	//キー移動
@@ -333,6 +349,8 @@ void Player::Create()
 	Body_Four.Create();
 
 	FaceLeg.Create();
+
+	LoadPlayerSound();
 }
 
 void Player::Key_Move()
@@ -370,6 +388,8 @@ void Player::Key_Move()
 	{
 		IsJump = true;
 		FallSpeed = -5.4f;
+		Audio::volume = 0.75f;
+		Audio::PlayLoadedSound(jumpSound);
 	}
 }
 
@@ -863,34 +883,34 @@ bool Player::IsMouseClickFold(BodyType Direction)
 		{
 		case BodyType::left:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300.0f;
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300.0f;
 			break;
 		}
 		case BodyType::right:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600.0f;
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300.0f;
 			break;
 		}
 		case BodyType::up:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300.0f;
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
 			break;
 		}
 		case BodyType::down:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600.0f;
 			break;
 		}
 
@@ -952,34 +972,34 @@ bool Player::IsMouseClickOpen(BodyType Direction)
 		{
 		case BodyType::left:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300;
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) - 300.0f;
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300.0f;
 			break;
 		}
 		case BodyType::right:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600;
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 600.0f;
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300.0f;
 			break;
 		}
 		case BodyType::up:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300;
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) - 300.0f;
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60);
 			break;
 		}
 		case BodyType::down:
 		{
-			TileLeft = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
-			TileRight = (stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300;
-			TileUp = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300;
-			TileDown = (stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600;
+			TileLeft = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60);
+			TileRight = static_cast<float>(stage->GetStageTileOffsetX(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileUp = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 300.0f;
+			TileDown = static_cast<float>(stage->GetStageTileOffsetY(PlayerStage, PlayerTile) * 60) + 600.0f;
 			break;
 		}
 
@@ -1558,7 +1578,7 @@ void Player::IsHitPlayerBody()
 				X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				MapchipPos = (Y_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (X_mapchip_tile);
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = (left_mapchip * 60) - FaceLeft;
@@ -1590,7 +1610,7 @@ void Player::IsHitPlayerBody()
 				X_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				Y_mapchip_tile = FaceAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				MapchipPos = (Y_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (X_mapchip_tile);
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = (left_mapchip * 60) - FaceLeft;
@@ -1623,7 +1643,7 @@ void Player::IsHitPlayerBody()
 				X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				Y_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				MapchipPos = (Y_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (X_mapchip_tile);
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = (FaceRight - 60) - (right_mapchip * 60);
@@ -1656,7 +1676,7 @@ void Player::IsHitPlayerBody()
 				X_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				Y_mapchip_tile = FaceAndLegdown_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (Y_mapchip_tile)*stage->GetStageTileWidth(i, j) + (X_mapchip_tile);
+				MapchipPos = (Y_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (X_mapchip_tile);
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)))
 				{
 					BuriedX = (FaceRight - 60) - (right_mapchip * 60);
@@ -1706,10 +1726,10 @@ void Player::IsHitPlayerBody()
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
 				//左上
-				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
-				MapchipPos_Goal[0] = up_mapchip_tile * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
-				MapchipPos_Goal[1] = down_mapchip_tile * stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
-				MapchipPos_Goal[2] = down_mapchip_tile * stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos = up_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
+				MapchipPos_Goal[0] = up_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
+				MapchipPos_Goal[1] = down_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
+				MapchipPos_Goal[2] = down_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
 
 				if (Player_IsAction == false)
 				{
@@ -1737,6 +1757,10 @@ void Player::IsHitPlayerBody()
 					if (GoalCount >= 4)
 					{
 						IsGoal = true;
+
+						Audio::volume = 0.125f;
+						Audio::PlayLoadedSound(clearSound);
+						Audio::StopLoadedSound(runSound);
 					}
 				}
 			}
@@ -1753,10 +1777,10 @@ void Player::IsHitPlayerBody()
 		{
 			if (stage->IsPositionTile({ FaceLeft - 20, FaceUp - 20, 0.0f }, i, j))
 			{
-				left_mapchip_tile = (left_mapchip - 1) % stage->GetStageTileWidth(i, j);
-				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
+				left_mapchip_tile = static_cast<size_t>(left_mapchip - 1) % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = static_cast<size_t>(up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + left_mapchip_tile;
+				MapchipPos = up_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + left_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)) &&
 					Player::Get()->IsLeft == true)
 				{
@@ -1766,10 +1790,10 @@ void Player::IsHitPlayerBody()
 
 			if (stage->IsPositionTile({ FaceRight + 20, FaceUp - 20, 0.0f }, i, j))
 			{
-				right_mapchip_tile = (right_mapchip) % stage->GetStageTileWidth(i, j);
-				up_mapchip_tile = (up_mapchip - 1) % stage->GetStageTileHeight(i, j);
+				right_mapchip_tile = static_cast<size_t>(right_mapchip) % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = static_cast<size_t>(up_mapchip - 1) % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = up_mapchip_tile * stage->GetStageTileWidth(i, j) + right_mapchip_tile;
+				MapchipPos = up_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + right_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, MapchipPos)) &&
 					Player::Get()->IsRight == true)
 				{
@@ -1856,7 +1880,7 @@ void Player::IsOutsideFace()
 			{
 				if (Leftwall.x > stage->GetStageTileOffsetX(i, j) * stage->blockSize)
 				{
-					Leftwall.x = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
+					Leftwall.x = static_cast<float>(stage->GetStageTileOffsetX(i, j)) * stage->blockSize;
 				}
 			}
 			//左のoffset計算(左下)
@@ -1865,7 +1889,7 @@ void Player::IsOutsideFace()
 			{
 				if (Leftwall.y > (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 				{
-					Leftwall.y = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
+					Leftwall.y = static_cast<float>(stage->GetStageTileOffsetX(i, j)) * stage->blockSize;
 				}
 			}
 
@@ -1875,7 +1899,7 @@ void Player::IsOutsideFace()
 			{
 				if (Rightwall.x < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
-					Rightwall.x = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+					Rightwall.x = static_cast<float>(stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
 			//右のoffset計算(右下)
@@ -1884,7 +1908,7 @@ void Player::IsOutsideFace()
 			{
 				if (Rightwall.y < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
 				{
-					Rightwall.y = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
+					Rightwall.y = static_cast<float>(stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
 
@@ -1894,7 +1918,7 @@ void Player::IsOutsideFace()
 			{
 				if (Upwall.x > stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 				{
-					Upwall.x = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
+					Upwall.x = static_cast<float>(stage->GetStageTileOffsetY(i, j)) * stage->blockSize;
 				}
 			}
 			//上のoffset計算(右上)
@@ -1903,7 +1927,7 @@ void Player::IsOutsideFace()
 			{
 				if (Upwall.y > (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
 				{
-					Upwall.y = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
+					Upwall.y = static_cast<float>(stage->GetStageTileOffsetY(i, j)) * stage->blockSize;
 				}
 			}
 
@@ -1913,7 +1937,7 @@ void Player::IsOutsideFace()
 			{
 				if (Downwall.x < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
 				{
-					Downwall.x = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+					Downwall.x = static_cast<float>(stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
 			//下のoffset計算(右下)
@@ -1922,7 +1946,7 @@ void Player::IsOutsideFace()
 			{
 				if (Downwall.y < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
 				{
-					Downwall.y = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
+					Downwall.y = static_cast<float>(stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
 		}
@@ -2101,7 +2125,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
@@ -2114,7 +2138,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (left_mapchip_tile);
+				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
@@ -2127,7 +2151,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (up_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
@@ -2140,7 +2164,7 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
 
-				MapchipPos = (down_mapchip_tile)*stage->GetStageTileWidth(i, j) + (right_mapchip_tile);
+				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
 
 				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 				{
@@ -2184,6 +2208,8 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 	{
 		return true;
 	}
+
+	return false;
 }
 
 int Player::ActivateBodyCount()
@@ -2284,7 +2310,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = Faceup_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsLeftBlockFace = true;
@@ -2298,7 +2324,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = Facedown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsLeftBlockFace = true;
@@ -2312,7 +2338,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = Faceup_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsRightBlockFace = true;
@@ -2326,7 +2352,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = Facedown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsRightBlockFace = true;
@@ -2340,7 +2366,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = NextUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsUpBlockFace = true;
@@ -2354,7 +2380,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = NextUp_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsUpBlockFace = true;
@@ -2368,7 +2394,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = NextDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsDownBlockFace = true;
@@ -2382,7 +2408,7 @@ void Player::IsAroundBlock()
 				Y_mapchip_tile = NextDown_mapchip % stage->GetStageTileHeight(i, j);
 
 				//今いる座標のマップチップを確認
-				mapchipPos = Y_mapchip_tile * stage->GetStageTileWidth(i, j) + X_mapchip_tile;
+				mapchipPos = Y_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + X_mapchip_tile;
 				if (stage->IsMapchipBlocks(stage->GetStageMapchip(i, j, mapchipPos)))
 				{
 					IsDownBlockFace = true;
@@ -2582,4 +2608,20 @@ bool Player::IsOpenBlock(BodyType opentype)
 	}
 
 	return true;
+}
+
+void Player::LoadPlayerSound()
+{
+	jumpSound = Audio::LoadSound_wav("./Resources/sound/SE/jump.wav");
+	landingSound = Audio::LoadSound_wav("./Resources/sound/SE/landing.wav");
+	runSound = Audio::LoadSound_wav("./Resources/sound/SE/run.wav");
+	clearSound = Audio::LoadSound_wav("./Resources/sound/SE/stageClear.wav");
+}
+
+void Player::DeletePlayerSound()
+{
+	Audio::UnloadSound(&jumpSound);
+	Audio::UnloadSound(&landingSound);
+	Audio::UnloadSound(&runSound);
+	Audio::UnloadSound(&clearSound);
 }
