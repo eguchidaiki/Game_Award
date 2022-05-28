@@ -38,12 +38,14 @@ void StageSelecter::Init()
 		icon_x_offsets[i] = icon_posx_offset * (i + 1);
 	}
 	//アイコン画像のロード
-	std::array<UINT,20> graphHandles = LoadStageIcons();
 	UINT cursorRHandle = TexManager::LoadTexture("Resources/CC/selectBack.png");
 	//ページグラフィックの初期化
 	for (int i = 0; i < stagePage.size(); i++) {
-		stagePage[i].Init(icon_x_offsets, icon_y_offsets, graphHandles, cursorRHandle, cursorRHandle
-			, RVector3(50 + (i * 10), 0, 0));
+		std::array<UINT, 4> graphArrays;
+		graphArrays = LoadStageIcons(i);
+
+		stagePage[i].Init(icon_x_offsets, icon_y_offsets, graphArrays, cursorRHandle, cursorRHandle
+			, RVector3(0 + (i * 10), 0, 0));
 	}
 
 	nowpage = page_1_4;
@@ -53,11 +55,13 @@ void StageSelecter::Init()
 	user_selecting = UI_STAGEBOX_1;
 
 	nowDisplayNum = 0;
+
+	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
+	Audio::SetPlayRoopmode(menuBGM, 255);
 }
 
 void StageSelecter::Update()
 {
-
 	CheckToStageChangeInput();
 
 	CheckToPageChangeInput();
@@ -69,6 +73,7 @@ void StageSelecter::Update()
 		pages.Update();
 	}
 
+	Audio::PlayLoadedSound(menuBGM);
 }
 
 void StageSelecter::Draw()
@@ -99,8 +104,8 @@ void StageSelecter::Draw()
 	//	break;
 	//}
 
-	for (auto& pages : stagePage) {
-		pages.Draw();
+	for (int i = stagePage.size() - 1; i >= 0; i--) {
+		stagePage[i].Draw();
 	}
 
 
@@ -187,15 +192,15 @@ void StageSelecter::LoadSprite()
 	SelectRight.Create(TexManager::LoadTexture(fullImgPath + "SelectRight" + filename));
 }
 
-std::array< UINT, 20> StageSelecter::LoadStageIcons()
+std::array< UINT, 4> StageSelecter::LoadStageIcons(int pageNumber)
 {
-	std::array<UINT,20> handleTemp;
+	std::array<UINT,4> handleTemp;
 
 	string folderPath = "Resources/CC/stageNumber/stageNumber";
 	string filename = ".png";
 
-	for (int i = 0; i < 20; i++) {
-		string number = std::to_string(i + 1);
+	for (int i = 0; i < 4; i++) {
+		string number = std::to_string((i + 1) + pageNumber * 4);
 		string fullPath = folderPath + number + filename;
 		handleTemp[i] = TexManager::LoadTexture(fullPath);
 	}
@@ -217,46 +222,30 @@ void StageSelecter::CheckToPageChangeInput()
 	switch (user_selecting)
 	{
 	case StageSelecter::UI_BACK:
-		////最初のページでないときにBACK
-		//if (inputManager->DecisionTrigger() && nowpage != page_1_4) {
-		//	//移動方向設定
-		//	pageMoveDir = is_back;
-		//	//次ページ設定
-		//	int pageNum = static_cast<int>(nextpage);
-		//	pageNum--;
-		//	nextpage = static_cast<STAGE_PAGE>(pageNum);
-		//}
+
 		if (nowpage != page_1_4) {
 			//移動方向設定
 			pageMoveDir = is_back;
 			//前ページ設定
-			int pageNum = static_cast<int>(nextpage);
+			int pageNum = static_cast<int>(nowpage);
 			pageNum--;
-			nextpage = static_cast<STAGE_PAGE>(pageNum);
-			stagePage[pageNum].isDisplay = true;
+			nowpage = static_cast<STAGE_PAGE>(pageNum);
+			stagePage[pageNum].ChangeDisplayMode();
+			user_selecting = NOW_SELECTING::UI_STAGEBOX_4;
 		}
-
-
 
 		break;
 	case StageSelecter::UI_FRONT:
-		////最後のページでないときにFRONT
-		//if (inputManager->DecisionTrigger() && nowpage != page_17_20) {
-		//	//移動方向設定
-		//	pageMoveDir = is_front;
-		//	//次ページ設定
-		//	int pageNum = static_cast<int>(nextpage);
-		//	pageNum++;
-		//	nextpage = static_cast<STAGE_PAGE>(pageNum);
-		//}
+
 		if (nowpage != page_17_20) {
 			//移動方向設定
 			pageMoveDir = is_front;
 			//次ページ設定
-			int pageNum = static_cast<int>(nextpage);
+			int pageNum = static_cast<int>(nowpage);
 			pageNum++;
-			nextpage = static_cast<STAGE_PAGE>(pageNum);
-			stagePage[pageNum - 1].isDisplay = false;
+			nowpage = static_cast<STAGE_PAGE>(pageNum);
+			stagePage[pageNum - 1].ChangeDisplayMode();
+			user_selecting = NOW_SELECTING::UI_STAGEBOX_1;
 		}
 
 		break;
@@ -269,63 +258,6 @@ void StageSelecter::CheckToPageChangeInput()
 void StageSelecter::PageChange()
 {
 
-	if (nowpage != nextpage)
-	{
-		animationFrame++;
-
-		if (pageMoveDir == is_front)
-		{
-
-			displayPage = nowpage;
-
-			state = is_pageChange_waiting;
-			if (animationFrame % perFrame == 0)
-			{
-				nowDisplayNum++;
-			}
-			if (nowDisplayNum >= 20)
-			{
-				displayPage = nextpage;
-
-				nowpage = nextpage;
-
-				nowDisplayNum = 0;
-				//最後のページのときは最終フレームで固定
-				if (displayPage == STAGE_PAGE::page_17_20) {
-					nowDisplayNum = 19;
-				}
-
-				state = is_selecting;
-
-				animationFrame = 0;
-
-				user_selecting = StageSelecter::UI_STAGEBOX_1;
-			}
-		}
-		else
-		{
-			if (state != is_pageChange_waiting)
-			{
-				state = is_pageChange_waiting;
-				nowDisplayNum = 19;
-				displayPage = nextpage;
-			}
-
-			if (animationFrame % perFrame == 0)
-			{
-				nowDisplayNum--;
-			}
-
-			if (nowDisplayNum <= 0)
-			{
-				nowDisplayNum = 0;
-				state = is_selecting;
-				nowpage = nextpage;
-				animationFrame = 0;
-				user_selecting = StageSelecter::UI_STAGEBOX_4;
-			}
-		}
-	}
 }
 
 void StageSelecter::CheckLoadStage(int boxnum)
@@ -378,7 +310,8 @@ void StageSelecter::CheckToStageChangeInput()
 	if (selected) { 
 		CheckLoadStage(select_Stage_num);
 		state = is_stageSelected_waiting; 
-
+		
+		Audio::StopLoadedSound(menuBGM);
 		//これでステージ開始
 		isChanging_GameMain = true;
 	}
@@ -458,22 +391,24 @@ void StageSelecter::LoadStage(int stagenum)
 	playerPtr->BodySetUp(playerPtr->playerTile);
 }
 
-void Page::Init(float xicons[], float yicons[], std::array<UINT,20> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget)
+void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget)
 {
 	//各種リソース初期化
 	for (int i = 0; i < 4; i++) {
 		iconX[i] = xicons[i];
 		iconY[i] = yicons[i];
-		stageIconButton[i].Init(60, uiGraphHandles[i], 64, 64);
+		stageIconButton[i].Init(60, uiGraphHandles[i], 100, 100);
 		this->cursorL.Create(cursorL);
 		this->cursorR.Create(cursorR);
 	}
 	//ウィンドウサイズと同じ解像度のレンダーテクスチャ
-	RenderTargetManager::GetInstance()->CreateRenderTexture(Raki_WinAPI::window_width, Raki_WinAPI::window_height);
+	rtHandle = RenderTargetManager::GetInstance()->CreateRenderTexture(Raki_WinAPI::window_width, Raki_WinAPI::window_height);
 	//それを描画するスプライト
 	rtSprite.CreateRtexSprite(rtHandle);
 	//背景
 	backSprite.Create(TexManager::LoadTexture("Resources/CC/pageAnime/select1.png"));
+
+	drawLTpos = RVector3(-1280.0f, 0.0f, 0.0f);
 	//イージング目標
 	this->easeTarget = easeTarget;
 	//表示フラグ有効化
@@ -488,19 +423,22 @@ void Page::Update()
 
 	float rate = static_cast<float>(frame) / static_cast<float>(EASE_FRAME);
 	//イージング処理
-	if (isDisplay && frame <= EASE_FRAME) {
+	if (isDisplay && frame < EASE_FRAME) {
 		frame++;
+		drawLTpos = Rv3Ease::OutQuad(easeStart, easeTarget, rate);
 	}
-	else if (!isDisplay && frame >= EASE_FRAME) {
-		frame--;
+	else if (!isDisplay && frame < EASE_FRAME) {
+		frame++;
+		drawLTpos = Rv3Ease::OutQuad(easeTarget, easeStart, rate);
 	}
-	drawLTpos = Rv3Ease::OutQuad(easeStart, easeTarget, rate);
+
 }
 
 void Page::Draw()
 {
 	//ページリソースをレンダリング
 	RenderTargetManager::GetInstance()->SetRenderTarget(rtHandle);
+	RenderTargetManager::GetInstance()->ClearRenderTexture(rtHandle);
 	//背景
 	backSprite.DrawSprite(0, 0);
 	backSprite.Draw();
@@ -516,4 +454,16 @@ void Page::Draw()
 	//ページ描画
 	rtSprite.DrawRTexSprite(rtHandle, drawLTpos.x, drawLTpos.y, drawLTpos.x + 1280.0f, drawLTpos.y + 720.0f, 0.0f);
 	rtSprite.Draw();
+}
+
+void Page::ChangeDisplayMode()
+{
+	if (isDisplay) {
+		isDisplay = false;
+		frame = 0;
+	}
+	else {
+		isDisplay = true;
+		frame = 0;
+	}
 }

@@ -4,7 +4,7 @@
 #include <TexManager.h>
 #include <Sprite.h>
 #include <Raki_Input.h>
-#include <array>
+#include <Audio.h>
 
 #include "ButtonUI.h"
 
@@ -16,11 +16,13 @@ public:
 	~Page(){};
 
 	//初期化（アイコン中心座標の定義配列、グラフィックハンドルの配列、カーソルのグラフィックハンドルの配列）
-	void Init(float xicons[], float yicons[], std::array<UINT, 20> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget);
+	void Init(float xicons[], float yicons[], std::array<UINT, 4> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget);
 	//更新
 	void Update();
 	//描画（左上基準）
 	void Draw();
+
+	void ChangeDisplayMode();
 
 	//各アイコンの中心座標
 	std::array<float, 4> iconX, iconY;
@@ -29,6 +31,7 @@ public:
 
 	//イージング目標に移動するかのフラグ
 	bool isDisplay = true;
+	bool isMustMoving = true;
 	//イージング関連
 	RVector3 easeTarget;
 	RVector3 easeStart = { -1280,-720,0 };
@@ -157,7 +160,7 @@ private:
 	void LoadSprite();
 	
 	//ステージアイコン画像のロード
-	std::array<UINT,20> LoadStageIcons();
+	std::array<UINT,4> LoadStageIcons(int pageNumber);
 
 	//ページ遷移のための入力検知、ページ状態切替
 	void CheckToPageChangeInput();
@@ -185,6 +188,7 @@ private:
 
 	void DrawPages();
 
-
+	//BGM
+	SoundData menuBGM;
 };
 

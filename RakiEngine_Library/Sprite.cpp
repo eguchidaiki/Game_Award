@@ -652,6 +652,7 @@ void Sprite::DrawRTexSprite(int handle, float x1, float y1, float x2, float y2, 
     ins.worldmat *= rot;
     ins.worldmat *= trans;
     ins.drawsize = { x2 - x1, y2 - y1 };
+    ins.uvOffset = { 0.0f,0.0f,1.0f,1.0f };
     //�s��R���e�i�Ɋi�[
     ins.color = sprite_color;
     spdata->insWorldMatrixes.push_back(ins);
