@@ -705,7 +705,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitLeft == false)
 						{
-							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft - 1);
+							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft-1);
 							IsHitLeft = true;
 						}
 					}
@@ -727,7 +727,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * stage->blockSize) - (BodyAndLegDown - player->CenterPosition.y);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -737,7 +737,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitLeft == false)
 						{
-							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft - 1);
+							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft-1);
 							player->IsInitJump = false;
 							IsHitLeft = true;
 						}
@@ -792,7 +792,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * stage->blockSize) - (BodyAndLegDown - player->CenterPosition.y);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -869,6 +869,11 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	size_t NowTile = 0;
 
 	stage->GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
+
+	if (NowStage == static_cast<size_t>(-1) || NowTile == static_cast<size_t>(-1))
+	{
+		return;
+	}
 
 	//体の四辺
 	float BodyLeft;
@@ -1092,7 +1097,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 
 	if (NowLeft >= BodyLeft && ((BuriedLeft <= BuriedUp) || (BuriedLeft <= BuriedDown)))
 	{
-		center->x = NowLeft + (center->x - BodyLeft) + 1;
+		center->x = NowLeft + (center->x - BodyLeft);
 	}
 	if (NowRight <= BodyRight && ((BuriedRight <= BuriedUp) || (BuriedRight <= BuriedDown)))
 	{
@@ -1100,12 +1105,12 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	}
 	if (NowUp >= BodyUp && ((BuriedUp < BuriedLeft) || (BuriedUp < BuriedRight)))
 	{
-		center->y = NowUp + (center->y - BodyUp) + 1;
+		center->y = NowUp + (center->y - BodyUp);
 		FallSpeed = 0.0f;
 	}
 	if (NowDown <= BodyDown && ((BuriedDown < BuriedLeft) || (BuriedDown < BuriedRight)))
 	{
-		center->y = NowDown - (BodyDown - center->y) - 1;
+		center->y = NowDown - (BodyDown - center->y);
 	}
 }
 
