@@ -20,6 +20,9 @@ void UI_Button::Update()
 		if (count > activateTimerag) {
 			isFunctionActivate = true;
 		}
+		float rate = static_cast<float>(count) / static_cast<float>(activateTimerag);
+		
+
 	}
 	//‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢‚©
 	else {

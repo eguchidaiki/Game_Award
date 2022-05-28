@@ -34,7 +34,7 @@ public:
 	bool isMustMoving = true;
 	//イージング関連
 	RVector3 easeTarget;
-	RVector3 easeStart = { -1280,-720,0 };
+	RVector3 easeStart = { -1280,0,0 };
 	//描画座標左上
 	RVector3 drawLTpos;
 	//イージング最大フレーム

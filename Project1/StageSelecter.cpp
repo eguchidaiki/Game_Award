@@ -28,8 +28,7 @@ void StageSelecter::Init()
 {
 	LoadSprite();
 
-	//
-	float icon_posx_offset = static_cast<float>(Raki_WinAPI::window_width) / 6.0f;
+	float icon_posx_offset = static_cast<float>(Raki_WinAPI::window_width) / 5.0f;
 	float icon_posy_offset = Raki_WinAPI::window_height / 2;
 
 	float icon_x_offsets[4] = {};
@@ -45,7 +44,7 @@ void StageSelecter::Init()
 		graphArrays = LoadStageIcons(i);
 
 		stagePage[i].Init(icon_x_offsets, icon_y_offsets, graphArrays, cursorRHandle, cursorRHandle
-			, RVector3(0 + (i * 10), 0, 0));
+			, RVector3(0, 0, 0));
 	}
 
 	nowpage = page_1_4;
