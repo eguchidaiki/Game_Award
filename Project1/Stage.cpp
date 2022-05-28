@@ -319,29 +319,52 @@ void Stage::Draw(const int offsetX, const int offsetY)
 	// 色の初期化
 	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 
-	SelectIconSprite[0].DrawExtendSprite(
-		SelectTile->offsetX * blockSize + drawOffset.x,
-		SelectTile->offsetY * blockSize + drawOffset.y,
-		SelectTile->offsetX * blockSize + 10 + drawOffset.x,
-		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
+#pragma  region 選択しているステージのフレーム
+	//左フレーム
+	for (int l = 0; l < SelectFrame_L.size(); l++)
+	{
+		SelectIconSprite[0].DrawExtendSprite(
+			SelectFrame_L[l].x + drawOffset.x,
+			SelectFrame_L[l].y + drawOffset.y,
+			SelectFrame_L[l].x + 10 + drawOffset.x,
+			SelectFrame_L[l].z + drawOffset.y
+		);
+	}
 
-	SelectIconSprite[1].DrawExtendSprite(
-		SelectTile->offsetX * blockSize + drawOffset.x,
-		SelectTile->offsetY * blockSize + drawOffset.y,
-		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
-		SelectTile->offsetY * blockSize + 10 + drawOffset.y);
+	//上フレーム
+	for (int u = 0; u < SelectFrame_U.size(); u++)
+	{
+		SelectIconSprite[1].DrawExtendSprite(
+			SelectFrame_U[u].x + drawOffset.x,
+			SelectFrame_U[u].z + drawOffset.y,
+			SelectFrame_U[u].y + drawOffset.x,
+			SelectFrame_U[u].z + 10 + drawOffset.y
+		);
+	}
 
-	SelectIconSprite[2].DrawExtendSprite(
-		(SelectTile->offsetX + SelectTile->width) * blockSize - 10 + drawOffset.x,
-		SelectTile->offsetY * blockSize + drawOffset.y,
-		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
-		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
+	//右フレーム
+	for (int r = 0; r < SelectFrame_R.size(); r++)
+	{
+		SelectIconSprite[2].DrawExtendSprite(
+			SelectFrame_R[r].x + drawOffset.x,
+			SelectFrame_R[r].y + drawOffset.y,
+			SelectFrame_R[r].x - 10 + drawOffset.x,
+			SelectFrame_R[r].z + drawOffset.y
+		);
+	}
 
-	SelectIconSprite[3].DrawExtendSprite(
-		SelectTile->offsetX * blockSize + drawOffset.x,
-		(SelectTile->offsetY + SelectTile->height) * blockSize - 10 + drawOffset.y,
-		(SelectTile->offsetX + SelectTile->width) * blockSize + drawOffset.x,
-		(SelectTile->offsetY + SelectTile->height) * blockSize + drawOffset.y);
+	//下フレーム
+	for (int d = 0; d < SelectFrame_D.size(); d++)
+	{
+		SelectIconSprite[3].DrawExtendSprite(
+			SelectFrame_D[d].x + drawOffset.x,
+			SelectFrame_D[d].z + drawOffset.y,
+			SelectFrame_D[d].y + drawOffset.x,
+			SelectFrame_D[d].z - 10 + drawOffset.y
+		);
+	}
+
+#pragma endregion
 
 	//エフェクト描画
 	oriEffect.Draw();
@@ -785,13 +808,15 @@ void Stage::SelectingStageTile()
 {
 	std::vector < size_t > AllTiles = {};
 
+	//ステージの数だけリストをセット
 	for (int a = 0; a < stageData.size(); a++)
 	{
 		AllTiles.push_back(a);
 	}
 
-	static int selectCount;
+	static size_t selectCount;
 
+	//現在選択しているタイルに合わせてカウントを初期化
 	for (int c = 0; c < AllTiles.size(); c++)
 	{
 		if (AllTiles[c] == selectStageNum)
@@ -800,9 +825,10 @@ void Stage::SelectingStageTile()
 		}
 	}
 
+	//セレクト入力が入ったら対象ステージを変更(単ボタンループ)
 	if (inputManeger->FoldSelectTrigger())
 	{
-		if (static_cast<size_t>(selectCount + 1) < AllTiles.size())
+		if (selectCount + 1 < AllTiles.size())
 		{
 			selectCount++;
 		}
@@ -818,6 +844,123 @@ void Stage::SelectingStageTile()
 	SelectTile = &stageData[selectStageNum].stageTileData[0];
 
 	SelectStage = &stageData[selectCount];
+
+	SetSelectStageFrame(selectStageNum);
+}
+
+void Stage::SetSelectStageFrame(size_t SelectStageNum)
+{
+	SelectFrame_L.clear();
+	SelectFrame_R.clear();
+	SelectFrame_U.clear();
+	SelectFrame_D.clear();
+
+	int a = 0;
+	int b = 0;
+
+	XMFLOAT2 SetOffsets = {};
+
+	//対象のタイルの外枠
+	float NowTile_L;
+	float NowTile_U;
+	float NowTile_R;
+	float NowTile_D;
+
+	//対象外のタイルの外枠
+	float OtherTile_L;
+	float OtherTile_U;
+	float OtherTile_R;
+	float OtherTile_D;
+
+	//四方向それぞれ隣り合っているタイルがあるか
+	bool IsNext_L = false;
+	bool IsNext_U = false;
+	bool IsNext_R = false;
+	bool IsNext_D = false;
+
+	//指定したステージの頭からタイルを見ていく
+	for (a = 0; a < stageData[SelectStageNum].stageTileData.size(); a++)
+	{
+		//対象タイルの外枠をセット
+		NowTile_L = (stageData[SelectStageNum].stageTileData[a].offsetX) * blockSize;
+		NowTile_R = (stageData[SelectStageNum].stageTileData[a].offsetX + stageData[SelectStageNum].stageTileData[a].width) * blockSize;
+		NowTile_U = (stageData[SelectStageNum].stageTileData[a].offsetY) * blockSize;
+		NowTile_D = (stageData[SelectStageNum].stageTileData[a].offsetY + stageData[SelectStageNum].stageTileData[a].height) * blockSize;
+
+		IsNext_L = false;
+		IsNext_U = false;
+		IsNext_R = false;
+		IsNext_D = false;
+
+		//ほかのタイルと比べていく
+		for (b = 0; b < stageData[SelectStageNum].stageTileData.size(); b++)
+		{
+			//同じタイルは見ない
+			if (a == b)
+			{
+				continue;
+			}
+
+			//対象外タイルの外枠をセット
+			OtherTile_L = (stageData[SelectStageNum].stageTileData[b].offsetX) * blockSize;
+			OtherTile_R = (stageData[SelectStageNum].stageTileData[b].offsetX + stageData[SelectStageNum].stageTileData[b].width) * blockSize;
+			OtherTile_U = (stageData[SelectStageNum].stageTileData[b].offsetY) * blockSize;
+			OtherTile_D = (stageData[SelectStageNum].stageTileData[b].offsetY + stageData[SelectStageNum].stageTileData[b].height) * blockSize;
+
+			//同じサイズのタイル同士の場合
+			if (NowTile_R - NowTile_L == OtherTile_R - OtherTile_L &&
+				NowTile_D - NowTile_U == OtherTile_D - OtherTile_U)
+			{
+				//縦並びだった場合
+				if (NowTile_L == OtherTile_L)
+				{
+					//上側にあるかどうか
+					if (NowTile_U > OtherTile_U)
+					{
+						IsNext_U = true;
+					}
+					//下側にあるかどうか
+					if (NowTile_D < OtherTile_D)
+					{
+						IsNext_D = true;
+					}
+				}
+
+				//横並びだった場合
+				if (NowTile_U == OtherTile_U)
+				{
+					//左側にあるかどうか
+					if (NowTile_L > OtherTile_L)
+					{
+						IsNext_L = true;
+					}
+					//右側にあるかどうか
+					if (NowTile_R < OtherTile_R)
+					{
+						IsNext_R = true;
+					}
+				}
+			}
+		}
+
+		//上下左右それぞれ端だった場合のみフレーム描画座標を格納
+		if (!IsNext_U)
+		{
+			SelectFrame_U.push_back({ NowTile_L,NowTile_R,NowTile_U });
+		}
+		if (!IsNext_D)
+		{
+			SelectFrame_D.push_back({ NowTile_L,NowTile_R,NowTile_D });
+		}
+		if (!IsNext_L)
+		{
+			SelectFrame_L.push_back({ NowTile_L,NowTile_U,NowTile_D });
+		}
+		if (!IsNext_R)
+		{
+			SelectFrame_R.push_back({ NowTile_R,NowTile_U,NowTile_D });
+		}
+	}
 }
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])

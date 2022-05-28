@@ -173,7 +173,11 @@ public: //メンバ関数
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
+	//折るステージを選択
 	void SelectingStageTile();
+
+	//選択したステージの描画座標セット
+	void SetSelectStageFrame(size_t SelectStageNum);
 
 	// ステージを折る・開く
 	int FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
@@ -349,6 +353,18 @@ private: //メンバ変数
 
 	char* reverseMapchip;
 
+	//(左端、上端、下端)
+	std::vector<RVector3> SelectFrame_L;
+
+	//(左端、右端、上端)
+	std::vector<RVector3> SelectFrame_U;
+
+	//(右端、上端、下端)
+	std::vector<RVector3> SelectFrame_R;
+
+	//(左端、右端、下端)
+	std::vector<RVector3> SelectFrame_D;
+
 	//折り目の画像ハンドル
 	UINT lineHandle;
 	//ブロックの画像ハンドル
@@ -357,21 +373,18 @@ private: //メンバ変数
 	UINT EmptyHandle;
 	//ゴールの画像ハンドル
 	UINT GoalHandle;
-
 	//選択しているステージのハンドル
 	UINT SelectFrameHandle;
 
 	//折り目のスプライト
 	Sprite lineSprite;
 	//ブロックのスプライト
-	//Sprite MapchipSpriteBlocks[4];
 	Sprite AllBlockSprite[4][16];
 	//空白のスプライト
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト
 	Sprite MapchipSpriteGoal;
-
-	//タイル選択アイコンのスプライト
+	//選択しているステージのスプライト(左から時計回り)
 	Sprite SelectIconSprite[4];
 
 	bool IsParticleTrigger;
