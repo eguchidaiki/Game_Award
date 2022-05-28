@@ -1821,6 +1821,11 @@ void Player::IsOutsideFace()
 
 	stage->GetPositionTile(CenterPosition, &NowStage, &NowTile);
 
+	if (NowStage == static_cast<size_t>(-1) || NowTile == static_cast<size_t>(-1))
+	{
+		return;
+	}
+
 	float FaceLeft = CenterPosition.x - 25;
 	float FaceUp = CenterPosition.y - 25;
 	float FaceRight = CenterPosition.x + 25;

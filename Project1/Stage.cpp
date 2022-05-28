@@ -309,12 +309,15 @@ void Stage::Draw(const int offsetX, const int offsetY)
 		LineDraw(i, drawOffset);
 	}
 
-	for (j = 0; j < stageData[nowPlayerStage].stageTileData.size(); j++)
+	if (nowPlayerStage >= 0)
 	{
-		StageTileDraw(nowPlayerStage, j, drawOffset, 1.1f);
-	}
+		for (j = 0; j < stageData[nowPlayerStage].stageTileData.size(); j++)
+		{
+			StageTileDraw(nowPlayerStage, j, drawOffset, 1.1f);
+		}
 
-	LineDraw(nowPlayerStage, drawOffset, 1.1f);
+		LineDraw(nowPlayerStage, drawOffset, 1.1f);
+	}
 
 	SelectIconSprite[0].DrawExtendSprite(
 		SelectTile->offsetX * blockSize + drawOffset.x,
