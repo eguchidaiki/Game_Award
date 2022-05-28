@@ -99,6 +99,9 @@ public: //サブクラス
 		int StageGroup = -1;
 
 		//折られている場合の方向
+		int FoldDirection = -1;
+
+		//このタイルがどの方向に折れるのか
 		int FoldType = -1;
 
 		//上に重なっている枚数
@@ -172,6 +175,8 @@ public: //メンバ関数
 	/// <param name="fileHandle"> ステージファイルのパス </param>
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
+
+	void SetFoldType(size_t stagenum);
 
 	//折るステージを選択
 	void SelectingStageTile();

@@ -804,6 +804,30 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	return 0;
 }
 
+void Stage::SetFoldType(size_t stagenum)
+{
+	int a = 0;
+
+	//隣り合ったタイルが何枚あるのか
+	int NextCount = 0;
+
+	//対象のタイルの外枠
+	float NowTile_L = (stageData[stagenum].stageTileData[a].offsetX) * blockSize;
+	float NowTile_R = (stageData[stagenum].stageTileData[a].offsetX + stageData[stagenum].stageTileData[a].width) * blockSize;
+	float NowTile_U = (stageData[stagenum].stageTileData[a].offsetY) * blockSize;
+	float NowTile_D = (stageData[stagenum].stageTileData[a].offsetY + stageData[stagenum].stageTileData[a].height) * blockSize;
+
+	//対象のタイルを順番に見ていく
+	for (a = 0; a < stageData[stagenum].stageTileData.size(); a++)
+	{
+		//ほかのタイルとの位置関係を調べる
+		for (a = 0; a < stageData[stagenum].stageTileData.size(); a++)
+		{
+
+		}
+	}
+}
+
 void Stage::SelectingStageTile()
 {
 	std::vector < size_t > AllTiles = {};
@@ -1691,7 +1715,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 			}
 			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 			if (stageData[a].stageTileData[b].isFold == true &&
-				stageData[a].stageTileData[b].FoldType == direction)
+				stageData[a].stageTileData[b].FoldDirection == direction)
 			{
 				//方向ごとに格納していく
 				switch (direction)
@@ -2190,7 +2214,7 @@ int Stage::Fold(const unsigned char& direction, const size_t& onPlayerStage, con
 	stageData[onPlayerStage].stageTileData[moveStageData].stageNumber = static_cast<char>(onPlayerStageTile);
 	stageData[onPlayerStage].stageTileData[moveStageData].direction = direction + 1;
 	stageData[onPlayerStage].stageTileData[moveStageData].isFold = true;
-	stageData[onPlayerStage].stageTileData[moveStageData].FoldType = direction;
+	stageData[onPlayerStage].stageTileData[moveStageData].FoldDirection = direction;
 
 	datacount++;
 
@@ -2286,7 +2310,7 @@ int Stage::Open(const unsigned char& direction, const size_t& onPlayerStage, con
 	stageData[onPlayerStage].stageTileData[moveStageData].stageNumber = initStageData[onPlayerStage].stageTileData[moveStageData].stageNumber;
 	stageData[onPlayerStage].stageTileData[moveStageData].direction = direction + 1 + 2;
 	stageData[onPlayerStage].stageTileData[moveStageData].isFold = false;
-	stageData[onPlayerStage].stageTileData[moveStageData].FoldType = -1;
+	stageData[onPlayerStage].stageTileData[moveStageData].FoldDirection = -1;
 
 	datacount++;
 
