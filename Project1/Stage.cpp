@@ -1619,8 +1619,6 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 	for (int a = 0; a < stageData.size(); a++)
 	{
-		XMFLOAT2 most = ReturnMostOffset(direction, a);
-
 		//タイルの数が１枚しかないステージは折れない
 		if (stageData[a].stageTileData.size() <= 1)
 		{
@@ -1693,7 +1691,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 			}
 			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 			if (stageData[a].stageTileData[b].isFold == true &&
-				stageData[a].stageTileData[b].FoldDirection == direction)
+				stageData[a].stageTileData[b].FoldType == direction)
 			{
 				//方向ごとに格納していく
 				switch (direction)
@@ -2192,7 +2190,7 @@ int Stage::Fold(const unsigned char& direction, const size_t& onPlayerStage, con
 	stageData[onPlayerStage].stageTileData[moveStageData].stageNumber = static_cast<char>(onPlayerStageTile);
 	stageData[onPlayerStage].stageTileData[moveStageData].direction = direction + 1;
 	stageData[onPlayerStage].stageTileData[moveStageData].isFold = true;
-	stageData[onPlayerStage].stageTileData[moveStageData].FoldDirection = direction;
+	stageData[onPlayerStage].stageTileData[moveStageData].FoldType = direction;
 
 	datacount++;
 
@@ -2288,7 +2286,7 @@ int Stage::Open(const unsigned char& direction, const size_t& onPlayerStage, con
 	stageData[onPlayerStage].stageTileData[moveStageData].stageNumber = initStageData[onPlayerStage].stageTileData[moveStageData].stageNumber;
 	stageData[onPlayerStage].stageTileData[moveStageData].direction = direction + 1 + 2;
 	stageData[onPlayerStage].stageTileData[moveStageData].isFold = false;
-	stageData[onPlayerStage].stageTileData[moveStageData].FoldDirection = -1;
+	stageData[onPlayerStage].stageTileData[moveStageData].FoldType = -1;
 
 	datacount++;
 

@@ -99,7 +99,7 @@ public: //サブクラス
 		int StageGroup = -1;
 
 		//折られている場合の方向
-		int FoldDirection = -1;
+		int FoldType = -1;
 
 		//上に重なっている枚数
 		int Overlap = 0;
