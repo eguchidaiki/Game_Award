@@ -7,9 +7,10 @@ public: //サブクラス
 	enum TutorialState
 	{
 		NO_TUTORIAL,
-		MOVE, //移動のチュートリアル
-		JUMP, //ジャンプのチュートリアル
-		FOLD  //折るのチュートリアル
+		MOVE,  //移動のチュートリアル
+		JUMP,  //ジャンプのチュートリアル
+		FOLD,  //折るのチュートリアル
+		SELECT //カーソル移動のチュートリアル
 	};
 
 public: //メンバ関数
@@ -47,6 +48,7 @@ private:
 	Sprite moveSprite;
 	Sprite jumpSprite;
 	Sprite foldSprite;
+	Sprite selectSprite;
 
 	XMFLOAT2 spriteSize;
 };

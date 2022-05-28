@@ -141,6 +141,8 @@ public: //静的メンバ関数
 public: //静的メンバ変数
 	static int drawOffsetX;
 	static int drawOffsetY;
+
+	static bool isMoveSelectCursor;
 private:
 	static int startPlayerPosX;
 	static int startPlayerPosY;
