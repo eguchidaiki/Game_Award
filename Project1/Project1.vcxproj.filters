@@ -51,9 +51,6 @@
     <ClCompile Include="UI.cpp">
       <Filter>ソースファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GoalParticle.cpp">
-      <Filter>Effect</Filter>
-    </ClCompile>
     <ClCompile Include="testParticle.cpp">
       <Filter>Effect</Filter>
     </ClCompile>
@@ -120,6 +117,8 @@
     <ClCompile Include="StageClearedControler.cpp">
       <Filter>Scene\gameMain\control</Filter>
     </ClCompile>
+    <ClCompile Include="SceneChangeDirection.cpp" />
+    <ClCompile Include="ButtonUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -206,6 +205,8 @@
     <ClInclude Include="StageClearedControler.h">
       <Filter>Scene\gameMain\control</Filter>
     </ClInclude>
+    <ClInclude Include="SceneChangeDirection.h" />
+    <ClInclude Include="ButtonUI.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\block.png">
@@ -226,6 +227,8 @@
     <Image Include="Resources\playerSub.png">
       <Filter>リソースファイル</Filter>
     </Image>
+    <Image Include="Resources\player.png" />
+    <Image Include="Resources\playerBody02.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Shaders\mpShaderHeader.hlsli">

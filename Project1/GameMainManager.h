@@ -17,8 +17,6 @@ private:
 	Sprite Back;
 	const int tutorialOffsetX = 320, tutorialOffsetY = 45;
 
-	//BGM
-	SoundData menuBGM;
 	SoundData playBGM;
 
 	UI ui;
