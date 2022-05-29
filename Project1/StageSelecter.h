@@ -4,6 +4,55 @@
 #include <TexManager.h>
 #include <Sprite.h>
 #include <Raki_Input.h>
+#include <Audio.h>
+
+#include "ButtonUI.h"
+
+//ページ1枚分（これはあくまでも表示と描画座標の管理のみを担う。実際の選択や遷移の処理はSelecterの仕事）
+class Page
+{
+public:
+	Page(){};
+	~Page(){};
+
+	//初期化（アイコン中心座標の定義配列、グラフィックハンドルの配列、カーソルのグラフィックハンドルの配列）
+	void Init(float xicons[], float yicons[], std::array<UINT, 4> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget);
+	//更新
+	void Update();
+	//描画（左上基準）
+	void Draw();
+
+	void ChangeDisplayMode();
+
+	//各アイコンの中心座標
+	std::array<float, 4> iconX, iconY;
+	//ボタンリソース(Selecterがアクセスする)
+	std::array<UI_Button, 4> stageIconButton;
+
+	//イージング目標に移動するかのフラグ
+	bool isDisplay = true;
+	bool isMustMoving = true;
+	//イージング関連
+	RVector3 easeTarget;
+	RVector3 easeStart = { -1280,-720,0 };
+	//描画座標左上
+	RVector3 drawLTpos;
+	//イージング最大フレーム
+	const int EASE_FRAME = 60;
+	int frame = 0;
+
+
+private:
+	//背景
+	Sprite backSprite;
+	//レンダーテクスチャハンドル
+	int rtHandle;
+	//レンダーテクスチャスプライト
+	Sprite rtSprite;
+	//左右スプライト
+	Sprite cursorR, cursorL;
+
+};
 
 //ステージ選択を管理する
 class StageSelecter
@@ -59,6 +108,9 @@ private:
 	//ステージ背景
 	std::array<Sprite, 20> stageBack;
 
+	//ページ
+	std::array<Page, 5> stagePage;
+
 	//カーソル
 	Sprite selectCursor;
 	const int cursorSpriteCount = 4;
@@ -106,6 +158,9 @@ private:
 
 	//ロード関数（連番画像のためにint -> string変換）
 	void LoadSprite();
+	
+	//ステージアイコン画像のロード
+	std::array<UINT,4> LoadStageIcons(int pageNumber);
 
 	//ページ遷移のための入力検知、ページ状態切替
 	void CheckToPageChangeInput();
@@ -131,5 +186,9 @@ private:
 	void DrawCursor();
 
 
+	void DrawPages();
+
+	//BGM
+	SoundData menuBGM;
 };
 

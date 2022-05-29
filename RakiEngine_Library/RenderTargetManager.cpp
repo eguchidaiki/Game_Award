@@ -39,16 +39,7 @@ void RenderTargetManager::FinalizeRenderTargetManager()
 
 void RenderTargetManager::CrearAndStartDraw()
 {
-	//すべてのレンダーテクスチャをクリアするために、一度レンダーテクスチャを設定する
-	//for (int i = 0; i < renderTextures.size(); i++) {
-	//	SetRenderTarget(i);
-	//	ClearRenderTarget(renderTextures[i]->GetDescriptorHeapRTV());
-	//	ClearDepthBuffer(renderTextures[i]->GetDescriptorHeapDSV());
-	//	CloseDrawRenderTexture();
-	//}
-
 	//レンダーテクスチャはユーザーが任意のタイミングでクリアする。
-
 	//バックバッファの番号取得
 	UINT bbIndex = swapchain->GetCurrentBackBufferIndex();
 

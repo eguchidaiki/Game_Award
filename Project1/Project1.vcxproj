@@ -156,6 +156,7 @@
   <ItemGroup>
     <ClCompile Include="ActFlag.cpp" />
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="ButtonUI.cpp" />
     <ClCompile Include="Easing.cpp" />
     <ClCompile Include="GameMainManager.cpp" />
     <ClCompile Include="GameScene.cpp" />
@@ -271,6 +272,7 @@
   <ItemGroup>
     <ClInclude Include="ActFlag.h" />
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="ButtonUI.h" />
     <ClInclude Include="Easing.h" />
     <ClInclude Include="GameMainManager.h" />
     <ClInclude Include="GameScene.h" />

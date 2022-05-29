@@ -726,7 +726,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * stage->blockSize) - (BodyAndLegDown - player->CenterPosition.y);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -791,7 +791,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * stage->blockSize) - (BodyAndLegDown - player->CenterPosition.y);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -868,6 +868,11 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	size_t NowTile = 0;
 
 	stage->GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
+
+	if (NowStage == static_cast<size_t>(-1) || NowTile == static_cast<size_t>(-1))
+	{
+		return;
+	}
 
 	//体の四辺
 	float BodyLeft;

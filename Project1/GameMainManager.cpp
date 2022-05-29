@@ -28,8 +28,9 @@ void GameMainManager::Init()
 	BackHandle = TexManager::LoadTexture("Resources/background03.png");
 	this->Back.Create(BackHandle);
 
-	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
+
 	playBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm02.wav");
+	Audio::SetPlayRoopmode(playBGM, 255);
 
 	ui.Init(&tutorial);
 
@@ -40,6 +41,10 @@ void GameMainManager::Init()
 
 void GameMainManager::Update()
 {
+	if (!player->IsGoal) {
+		Audio::PlayLoadedSound(playBGM);
+	}
+
 	//ゲーム内インスタンスの更新処理（ようは俺が作ってないクラスの更新処理。ややこしくなるからラップした）
 	GameInstanceUpdate();
 
@@ -154,6 +159,8 @@ void GameMainManager::GameInstanceUpdate()
 		//ゴールした判定？
 		if (player->IsGoal && !Ischangecount)
 		{
+			//音停止
+			Audio::StopLoadedSound(playBGM);
 			//UIコントロール有効化
 			stageClearCtrl.ControlActivate();
 		}
