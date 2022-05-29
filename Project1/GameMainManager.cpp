@@ -195,7 +195,11 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 
 	if (NowScene == 1)
 	{
-		tutorial.StartTutorial();
+		tutorial.StartNormalTutorial();
+	}
+	if (NowScene == 3)
+	{
+		tutorial.StartSelectTutorial();
 	}
 }
 

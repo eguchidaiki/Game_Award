@@ -13,12 +13,11 @@ Tutorial::Tutorial() :
 	foldSprite{},
 	isTutorial(false),
 	tutorialState(TutorialState::NO_TUTORIAL),
-	isMoveTutorial(false),
-	isJumpTutorial(false),
-	isFoldTutorial(false),
 	isFirst(true),
 	isFirstOnly(false),
-	spriteSize{ 230.0f, 97.0f }
+	spriteSize{ 230.0f, 97.0f },
+	isNormal(false),
+	isSelect(false)
 {
 	Init();
 }
@@ -31,10 +30,10 @@ void Tutorial::Init()
 {
 	isTutorial = false;
 	tutorialState = TutorialState::NO_TUTORIAL;
-	isMoveTutorial = true;
-	isFoldTutorial = false;
 	isFirst = true;
 	isFirstOnly = false;
+	isNormal = false;
+	isSelect = false;
 }
 
 void Tutorial::Update()
@@ -81,7 +80,7 @@ void Tutorial::Update()
 	{
 		if (isJump)
 		{
-			tutorialState = TutorialState::SELECT;
+			tutorialState = TutorialState::FOLD;
 		}
 		break;
 	}
@@ -97,7 +96,7 @@ void Tutorial::Update()
 	{
 		if (isSelect)
 		{
-			tutorialState = TutorialState::FOLD;
+			tutorialState = TutorialState::NO_TUTORIAL;
 		}
 		break;
 	}
@@ -182,12 +181,20 @@ void Tutorial::Create()
 
 void Tutorial::Reset()
 {
+	if (isNormal)
+	{
+		tutorialState = TutorialState::MOVE;
+	}
+	else if (isSelect)
+	{
+		tutorialState = TutorialState::MOVE;
+	}
+
 	isTutorial = true;
-	tutorialState = TutorialState::MOVE;
 	isFirst = true;
 }
 
-void Tutorial::StartTutorial()
+void Tutorial::StartNormalTutorial()
 {
 	if (isTutorial)
 	{
@@ -201,7 +208,24 @@ void Tutorial::StartTutorial()
 	}
 
 	isTutorial = true;
+	isNormal = true;
 	tutorialState = TutorialState::MOVE;
-	isMoveTutorial = true;
-	isFoldTutorial = false;
+}
+
+void Tutorial::StartSelectTutorial()
+{
+	if (isTutorial)
+	{
+		return;
+	}
+
+	if (isFirstOnly && isFirst == false)
+	{
+		isTutorial = false;
+		return;
+	}
+
+	isTutorial = true;
+	isSelect = true;
+	tutorialState = TutorialState::SELECT;
 }
