@@ -50,12 +50,13 @@ public:
 
 	//ÉJÅ[É\Éã
 	Sprite cursor;
+	const int cursorSpriteCount = 4;
 
 	const int MENUICON_START_X = 500;
-	const int MENUICON_START_Y = 470;
+	const int MENUICON_START_Y = 495;
 	const int MENUICON_SIZE_Y = 60;
 	const int MENUICON_SIZE_X = 280;
-	const int MENUICON_OFFSET = 25;
+	const int MENUICON_OFFSET = 30;
 
 };
 

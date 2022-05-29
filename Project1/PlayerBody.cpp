@@ -1,5 +1,4 @@
 ﻿#include <RVector.h>
-
 #include "PlayerBody.h"
 #include "InputManger.h"
 #include "Stage.h"
@@ -705,7 +704,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitLeft == false)
 						{
-							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft-1);
+							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
 							IsHitLeft = true;
 						}
 					}
@@ -737,7 +736,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitLeft == false)
 						{
-							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft-1);
+							player->CenterPosition.x = (BodyLeft_mapchip + 1) * 60 + (player->CenterPosition.x - BodyLeft);
 							player->IsInitJump = false;
 							IsHitLeft = true;
 						}
@@ -923,21 +922,25 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	XMFLOAT2 RightDownTile = { (float)sub_stage,(float)sub_tile };
 
 	//現時点での四隅のタイルをセット
+	//左の壁(上下)
 	XMFLOAT2 Leftwall =
 	{
 		(float)stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize,
 		(float)stage->GetStageTileOffsetX(NowStage, NowTile) * stage->blockSize
 	};
+	//右の壁(上下)
 	XMFLOAT2 Rightwall =
 	{
 		(float)(stage->GetStageTileOffsetX(NowStage, NowTile) + stage->GetStageTileWidth(NowStage, NowTile)) * stage->blockSize,
 		(float)(stage->GetStageTileOffsetX(NowStage, NowTile) + stage->GetStageTileWidth(NowStage, NowTile)) * stage->blockSize
 	};
+	//上の壁(左右)
 	XMFLOAT2 Upwall =
 	{
 		(float)stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize,
 		(float)stage->GetStageTileOffsetY(NowStage, NowTile) * stage->blockSize
 	};
+	//下の壁(左右)
 	XMFLOAT2 Downwall =
 	{
 		(float)(stage->GetStageTileOffsetY(NowStage, NowTile) + stage->GetStageTileHeight(NowStage, NowTile)) * stage->blockSize,
@@ -954,7 +957,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	{
 		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			//左のoffset計算(左上)
+			//左のoffset計算(上)
 			if (BodyUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
@@ -963,7 +966,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 					Leftwall.x = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
 			}
-			//左のoffset計算(左下)
+			//左のoffset計算(下)
 			if (BodyDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
@@ -973,7 +976,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 				}
 			}
 
-			//右のoffset計算(右上)
+			//右のoffset計算(上)
 			if (BodyUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
@@ -982,7 +985,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 					Rightwall.x = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
 			}
-			//右のoffset計算(右下)
+			//右のoffset計算(下)
 			if (BodyDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
@@ -992,7 +995,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 				}
 			}
 
-			//上のoffset計算(左上)
+			//上のoffset計算(左)
 			if (BodyLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
@@ -1001,7 +1004,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 					Upwall.x = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
 				}
 			}
-			//上のoffset計算(右上)
+			//上のoffset計算(右)
 			if (BodyRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
@@ -1011,7 +1014,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 				}
 			}
 
-			//下のoffset計算(左下)
+			//下のoffset計算(左)
 			if (BodyLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
@@ -1020,7 +1023,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 					Downwall.x = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
 			}
-			//下のoffset計算(右下)
+			//下のoffset計算(右)
 			if (BodyRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
@@ -1073,44 +1076,67 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 30 <= BodyLeft)
+	if (NowLeft + 50 <= BodyLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 30 >= BodyRight)
+	if (NowRight + 50 >= BodyRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 30 <= BodyUp)
+	if (NowUp + 50 <= BodyUp)
 	{
 		IsOutSideUp = true;
 	}
-	if (NowDown + 30 >= BodyDown)
+	if (NowDown + 50 >= BodyDown)
 	{
 		IsOutSideDown = true;
 	}
 
-	float BuriedLeft = BodyLeft - NowLeft;
-	float BuriedUp = BodyUp - NowUp;
-	float BuriedRight = NowRight - BodyRight;
-	float BuriedDown = NowDown - BodyDown;
+	//四隅の壁との距離
+	XMFLOAT2 Buried_LU =
+	{
+		fabs(Leftwall.x - BodyLeft),
+		fabs(Upwall.x - BodyUp)
+	};
+	XMFLOAT2 Buried_LD =
+	{
+		fabs(Leftwall.y - BodyLeft),
+		fabs(Downwall.x - BodyDown)
+	};
+	XMFLOAT2 Buried_RU =
+	{
+		fabs(Rightwall.x - BodyRight),
+		fabs(Upwall.y - BodyUp)
+	};
+	XMFLOAT2 Buried_RD =
+	{
+		fabs(Rightwall.y - BodyRight),
+		fabs(Downwall.y - BodyDown)
+	};
 
-	if (NowLeft >= BodyLeft && ((BuriedLeft <= BuriedUp) || (BuriedLeft <= BuriedDown)))
+	float push = 0;
+
+	if ((Leftwall.x > BodyLeft && (Buried_LU.x < Buried_LU.y)) || (Leftwall.y > BodyLeft && (Buried_LD.x < Buried_LD.y)))
 	{
-		center->x = NowLeft + (center->x - BodyLeft);
+		push = fabs(center->x - BodyLeft);
+		center->x = NowLeft + push;
 	}
-	if (NowRight <= BodyRight && ((BuriedRight <= BuriedUp) || (BuriedRight <= BuriedDown)))
+	if ((Rightwall.x < BodyRight && (Buried_RU.x < Buried_RU.y)) || (Rightwall.y < BodyRight && (Buried_RD.x < Buried_RD.y)))
 	{
-		center->x = NowRight - (BodyRight - center->x) - 1;
+		push = fabs(BodyRight - center->x);
+		center->x = NowRight - push - 1;
 	}
-	if (NowUp >= BodyUp && ((BuriedUp < BuriedLeft) || (BuriedUp < BuriedRight)))
+	if ((Upwall.x > BodyUp && (Buried_LU.x > Buried_LU.y)) || (Upwall.y > BodyUp && (Buried_RU.x > Buried_RU.y)))
 	{
-		center->y = NowUp + (center->y - BodyUp);
+		push = fabs(center->y - BodyUp);
+		center->y = NowUp + push + 1;
 		FallSpeed = 0.0f;
 	}
-	if (NowDown <= BodyDown && ((BuriedDown < BuriedLeft) || (BuriedDown < BuriedRight)))
+	if ((Downwall.x < BodyDown && (Buried_LD.x > Buried_LD.y)) || (Downwall.y < BodyDown && (Buried_RD.x > Buried_RD.y)))
 	{
-		center->y = NowDown - (BodyDown - center->y);
+		push = fabs(BodyDown - center->y);
+		center->y = NowDown - push;
 	}
 }
 

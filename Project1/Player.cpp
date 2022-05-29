@@ -1597,7 +1597,7 @@ void Player::IsHitPlayerBody()
 					{
 						if (IsHitLeft == false)
 						{
-							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 24.0f;
+							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 							JumpCountLeft += IsLeft;
 							IsHitLeft = true;
 						}
@@ -1630,7 +1630,7 @@ void Player::IsHitPlayerBody()
 					{
 						if (IsHitLeft == false)
 						{
-							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 24.0f;
+							CenterPosition.x = static_cast<float>(left_mapchip + 1) * stage->blockSize + 25.0f;
 							JumpCountLeft += IsLeft;
 							IsHitLeft = true;
 						}
@@ -1998,44 +1998,61 @@ void Player::IsOutsideFace()
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 25 <= FaceLeft)
+	if (NowLeft + 50 <= FaceLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 25 >= FaceRight)
+	if (NowRight + 50 >= FaceRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 25 <= FaceUp)
+	if (NowUp + 50 <= FaceUp)
 	{
 		IsOutSideUp = true;
 	}
-	if (NowDown + 30 >= FaceDown)
+	if (NowDown + 50 >= FaceDown)
 	{
 		IsOutSideDown = true;
 	}
 
-	float BuriedLeft = FaceLeft - NowLeft;
-	float BuriedUp = FaceUp - NowUp;
-	float BuriedRight = NowRight - FaceRight;
-	float BuriedDown = NowDown - FaceDown;
+	//四隅の壁との距離
+	XMFLOAT2 Buried_LU =
+	{
+		fabs(Leftwall.x - FaceLeft),
+		fabs(Upwall.x - FaceUp)
+	};
+	XMFLOAT2 Buried_LD =
+	{
+		fabs(Leftwall.y - FaceLeft),
+		fabs(Downwall.x - FaceDown)
+	};
+	XMFLOAT2 Buried_RU =
+	{
+		fabs(Rightwall.x - FaceRight),
+		fabs(Upwall.y - FaceUp)
+	};
+	XMFLOAT2 Buried_RD =
+	{
+		fabs(Rightwall.y - FaceRight),
+		fabs(Downwall.y - FaceDown)
+	};
 
-	if (NowLeft >= FaceLeft && ((BuriedLeft <= BuriedUp) || (BuriedLeft <= BuriedDown)))
+	if ((Leftwall.x > FaceLeft && (Buried_LU.x < Buried_LU.y)) || (Leftwall.y > FaceLeft && (Buried_LD.x < Buried_LD.y)))
 	{
-		CenterPosition.x = NowLeft + 26;
+		CenterPosition.x = NowLeft + 25;
 	}
-	if (NowRight <= FaceRight && ((BuriedRight <= BuriedUp) || (BuriedRight <= BuriedDown)))
+	if ((Rightwall.x < FaceRight && (Buried_RU.x < Buried_RU.y)) || (Rightwall.y < FaceRight && (Buried_RD.x < Buried_RD.y)))
 	{
-		CenterPosition.x = NowRight - 26;
+		CenterPosition.x = NowRight - 25;
 	}
-	if (NowUp >= FaceUp && ((BuriedUp < BuriedLeft) || (BuriedUp < BuriedRight)))
+	if ((Upwall.x >= FaceUp && (Buried_LU.x >= Buried_LU.y)) || (Upwall.y >= FaceUp && (Buried_RU.x >= Buried_RU.y)))
 	{
-		CenterPosition.y = NowUp + 26;
+		CenterPosition.y = NowUp + 25;
 		FallSpeed = 0.0f;
 	}
-	if (NowDown <= FaceDown && ((BuriedDown < BuriedLeft) || (BuriedDown < BuriedRight)))
+	if ((Downwall.x <= FaceDown && (Buried_LD.x >= Buried_LD.y)) || (Downwall.y <= FaceDown && (Buried_RD.x >= Buried_RD.y)))
 	{
-		CenterPosition.y = NowDown - 26;
+		CenterPosition.y = NowDown - 25;
 	}
 }
 
