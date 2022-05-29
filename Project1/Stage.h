@@ -91,9 +91,8 @@ public: //サブクラス
 
 		bool isTop = true;
 
-		//相対的な位置
-		int RelativePositionFold = -1;
-		int RelativePositionOpen = -1;
+		//隣り合っているタイルが何枚あるのか
+		int NextTileCount = 0;
 
 		//どのステージのタイルなのか
 		int StageGroup = -1;
@@ -176,7 +175,7 @@ public: //メンバ関数
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
-	//同一ステージ内での位置関係を計算する
+	//同一ステージ内での位置関係から折れる方向をを割り出す
 	void SetFoldType(size_t stagenum);
 
 	//折るステージを選択
@@ -190,6 +189,9 @@ public: //メンバ関数
 
 	//セレクトしたタイルが指定の方向に折れるかどうか
 	bool IsTileFoldDirection(size_t stage, int direction);
+
+	//指定した方向のタイルに応じた位置にプレイヤーがいるかどうか
+	bool IsPlayerFold(int FoldType);
 
 	//今いるタイルがほかのタイルと重なっているかどうか
 	bool IsNowTileOver(size_t stage, size_t tile);

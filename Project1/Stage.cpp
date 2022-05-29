@@ -788,6 +788,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 		{
 			SetOverlap(i, j);
 		}
+		SetFoldType(i);
 	}
 
 	for (i = 0; i < stageData.size(); i++)
@@ -810,23 +811,85 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 void Stage::SetFoldType(size_t stagenum)
 {
 	int a = 0;
+	int b = 0;
 
 	//隣り合ったタイルが何枚あるのか
 	int NextCount = 0;
 
 	//対象のタイルの外枠
-	float NowTile_L = (stageData[stagenum].stageTileData[a].offsetX) * blockSize;
-	float NowTile_R = (stageData[stagenum].stageTileData[a].offsetX + stageData[stagenum].stageTileData[a].width) * blockSize;
-	float NowTile_U = (stageData[stagenum].stageTileData[a].offsetY) * blockSize;
-	float NowTile_D = (stageData[stagenum].stageTileData[a].offsetY + stageData[stagenum].stageTileData[a].height) * blockSize;
+	float NowTile_L;
+	float NowTile_R;
+	float NowTile_U;
+	float NowTile_D;
+
+	//対象外のタイルの外枠
+	float OtherTile_L;
+	float OtherTile_U;
+	float OtherTile_R;
+	float OtherTile_D;
 
 	//対象のタイルを順番に見ていく
 	for (a = 0; a < stageData[stagenum].stageTileData.size(); a++)
 	{
-		//ほかのタイルとの位置関係を調べる
-		for (a = 0; a < stageData[stagenum].stageTileData.size(); a++)
-		{
+		NowTile_L = (stageData[stagenum].stageTileData[a].offsetX) * blockSize;
+		NowTile_R = (stageData[stagenum].stageTileData[a].offsetX + stageData[stagenum].stageTileData[a].width) * blockSize;
+		NowTile_U = (stageData[stagenum].stageTileData[a].offsetY) * blockSize;
+		NowTile_D = (stageData[stagenum].stageTileData[a].offsetY + stageData[stagenum].stageTileData[a].height) * blockSize;
 
+		//ほかのタイルとの位置関係を調べる
+		for (b = 0; b < stageData[stagenum].stageTileData.size(); b++)
+		{
+			if (a == b)
+			{
+				continue;
+			}
+
+			//対象外タイルの外枠をセット
+			OtherTile_L = (stageData[stagenum].stageTileData[b].offsetX) * blockSize;
+			OtherTile_R = (stageData[stagenum].stageTileData[b].offsetX + stageData[stagenum].stageTileData[b].width) * blockSize;
+			OtherTile_U = (stageData[stagenum].stageTileData[b].offsetY) * blockSize;
+			OtherTile_D = (stageData[stagenum].stageTileData[b].offsetY + stageData[stagenum].stageTileData[b].height) * blockSize;
+
+			if (NowTile_L == OtherTile_L || NowTile_R == OtherTile_R)
+			{
+				stageData[stagenum].stageTileData[a].NextTileCount++;
+
+				if (stageData[stagenum].stageTileData[a].FoldType < 0)
+				{
+					if (NowTile_U < OtherTile_U)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::up;
+					}
+
+					if (NowTile_D > OtherTile_D)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::down;
+					}
+				}
+			}
+
+			if (NowTile_U == OtherTile_U || NowTile_D == OtherTile_D)
+			{
+				stageData[stagenum].stageTileData[a].NextTileCount++;
+
+				if (stageData[stagenum].stageTileData[a].FoldType < 0)
+				{
+					if (NowTile_L < OtherTile_L)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::left;
+					}
+
+					if (NowTile_R > OtherTile_R)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::right;
+					}
+				}
+			}
+		}
+
+		if (stageData[stagenum].stageTileData[a].NextTileCount >= 2)
+		{
+			stageData[stagenum].stageTileData[a].FoldType = -1;
 		}
 	}
 }
@@ -1068,17 +1131,26 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 				direction = BodyType::up;
 			}
 		}
-		else if (inputManeger->FoldDownTrigger() && IsTileFoldDirection(selectStageNum, BodyType::down))
+		else if (inputManeger->FoldDownTrigger())
 		{
-			direction = BodyType::down;
+			if (IsTileFoldDirection(selectStageNum, BodyType::down))
+			{
+				direction = BodyType::down;
+			}
 		}
-		else if (inputManeger->FoldLeftTrigger() && IsTileFoldDirection(selectStageNum, BodyType::left))
+		else if (inputManeger->FoldLeftTrigger())
 		{
-			direction = BodyType::left;
+			if (IsTileFoldDirection(selectStageNum, BodyType::left))
+			{
+				direction = BodyType::left;
+			}
 		}
-		else if (inputManeger->FoldRightTrigger() && IsTileFoldDirection(selectStageNum, BodyType::right))
+		else if (inputManeger->FoldRightTrigger())
 		{
-			direction = BodyType::right;
+			if (IsTileFoldDirection(selectStageNum, BodyType::right))
+			{
+				direction = BodyType::right;
+			}
 		}
 	}
 	else
@@ -1264,6 +1336,17 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 		default:
 			break;
 		}
+	}
+
+	return false;
+}
+
+bool Stage::IsPlayerFold(int FoldType)
+{
+	//セレクトステージのタイル数分だけ回す
+	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
+	{
+
 	}
 
 	return false;
@@ -1644,49 +1727,42 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 		return;
 	}
 
-	for (int a = 0; a < stageData.size(); a++)
-	{
-		//タイルの数が１枚しかないステージは折れない
-		if (stageData[a].stageTileData.size() <= 1)
-		{
-			continue;
-		}
 
-		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
+	{
+		if (stageData[selectStageNum].stageTileData[b].FoldType == direction &&
+			stageData[selectStageNum].stageTileData[b].Overlap <= 0)
 		{
-			if (a == selectStageNum && b == selectTileNum && SelectTile->Overlap == 0)
+			switch (direction)
 			{
-				switch (direction)
-				{
-				case BodyType::up:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				case BodyType::down:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				case BodyType::left:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				case BodyType::right:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				}
+			case BodyType::up:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(selectTileNum);
+				break;
+			}
+			case BodyType::down:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(selectTileNum);
+				break;
+			}
+			case BodyType::left:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(selectTileNum);
+				break;
+			}
+			case BodyType::right:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(selectTileNum);
+				break;
+			}
 			}
 		}
 	}
