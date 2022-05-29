@@ -332,6 +332,34 @@ void Stage::Draw(const int offsetX, const int offsetY)
 			SelectFrame_L[l].x + 10 + drawOffset.x,
 			SelectFrame_L[l].z + drawOffset.y
 		);
+
+		for (int u = 0; u < SelectFrame_U.size(); u++)
+		{
+			if (SelectFrame_L[l].x == SelectFrame_U[u].y &&
+				SelectFrame_L[l].z == SelectFrame_U[u].z)
+			{
+				SelectIconSprite[0].DrawExtendSprite(
+					SelectFrame_L[l].x + drawOffset.x,
+					SelectFrame_L[l].y + drawOffset.y,
+					SelectFrame_L[l].x + 10 + drawOffset.x,
+					SelectFrame_L[l].z + 10 + drawOffset.y
+				);
+			}
+		}
+
+		for (int d = 0; d < SelectFrame_D.size(); d++)
+		{
+			if (SelectFrame_L[l].x == SelectFrame_D[d].y &&
+				SelectFrame_L[l].y == SelectFrame_D[d].z)
+			{
+				SelectIconSprite[0].DrawExtendSprite(
+					SelectFrame_L[l].x + drawOffset.x,
+					SelectFrame_L[l].y + drawOffset.y,
+					SelectFrame_L[l].x + 10 + drawOffset.x,
+					SelectFrame_L[l].z - 10 + drawOffset.y
+				);
+			}
+		}
 	}
 
 	//上フレーム
@@ -354,6 +382,34 @@ void Stage::Draw(const int offsetX, const int offsetY)
 			SelectFrame_R[r].x - 10 + drawOffset.x,
 			SelectFrame_R[r].z + drawOffset.y
 		);
+
+		for (int u = 0; u < SelectFrame_U.size(); u++)
+		{
+			if (SelectFrame_R[r].x == SelectFrame_U[u].x &&
+				SelectFrame_R[r].z == SelectFrame_U[u].z)
+			{
+				SelectIconSprite[2].DrawExtendSprite(
+					SelectFrame_R[r].x + drawOffset.x,
+					SelectFrame_R[r].y + drawOffset.y,
+					SelectFrame_R[r].x - 10 + drawOffset.x,
+					SelectFrame_R[r].z + 10 + drawOffset.y
+				);
+			}
+		}
+
+		for (int d = 0; d < SelectFrame_D.size(); d++)
+		{
+			if (SelectFrame_R[r].x == SelectFrame_D[d].x &&
+				SelectFrame_R[r].y == SelectFrame_D[d].z)
+			{
+				SelectIconSprite[2].DrawExtendSprite(
+					SelectFrame_R[r].x + drawOffset.x,
+					SelectFrame_R[r].y + drawOffset.y,
+					SelectFrame_R[r].x - 10 + drawOffset.x,
+					SelectFrame_R[r].z - 10 + drawOffset.y
+				);
+			}
+		}
 	}
 
 	//下フレーム
