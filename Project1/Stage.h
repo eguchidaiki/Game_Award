@@ -211,10 +211,10 @@ public: //メンバ関数
 	void DataClear();
 
 	//Overlapの設定
-	void SetOverlap(size_t stagenum, size_t tilenum);
+	void InitOverlap(size_t stagenum, size_t tilenum);
 
 	//Overlapの更新
-	void UpdateOverlap() {}
+	void SetOverlap(size_t stagenum, size_t tilenum);
 
 	// 任意の座標が任意のステージにいるかどうか
 	bool IsPositionStage(const RVector3& center, const size_t& stageNumber);
@@ -297,6 +297,11 @@ public: //メンバ関数
 	inline char GetStageMapchip(const size_t& stageNumber, const size_t& stageTileNumber, int mapchipPos)
 	{
 		return stageData[stageNumber].stageTileData[stageTileNumber].mapchip[mapchipPos];
+	}
+	//任意のタイルのismove取得
+	bool IsTileMove(size_t stagenum, size_t tilenum)
+	{
+		return stageData[stagenum].stageTileData[tilenum].stageEase.isMove;
 	}
 	//引数で取ったマップチップがブロックかどうか
 	bool IsMapchipBlocks(char mapchip);
