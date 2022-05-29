@@ -23,7 +23,13 @@ Tutorial::Tutorial() :
 	isFirst(true),
 	isFirstOnly(false),
 	isNormal(false),
-	isSelect(false)
+	isSelect(false),
+	isEase(false),
+	easeState(TutorialState::NO_TUTORIAL),
+	timeRate(0.0f),
+	startPos{},
+	endPos{},
+	easePos{}
 {
 	Init();
 }
@@ -42,11 +48,6 @@ void Tutorial::Init()
 
 void Tutorial::Update()
 {
-	if (isTutorial == false)
-	{
-		return;
-	}
-
 	if (isFirstOnly && isFirst == false)
 	{
 		isTutorial = false;
@@ -64,6 +65,17 @@ void Tutorial::Update()
 		player->IsLeftFold || player->IsRightFold;
 	isSelect = Stage::isMoveSelectCursor;
 
+	if (isEase)
+	{
+		timeRate += 1.0f / 10.0f;
+		easePos = Rv3Ease::lerp(startPos, endPos, timeRate);
+
+		if (timeRate >= 1.0f)
+		{
+			isEase = false;
+		}
+	}
+
 	switch (tutorialState)
 	{
 	case TutorialState::NO_TUTORIAL:
@@ -76,6 +88,12 @@ void Tutorial::Update()
 	{
 		if (isMove)
 		{
+			isEase = true;
+			easeState = tutorialState;
+			timeRate = 0.0f;
+			endPos = { backFrameWadth + 10.0f, 560.0f + 20.0f, 0.0f };
+			easePos = startPos;
+
 			tutorialState = TutorialState::JUMP;
 		}
 		break;
@@ -84,6 +102,12 @@ void Tutorial::Update()
 	{
 		if (isJump)
 		{
+			isEase = true;
+			easeState = tutorialState;
+			timeRate = 0.0f;
+			endPos = { (backFrameWadth + 10.0f) + moveSpriteSize.x, 560.0f + 20.0f, 0.0f };
+			easePos = startPos;
+
 			tutorialState = TutorialState::FOLD;
 		}
 		break;
@@ -92,6 +116,13 @@ void Tutorial::Update()
 	{
 		if (isFold)
 		{
+			isEase = true;
+			easeState = tutorialState;
+			timeRate = 0.0f;
+			endPos = { (backFrameWadth + 10.0f) + (moveSpriteSize.x + jumpSpriteSize.x),
+				560.0f + 20.0f, 0.0f };
+			easePos = startPos;
+
 			tutorialState = TutorialState::NO_TUTORIAL;
 		}
 		break;
@@ -100,6 +131,13 @@ void Tutorial::Update()
 	{
 		if (isSelect)
 		{
+			isEase = true;
+			easeState = tutorialState;
+			timeRate = 0.0f;
+			endPos = { (backFrameWadth + 10.0f) + (moveSpriteSize.x + jumpSpriteSize.x + foldSpriteSize.x),
+				560.0f + 25.0f, 0.0f };
+			easePos = startPos;
+
 			tutorialState = TutorialState::NO_TUTORIAL;
 		}
 		break;
@@ -187,7 +225,7 @@ void Tutorial::Reset()
 	}
 	else if (isSelect)
 	{
-		tutorialState = TutorialState::MOVE;
+		tutorialState = TutorialState::SELECT;
 	}
 
 	isTutorial = true;
@@ -240,14 +278,23 @@ void Tutorial::MoveTutorial(const XMFLOAT2& offset, bool flag)
 	{
 		x = offset.x - 50.0f;
 		y = offset.y - (flag * PlayerBody::BodySize + moveSpriteSize.y + 10.0f);
+		startPos = { x, y, 0.0f };
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 		moveSprite.DrawSprite(x, y);
 	}
 	else
 	{
-		x = backFrameWadth + 10.0f;
-		y = 560.0f + 25.0f;
+		if (isEase && easeState == TutorialState::MOVE)
+		{
+			x = easePos.x;
+			y = easePos.y;
+		}
+		else
+		{
+			x = backFrameWadth + 10.0f;
+			y = 560.0f + 25.0f;
+		}
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		moveSprite.DrawSprite(x, y);
@@ -264,17 +311,26 @@ void Tutorial::JumpTutorial(const XMFLOAT2& offset, bool flag)
 	{
 		x = offset.x - 50.0f;
 		y = offset.y - (flag * PlayerBody::BodySize + jumpSpriteSize.y + 10.0f);
+		startPos = { x, y, 0.0f };
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 		jumpSprite.DrawSprite(x, y);
 	}
 	else
 	{
-		x = (backFrameWadth + 10.0f) + moveSpriteSize.x;
-		y = 560.0f + 20.0f;
+		if (isEase && easeState == TutorialState::JUMP)
+		{
+			x = easePos.x;
+			y = easePos.y;
+		}
+		else
+		{
+			x = (backFrameWadth + 10.0f) + moveSpriteSize.x;
+			y = 560.0f + 20.0f;
+		}
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
-		jumpSprite.DrawSprite(x, 560.0f + 20.0f);
+		jumpSprite.DrawSprite(x, y);
 	}
 
 	jumpSprite.Draw();
@@ -288,14 +344,23 @@ void Tutorial::FoldTutorial(const XMFLOAT2& offset, bool flag)
 	{
 		x = offset.x - 50.0f;
 		y = offset.y - (flag * PlayerBody::BodySize + foldSpriteSize.y + 10.0f);
+		startPos = { x, y, 0.0f };
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 		foldSprite.DrawSprite(x, y);
 	}
 	else
 	{
-		x = (backFrameWadth + 10.0f) + (moveSpriteSize.x + jumpSpriteSize.x);
-		y = 560.0f + 20.0f;
+		if (isEase && easeState == TutorialState::FOLD)
+		{
+			x = easePos.x;
+			y = easePos.y;
+		}
+		else
+		{
+			x = (backFrameWadth + 10.0f) + (moveSpriteSize.x + jumpSpriteSize.x);
+			y = 560.0f + 20.0f;
+		}
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		foldSprite.DrawSprite(x, y);
@@ -317,14 +382,23 @@ void Tutorial::SelectTutorial(const XMFLOAT2& offset, bool flag)
 	{
 		x = offset.x - 50.0f;
 		y = offset.y - (flag * PlayerBody::BodySize + jumpSpriteSize.y + 10.0f);
+		startPos = { x, y, 0.0f };
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 		selectSprite.DrawSprite(offset.x - 50.0f, offset.y - (flag * PlayerBody::BodySize + selectSpriteSize.y + 10.0f));
 	}
 	else
 	{
-		x = (backFrameWadth + 10.0f) + (moveSpriteSize.x + jumpSpriteSize.x + foldSpriteSize.x);
-		y = 560.0f + 25.0f;
+		if (isEase && easeState == TutorialState::SELECT)
+		{
+			x = easePos.x;
+			y = easePos.y;
+		}
+		else
+		{
+			x = (backFrameWadth + 10.0f) + (moveSpriteSize.x + jumpSpriteSize.x + foldSpriteSize.x);
+			y = 560.0f + 25.0f;
+		}
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		selectSprite.DrawSprite(x, y);
