@@ -191,7 +191,7 @@ public: //メンバ関数
 	bool IsTileFoldDirection(size_t stage, int direction);
 
 	//指定した方向のタイルに応じた位置にプレイヤーがいるかどうか
-	bool IsPlayerFold(int FoldType);
+	bool IsPlayerPositionFold(int FoldType);
 
 	//今いるタイルがほかのタイルと重なっているかどうか
 	bool IsNowTileOver(size_t stage, size_t tile);
