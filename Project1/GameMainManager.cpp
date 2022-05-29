@@ -114,6 +114,12 @@ void GameMainManager::GameInstanceUpdate()
 		player->Update(stage->drawOffsetX, stage->drawOffsetY);
 		bool PlayerBodyStatus[4] = {};
 
+		if (player->isRespawn)
+		{
+			IsStart = false;
+			player->isRespawn = false;
+		}
+
 		IsFolds[0] = player->IsLeftFold;
 		IsFolds[1] = player->IsUpFold;
 		IsFolds[2] = player->IsRightFold;

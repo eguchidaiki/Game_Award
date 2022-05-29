@@ -1,4 +1,4 @@
-#include "Sprite.h"
+﻿#include "Sprite.h"
 #include "NY_Camera.h"
 
 #include "TexManager.h"

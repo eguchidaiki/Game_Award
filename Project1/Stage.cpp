@@ -788,6 +788,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 		{
 			SetOverlap(i, j);
 		}
+		SetFoldType(i);
 	}
 
 	for (i = 0; i < stageData.size(); i++)
@@ -810,23 +811,85 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 void Stage::SetFoldType(size_t stagenum)
 {
 	int a = 0;
+	int b = 0;
 
 	//隣り合ったタイルが何枚あるのか
 	int NextCount = 0;
 
 	//対象のタイルの外枠
-	float NowTile_L = (stageData[stagenum].stageTileData[a].offsetX) * blockSize;
-	float NowTile_R = (stageData[stagenum].stageTileData[a].offsetX + stageData[stagenum].stageTileData[a].width) * blockSize;
-	float NowTile_U = (stageData[stagenum].stageTileData[a].offsetY) * blockSize;
-	float NowTile_D = (stageData[stagenum].stageTileData[a].offsetY + stageData[stagenum].stageTileData[a].height) * blockSize;
+	float NowTile_L;
+	float NowTile_R;
+	float NowTile_U;
+	float NowTile_D;
+
+	//対象外のタイルの外枠
+	float OtherTile_L;
+	float OtherTile_U;
+	float OtherTile_R;
+	float OtherTile_D;
 
 	//対象のタイルを順番に見ていく
 	for (a = 0; a < stageData[stagenum].stageTileData.size(); a++)
 	{
-		//ほかのタイルとの位置関係を調べる
-		for (a = 0; a < stageData[stagenum].stageTileData.size(); a++)
-		{
+		NowTile_L = (stageData[stagenum].stageTileData[a].offsetX) * blockSize;
+		NowTile_R = (stageData[stagenum].stageTileData[a].offsetX + stageData[stagenum].stageTileData[a].width) * blockSize;
+		NowTile_U = (stageData[stagenum].stageTileData[a].offsetY) * blockSize;
+		NowTile_D = (stageData[stagenum].stageTileData[a].offsetY + stageData[stagenum].stageTileData[a].height) * blockSize;
 
+		//ほかのタイルとの位置関係を調べる
+		for (b = 0; b < stageData[stagenum].stageTileData.size(); b++)
+		{
+			if (a == b)
+			{
+				continue;
+			}
+
+			//対象外タイルの外枠をセット
+			OtherTile_L = (stageData[stagenum].stageTileData[b].offsetX) * blockSize;
+			OtherTile_R = (stageData[stagenum].stageTileData[b].offsetX + stageData[stagenum].stageTileData[b].width) * blockSize;
+			OtherTile_U = (stageData[stagenum].stageTileData[b].offsetY) * blockSize;
+			OtherTile_D = (stageData[stagenum].stageTileData[b].offsetY + stageData[stagenum].stageTileData[b].height) * blockSize;
+
+			if (NowTile_L == OtherTile_L || NowTile_R == OtherTile_R)
+			{
+				stageData[stagenum].stageTileData[a].NextTileCount++;
+
+				if (stageData[stagenum].stageTileData[a].FoldType < 0)
+				{
+					if (NowTile_U < OtherTile_U)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::up;
+					}
+
+					if (NowTile_D > OtherTile_D)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::down;
+					}
+				}
+			}
+
+			if (NowTile_U == OtherTile_U || NowTile_D == OtherTile_D)
+			{
+				stageData[stagenum].stageTileData[a].NextTileCount++;
+
+				if (stageData[stagenum].stageTileData[a].FoldType < 0)
+				{
+					if (NowTile_L < OtherTile_L)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::left;
+					}
+
+					if (NowTile_R > OtherTile_R)
+					{
+						stageData[stagenum].stageTileData[a].FoldType = BodyType::right;
+					}
+				}
+			}
+		}
+
+		if (stageData[stagenum].stageTileData[a].NextTileCount >= 2)
+		{
+			stageData[stagenum].stageTileData[a].FoldType = -1;
 		}
 	}
 }
@@ -1004,8 +1067,6 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 		}
 	}
 
-	SelectTile = &stageData[selectStageNum].stageTileData[selectTileNum];
-
 	int anyActionCount = 0;
 
 	for (int a = 0; a < stageData.size(); a++)
@@ -1054,50 +1115,65 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
-	if (SelectTile->Overlap > 0)
+	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
 	{
-		return 0;
-	}
-
-	if (!SelectTile->isFold)
-	{
-		if (inputManeger->FoldUpTrigger())
+		if (!SelectStage->stageTileData[a].isFold)
 		{
-			if (IsTileFoldDirection(selectStageNum, BodyType::up))
+			if (inputManeger->FoldUpTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::up)
+			{
+				if (IsTileFoldDirection(selectStageNum, BodyType::up))
+				{
+					direction = BodyType::up;
+				}
+			}
+			else if (inputManeger->FoldDownTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::down)
+			{
+				if (IsTileFoldDirection(selectStageNum, BodyType::down))
+				{
+					direction = BodyType::down;
+				}
+			}
+			else if (inputManeger->FoldLeftTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::left)
+			{
+				if (IsTileFoldDirection(selectStageNum, BodyType::left))
+				{
+					direction = BodyType::left;
+				}
+			}
+			else if (inputManeger->FoldRightTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::right)
+			{
+				if (IsTileFoldDirection(selectStageNum, BodyType::right))
+				{
+					direction = BodyType::right;
+				}
+			}
+		}
+		else
+		{
+			if (inputManeger->OpenUpTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::up)
 			{
 				direction = BodyType::up;
 			}
-		}
-		else if (inputManeger->FoldDownTrigger() && IsTileFoldDirection(selectStageNum, BodyType::down))
-		{
-			direction = BodyType::down;
-		}
-		else if (inputManeger->FoldLeftTrigger() && IsTileFoldDirection(selectStageNum, BodyType::left))
-		{
-			direction = BodyType::left;
-		}
-		else if (inputManeger->FoldRightTrigger() && IsTileFoldDirection(selectStageNum, BodyType::right))
-		{
-			direction = BodyType::right;
-		}
-	}
-	else
-	{
-		if (inputManeger->OpenUpTrigger())
-		{
-			direction = BodyType::up;
-		}
-		else if (inputManeger->OpenDownTrigger())
-		{
-			direction = BodyType::down;
-		}
-		else if (inputManeger->OpenLeftTrigger())
-		{
-			direction = BodyType::left;
-		}
-		else if (inputManeger->OpenRightTrigger())
-		{
-			direction = BodyType::right;
+			else if (inputManeger->OpenDownTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::down)
+			{
+				direction = BodyType::down;
+			}
+			else if (inputManeger->OpenLeftTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::left)
+			{
+				direction = BodyType::left;
+			}
+			else if (inputManeger->OpenRightTrigger() &&
+				SelectStage->stageTileData[a].FoldType == BodyType::right)
+			{
+				direction = BodyType::right;
+			}
 		}
 	}
 
@@ -1110,17 +1186,10 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 		return 0;
 	}
 
-	//プレイヤーがいるタイルを選択していたら折れない(重なっていない時)
-	if (!IsNowTileOver(NowStage, NowTile) &&
-		NowStage == selectStageNum && NowTile == selectTileNum)
-	{
-		return 0;
-	}
-
-	//Open専用のコンテナに格納
+	//Fold専用のコンテナに格納
 	SetOnPlayerStageTileFold(stagenumber, onplayerstage, movestagetile, movestagedata, direction);
 
-	//Fold専用のコンテナに格納
+	//Open専用のコンテナに格納
 	SetOnPlayerStageTileOpen(stagenumber, onplayerstageOpen, movestagetileOpen, movestagedataOpen, direction);
 
 	//Fold専用のコンテナのサイズ分回す
@@ -1155,34 +1224,23 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 		return false;
 	}
 
-	for (int tile = 0; tile < stageData[stage].stageTileData.size(); tile++)
+	for (int tile = 0; tile < SelectStage->stageTileData.size(); tile++)
 	{
-		//選択していないタイルと比べる
-		if (selectTileNum == tile)
-		{
-			continue;
-		}
-
 		switch (direction)
 		{
 		case BodyType::up:
 		{
-			if (SelectTile->offsetY < stageData[stage].stageTileData[tile].offsetY)
+			if (IsPlayerPositionFold(direction))
 			{
-				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY > SelectTile->offsetY &&
-					selectStageNum == NowStage)
+				if (player->IsDirectionFoldAll(BodyType::up))
 				{
-					if (player->IsDirectionFoldAll(BodyType::up))
-					{
-						player->Player_IsAction = true;
-						player->IsUpFold = true;
-						player->FaceLeg.Set();
-					}
-					else
-					{
-						return false;
-					}
+					player->Player_IsAction = true;
+					player->IsUpFold = true;
+					player->FaceLeg.Set();
+				}
+				else
+				{
+					return false;
 				}
 				return true;
 			}
@@ -1190,22 +1248,17 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 		}
 		case BodyType::down:
 		{
-			if (SelectTile->offsetY > stageData[stage].stageTileData[tile].offsetY)
+			if (IsPlayerPositionFold(direction))
 			{
-				if (stageData[NowStage].stageTileData[NowTile].offsetX == SelectTile->offsetX &&
-					stageData[NowStage].stageTileData[NowTile].offsetY < SelectTile->offsetY &&
-					selectStageNum == NowStage)
+				if (player->IsDirectionFoldAll(BodyType::down))
 				{
-					if (player->IsDirectionFoldAll(BodyType::down))
-					{
-						player->Player_IsAction = true;
-						player->IsDownFold = true;
-						player->FaceLeg.Set();
-					}
-					else
-					{
-						return false;
-					}
+					player->Player_IsAction = true;
+					player->IsDownFold = true;
+					player->FaceLeg.Set();
+				}
+				else
+				{
+					return false;
 				}
 				return true;
 			}
@@ -1213,25 +1266,20 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 		}
 		case BodyType::left:
 		{
-			if (SelectTile->offsetX < stageData[stage].stageTileData[tile].offsetX)
+			if (IsPlayerPositionFold(direction))
 			{
-				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX > SelectTile->offsetX &&
-					selectStageNum == NowStage)
+				if (player->Player_IsAction == false && player->Body_One.IsActivate &&
+					player->Body_One.IsFold == false && !player->Body_One.IsAction)
 				{
-					if (player->Player_IsAction == false && player->Body_One.IsActivate &&
-						player->Body_One.IsFold == false && !player->Body_One.IsAction)
+					if (player->IsDirectionFoldAll(BodyType::left))
 					{
-						if (player->IsDirectionFoldAll(BodyType::left))
-						{
-							player->Player_IsAction = true;
-							player->IsLeftFold = true;
-							player->FaceLeg.Set();
-						}
-						else
-						{
-							return false;
-						}
+						player->Player_IsAction = true;
+						player->IsLeftFold = true;
+						player->FaceLeg.Set();
+					}
+					else
+					{
+						return false;
 					}
 				}
 				return true;
@@ -1240,28 +1288,86 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 		}
 		case BodyType::right:
 		{
-			if (SelectTile->offsetX > stageData[stage].stageTileData[tile].offsetX)
+			if (IsPlayerPositionFold(direction))
 			{
-				if (stageData[NowStage].stageTileData[NowTile].offsetY == SelectTile->offsetY &&
-					stageData[NowStage].stageTileData[NowTile].offsetX < SelectTile->offsetX &&
-					selectStageNum == NowStage)
+				if (player->IsDirectionFoldAll(BodyType::right))
 				{
-					if (player->IsDirectionFoldAll(BodyType::right))
-					{
-						player->Player_IsAction = true;
-						player->IsRightFold = true;
-						player->FaceLeg.Set();
-					}
-					else
-					{
-						return false;
-					}
+					player->Player_IsAction = true;
+					player->IsRightFold = true;
+					player->FaceLeg.Set();
+				}
+				else
+				{
+					return false;
 				}
 				return true;
 			}
 			break;
 		}
 		default:
+			break;
+		}
+	}
+
+	return false;
+}
+
+bool Stage::IsPlayerPositionFold(int FoldType)
+{
+	StageTileData* ThisTile = {};
+
+	//セレクトステージのタイル数分だけ回す
+	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
+	{
+		//プレイヤーのいるタイルは飛ばす
+		if (IsPlayerTile(selectStageNum, a) == true ||
+			stageData[selectStageNum].stageTileData[a].FoldType != FoldType)
+		{
+			continue;
+		}
+
+		ThisTile = &stageData[selectStageNum].stageTileData[a];
+
+		switch (FoldType)
+		{
+		case BodyType::left:
+			if ((ThisTile->offsetX + ThisTile->width) * blockSize + 26 < player->CenterPosition.x &&
+				(ThisTile->offsetX + ThisTile->width) * blockSize + 300 > player->CenterPosition.x &&
+				(ThisTile->offsetY) * blockSize < player->CenterPosition.y &&
+				(ThisTile->offsetY + ThisTile->height) * blockSize > player->CenterPosition.y)
+			{
+				return true;
+			}
+			break;
+
+		case BodyType::right:
+			if ((ThisTile->offsetX) * blockSize - 26 > player->CenterPosition.x &&
+				(ThisTile->offsetX) * blockSize - 300 < player->CenterPosition.x &&
+				(ThisTile->offsetY) * blockSize < player->CenterPosition.y &&
+				(ThisTile->offsetY + ThisTile->height) * blockSize > player->CenterPosition.y)
+			{
+				return true;
+			}
+			break;
+
+		case BodyType::up:
+			if ((ThisTile->offsetY + ThisTile->height) * blockSize + 26 < player->CenterPosition.y &&
+				(ThisTile->offsetY + ThisTile->height) * blockSize + 300 > player->CenterPosition.y &&
+				(ThisTile->offsetX) * blockSize < player->CenterPosition.x &&
+				(ThisTile->offsetX + ThisTile->width) * blockSize > player->CenterPosition.x)
+			{
+				return true;
+			}
+			break;
+
+		case BodyType::down:
+			if ((ThisTile->offsetY) * blockSize - 26 > player->CenterPosition.y &&
+				(ThisTile->offsetY) * blockSize - 300 < player->CenterPosition.y &&
+				(ThisTile->offsetX) * blockSize < player->CenterPosition.x &&
+				(ThisTile->offsetX + ThisTile->width) * blockSize > player->CenterPosition.x)
+			{
+				return true;
+			}
 			break;
 		}
 	}
@@ -1644,49 +1750,42 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 		return;
 	}
 
-	for (int a = 0; a < stageData.size(); a++)
-	{
-		//タイルの数が１枚しかないステージは折れない
-		if (stageData[a].stageTileData.size() <= 1)
-		{
-			continue;
-		}
 
-		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
+	{
+		if (stageData[selectStageNum].stageTileData[b].FoldType == direction &&
+			stageData[selectStageNum].stageTileData[b].Overlap <= 0)
 		{
-			if (a == selectStageNum && b == selectTileNum && SelectTile->Overlap == 0)
+			switch (direction)
 			{
-				switch (direction)
-				{
-				case BodyType::up:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				case BodyType::down:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				case BodyType::left:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				case BodyType::right:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-					break;
-				}
-				}
+			case BodyType::up:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
+				break;
+			}
+			case BodyType::down:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
+				break;
+			}
+			case BodyType::left:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
+				break;
+			}
+			case BodyType::right:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
+				break;
+			}
 			}
 		}
 	}
@@ -1707,122 +1806,115 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 
 	StageTileData* playertiles = &stageData[NowStage].stageTileData[NowTile];
 
-	//テンプレfor文
-	for (int a = 0; a < stageData.size(); a++)
+
+	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
 	{
-		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		//タイルが折られているかつ、折られた方向が開く方向と一致していたら
+		if (SelectStage->stageTileData[b].isFold == true &&
+			SelectStage->stageTileData[b].FoldType == direction)
 		{
-			if (selectStageNum != a || selectTileNum != b)
+			//方向ごとに格納していく
+			switch (direction)
 			{
-				continue;
+			case BodyType::up:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
+
+				if (IsPositionTile(player->CenterPosition, selectStageNum, b) ||
+					(NowStage == selectStageNum &&
+						(playertiles->offsetX <= stageData[selectStageNum].stageTileData[b].offsetX + stageData[selectStageNum].stageTileData[b].width) &&
+						playertiles->offsetX + playertiles->width >= stageData[selectStageNum].stageTileData[b].offsetX))
+				{
+					if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
+						player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
+						player->IsUpBlocked)
+					{
+						if (player->IsOpenBlock(BodyType::up))
+						{
+							player->OpenCount = 0;
+							player->IsOpenCountStart = true;
+							player->IsUpOpen = true;
+						}
+					}
+				}
+				break;
 			}
-			//タイルが折られているかつ、折られた方向が開く方向と一致していたら
-			if (stageData[a].stageTileData[b].isFold == true &&
-				stageData[a].stageTileData[b].FoldDirection == direction)
+			case BodyType::down:
 			{
-				//方向ごとに格納していく
-				switch (direction)
-				{
-				case BodyType::up:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
 
-					if (IsPositionTile(player->CenterPosition, a, b) ||
-						(NowStage == a &&
-							(playertiles->offsetX <= stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) &&
-							playertiles->offsetX + playertiles->width >= stageData[a].stageTileData[b].offsetX))
+				if (IsPositionTile(player->CenterPosition, selectStageNum, b) ||
+					(NowStage == selectStageNum &&
+						(playertiles->offsetX <= stageData[selectStageNum].stageTileData[b].offsetX + stageData[selectStageNum].stageTileData[b].width) &&
+						playertiles->offsetX + playertiles->width >= stageData[selectStageNum].stageTileData[b].offsetX))
+				{
+					if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
+						player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction)
 					{
-						if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
-							player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
-							player->IsUpBlocked)
+						if (player->IsOpenBlock(BodyType::down))
 						{
-							if (player->IsOpenBlock(BodyType::up))
-							{
-								player->OpenCount = 0;
-								player->IsOpenCountStart = true;
-								player->IsUpOpen = true;
-							}
+							player->OpenCount = 0;
+							player->IsOpenCountStart = true;
+							player->IsDownOpen = true;
 						}
 					}
-					break;
 				}
-				case BodyType::down:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
+				break;
+			}
+			case BodyType::left:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
 
-					if (IsPositionTile(player->CenterPosition, a, b) ||
-						(NowStage == a &&
-							(playertiles->offsetX <= stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) &&
-							playertiles->offsetX + playertiles->width >= stageData[a].stageTileData[b].offsetX))
+				if (IsPositionTile(player->CenterPosition, selectStageNum, b) ||
+					(NowStage == selectStageNum &&
+						(playertiles->offsetY <= stageData[selectStageNum].stageTileData[b].offsetY + stageData[selectStageNum].stageTileData[b].height) &&
+						playertiles->offsetY + playertiles->height >= stageData[selectStageNum].stageTileData[b].offsetY))
+				{
+					if (player->Body_One.IsActivate && player->Body_One.IsFold &&
+						player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction)
 					{
-						if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
-							player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction)
+						if (player->IsOpenBlock(BodyType::left))
 						{
-							if (player->IsOpenBlock(BodyType::down))
-							{
-								player->OpenCount = 0;
-								player->IsOpenCountStart = true;
-								player->IsDownOpen = true;
-							}
+							player->OpenCount = 0;
+							player->IsOpenCountStart = true;
+							player->IsLeftOpen = true;
 						}
 					}
-					break;
 				}
-				case BodyType::left:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
+				break;
+			}
+			case BodyType::right:
+			{
+				stagenumber.push_back(selectStageNum);
+				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
+				moveStageData.push_back(b);
 
-					if (IsPositionTile(player->CenterPosition, a, b) ||
-						(NowStage == a &&
-							(playertiles->offsetY <= stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) &&
-							playertiles->offsetY + playertiles->height >= stageData[a].stageTileData[b].offsetY))
+				if (IsPositionTile(player->CenterPosition, selectStageNum, b) ||
+					(NowStage == selectStageNum &&
+						(playertiles->offsetY <= stageData[selectStageNum].stageTileData[b].offsetY + stageData[selectStageNum].stageTileData[b].height) &&
+						playertiles->offsetY + playertiles->height >= stageData[selectStageNum].stageTileData[b].offsetY))
+				{
+					if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
+						player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction)
 					{
-						if (player->Body_One.IsActivate && player->Body_One.IsFold &&
-							player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction)
+						if (player->IsOpenBlock(BodyType::right))
 						{
-							if (player->IsOpenBlock(BodyType::left))
-							{
-								player->OpenCount = 0;
-								player->IsOpenCountStart = true;
-								player->IsLeftOpen = true;
-							}
+							player->OpenCount = 0;
+							player->IsOpenCountStart = true;
+							player->IsRightOpen = true;
 						}
 					}
-					break;
 				}
-				case BodyType::right:
-				{
-					stagenumber.push_back(a);
-					onplayerstage.push_back(stageData[a].stageTileData[b].stageNumber);
-					moveStageData.push_back(selectTileNum);
-
-					if (IsPositionTile(player->CenterPosition, a, b) ||
-						(NowStage == a &&
-							(playertiles->offsetY <= stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) &&
-							playertiles->offsetY + playertiles->height >= stageData[a].stageTileData[b].offsetY))
-					{
-						if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
-							player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction)
-						{
-							if (player->IsOpenBlock(BodyType::right))
-							{
-								player->OpenCount = 0;
-								player->IsOpenCountStart = true;
-								player->IsRightOpen = true;
-							}
-						}
-					}
-					break;
-				}
-				default:
-					break;
-				}
+				break;
+			}
+			default:
+				break;
 			}
 		}
 	}

@@ -222,6 +222,8 @@ public: //メンバ変数
 	//下に体があるかどうか
 	bool IsDownBody;
 
+	bool isRespawn; //リスポーンするかどうか
+
 	//足
 	PlayerFoot FaceLeg;
 
