@@ -1,5 +1,7 @@
 #pragma once
 #include "Sprite.h"
+#include "RVector.h"
+#include "Easing.h"
 
 class Tutorial
 {
@@ -68,4 +70,11 @@ private:
 	Sprite jumpSprite;
 	Sprite foldSprite;
 	Sprite selectSprite;
+
+	bool isEase;             //イージング中かどうか
+	TutorialState easeState; //どのチュートリアルが動いているか
+	float timeRate;
+	RVector3 startPos; //イージングの開始位置
+	RVector3 endPos;   //イージングの終了位置
+	RVector3 easePos;  //イージング中の座標
 };
