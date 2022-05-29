@@ -101,6 +101,9 @@ public: //サブクラス
 		//折られている場合の方向
 		int FoldDirection = -1;
 
+		//このタイルがどの方向に折れるのか
+		int FoldType = -1;
+
 		//上に重なっている枚数
 		int Overlap = 0;
 
@@ -173,7 +176,14 @@ public: //メンバ関数
 	/// <returns> 0で成功、0以外で失敗 </returns>
 	int LoadStage(const char* fileHandle, unsigned char playerTileArray[4]);
 
+	//同一ステージ内での位置関係を計算する
+	void SetFoldType(size_t stagenum);
+
+	//折るステージを選択
 	void SelectingStageTile();
+
+	//選択したステージの描画座標セット
+	void SetSelectStageFrame(size_t SelectStageNum);
 
 	// ステージを折る・開く
 	int FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4]);
@@ -343,36 +353,44 @@ private: //メンバ変数
 	std::vector<StageData> initStageData;
 
 	StageTileData* SelectTile;
+	StageData* SelectStage;
 	size_t selectStageNum = 0;
 	size_t selectTileNum = 0;
 
 	char* reverseMapchip;
 
+	//(左端、上端、下端)
+	std::vector<RVector3> SelectFrame_L;
+
+	//(左端、右端、上端)
+	std::vector<RVector3> SelectFrame_U;
+
+	//(右端、上端、下端)
+	std::vector<RVector3> SelectFrame_R;
+
+	//(左端、右端、下端)
+	std::vector<RVector3> SelectFrame_D;
+
 	//折り目の画像ハンドル
 	UINT lineHandle;
 	//ブロックの画像ハンドル
-	//UINT BlocksHandle[4];
 	UINT AllBlockHandle[4][16];
-	UINT Bule_BlocksHandle[15];
-	UINT Green_BlocksHandle[15];
-	UINT Red_BlocksHandle[15];
-	UINT Yellow_BlocksHandle[15];
 	//空白の画像ハンドル
 	UINT EmptyHandle;
 	//ゴールの画像ハンドル
 	UINT GoalHandle;
+	//選択しているステージのハンドル
+	UINT SelectFrameHandle;
 
 	//折り目のスプライト
 	Sprite lineSprite;
 	//ブロックのスプライト
-	//Sprite MapchipSpriteBlocks[4];
 	Sprite AllBlockSprite[4][16];
 	//空白のスプライト
 	Sprite MapchipSpriteEmpty;
 	//ゴールのスプライト
 	Sprite MapchipSpriteGoal;
-
-	//タイル選択アイコンのスプライト
+	//選択しているステージのスプライト(左から時計回り)
 	Sprite SelectIconSprite[4];
 
 	bool IsParticleTrigger;
