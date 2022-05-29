@@ -29,7 +29,9 @@ public: //メンバ関数
 	void Reset();
 
 	// チュートリアルを開始する
-	void StartTutorial();
+	void StartNormalTutorial();
+	// チュートリアルを開始する
+	void StartSelectTutorial();
 	// チュートリアル中かどうか
 	inline bool GetTutorialFlag() { return isTutorial; }
 
@@ -39,10 +41,9 @@ public: //メンバ変数
 private:
 	bool isTutorial;
 	TutorialState tutorialState;
-	bool isMoveTutorial;
-	bool isJumpTutorial;
-	bool isFoldTutorial;
 	bool isFirst;
+	bool isNormal;
+	bool isSelect;
 
 	//画像ハンドル
 	Sprite moveSprite;
