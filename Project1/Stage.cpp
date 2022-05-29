@@ -948,8 +948,6 @@ void Stage::SetSelectStageFrame(size_t SelectStageNum)
 	int a = 0;
 	int b = 0;
 
-	XMFLOAT2 SetOffsets = {};
-
 	//対象のタイルの外枠
 	float NowTile_L;
 	float NowTile_U;
@@ -968,6 +966,12 @@ void Stage::SetSelectStageFrame(size_t SelectStageNum)
 	bool IsNext_R = false;
 	bool IsNext_D = false;
 
+	//セットする用の変数
+	RVector3 Set_L = {};
+	RVector3 Set_U = {};
+	RVector3 Set_R = {};
+	RVector3 Set_D = {};
+
 	//指定したステージの頭からタイルを見ていく
 	for (a = 0; a < stageData[SelectStageNum].stageTileData.size(); a++)
 	{
@@ -981,6 +985,11 @@ void Stage::SetSelectStageFrame(size_t SelectStageNum)
 		IsNext_U = false;
 		IsNext_R = false;
 		IsNext_D = false;
+
+		Set_L = { -1,-1,-1 };
+		Set_U = { -1,-1,-1 };
+		Set_R = { -1,-1,-1 };
+		Set_D = { -1,-1,-1 };
 
 		//ほかのタイルと比べていく
 		for (b = 0; b < stageData[SelectStageNum].stageTileData.size(); b++)
@@ -997,37 +1006,105 @@ void Stage::SetSelectStageFrame(size_t SelectStageNum)
 			OtherTile_U = (stageData[SelectStageNum].stageTileData[b].offsetY) * blockSize;
 			OtherTile_D = (stageData[SelectStageNum].stageTileData[b].offsetY + stageData[SelectStageNum].stageTileData[b].height) * blockSize;
 
-			//同じサイズのタイル同士の場合
-			if (NowTile_R - NowTile_L == OtherTile_R - OtherTile_L &&
-				NowTile_D - NowTile_U == OtherTile_D - OtherTile_U)
+
+			//縦並びだった場合
+			if (NowTile_L == OtherTile_L || NowTile_R == OtherTile_R)
 			{
-				//縦並びだった場合
-				if (NowTile_L == OtherTile_L)
+				//上側にあるかどうか
+				if (NowTile_U > OtherTile_U)
 				{
-					//上側にあるかどうか
-					if (NowTile_U > OtherTile_U)
-					{
-						IsNext_U = true;
-					}
-					//下側にあるかどうか
-					if (NowTile_D < OtherTile_D)
-					{
-						IsNext_D = true;
-					}
+					IsNext_U = true;
+				}
+				//下側にあるかどうか
+				if (NowTile_D < OtherTile_D)
+				{
+					IsNext_D = true;
 				}
 
-				//横並びだった場合
-				if (NowTile_U == OtherTile_U)
+				//片方の幅が大きかった場合
+				if (stageData[SelectStageNum].stageTileData[a].width > stageData[SelectStageNum].stageTileData[b].width)
 				{
-					//左側にあるかどうか
-					if (NowTile_L > OtherTile_L)
+					if (NowTile_L < OtherTile_L)
 					{
-						IsNext_L = true;
+						Set_U =
+						{
+							OtherTile_L - (OtherTile_L - NowTile_L),
+							OtherTile_L,
+							NowTile_U
+						};
+						Set_D =
+						{
+							OtherTile_L - (OtherTile_L - NowTile_L),
+							OtherTile_L,
+							NowTile_D
+						};
 					}
-					//右側にあるかどうか
-					if (NowTile_R < OtherTile_R)
+
+					if (NowTile_R > OtherTile_R)
 					{
-						IsNext_R = true;
+						Set_U =
+						{
+							OtherTile_R,
+							OtherTile_R + (NowTile_R - OtherTile_R),
+							NowTile_U
+						};
+						Set_D =
+						{
+							OtherTile_R,
+							OtherTile_R + (NowTile_R - OtherTile_R),
+							NowTile_D
+						};
+					}
+				}
+			}
+
+			//横並びだった場合
+			if (NowTile_U == OtherTile_U || NowTile_D == OtherTile_D)
+			{
+				//左側にあるかどうか
+				if (NowTile_L > OtherTile_L)
+				{
+					IsNext_L = true;
+				}
+				//右側にあるかどうか
+				if (NowTile_R < OtherTile_R)
+				{
+					IsNext_R = true;
+				}
+
+				//片方の幅が大きかった場合
+				if (stageData[SelectStageNum].stageTileData[a].height > stageData[SelectStageNum].stageTileData[b].height)
+				{
+					if (NowTile_U < OtherTile_U)
+					{
+						Set_L =
+						{
+							NowTile_L,
+							NowTile_U,
+							NowTile_U + (OtherTile_U - NowTile_U)
+						};
+						Set_R =
+						{
+							NowTile_R,
+							NowTile_U,
+							NowTile_U + (OtherTile_U - NowTile_U)
+						};
+					}
+
+					if (NowTile_D > OtherTile_D)
+					{
+						Set_L =
+						{
+							NowTile_L,
+							NowTile_D - (NowTile_D - OtherTile_D),
+							NowTile_D
+						};
+						Set_R =
+						{
+							NowTile_R,
+							NowTile_D - (NowTile_D - OtherTile_D),
+							NowTile_D
+						};
 					}
 				}
 			}
@@ -1050,7 +1127,26 @@ void Stage::SetSelectStageFrame(size_t SelectStageNum)
 		{
 			SelectFrame_R.push_back({ NowTile_R,NowTile_U,NowTile_D });
 		}
+
+		if (Set_U.x != -1)
+		{
+			SelectFrame_U.push_back(Set_U);
+		}
+		if (Set_D.x != -1)
+		{
+			SelectFrame_D.push_back(Set_D);
+		}
+		if (Set_L.x != -1)
+		{
+			SelectFrame_L.push_back(Set_L);
+		}
+		if (Set_R.x != -1)
+		{
+			SelectFrame_R.push_back(Set_R);
+		}
 	}
+
+	return;
 }
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
