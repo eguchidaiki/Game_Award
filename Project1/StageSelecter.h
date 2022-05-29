@@ -98,11 +98,6 @@ public:
 private:
 	int _nowStageNumber = 0;
 
-	//ステージ選択画面のリソース
-	std::array<Sprite, 20> selectImg_1_4;
-	std::array<Sprite, 20> selectImg_5_8;
-	std::array<Sprite, 20> selectImg_9_12;
-	std::array<Sprite, 20> selectImg_13_16;
 	//番号
 	std::array<Sprite, 20> stageNumIcon;
 	//ステージ背景

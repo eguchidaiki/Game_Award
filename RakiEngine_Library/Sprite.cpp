@@ -525,6 +525,8 @@ void Sprite::InstanceUpdate()
 
 void Sprite::Draw()
 {
+    if (spdata->insWorldMatrixes.size() <= 0) { return; }
+
     SpriteManager::Get()->SetCommonBeginDraw();
 
     //�C���X�^���V���O�f�[�^�X�V

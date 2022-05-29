@@ -119,6 +119,7 @@
     </ClCompile>
     <ClCompile Include="SceneChangeDirection.cpp" />
     <ClCompile Include="ButtonUI.cpp" />
+    <ClCompile Include="SChangeDir.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -207,6 +208,7 @@
     </ClInclude>
     <ClInclude Include="SceneChangeDirection.h" />
     <ClInclude Include="ButtonUI.h" />
+    <ClInclude Include="SChangeDir.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\block.png">

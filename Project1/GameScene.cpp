@@ -4,6 +4,7 @@
 
 #include "InputManger.h"
 #include "NY_random.h"
+#include "SChangeDir.h"
 
 GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 {
@@ -23,6 +24,7 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 	gamemain->selecterPtr = selecter.get();
 	gamemain->Init();
 
+	SChangeDir::Get()->PlayChangedDirection();
 }
 
 //初期化
@@ -41,12 +43,18 @@ void GameScene::Update()
 	case GameScene::is_Select:
 		//ステージセレクト画面の処理
 		selecter->Update();
-		if (selecter->GetMoveGameMain())
+		if (selecter->GetMoveGameMain() && !SChangeDir::Get()->isChangeingDirecting && !SChangeDir::Get()->isChangeActivate)
 		{
+			SChangeDir::Get()->PlayChangingDirection();
+		}
+		if (SChangeDir::Get()->isChangeActivate) {
 			gamemain->SetSelectToGame(selecter->SelectStageNum);
 			selecter->isChanging_GameMain = false;
+			//セレクター終了
+			selecter->Finalize();
 			nowState = is_Game;
 			InputManger::isMenu = true;
+			SChangeDir::Get()->PlayChangedDirection();
 		}
 
 		break;
@@ -55,13 +63,17 @@ void GameScene::Update()
 	case GameScene::is_Game:
 		//ゲーム本編の処理
 		gamemain->Update();
-		if (gamemain->IsGoSelect == true)
+		if (gamemain->IsGoSelect == true && !SChangeDir::Get()->isChangeingDirecting && !SChangeDir::Get()->isChangeActivate)
 		{
+			SChangeDir::Get()->PlayChangingDirection();
+		}
+		if (SChangeDir::Get()->isChangeActivate) {
 			gamemain->SetGameToSelect();
 			selecter->isChanging_GameMain = false;
 			selecter->state = selecter->is_selecting;
 			nowState = is_Select;
 			InputManger::isMenu = false;
+			SChangeDir::Get()->PlayChangedDirection();
 		}
 
 		break;

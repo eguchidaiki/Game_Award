@@ -11,6 +11,7 @@
 #include "ActFlag.h"
 #include "InputManger.h"
 #include "RenderTargetManager.h"
+#include "SChangeDir.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -55,6 +56,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     SceneManager *smgr;
     smgr = new SceneManager;
 
+    SChangeDir::Get()->Init();
+    SChangeDir::Get()->PlayChangedDirection();
+
 #pragma endregion GameValue
 
     FPS::Get()->Start();
@@ -70,6 +74,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         smgr->Update();
 
+        SChangeDir::Get()->Update();
+
         if (InputManger::Get()->Escape())
         {
             break;
@@ -78,6 +84,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         RenderTargetManager::GetInstance()->CrearAndStartDraw();
 
         smgr->Draw();
+
+        SChangeDir::Get()->Draw();
 
         RenderTargetManager::GetInstance()->SwapChainBufferFlip();
 
