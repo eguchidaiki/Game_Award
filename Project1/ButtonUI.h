@@ -14,6 +14,10 @@ private:
 	int activateTimerag = 0;
 	//フレームカウント
 	int count = 0;
+	//イージングスケーリング
+	const float EASE_SCALE_X = 0.7f, EASE_SCALE_Y = 0.7f;
+	const float EASE_SCALE_START_X = 1.0f;
+	float easeScaleX = 1.0f, easeSceleY = 1.0f;
 
 public:
 	//このボタンはユーザーによって押されたか？

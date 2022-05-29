@@ -28,8 +28,7 @@ void StageSelecter::Init()
 {
 	LoadSprite();
 
-	//
-	float icon_posx_offset = static_cast<float>(Raki_WinAPI::window_width) / 6.0f;
+	float icon_posx_offset = static_cast<float>(Raki_WinAPI::window_width) / 5.0f;
 	float icon_posy_offset = Raki_WinAPI::window_height / 2;
 
 	float icon_x_offsets[4] = {};
@@ -45,7 +44,7 @@ void StageSelecter::Init()
 		graphArrays = LoadStageIcons(i);
 
 		stagePage[i].Init(icon_x_offsets, icon_y_offsets, graphArrays, cursorRHandle, cursorRHandle
-			, RVector3(0 + (i * 10), 0, 0));
+			, RVector3(0, 0, 0));
 	}
 
 	nowpage = page_1_4;
@@ -78,31 +77,6 @@ void StageSelecter::Update()
 
 void StageSelecter::Draw()
 {
-	//switch (displayPage)
-	//{
-	//case StageSelecter::page_1_4:
-	//	selectImg_1_4[nowDisplayNum].DrawSprite(0, 0);
-	//	selectImg_1_4[nowDisplayNum].Draw();
-	//	break;
-	//case StageSelecter::page_5_8:
-	//	selectImg_5_8[nowDisplayNum].DrawSprite(0, 0);
-	//	selectImg_5_8[nowDisplayNum].Draw();
-	//	break;
-	//case StageSelecter::page_9_12:
-	//	selectImg_9_12[nowDisplayNum].DrawSprite(0, 0);
-	//	selectImg_9_12[nowDisplayNum].Draw();
-	//	break;
-	//case StageSelecter::page_13_16:
-	//	selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
-	//	selectImg_13_16[nowDisplayNum].Draw();
-	//	break;
-
-	//case StageSelecter::page_17_20:
-	//	selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
-	//	selectImg_13_16[nowDisplayNum].Draw();
-	//default:
-	//	break;
-	//}
 
 	for (int i = stagePage.size() - 1; i >= 0; i--) {
 		stagePage[i].Draw();
@@ -127,7 +101,7 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
-
+	Audio::StopLoadedSound(menuBGM);
 }
 
 void StageSelecter::GoNextStage()
@@ -161,31 +135,6 @@ void StageSelecter::LoadSprite()
 	std::string fullImgPath = "Resources/selectAnime/";
 	std::string filename = ".png";
 
-	std::string page_1_4 = "1-4/";
-	std::string page_5_8 = "5-8/";
-	std::string page_9_12 = "9-12/";
-	std::string page_13_16 = "13-16/";
-
-	std::string imageName_1_4 = "select1-4 ";
-	std::string imageName_5_8 = "select5-8 ";
-	std::string imageName_9_12 = "select9-12 ";
-	std::string imageName_13_16 = "select13-16 ";
-
-	for (int i = 0; i < 20; i++)
-	{
-		std::string number = std::to_string(i + 1);
-		std::string fullnumber = "(" + number + ")";
-
-		std::string fullpath_1_4 = fullImgPath + page_1_4 + imageName_1_4 + fullnumber + filename;
-		std::string fullpath_5_8 = fullImgPath + page_5_8 + imageName_5_8 + fullnumber + filename;
-		std::string fullpath_9_12 = fullImgPath + page_9_12 + imageName_9_12 + fullnumber + filename;
-		std::string fullpath_13_16 = fullImgPath + page_13_16 + imageName_13_16 + fullnumber + filename;
-
-		selectImg_1_4[i].Create(TexManager::LoadTexture(fullpath_1_4));
-		selectImg_5_8[i].Create(TexManager::LoadTexture(fullpath_5_8));
-		selectImg_9_12[i].Create(TexManager::LoadTexture(fullpath_9_12));
-		selectImg_13_16[i].Create(TexManager::LoadTexture(fullpath_13_16));
-	}
 	selectCursor.CreateAndSetDivisionUVOffsets(cursorSpriteCount, 2, 2, 50, 50, TexManager::LoadTexture("Resources/UI/Cursor/stageSelect.png"));
 	//selectCursor.Create(TexManager::LoadTexture("Resources/UI/Cursor.png"));
 	SelectLeft.Create(TexManager::LoadTexture(fullImgPath + "SelectLeft" + filename));
@@ -310,8 +259,6 @@ void StageSelecter::CheckToStageChangeInput()
 	if (selected) { 
 		CheckLoadStage(select_Stage_num);
 		state = is_stageSelected_waiting; 
-		
-		Audio::StopLoadedSound(menuBGM);
 		//これでステージ開始
 		isChanging_GameMain = true;
 	}

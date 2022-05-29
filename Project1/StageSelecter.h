@@ -34,7 +34,7 @@ public:
 	bool isMustMoving = true;
 	//イージング関連
 	RVector3 easeTarget;
-	RVector3 easeStart = { -1280,-720,0 };
+	RVector3 easeStart = { -1280,0,0 };
 	//描画座標左上
 	RVector3 drawLTpos;
 	//イージング最大フレーム
@@ -97,16 +97,6 @@ public:
 
 private:
 	int _nowStageNumber = 0;
-
-	//ステージ選択画面のリソース
-	std::array<Sprite, 20> selectImg_1_4;
-	std::array<Sprite, 20> selectImg_5_8;
-	std::array<Sprite, 20> selectImg_9_12;
-	std::array<Sprite, 20> selectImg_13_16;
-	//番号
-	std::array<Sprite, 20> stageNumIcon;
-	//ステージ背景
-	std::array<Sprite, 20> stageBack;
 
 	//ページ
 	std::array<Page, 5> stagePage;

@@ -180,6 +180,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SceneChangeDirection.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SChangeDir.cpp" />
     <ClCompile Include="stage.cpp" />
     <ClCompile Include="StageClearedControler.cpp" />
     <ClCompile Include="StageSelecter.cpp" />
@@ -296,6 +297,7 @@
     <ClInclude Include="PlayerFoot.h" />
     <ClInclude Include="SceneChangeDirection.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SChangeDir.h" />
     <ClInclude Include="stage.h" />
     <ClInclude Include="StageClearedControler.h" />
     <ClInclude Include="StageSelecter.h" />

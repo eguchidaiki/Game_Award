@@ -25,7 +25,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 //初期化
 void Title::Initialize()
 {
-
+	SChangeDir::Get()->PlayChangedDirection();
 }
 
 void Title::Finalize()
@@ -45,7 +45,12 @@ void Title::Update()
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		if (inputManger->DecisionTrigger()) { mSceneChanger->ChangeScene(eScene_Game); }
+		if (inputManger->DecisionTrigger()) { 
+			SChangeDir::Get()->PlayChangingDirection();
+		}
+		if (SChangeDir::Get()->isChangeActivate) {
+			mSceneChanger->ChangeScene(eScene_Game);
+		}
 
 		break;
 	case Title::is_end:

@@ -1,5 +1,6 @@
 #include "StageClearedControler.h"
 #include "InputManger.h"
+#include "SChangeDir.h"
 
 namespace
 {
@@ -62,7 +63,6 @@ void StageClearedControler::ControlActivate()
 	//演出状態に移行
 	ctrl_state = CONTROL_ACTIVE;
 
-
 	goalEffect->Play();
 }
 
@@ -111,6 +111,7 @@ void StageClearedControler::Update_CheckControlStates()
 			if (user_selecting == 1) { _go_select_button.UI_Push(); }
 
 			ctrl_state = CONTROL_UI_SELECTED;
+			SChangeDir::Get()->PlayChangingDirection();
 		}
 
 		break;
@@ -148,8 +149,9 @@ void StageClearedControler::Update_ControlMain()
 	case StageClearedControler::CONTROL_UI_SELECTED:
 		//UI選択後更新処理
 
-		//次ステージへの移動許可
-		if (_go_next_button.isFunctionActivate || _go_select_button.isFunctionActivate) { isAllowSwitching = true; }
+		if (SChangeDir::Get()->isChangeActivate) {
+			isAllowSwitching = true;
+		}
 
 		break;
 

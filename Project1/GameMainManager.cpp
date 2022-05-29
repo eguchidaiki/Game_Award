@@ -3,6 +3,7 @@
 #include "Raki_DX12B.h"
 #include "Stage.h"
 #include "Player.h"
+#include "SChangeDir.h"
 
 namespace
 {
@@ -77,10 +78,7 @@ void GameMainManager::Update()
 	{
 		changecount++;
 
-		if (changecount > 20)
-		{
-			IsGoSelect = true;
-		}
+		Audio::StopLoadedSound(playBGM);
 	}
 
 	//クリアフラグが立ったら遷移演出、セレクトに移動する処理を書きたい所存
@@ -162,6 +160,7 @@ void GameMainManager::GameInstanceUpdate()
 			player->IsOpenCountStart = false;
 		}
 
+
 		//ゴールした判定？
 		if (player->IsGoal && !Ischangecount)
 		{
@@ -207,6 +206,8 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	{
 		tutorial.StartSelectTutorial();
 	}
+
+	SChangeDir::Get()->PlayChangedDirection();
 }
 
 void GameMainManager::SetGameToSelect()
@@ -217,6 +218,11 @@ void GameMainManager::SetGameToSelect()
 	changecount = 0;
 
 	tutorial.Init();
+}
+
+StageClearedControler* GameMainManager::GetSCCtrl()
+{
+	return &stageClearCtrl;
 }
 
 void GameMainManager::GameInstanceDraw()

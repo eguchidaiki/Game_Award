@@ -11,6 +11,8 @@
 #include "Stage.h"
 #include "Tutorial.h"
 
+#include "SChangeDir.h"
+
 enum NowState
 {
 	title,
