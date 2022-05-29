@@ -98,11 +98,6 @@ public:
 private:
 	int _nowStageNumber = 0;
 
-	//番号
-	std::array<Sprite, 20> stageNumIcon;
-	//ステージ背景
-	std::array<Sprite, 20> stageBack;
-
 	//ページ
 	std::array<Page, 5> stagePage;
 

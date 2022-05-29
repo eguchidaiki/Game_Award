@@ -20,9 +20,11 @@ GameScene::GameScene(ISceneChanger* changer) : BaseScene(changer)
 
 	selecter.reset(new StageSelecter);
 	selecter->Init();
+
 	gamemain.reset(new GameMainManager);
 	gamemain->selecterPtr = selecter.get();
 	gamemain->Init();
+
 
 	SChangeDir::Get()->PlayChangedDirection();
 }
@@ -55,6 +57,7 @@ void GameScene::Update()
 			nowState = is_Game;
 			InputManger::isMenu = true;
 			SChangeDir::Get()->PlayChangedDirection();
+
 		}
 
 		break;
@@ -63,11 +66,9 @@ void GameScene::Update()
 	case GameScene::is_Game:
 		//ゲーム本編の処理
 		gamemain->Update();
-		if (gamemain->IsGoSelect == true && !SChangeDir::Get()->isChangeingDirecting && !SChangeDir::Get()->isChangeActivate)
+		//ステージ選択への遷移命令
+		if (gamemain->IsGoSelect)
 		{
-			SChangeDir::Get()->PlayChangingDirection();
-		}
-		if (SChangeDir::Get()->isChangeActivate) {
 			gamemain->SetGameToSelect();
 			selecter->isChanging_GameMain = false;
 			selecter->state = selecter->is_selecting;

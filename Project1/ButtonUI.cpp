@@ -12,6 +12,8 @@ void UI_Button::Init(int activateTimerag, UINT graphHandle, float baseWidth, flo
 
 	isUserPushed = false;
 	isFunctionActivate = false;
+
+	count = 0;
 }
 
 void UI_Button::Update()
@@ -23,11 +25,20 @@ void UI_Button::Update()
 		if (count > activateTimerag) {
 			isFunctionActivate = true;
 		}
-		float rate = static_cast<float>(count) / static_cast<float>(activateTimerag / 2);
 		
-		if (rate < 1.0f) {
+		
+		if (count < activateTimerag / 8) {
+			float rate = static_cast<float>(count) / static_cast<float>(activateTimerag / 8);
+			easeScaleX = EASE_SCALE_START_X + (EASE_SCALE_X - EASE_SCALE_START_X) * rate;
+			easeSceleY = EASE_SCALE_START_X + (EASE_SCALE_X - EASE_SCALE_START_X) * rate;
 
 		}
+		else if(count < activateTimerag / 4) {
+			float rate = static_cast<float>(count - activateTimerag / 8) / static_cast<float>((activateTimerag / 4) - (activateTimerag / 8));
+			easeScaleX = EASE_SCALE_X + (EASE_SCALE_START_X - EASE_SCALE_X) * rate;
+			easeSceleY = EASE_SCALE_X + (EASE_SCALE_START_X - EASE_SCALE_X) * rate;
+		}
+
 	}
 	//‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢‚©
 	else {
@@ -37,8 +48,8 @@ void UI_Button::Update()
 
 void UI_Button::Draw(float centerX, float centerY, float x_scale, float y_scale)
 {
-	uiSprite.DrawExtendSprite(centerX - width * easeScaleX, centerY - height * easeSceleY,
-		centerX + width * easeScaleX, centerY + height * easeSceleY);
+	uiSprite.DrawExtendSprite(centerX - width * easeScaleX * x_scale, centerY - height * easeSceleY * y_scale,
+		centerX + width * easeScaleX * x_scale, centerY + height * easeSceleY * y_scale);
 	uiSprite.Draw();
 }
 

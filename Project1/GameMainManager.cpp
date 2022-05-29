@@ -3,6 +3,7 @@
 #include "Raki_DX12B.h"
 #include "Stage.h"
 #include "Player.h"
+#include "SChangeDir.h"
 
 namespace
 {
@@ -199,6 +200,8 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	{
 		tutorial.StartSelectTutorial();
 	}
+
+	SChangeDir::Get()->PlayChangedDirection();
 }
 
 void GameMainManager::SetGameToSelect()
@@ -209,6 +212,11 @@ void GameMainManager::SetGameToSelect()
 	changecount = 0;
 
 	tutorial.Init();
+}
+
+StageClearedControler* GameMainManager::GetSCCtrl()
+{
+	return &stageClearCtrl;
 }
 
 void GameMainManager::GameInstanceDraw()
