@@ -786,7 +786,7 @@ int Stage::LoadStage(const char* filePath, unsigned char foldCount[4])
 	{
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
-			SetOverlap(i, j);
+			InitOverlap(i, j);
 		}
 		SetFoldType(i);
 	}
@@ -1055,18 +1055,6 @@ void Stage::SetSelectStageFrame(size_t SelectStageNum)
 
 int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFootAction, bool IsFolds[4], int OpenCount, bool IsOpens[4])
 {
-	//overlapの計算
-	for (int a = 0; a < stageData.size(); a++)
-	{
-		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
-		{
-			if (!IsNowTileOver(a, b))
-			{
-				stageData[a].stageTileData[b].Overlap = 0;
-			}
-		}
-	}
-
 	int anyActionCount = 0;
 
 	for (int a = 0; a < stageData.size(); a++)
@@ -1076,13 +1064,20 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 			StageTileData* tile = &stageData[a].stageTileData[b];
 			if (tile->stageEase.isMove)
 			{
-				anyActionCount++;
+				return 0;
 			}
 		}
 	}
 
-	//ステージかプレイヤーのどっちかがアクション中だったら何もしない
-	if (anyActionCount > 0 || player->Player_IsAction)
+	if (player->Player_IsAction)
+	{
+		return 0;
+	}
+
+	if (player->Body_One.Ease.isMove ||
+		player->Body_Two.Ease.isMove ||
+		player->Body_Three.Ease.isMove ||
+		player->Body_Four.Ease.isMove)
 	{
 		return 0;
 	}
@@ -1207,6 +1202,14 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 		if (Open(direction, stagenumber[a], movestagedataOpen[a], onplayerstageOpen.size()) != EF)
 		{
 			isAct = true;
+		}
+	}
+
+	for (int a = 0; a < stageData.size(); a++)
+	{
+		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
+		{
+			SetOverlap(a, b);
 		}
 	}
 
@@ -1672,7 +1675,7 @@ void Stage::DataClear()
 	ContainerClear(initStageData);
 }
 
-void Stage::SetOverlap(size_t stagenum, size_t tilenum)
+void Stage::InitOverlap(size_t stagenum, size_t tilenum)
 {
 	for (int a = 0; a < stageData.size(); a++)
 	{
@@ -1697,6 +1700,143 @@ void Stage::SetOverlap(size_t stagenum, size_t tilenum)
 			}
 		}
 	}
+}
+
+void Stage::SetOverlap(size_t stagenum, size_t tilenum)
+{
+	if (!stageData[stagenum].stageTileData[tilenum].stageEase.isMove)
+	{
+		return;
+	}
+
+	StageTileData* Tile = &stageData[stagenum].stageTileData[tilenum];
+
+	//対象のタイルの外枠(折った後・開いた後)
+	float NowTile_L = (Tile->offsetX) * blockSize;
+	float NowTile_R = (Tile->offsetX + Tile->width) * blockSize;
+	float NowTile_U = (Tile->offsetY) * blockSize;
+	float NowTile_D = (Tile->offsetY + Tile->height) * blockSize;
+
+	//対象のタイルが以前いた場所
+	float OldTile_L = -1;
+	float OldTile_R = -1;
+	float OldTile_U = -1;
+	float OldTile_D = -1;
+
+	//FoldTypeや折る場合・開く場合で以前いた場所が変わる
+	switch (Tile->FoldType)
+	{
+	case BodyType::left:
+	{
+		OldTile_U = NowTile_U;
+		OldTile_D = NowTile_D;
+
+		if (Tile->isFold)
+		{
+			OldTile_L = NowTile_L - (Tile->width * blockSize);
+			OldTile_R = NowTile_L;
+		}
+		else
+		{
+			OldTile_L = NowTile_R;
+			OldTile_R = NowTile_R + (Tile->width * blockSize);
+		}
+		break;
+	}
+	case BodyType::right:
+	{
+		OldTile_U = NowTile_U;
+		OldTile_D = NowTile_D;
+
+		if (Tile->isFold)
+		{
+			OldTile_L = NowTile_R;
+			OldTile_R = NowTile_R + (Tile->width * blockSize);
+		}
+		else
+		{
+			OldTile_L = NowTile_L - (Tile->width * blockSize);
+			OldTile_R = NowTile_L;
+		}
+		break;
+	}
+	case BodyType::up:
+	{
+		OldTile_L = NowTile_L;
+		OldTile_R = NowTile_R;
+
+		if (Tile->isFold)
+		{
+			OldTile_U = NowTile_U - (Tile->height * blockSize);
+			OldTile_D = NowTile_U;
+		}
+		else
+		{
+			OldTile_U = NowTile_D;
+			OldTile_D = NowTile_D + (Tile->height * blockSize);
+		}
+		break;
+	}
+	case BodyType::down:
+	{
+		OldTile_L = NowTile_L;
+		OldTile_R = NowTile_R;
+
+		if (Tile->isFold)
+		{
+			OldTile_U = NowTile_D;
+			OldTile_D = NowTile_D + (Tile->height * blockSize);
+		}
+		else
+		{
+			OldTile_U = NowTile_U - (Tile->height * blockSize);
+			OldTile_D = NowTile_U;
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
+	//対象外のタイルの外枠
+	float OtherTile_L;
+	float OtherTile_U;
+	float OtherTile_R;
+	float OtherTile_D;
+
+	//重なっている状態を方向別に見る
+	for (i = 0; i < stageData.size(); i++)
+	{
+		for (j = 0; j < stageData[i].stageTileData.size(); j++)
+		{
+			if (i == stagenum && j == tilenum)
+			{
+				continue;
+			}
+
+			//今見ているタイルの外枠をセット
+			OtherTile_L = (stageData[i].stageTileData[j].offsetX) * blockSize;
+			OtherTile_R = (stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) * blockSize;
+			OtherTile_U = (stageData[i].stageTileData[j].offsetY) * blockSize;
+			OtherTile_D = (stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height) * blockSize;
+
+			//現在の位置とかぶっていればOverlapを加算・以前いた位置とかぶっていればOerlapを減算する
+			if (OtherTile_L < NowTile_R && OtherTile_R > NowTile_L &&
+				OtherTile_U < NowTile_D && OtherTile_D > NowTile_U)
+			{
+				stageData[i].stageTileData[j].Overlap++;
+			}
+
+			if (OtherTile_L < OldTile_R && OtherTile_R > OldTile_L &&
+				OtherTile_U < OldTile_D && OtherTile_D > OldTile_U)
+			{
+				stageData[i].stageTileData[j].Overlap--;
+			}
+
+		}
+	}
+
+	return;
 }
 
 bool Stage::IsPositionStage(const RVector3& center, const size_t& stageNumber)
@@ -1811,7 +1951,8 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	{
 		//タイルが折られているかつ、折られた方向が開く方向と一致していたら
 		if (SelectStage->stageTileData[b].isFold == true &&
-			SelectStage->stageTileData[b].FoldType == direction)
+			SelectStage->stageTileData[b].FoldType == direction &&
+			SelectStage->stageTileData[b].Overlap <= 0)
 		{
 			//方向ごとに格納していく
 			switch (direction)

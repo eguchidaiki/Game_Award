@@ -1572,6 +1572,12 @@ void Player::IsHitPlayerBody()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			//動いているタイルは無視
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左上
 			if (stage->IsPositionTile({ FaceLeft, FaceUp ,0.0f }, i, j))
 			{
@@ -2141,6 +2147,12 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 	{
 		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			//動いているタイルは無視
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左上
 			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y - 30, 0.0f }, i, j))
 			{
@@ -2325,6 +2337,12 @@ void Player::IsAroundBlock()
 	{
 		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			//動いているタイルは無視
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左隣(上)
 			if (stage->IsPositionTile({ NextLeft,FaceUp,0.0 }, i, j))
 			{

@@ -678,6 +678,12 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			//動いているタイルは無視
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左上
 			if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
 			{
@@ -1217,6 +1223,12 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 	{
 		for (size_t j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			//動いているタイルは無視
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左上
 			if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
 			{
@@ -1360,6 +1372,12 @@ void PlayerBody::IsAroundBlock()
 	{
 		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			//動いているタイルは無視
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左隣(上)
 			if (stage->IsPositionTile({ NextLeft,BodyUp,0.0 }, i, j))
 			{
