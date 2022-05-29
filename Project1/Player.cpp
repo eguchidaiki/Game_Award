@@ -2060,15 +2060,15 @@ bool Player::IsFall()
 {
 	int FallCount = 0;
 
-	if (Body_One.IsActivate == true && Body_One.BodyIsFall == false)
+	if (Body_One.IsActivate == true && !Body_One.IsFold && Body_One.BodyIsFall == false)
 	{
 		FallCount++;
 	}
-	if (Body_Three.IsActivate == true && Body_Three.BodyIsFall == false)
+	if (Body_Three.IsActivate == true && !Body_Three.IsFold && Body_Three.BodyIsFall == false)
 	{
 		FallCount++;
 	}
-	if (Body_Four.IsActivate == true && Body_Four.BodyIsFall == false)
+	if (Body_Four.IsActivate == true && !Body_Four.IsFold && Body_Four.BodyIsFall == false)
 	{
 		FallCount++;
 	}
