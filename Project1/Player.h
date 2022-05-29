@@ -89,7 +89,7 @@ public: //メンバ関数
 	//反転したタイルと顔の四隅との判定
 	bool IsReverseHitFace(const unsigned char& direction);
 
-	//任意の方向に折ったあとのブロックに埋まらないか
+	//任意の方向に折ったあとのブロックとかぶらないか
 	bool IsDirectionFoldAll(BodyType foldtype);
 
 	//有効化されている体の数を取得
@@ -221,6 +221,8 @@ public: //メンバ変数
 
 	//下に体があるかどうか
 	bool IsDownBody;
+
+	bool isRespawn; //リスポーンするかどうか
 
 	//足
 	PlayerFoot FaceLeg;
