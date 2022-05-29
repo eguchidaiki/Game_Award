@@ -13,6 +13,14 @@ public: //サブクラス
 		SELECT //カーソル移動のチュートリアル
 	};
 
+public: //定数
+	static const int backFrameWadth; //背景の枠線の幅
+	
+	static const XMFLOAT2 moveSpriteSize;   //移動のチュートリアルの画像サイズ
+	static const XMFLOAT2 jumpSpriteSize;   //ジャンプのチュートリアルの画像サイズ
+	static const XMFLOAT2 foldSpriteSize;   //折る開くのチュートリアルの画像サイズ
+	static const XMFLOAT2 selectSpriteSize; //カーソル移動のチュートリアルの画像サイズ
+
 public: //メンバ関数
 	Tutorial();
 	~Tutorial();
@@ -34,6 +42,15 @@ public: //メンバ関数
 	void StartSelectTutorial();
 	// チュートリアル中かどうか
 	inline bool GetTutorialFlag() { return isTutorial; }
+private:
+	// 移動のチュートリアル
+	void MoveTutorial(const XMFLOAT2& offset, bool flag);
+	// ジャンプのチュートリアル
+	void JumpTutorial(const XMFLOAT2& offset, bool flag);
+	// 折る開くのチュートリアル
+	void FoldTutorial(const XMFLOAT2& offset, bool flag);
+	// カーソル移動のチュートリアル
+	void SelectTutorial(const XMFLOAT2& offset, bool flag);
 
 public: //メンバ変数
 	bool isFirstOnly;
@@ -46,10 +63,9 @@ private:
 	bool isSelect;
 
 	//画像ハンドル
+	Sprite frameSprite;
 	Sprite moveSprite;
 	Sprite jumpSprite;
 	Sprite foldSprite;
 	Sprite selectSprite;
-
-	XMFLOAT2 spriteSize;
 };

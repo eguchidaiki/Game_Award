@@ -17,10 +17,9 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 {
 	user_selecting = NOW_SELECTING::is_start;
 
-	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
+	titleMainSprite.Create(TexManager::LoadTexture("Resources/title.png"));
 
 	cursor.Create(TexManager::LoadTexture("Resources/wakuF01.png"));
-	ui.Create(TexManager::LoadTexture("Resources/selectButton.png"));
 }
 
 //初期化
@@ -80,8 +79,4 @@ void Title::Draw()
 		break;
 	}
 	cursor.Draw();
-
-	ui.DrawSprite(Raki_WinAPI::window_width - 248, MENUICON_START_Y + MENUICON_SIZE_Y * 2 + MENUICON_OFFSET);
-	ui.Draw();
-
 }
