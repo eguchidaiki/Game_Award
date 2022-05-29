@@ -77,10 +77,7 @@ void GameMainManager::Update()
 	{
 		changecount++;
 
-		if (changecount > 20)
-		{
-			IsGoSelect = true;
-		}
+		Audio::StopLoadedSound(playBGM);
 	}
 
 	//クリアフラグが立ったら遷移演出、セレクトに移動する処理を書きたい所存
@@ -155,6 +152,7 @@ void GameMainManager::GameInstanceUpdate()
 			player->OpenCount = 0;
 			player->IsOpenCountStart = false;
 		}
+
 
 		//ゴールした判定？
 		if (player->IsGoal && !Ischangecount)

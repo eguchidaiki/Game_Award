@@ -7,6 +7,9 @@ void UI_Button::Init(int activateTimerag, UINT graphHandle, float baseWidth, flo
 	width = baseWidth / 2.0f;
 	height = baseHeight / 2.0f;
 
+	easeScaleX = 1.0f;
+	easeSceleY = 1.0f;
+
 	isUserPushed = false;
 	isFunctionActivate = false;
 }
@@ -20,9 +23,11 @@ void UI_Button::Update()
 		if (count > activateTimerag) {
 			isFunctionActivate = true;
 		}
-		float rate = static_cast<float>(count) / static_cast<float>(activateTimerag);
+		float rate = static_cast<float>(count) / static_cast<float>(activateTimerag / 2);
 		
+		if (rate < 1.0f) {
 
+		}
 	}
 	//‰Ÿ‚³‚ê‚Ä‚¢‚È‚¢‚©
 	else {
@@ -32,8 +37,8 @@ void UI_Button::Update()
 
 void UI_Button::Draw(float centerX, float centerY, float x_scale, float y_scale)
 {
-	uiSprite.DrawExtendSprite(centerX - width * x_scale, centerY - height * y_scale,
-		centerX + width * x_scale, centerY + height * y_scale);
+	uiSprite.DrawExtendSprite(centerX - width * easeScaleX, centerY - height * easeSceleY,
+		centerX + width * easeScaleX, centerY + height * easeSceleY);
 	uiSprite.Draw();
 }
 
