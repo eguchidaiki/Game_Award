@@ -4,9 +4,9 @@
 #include <fstream>
 #include <sstream>
 
-TexManager::texture								TexManager::textureData[1024];
+TexManager::texture								TexManager::textureData[2048];
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>	TexManager::texDsvHeap;
-const int										TexManager::MAX_TEXNUM = 1024;
+const int										TexManager::MAX_TEXNUM = 2048;
 
 ID3D12Device *TexManager::dev;
 

@@ -1,12 +1,12 @@
 ﻿#include "StageSelecter.h"
 #include <string>
 #include <Raki_WinAPI.h>
-#include <RenderTargetManager.h>
 #include <Raki_imguiMgr.h>
 
 #include "Stage.h"
 #include "Player.h"
 #include "InputManger.h"
+#include "TitleAudio.h"
 
 namespace
 {
@@ -44,7 +44,7 @@ void StageSelecter::Init()
 		graphArrays = LoadStageIcons(i);
 
 		stagePage[i].Init(icon_x_offsets, icon_y_offsets, graphArrays, cursorRHandle, cursorRHandle
-			, RVector3(0, 0, 0));
+			, backAnimationGraph);
 	}
 
 	nowpage = page_1_4;
@@ -54,9 +54,6 @@ void StageSelecter::Init()
 	user_selecting = UI_STAGEBOX_1;
 
 	nowDisplayNum = 0;
-
-	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
-	Audio::SetPlayRoopmode(menuBGM, 255);
 }
 
 void StageSelecter::Update()
@@ -72,7 +69,8 @@ void StageSelecter::Update()
 		pages.Update();
 	}
 
-	Audio::PlayLoadedSound(menuBGM);
+	Audio::volume = 0.5f;
+	TitleAudio::Get()->Play();
 }
 
 void StageSelecter::Draw()
@@ -101,7 +99,7 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
-	Audio::StopLoadedSound(menuBGM);
+	TitleAudio::Get()->Stop();
 }
 
 void StageSelecter::GoNextStage()
@@ -133,10 +131,16 @@ void StageSelecter::Changing_UI_Number()
 void StageSelecter::LoadSprite()
 {
 	std::string fullImgPath = "Resources/selectAnime/";
+	std::string pageAnimPath = "pageAnime/select";
 	std::string filename = ".png";
 
+	for (int i = 0; i < 20; i++) {
+		std::string number = std::to_string(i + 1);
+		std::string fullPath = fullImgPath + pageAnimPath + number + filename;
+		backAnimationGraph[i] = TexManager::LoadTexture(fullPath);
+	}
+
 	selectCursor.CreateAndSetDivisionUVOffsets(cursorSpriteCount, 2, 2, 50, 50, TexManager::LoadTexture("Resources/UI/Cursor/stageSelect.png"));
-	//selectCursor.Create(TexManager::LoadTexture("Resources/UI/Cursor.png"));
 	SelectLeft.Create(TexManager::LoadTexture(fullImgPath + "SelectLeft" + filename));
 	SelectRight.Create(TexManager::LoadTexture(fullImgPath + "SelectRight" + filename));
 }
@@ -338,13 +342,13 @@ void StageSelecter::LoadStage(int stagenum)
 	playerPtr->BodySetUp(playerPtr->playerTile);
 }
 
-void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget)
+void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandles, UINT cursorR, UINT cursorL, std::array<UINT, 20> backTexture)
 {
 	//各種リソース初期化
 	for (int i = 0; i < 4; i++) {
 		iconX[i] = xicons[i];
 		iconY[i] = yicons[i];
-		stageIconButton[i].Init(60, uiGraphHandles[i], 100, 100);
+		stageIconButton[i].Init(60, uiGraphHandles[i], 144, 144);
 		this->cursorL.Create(cursorL);
 		this->cursorR.Create(cursorR);
 	}
@@ -356,8 +360,12 @@ void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandle
 	backSprite.Create(TexManager::LoadTexture("Resources/CC/pageAnime/select1.png"));
 
 	drawLTpos = RVector3(-1280.0f, 0.0f, 0.0f);
-	//イージング目標
-	this->easeTarget = easeTarget;
+
+	//背景アニメーションスプライト生成
+	for (int i = 0; i < backAnimation.size(); i++) {
+		backAnimation[i].Create(backTexture[i]);
+	}
+	
 	//表示フラグ有効化
 	isDisplay = true;
 }
@@ -369,34 +377,38 @@ void Page::Update()
 	}
 
 	float rate = static_cast<float>(frame) / static_cast<float>(EASE_FRAME);
-	//イージング処理
-	if (isDisplay && frame < EASE_FRAME) {
+	//アニメーション処理
+
+	//表示状態かつ、アニメーションの表示番号が0じゃない
+	if (isDisplay && displayNum > 0) {
 		frame++;
-		drawLTpos = Rv3Ease::OutQuad(easeStart, easeTarget, rate);
+		if (frame % ANIMATION_SPEED == 0) {
+			displayNum--;
+		}
 	}
-	else if (!isDisplay && frame < EASE_FRAME) {
+	//非表示状態かつ、アニメーションの表示番号が19じゃない
+	else if (!isDisplay && displayNum < backAnimation.size() - 1) {
 		frame++;
-		drawLTpos = Rv3Ease::OutQuad(easeTarget, easeStart, rate);
+		if (frame % ANIMATION_SPEED == 0) {
+			displayNum++;
+		}
 	}
 
 }
 
 void Page::Draw()
 {
-	//ページリソースをレンダリング
-	RenderTargetManager::GetInstance()->SetRenderTarget(rtHandle);
-	RenderTargetManager::GetInstance()->ClearRenderTexture(rtHandle);
 	//背景
-	backSprite.DrawSprite(0, 0);
-	backSprite.Draw();
+	backAnimation[displayNum].DrawSprite(0, 0);
+	backAnimation[displayNum].Draw();
 	//ui
-	for (int i = 0; i < stageIconButton.size(); i++) {
-		stageIconButton[i].Draw(iconX[i], iconY[i]);
+	if (isDisplay && displayNum == 0) {
+		for (int i = 0; i < stageIconButton.size(); i++) {
+			stageIconButton[i].Draw(iconX[i], iconY[i]);
+		}
 	}
-	//左右表示（あとで）
 
-	//レンダリング終了
-	RenderTargetManager::GetInstance()->SetDrawBackBuffer();
+	//左右表示（あとで）
 
 	//ページ描画
 	rtSprite.DrawRTexSprite(rtHandle, drawLTpos.x, drawLTpos.y, drawLTpos.x + 1280.0f, drawLTpos.y + 720.0f, 0.0f);

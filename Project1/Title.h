@@ -11,6 +11,7 @@
 #include "Stage.h"
 #include "Tutorial.h"
 
+#include "ButtonUI.h"
 #include "SChangeDir.h"
 
 enum NowState
@@ -39,6 +40,14 @@ public:
 
 	// ゲームループで使う変数の宣言
 
+	enum NOW_DIRECT_STATE
+	{
+		TITLE_DIRECT_STARTING,
+		TITLE_DIRECT_USER_SELECT,
+		TITLE_DIRECT_ENDING,
+	};
+	NOW_DIRECT_STATE titleDirectState;
+
 	enum NOW_SELECTING
 	{
 		is_start,
@@ -49,6 +58,15 @@ public:
 	const int drawOffsetX = 320, drawOffsetY = 45;
 	//タイトルのメインスプライト
 	Sprite titleMainSprite;
+
+	//スプライト
+	Sprite titleBackScreen;
+	Sprite titleLogo;
+	Sprite titleFont;
+	
+	//ボタン
+	UI_Button go_next_Button;
+	UI_Button go_end_Button;
 
 	//カーソル
 	Sprite cursor;

@@ -120,6 +120,7 @@
     <ClCompile Include="SceneChangeDirection.cpp" />
     <ClCompile Include="ButtonUI.cpp" />
     <ClCompile Include="SChangeDir.cpp" />
+    <ClCompile Include="TitleAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -209,6 +210,7 @@
     <ClInclude Include="SceneChangeDirection.h" />
     <ClInclude Include="ButtonUI.h" />
     <ClInclude Include="SChangeDir.h" />
+    <ClInclude Include="TitleAudio.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\block.png">

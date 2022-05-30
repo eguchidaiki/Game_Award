@@ -1,10 +1,12 @@
 #pragma once
 #include <memory>
 #include <array>
+#include <Raki_WinAPI.h>
 #include <TexManager.h>
 #include <Sprite.h>
 #include <Raki_Input.h>
 #include <Audio.h>
+#include <RenderTargetManager.h>
 
 #include "ButtonUI.h"
 
@@ -16,7 +18,7 @@ public:
 	~Page(){};
 
 	//初期化（アイコン中心座標の定義配列、グラフィックハンドルの配列、カーソルのグラフィックハンドルの配列）
-	void Init(float xicons[], float yicons[], std::array<UINT, 4> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget);
+	void Init(float xicons[], float yicons[], std::array<UINT, 4> uiGraphHandles, UINT cursorR, UINT cursorL, std::array<UINT, 20> backTexture);
 	//更新
 	void Update();
 	//描画（左上基準）
@@ -28,8 +30,12 @@ public:
 	std::array<float, 4> iconX, iconY;
 	//ボタンリソース(Selecterがアクセスする)
 	std::array<UI_Button, 4> stageIconButton;
+	//背景アニメーション
+	std::array<Sprite, 20> backAnimation;
+	int displayNum = 0;
+	const int ANIMATION_SPEED = 2;
 
-	//イージング目標に移動するかのフラグ
+	//表示するかのフラグ
 	bool isDisplay = true;
 	bool isMustMoving = true;
 	//イージング関連
@@ -148,6 +154,7 @@ private:
 
 	//ロード関数（連番画像のためにint -> string変換）
 	void LoadSprite();
+	std::array<UINT, 20> backAnimationGraph;
 	
 	//ステージアイコン画像のロード
 	std::array<UINT,4> LoadStageIcons(int pageNumber);
@@ -161,10 +168,10 @@ private:
 	void PageChange();
 
 	//ステージ遷移のための入力検知
-	const int NUMBOX_START_X = 284;
-	const int NUMBOX_START_Y = 325;
-	const int NUMBOX_SIZE = 129;
-	const int NUMBOX_SPACE = 65;
+	const int NUMBOX_START_X = Raki_WinAPI::window_width / 5 - 144 / 2;
+	const int NUMBOX_START_Y = Raki_WinAPI::window_height / 2 - 144 / 2;
+	const int NUMBOX_SIZE = 144;
+	const int NUMBOX_SPACE = (Raki_WinAPI::window_width / 5) / 2 * 0.875;
 	const int PAGEMOVE_LEFT_X = 29;
 	const int PAGEMOVE_RIGHT_X = 1184;
 	const int PAGEMOVE_Y = 623;
@@ -177,8 +184,5 @@ private:
 
 
 	void DrawPages();
-
-	//BGM
-	SoundData menuBGM;
 };
 

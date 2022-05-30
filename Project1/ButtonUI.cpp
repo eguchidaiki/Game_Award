@@ -1,5 +1,7 @@
 #include "ButtonUI.h"
 
+SoundData UI_Button::_ui_push_sound;
+
 void UI_Button::Init(int activateTimerag, UINT graphHandle, float baseWidth, float baseHeight)
 {
 	this->activateTimerag = activateTimerag;
@@ -12,6 +14,10 @@ void UI_Button::Init(int activateTimerag, UINT graphHandle, float baseWidth, flo
 
 	isUserPushed = false;
 	isFunctionActivate = false;
+	
+	_ui_push_sound = Audio::LoadSound_wav("Resources/sound/SE/select.wav");
+	Audio::SetPlayRoopmode(_ui_push_sound, 0);
+	Audio::volume = 0.75f;
 
 	count = 0;
 }
@@ -56,4 +62,5 @@ void UI_Button::Draw(float centerX, float centerY, float x_scale, float y_scale)
 void UI_Button::UI_Push()
 {
 	isUserPushed = true;
+	Audio::PlayLoadedSound(_ui_push_sound);
 }
