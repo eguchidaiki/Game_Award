@@ -23,6 +23,8 @@ public: //サブクラス
 
 public: //定数
 	static const int backFrameWadth; //背景の枠線の幅
+	static const int frameWadth;     //枠線の幅
+	static const XMFLOAT2 frameSize; //枠のサイズ
 	
 	static const XMFLOAT2 moveSpriteSize;   //移動のチュートリアルの画像サイズ
 	static const XMFLOAT2 jumpSpriteSize;   //ジャンプのチュートリアルの画像サイズ
@@ -78,6 +80,9 @@ private:
 	Sprite jumpSprite;
 	Sprite foldSprite;
 	Sprite selectSprite;
+
+	XMFLOAT2 frameOffset;
+	float drawScale;
 
 	bool isEase;             //イージング中かどうか
 	TutorialState easeState; //どのチュートリアルが動いているか
