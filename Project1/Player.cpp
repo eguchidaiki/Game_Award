@@ -2331,6 +2331,113 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 	return false;
 }
 
+bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
+{
+	//顔の四辺
+	float BodyLeft;
+	float BodyRight;
+	float BodyUp;
+	float BodyDown;
+
+	BodyLeft = CenterPosition.x - 25;
+	BodyRight = CenterPosition.x + 25;
+	BodyUp = CenterPosition.y - 25;
+	BodyDown = CenterPosition.y + 25;
+
+	//上下左右(プレイヤーの顔)
+	int left_mapchip = (int)(BodyLeft - stage->offset.x) / 60;
+	int up_mapchip = (int)(BodyUp - stage->offset.y) / 60;
+	int right_mapchip = (int)(BodyRight - stage->offset.x) / 60;
+	int down_mapchip = (int)(BodyDown - stage->offset.y) / 60;
+
+	//タイル内のマップチップ座標
+	int left_mapchip_tile;
+	int up_mapchip_tile;
+	int right_mapchip_tile;
+	int down_mapchip_tile;
+
+	//マップチップの場所(25個)
+	int MapchipPos = 0;
+
+	char* mapchip = { 0 };
+
+	for (size_t j = 0; j < stage->SelectStage->stageTileData.size(); j++)
+	{
+		//動いているタイルは無視
+		if (stage->SelectStage->stageTileData[j].isFold)
+		{
+			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+		}
+	}
+
+	//反転したブロックマップチップと顔の四隅との判定
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage->SelectStage->stageTileData.size(); j++)
+		{
+			//動いているタイルは無視
+			if (!stage->SelectStage->stageTileData[j].isFold)
+			{
+				continue;
+			}
+
+			//左上
+			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y - 30, 0.0f }, i, j))
+			{
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
+
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				{
+					return true;
+				}
+			}
+			//左下
+			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y + 33, 0.0f }, i, j))
+			{
+				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
+
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				{
+					return true;
+				}
+			}
+			//右上
+			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y - 30, 0.0f }, i, j))
+			{
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
+
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				{
+					return true;
+				}
+			}
+			//右下
+			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y + 33, 0.0f }, i, j))
+			{
+				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
+				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
+
+				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
+
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 bool Player::IsDirectionFoldAll(BodyType foldtype)
 {
 	int BodyCanFoldCount = 0;
@@ -2359,6 +2466,37 @@ bool Player::IsDirectionFoldAll(BodyType foldtype)
 		return false;
 	}
 	else if (ReverseHitFace == false && BodyCanFoldCount == 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool Player::IsDirectionOpenAll(int opentype)
+{
+	int BodyCanOpenCount = 0;
+
+	if (Body_One.IsActivate == true && Body_One.IsReverseHitBodyOpen(opentype) == true)
+	{
+		BodyCanOpenCount++;
+	}
+	if (Body_Two.IsActivate == true && Body_Two.IsReverseHitBodyOpen(opentype) == true)
+	{
+		BodyCanOpenCount++;
+	}
+	if (Body_Three.IsActivate == true && Body_Three.IsReverseHitBodyOpen(opentype) == true)
+	{
+		BodyCanOpenCount++;
+	}
+	if (Body_Four.IsActivate == true && Body_Four.IsReverseHitBodyOpen(opentype) == true)
+	{
+		BodyCanOpenCount++;
+	}
+
+	bool ReverseHitFace = IsReverseHitFaceOpen(opentype);
+
+	if (ReverseHitFace == true || BodyCanOpenCount > 0)
 	{
 		return true;
 	}

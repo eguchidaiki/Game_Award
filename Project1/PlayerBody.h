@@ -76,6 +76,12 @@ public: //メンバ関数
 	bool IsReverseHitBody(const unsigned char& direction);
 
 	/// <summary>
+	/// 開いたタイルと体の四隅の判定(折る)
+	/// </summary>
+	/// <param name="stage">ステージデータ</param>
+	bool IsReverseHitBodyOpen(const unsigned char& direction);
+
+	/// <summary>
 	/// 十字方向にブロックがあるかどうか
 	/// </summary>
 	/// <param name="stage">ステージ情報</param>

@@ -89,8 +89,14 @@ public: //メンバ関数
 	//反転したタイルと顔の四隅との判定(折る)
 	bool IsReverseHitFace(const unsigned char& direction);
 
+	//反転したタイルと顔の四隅との判定(折る)
+	bool IsReverseHitFaceOpen(const unsigned char& direction);
+
 	//任意の方向に折ったあとのブロックとかぶらないか
 	bool IsDirectionFoldAll(BodyType foldtype);
+
+	//任意の方向に開いたあとのブロックとかぶらないか
+	bool IsDirectionOpenAll(int opentype);
 
 	//有効化されている体の数を取得
 	int ActivateBodyCount();

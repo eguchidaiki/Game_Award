@@ -1323,6 +1323,141 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 	return false;
 }
 
+bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
+{
+	if (this->IsFold)
+	{
+		return false;
+	}
+
+	//体の四辺
+	float BodyLeft;
+	float BodyRight;
+	float BodyUp;
+	float BodyDown;
+
+	//StartPosとEndPosの位置関係によって上下左右の設定を変える
+	if (BodyStartPos.x < BodyEndPos.x)
+	{
+		BodyLeft = BodyStartPos.x;
+		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+	}
+	else
+	{
+		BodyLeft = BodyEndPos.x;
+		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+	}
+
+	if (BodyStartPos.y < BodyEndPos.y)
+	{
+		BodyUp = BodyStartPos.y;
+		BodyDown = BodyStartPos.y + ((BodySize + 8) - 1.0f);
+	}
+	else
+	{
+		BodyUp = BodyEndPos.y;
+		BodyDown = BodyEndPos.y + ((BodySize + 8) - 1.0f);
+	}
+
+	//四辺をブロックサイズで割った数
+	int BodyLeft_mapchip = (int)(BodyLeft - stage->offset.x) / 60;
+	int BodyUp_mapchip = (int)(BodyUp - stage->offset.y) / 60;
+	int BodyRight_mapchip = (int)(BodyRight - stage->offset.x) / 60;
+	int BodyDown_mapchip = (int)(BodyDown - stage->offset.y) / 60;
+
+	//タイル内のマップチップ座標
+	int BodyLeft_mapchip_tile;
+	int BodyUp_mapchip_tile;
+	int BodyRight_mapchip_tile;
+	int BodyDown_mapchip_tile;
+
+	//マップチップの座標
+	int mapchipPos = 0;
+
+	char* mapchip = { 0 };
+
+	for (size_t j = 0; j < stage->SelectStage->stageTileData.size(); j++)
+	{
+		//動いているタイルは無視
+		if (stage->SelectStage->stageTileData[j].isFold)
+		{
+			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+		}
+	}
+
+	for (size_t i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (size_t j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			//動いているタイルは無視
+			if (!stage->SelectStage->stageTileData[j].isFold)
+			{
+				continue;
+			}
+
+			//左上
+			if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			{
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				{
+					return true;
+				}
+			}
+			//左下
+			if (stage->IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+			{
+				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
+				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
+
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				{
+					return true;
+				}
+			}
+			//右上
+			if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			{
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
+
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				{
+					return true;
+				}
+			}
+			//右下
+			if (stage->IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
+			{
+				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
+				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
+
+				//今いる座標のマップチップを確認
+				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
+
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				{
+					return true;
+				}
+			}
+
+		}
+	}
+
+	return false;
+}
+
 void PlayerBody::IsAroundBlock()
 {
 	//体の中心
