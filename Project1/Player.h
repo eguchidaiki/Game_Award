@@ -86,7 +86,7 @@ public: //メンバ関数
 	//各体の状態を配列にセット(セットする順番はstage.FoldAndOpenの判定順)
 	void SetBodyStatus(bool arrangement[4]);
 
-	//反転したタイルと顔の四隅との判定
+	//反転したタイルと顔の四隅との判定(折る)
 	bool IsReverseHitFace(const unsigned char& direction);
 
 	//任意の方向に折ったあとのブロックとかぶらないか

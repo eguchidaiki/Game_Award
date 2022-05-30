@@ -1198,11 +1198,6 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 	float BodyUp;
 	float BodyDown;
 
-	int ReverseLeftCount = 0;
-	int ReverseUpCount = 0;
-	int ReverseRightCount = 0;
-	int ReverseDownCount = 0;
-
 	//StartPosとEndPosの位置関係によって上下左右の設定を変える
 	if (BodyStartPos.x < BodyEndPos.x)
 	{
@@ -1258,71 +1253,69 @@ bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 
 	int BlockCount = 0;
 
-	for (size_t i = 0; i < stage->GetStageDataSize(); i++)
+
+	for (size_t j = 0; j < stage->SelectStage->stageTileData.size(); j++)
 	{
-		for (size_t j = 0; j < stage->GetStageTileDataSize(i); j++)
+		//動いているタイルは無視
+		if (stage->IsTileMove(stage->selectStageNum, j))
 		{
-			//動いているタイルは無視
-			if (stage->IsTileMove(i, j))
+			continue;
+		}
+
+		//左上
+		if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, stage->selectStageNum, j))
+		{
+			BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
+
+			//今いる座標のマップチップを確認
+			mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(stage->selectStageNum, j) + BodyLeft_mapchip_tile;
+
+			if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 			{
-				continue;
+				return true;
 			}
+		}
+		//左下
+		if (stage->IsPositionTile({ BodyLeft,BodyDown,0.0f }, stage->selectStageNum, j))
+		{
+			BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
 
-			//左上
-			if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			//今いる座標のマップチップを確認
+			mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(stage->selectStageNum, j) + BodyLeft_mapchip_tile;
+
+			if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 			{
-				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
-
-				//今いる座標のマップチップを確認
-				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-
-				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
-				{
-					return true;
-				}
+				return true;
 			}
-			//左下
-			if (stage->IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+		}
+		//右上
+		if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, stage->selectStageNum, j))
+		{
+			BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
+
+			//今いる座標のマップチップを確認
+			mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(stage->selectStageNum, j) + BodyRight_mapchip_tile;
+
+			if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 			{
-				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
-				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
-
-				//今いる座標のマップチップを確認
-				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
-
-				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
-				{
-					return true;
-				}
+				return true;
 			}
-			//右上
-			if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+		}
+		//右下
+		if (stage->IsPositionTile({ BodyRight,BodyDown,0.0f }, stage->selectStageNum, j))
+		{
+			BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
+
+			//今いる座標のマップチップを確認
+			mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(stage->selectStageNum, j) + BodyRight_mapchip_tile;
+
+			if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
 			{
-				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
-				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
-
-				//今いる座標のマップチップを確認
-				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
-
-				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
-				{
-					return true;
-				}
-			}
-			//右下
-			if (stage->IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
-			{
-				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
-				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
-
-				//今いる座標のマップチップを確認
-				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
-
-				if (mapchip != nullptr && stage->IsMapchipBlocks(mapchip[mapchipPos]))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}

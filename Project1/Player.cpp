@@ -2265,67 +2265,65 @@ bool Player::IsReverseHitFace(const unsigned char& direction)
 	int MapchipPos = 0;
 
 	//反転したブロックマップチップと顔の四隅との判定
-	for (int i = 0; i < stage->GetStageDataSize(); i++)
+
+	for (int j = 0; j < stage->SelectStage->stageTileData.size(); j++)
 	{
-		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
+		//動いているタイルは無視
+		if (stage->IsTileMove(stage->selectStageNum, j))
 		{
-			//動いているタイルは無視
-			if (stage->IsTileMove(i, j))
+			continue;
+		}
+
+		//左上
+		if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y - 30, 0.0f }, stage->selectStageNum, j))
+		{
+			left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
+
+			MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(stage->selectStageNum, j)) + (left_mapchip_tile);
+
+			if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 			{
-				continue;
+				return true;
 			}
+		}
+		//左下
+		if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y + 33, 0.0f }, stage->selectStageNum, j))
+		{
+			left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
 
-			//左上
-			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y - 30, 0.0f }, i, j))
+			MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(stage->selectStageNum, j)) + (left_mapchip_tile);
+
+			if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 			{
-				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
-
-				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
-
-				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
-				{
-					return true;
-				}
+				return true;
 			}
-			//左下
-			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y + 33, 0.0f }, i, j))
+		}
+		//右上
+		if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y - 30, 0.0f }, stage->selectStageNum, j))
+		{
+			right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
+
+			MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(stage->selectStageNum, j)) + (right_mapchip_tile);
+
+			if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 			{
-				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
-
-				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
-
-				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
-				{
-					return true;
-				}
+				return true;
 			}
-			//右上
-			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y - 30, 0.0f }, i, j))
+		}
+		//右下
+		if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y + 33, 0.0f }, stage->selectStageNum, j))
+		{
+			right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(stage->selectStageNum, j);
+			down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(stage->selectStageNum, j);
+
+			MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(stage->selectStageNum, j)) + (right_mapchip_tile);
+
+			if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
 			{
-				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
-
-				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
-
-				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
-				{
-					return true;
-				}
-			}
-			//右下
-			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y + 33, 0.0f }, i, j))
-			{
-				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
-
-				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
-
-				if (stage->IsMapchipBlocks(ReverseMapchips[MapchipPos]))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
