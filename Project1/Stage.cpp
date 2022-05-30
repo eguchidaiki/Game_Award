@@ -1496,6 +1496,33 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 {
 	StageTileData* ThisTile = {};
 
+	StageTileData* P_Tile = {};
+
+	for (int p = 0; p < SelectStage->stageTileData.size(); p++)
+	{
+		if (IsPlayerTile(selectStageNum, p))
+		{
+			P_Tile = &SelectStage->stageTileData[p];
+		}
+	}
+
+	if (P_Tile == NULL)
+	{
+		return false;
+	}
+
+	//対象のタイルの指定した方向の外枠
+	float NowTile_L = -1;
+	float NowTile_U = -1;
+	float NowTile_R = -1;
+	float NowTile_D = -1;
+
+	//プレイヤーのタイルの外枠
+	float PTile_L = P_Tile->offsetX * blockSize;
+	float PTile_U = P_Tile->offsetY * blockSize;
+	float PTile_R = (P_Tile->offsetX + P_Tile->width) * blockSize;
+	float PTile_D = (P_Tile->offsetY + P_Tile->height) * blockSize;
+
 	//セレクトステージのタイル数分だけ回す
 	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
 	{
@@ -1511,45 +1538,49 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 		switch (FoldType)
 		{
 		case BodyType::left:
-			if ((ThisTile->offsetX + ThisTile->width) * blockSize + 25 < player->CenterPosition.x &&
-				(ThisTile->offsetX + ThisTile->width) * blockSize + 300 > player->CenterPosition.x &&
-				(ThisTile->offsetY) * blockSize < player->CenterPosition.y &&
-				(ThisTile->offsetY + ThisTile->height) * blockSize > player->CenterPosition.y)
-			{
-				return true;
-			}
-			break;
-
-		case BodyType::right:
-			if ((ThisTile->offsetX) * blockSize - 25 > player->CenterPosition.x &&
-				(ThisTile->offsetX) * blockSize - 300 < player->CenterPosition.x &&
-				(ThisTile->offsetY) * blockSize < player->CenterPosition.y &&
-				(ThisTile->offsetY + ThisTile->height) * blockSize > player->CenterPosition.y)
-			{
-				return true;
-			}
-			break;
-
-		case BodyType::up:
-			if ((ThisTile->offsetY + ThisTile->height) * blockSize + 25 < player->CenterPosition.y &&
-				(ThisTile->offsetY + ThisTile->height) * blockSize + 300 > player->CenterPosition.y &&
-				(ThisTile->offsetX) * blockSize < player->CenterPosition.x &&
-				(ThisTile->offsetX + ThisTile->width) * blockSize > player->CenterPosition.x)
-			{
-				return true;
-			}
-			break;
-
-		case BodyType::down:
-			if ((ThisTile->offsetY) * blockSize - 25 > player->CenterPosition.y &&
-				(ThisTile->offsetY) * blockSize - 300 < player->CenterPosition.y &&
-				(ThisTile->offsetX) * blockSize < player->CenterPosition.x &&
-				(ThisTile->offsetX + ThisTile->width) * blockSize > player->CenterPosition.x)
-			{
-				return true;
-			}
+		{
+			NowTile_L = (ThisTile->offsetX + ThisTile->width) * blockSize;
+			NowTile_R = (ThisTile->offsetX + ThisTile->width * 2) * blockSize;
+			NowTile_U = (ThisTile->offsetY) * blockSize;
+			NowTile_D = (ThisTile->offsetY + ThisTile->height) * blockSize;
 			break;
 		}
+		case BodyType::right:
+		{
+			NowTile_L = (ThisTile->offsetX - ThisTile->width) * blockSize;
+			NowTile_R = (ThisTile->offsetX) * blockSize;
+			NowTile_U = (ThisTile->offsetY) * blockSize;
+			NowTile_D = (ThisTile->offsetY + ThisTile->height) * blockSize;
+
+			break;
+		}
+		case BodyType::up:
+		{
+			NowTile_U = (ThisTile->offsetY + ThisTile->height) * blockSize;
+			NowTile_D = (ThisTile->offsetY + ThisTile->height * 2) * blockSize;
+			NowTile_L = (ThisTile->offsetX) * blockSize;
+			NowTile_R = (ThisTile->offsetX + ThisTile->width) * blockSize;
+
+			break;
+		}
+		case BodyType::down:
+		{
+			NowTile_U = (ThisTile->offsetY - ThisTile->height) * blockSize;
+			NowTile_D = (ThisTile->offsetY) * blockSize;
+			NowTile_L = (ThisTile->offsetX) * blockSize;
+			NowTile_R = (ThisTile->offsetX + ThisTile->width) * blockSize;
+
+			break;
+		}
+		}
+	}
+
+	if (NowTile_L < PTile_R &&
+		NowTile_R > PTile_L &&
+		NowTile_U < PTile_D &&
+		NowTile_D > PTile_U)
+	{
+		return true;
 	}
 
 	return false;
@@ -2128,6 +2159,16 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 	GetPositionTile(player->CenterPosition, &NowStage, &NowTile);
 
 	StageTileData* playertiles = &stageData[NowStage].stageTileData[NowTile];
+
+	StageTileData* P_Tile = {};
+
+	for (int p = 0; p < SelectStage->stageTileData.size(); p++)
+	{
+		if (IsPlayerTile(selectStageNum, p))
+		{
+			P_Tile = &SelectStage->stageTileData[p];
+		}
+	}
 
 
 	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
