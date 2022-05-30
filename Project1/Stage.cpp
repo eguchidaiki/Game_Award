@@ -1272,6 +1272,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 				if (IsTileFoldDirection(selectStageNum, BodyType::up))
 				{
 					direction = BodyType::up;
+					break;
 				}
 			}
 			else if (inputManeger->FoldDownTrigger() &&
@@ -1280,6 +1281,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 				if (IsTileFoldDirection(selectStageNum, BodyType::down))
 				{
 					direction = BodyType::down;
+					break;
 				}
 			}
 			else if (inputManeger->FoldLeftTrigger() &&
@@ -1288,6 +1290,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 				if (IsTileFoldDirection(selectStageNum, BodyType::left))
 				{
 					direction = BodyType::left;
+					break;
 				}
 			}
 			else if (inputManeger->FoldRightTrigger() &&
@@ -1296,31 +1299,48 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 				if (IsTileFoldDirection(selectStageNum, BodyType::right))
 				{
 					direction = BodyType::right;
+					break;
 				}
 			}
 		}
 		else
 		{
+			continue;
+		}
+	}
+
+	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
+	{
+		if (SelectStage->stageTileData[a].isFold)
+		{
 			if (inputManeger->OpenUpTrigger() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::up)
 			{
 				direction = BodyType::up;
+				break;
 			}
 			else if (inputManeger->OpenDownTrigger() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::down)
 			{
 				direction = BodyType::down;
+				break;
 			}
 			else if (inputManeger->OpenLeftTrigger() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::left)
 			{
 				direction = BodyType::left;
+				break;
 			}
 			else if (inputManeger->OpenRightTrigger() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::right)
 			{
 				direction = BodyType::right;
+				break;
 			}
+		}
+		else
+		{
+			continue;
 		}
 	}
 
@@ -1397,8 +1417,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 				{
 					return false;
 				}
-				return true;
 			}
+			return true;
 			break;
 		}
 		case BodyType::down:
@@ -1415,8 +1435,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 				{
 					return false;
 				}
-				return true;
 			}
+			return true;
 			break;
 		}
 		case BodyType::left:
@@ -1437,8 +1457,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 						return false;
 					}
 				}
-				return true;
 			}
+			return true;
 			break;
 		}
 		case BodyType::right:
@@ -1455,8 +1475,8 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 				{
 					return false;
 				}
-				return true;
 			}
+			return true;
 			break;
 		}
 		default:
@@ -2043,8 +2063,14 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 	}
 
 
+
 	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
 	{
+		if (IsPlayerTile(selectStageNum, b))
+		{
+			continue;
+		}
+
 		if (stageData[selectStageNum].stageTileData[b].FoldType == direction &&
 			stageData[selectStageNum].stageTileData[b].Overlap <= 0)
 		{
