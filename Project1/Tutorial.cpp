@@ -436,11 +436,11 @@ void Tutorial::SelectTutorial(const XMFLOAT2& offset, bool flag)
 	if (tutorialState == TutorialState::SELECT)
 	{
 		x = offset.x - 50.0f;
-		y = offset.y - (flag * PlayerBody::BodySize + selectSpriteSize.y + 10.0f);
+		y = offset.y - (flag * PlayerBody::BodySize + selectSpriteSize.y + 30.0f);
 		startPos = { x, y, 0.0f };
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-		selectSprite.DrawSprite(offset.x - 50.0f, offset.y - (flag * PlayerBody::BodySize + selectSpriteSize.y + 10.0f));
+		selectSprite.DrawSprite(x, y);
 	}
 	else
 	{
