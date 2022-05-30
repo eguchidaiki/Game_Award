@@ -50,7 +50,10 @@ Player::Player() :
 	IsColide(false),
 	IsDownBody(false),
 	isRespawn(false),
-	FaceLeg{}
+	FaceLeg{},
+	deathPos{},
+	isDeath(false),
+	deathFrameCount(0)
 {
 }
 
@@ -84,6 +87,23 @@ void Player::Init()
 
 void Player::Update(int offsetX, int offsetY)
 {
+	static size_t animationCount = 0;
+
+	animationCount++;
+	animationCount %= 0xFFFFFFFF;
+
+	if (isDeath)
+	{
+		if (animationCount % 5 == 0)
+		{
+			deathFrameCount++;
+		}
+		if (deathFrameCount >= 8 + 1)
+		{
+			isDeath = false;
+		}
+	}
+
 	PlayerOffsetX = offsetX;
 	PlayerOffsetY = offsetY;
 
@@ -225,46 +245,111 @@ void Player::Update(int offsetX, int offsetY)
 	Body_Four.Update(CenterPosition);
 	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
+
+	if (isRespawn)
+	{
+		DeathAnimation();
+	}
 }
 
 void Player::Draw(int offsetX, int offsetY)
 {
 	FaceLeg.Draw(offsetX, offsetY, IsLeft, IsRight);
+
+	float upPos = (CenterPosition.y - 25) + offsetY;
+	float downPos = (CenterPosition.y + 25) + offsetY;
+	float leftPos = (CenterPosition.x - 25) + offsetX;
+	float rightPos = (CenterPosition.x + 25) + offsetX;
+
 	if (IsLeft)
 	{
-		if (Player_IsAction)
+		if (isDeath)
+		{
+			if (deathFrameCount < 8)
+			{
+				deathSprite.uvOffsetHandle = 8 - deathFrameCount - 1;
+				deathSprite.DrawExtendSprite(
+					leftPos - 50, upPos - 50,
+					rightPos + 50, downPos + 50);
+			}
+			else
+			{
+				PlayerSprite.DrawExtendSprite(
+					leftPos, upPos,
+					rightPos, downPos);
+			}
+		}
+		else if (Player_IsAction)
 		{
 			PlayerSpriteAction.DrawExtendSprite(
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				leftPos, upPos,
+				rightPos, downPos);
 		}
 		else
 		{
 			PlayerSprite.DrawExtendSprite(
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				leftPos, upPos,
+				rightPos, downPos);
 		}
 	}
 	if (IsRight)
 	{
-		if (Player_IsAction)
+		if (isDeath)
+		{
+			if (deathFrameCount < 8)
+			{
+				deathSprite.uvOffsetHandle = 8 - deathFrameCount - 1;
+				deathSprite.DrawExtendSprite(
+					rightPos + 50, upPos - 50,
+					leftPos - 50, downPos + 50);
+			}
+			else
+			{
+				PlayerSprite.DrawExtendSprite(
+					rightPos, upPos,
+					leftPos, downPos);
+			}
+		}
+		else if (Player_IsAction)
 		{
 			PlayerSpriteAction.DrawExtendSprite(
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				rightPos, upPos,
+				leftPos, downPos);
 		}
 		else
 		{
 			PlayerSprite.DrawExtendSprite(
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				rightPos, upPos,
+				leftPos, downPos);
 		}
 	}
 
-	//bodyの描画(まとめた)
-	DrawBodys(offsetX, offsetY);
+	if (isDeath)
+	{
+		if (deathFrameCount < 8)
+		{
+			deathSprite.uvOffsetHandle = deathFrameCount;
+			deathSprite.DrawExtendSprite(
+				(deathPos.x - 75) + offsetX, (deathPos.y - 75) + offsetY,
+				(deathPos.x + 75) + offsetX, (deathPos.y + 75) + offsetY);
+		}
+	}
+	else
+	{
+		//bodyの描画(まとめた)
+		DrawBodys(offsetX, offsetY);
+	}
 
-	if (Player_IsAction)
+	if (isDeath)
+	{
+		deathSprite.Draw();
+
+		if (deathFrameCount >= 8)
+		{
+			PlayerSprite.Draw();
+		}
+	}
+	else if (Player_IsAction)
 	{
 		PlayerSpriteAction.Draw();
 	}
@@ -337,11 +422,14 @@ void Player::Create()
 		FaceHandle[0] = TexManager::LoadTexture("Resources/chara.png");
 		PlayerSprite.Create(FaceHandle[0]);
 	}
-
 	if ((PlayerSpriteAction.spdata->size.x <= 0) || (PlayerSpriteAction.spdata->size.y <= 0))
 	{
 		FaceHandle[1] = TexManager::LoadTexture("Resources/chara02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
+	}
+	if ((deathSprite.spdata->size.x <= 0) || (deathSprite.spdata->size.y <= 0))
+	{
+		deathSprite.CreateAndSetDivisionUVOffsets(8, 4, 2, 150, 150, TexManager::LoadTexture("Resources/die/die.png"));
 	}
 
 	Body_One.Create();
@@ -2651,6 +2739,13 @@ bool Player::IsOpenBlock(BodyType opentype)
 	}
 
 	return true;
+}
+
+void Player::DeathAnimation()
+{
+	isDeath = true;
+	deathPos = { CenterPosition.x, CenterPosition.y };
+	deathFrameCount = 0;
 }
 
 void Player::LoadPlayerSound()

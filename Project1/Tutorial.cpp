@@ -234,7 +234,7 @@ void Tutorial::Reset()
 
 void Tutorial::StartNormalTutorial()
 {
-	if (isTutorial)
+	if (isTutorial && isNormal)
 	{
 		return;
 	}
@@ -253,7 +253,7 @@ void Tutorial::StartNormalTutorial()
 
 void Tutorial::StartSelectTutorial()
 {
-	if (isTutorial)
+	if (isTutorial && isSelect)
 	{
 		return;
 	}
