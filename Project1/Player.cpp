@@ -2102,19 +2102,19 @@ void Player::IsOutsideFace()
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 50 <= FaceLeft)
+	if (NowLeft + 50 >= FaceLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 50 >= FaceRight)
+	if (NowRight + 50 <= FaceRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 50 <= FaceUp)
+	if (NowUp + 50 >= FaceUp)
 	{
 		IsOutSideUp = true;
 	}
-	if (NowDown + 50 >= FaceDown)
+	if (NowDown + 50 <= FaceDown)
 	{
 		IsOutSideDown = true;
 	}
@@ -2141,23 +2141,41 @@ void Player::IsOutsideFace()
 		fabs(Downwall.y - FaceDown)
 	};
 
-	if ((Leftwall.x > FaceLeft && (Buried_LU.x < Buried_LU.y)) || (Leftwall.y > FaceLeft && (Buried_LD.x < Buried_LD.y)))
+	if ((Leftwall.x > FaceLeft && (Buried_LU.x < Buried_LU.y)))
 	{
-		CenterPosition.x = NowLeft + 25;
+		CenterPosition.x = Leftwall.x + 25;
 	}
-	if ((Rightwall.x < FaceRight && (Buried_RU.x < Buried_RU.y)) || (Rightwall.y < FaceRight && (Buried_RD.x < Buried_RD.y)))
+	if ((Leftwall.y > FaceLeft && (Buried_LD.x < Buried_LD.y)))
 	{
-		CenterPosition.x = NowRight - 25;
+		CenterPosition.x = Leftwall.y + 25;
 	}
-	if ((Upwall.x >= FaceUp && (Buried_LU.x >= Buried_LU.y)) || (Upwall.y >= FaceUp && (Buried_RU.x >= Buried_RU.y)))
+	if ((Rightwall.x < FaceRight && (Buried_RU.x < Buried_RU.y)))
 	{
-		CenterPosition.y = NowUp + 25;
+		CenterPosition.x = Rightwall.x - 25;
+	}
+	if ((Rightwall.y < FaceRight && (Buried_RD.x < Buried_RD.y)))
+	{
+		CenterPosition.x = Rightwall.y - 25;
+	}
+	if ((Upwall.x >= FaceUp && (Buried_LU.x >= Buried_LU.y)))
+	{
+		CenterPosition.y = Upwall.x + 25;
 		FallSpeed = 0.0f;
 	}
-	if ((Downwall.x <= FaceDown && (Buried_LD.x >= Buried_LD.y)) || (Downwall.y <= FaceDown && (Buried_RD.x >= Buried_RD.y)))
+	if ((Upwall.y >= FaceUp && (Buried_RU.x >= Buried_RU.y)))
+	{
+		CenterPosition.y = Upwall.y + 25;
+		FallSpeed = 0.0f;
+	}
+	if ((Downwall.x <= FaceDown && (Buried_LD.x >= Buried_LD.y)))
 	{
 		isRespawn = true;
-		CenterPosition.y = NowDown - 25;
+		CenterPosition.y = Downwall.x - 25;
+	}
+	if ((Downwall.y <= FaceDown && (Buried_RD.x >= Buried_RD.y)))
+	{
+		isRespawn = true;
+		CenterPosition.y = Downwall.y - 25;
 	}
 }
 

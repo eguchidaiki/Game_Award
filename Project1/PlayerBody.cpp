@@ -1098,19 +1098,19 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 50 <= BodyLeft)
+	if (NowLeft + 50 >= BodyLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 50 >= BodyRight)
+	if (NowRight + 50 <= BodyRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 50 <= BodyUp)
+	if (NowUp + 50 >= BodyUp)
 	{
 		IsOutSideUp = true;
 	}
-	if (NowDown + 50 >= BodyDown)
+	if (NowDown + 50 <= BodyDown)
 	{
 		IsOutSideDown = true;
 	}
@@ -1139,27 +1139,49 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 
 	float push = 0;
 
-	if ((Leftwall.x > BodyLeft && (Buried_LU.x < Buried_LU.y)) || (Leftwall.y > BodyLeft && (Buried_LD.x < Buried_LD.y)))
+	if ((Leftwall.x > BodyLeft && (Buried_LU.x < Buried_LU.y)))
 	{
 		push = fabs(center->x - BodyLeft);
-		center->x = NowLeft + push;
+		center->x = Leftwall.x + push;
 	}
-	if ((Rightwall.x < BodyRight && (Buried_RU.x < Buried_RU.y)) || (Rightwall.y < BodyRight && (Buried_RD.x < Buried_RD.y)))
+	if ((Leftwall.y > BodyLeft && (Buried_LD.x < Buried_LD.y)))
+	{
+		push = fabs(center->x - BodyLeft);
+		center->x = Leftwall.y + push;
+	}
+	if ((Rightwall.x < BodyRight && (Buried_RU.x < Buried_RU.y)))
 	{
 		push = fabs(BodyRight - center->x);
-		center->x = NowRight - push - 1;
+		center->x = Rightwall.x - push - 1;
 	}
-	if ((Upwall.x > BodyUp && (Buried_LU.x > Buried_LU.y)) || (Upwall.y > BodyUp && (Buried_RU.x > Buried_RU.y)))
+	if ((Rightwall.y < BodyRight && (Buried_RD.x < Buried_RD.y)))
+	{
+		push = fabs(BodyRight - center->x);
+		center->x = Rightwall.y - push - 1;
+	}
+	if ((Upwall.x > BodyUp && (Buried_LU.x > Buried_LU.y)))
 	{
 		push = fabs(center->y - BodyUp);
-		center->y = NowUp + push + 1;
+		center->y = Upwall.x + push + 1;
 		FallSpeed = 0.0f;
 	}
-	if ((Downwall.x < BodyDown && (Buried_LD.x > Buried_LD.y)) || (Downwall.y < BodyDown && (Buried_RD.x > Buried_RD.y)))
+	if ((Upwall.y > BodyUp && (Buried_RU.x > Buried_RU.y)))
+	{
+		push = fabs(center->y - BodyUp);
+		center->y = Upwall.y + push + 1;
+		FallSpeed = 0.0f;
+	}
+	if ((Downwall.x < BodyDown && (Buried_LD.x > Buried_LD.y)))
 	{
 		player->isRespawn = true;
 		push = fabs(BodyDown - center->y);
-		center->y = NowDown - push;
+		center->y = Downwall.x - push;
+	}
+	if ((Downwall.y < BodyDown && (Buried_RD.x > Buried_RD.y)))
+	{
+		player->isRespawn = true;
+		push = fabs(BodyDown - center->y);
+		center->y = Downwall.y - push;
 	}
 }
 
