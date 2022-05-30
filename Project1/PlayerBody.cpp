@@ -8,9 +8,9 @@
 
 namespace
 {
-	static Stage* stage = Stage::Get();
-	static Player* player = Player::Get();
-	static ActFlag* isact = ActFlag::Get();
+static Stage* stage = Stage::Get();
+static Player* player = Player::Get();
+static ActFlag* isact = ActFlag::Get();
 }
 
 const float PlayerBody::BodySize = 50.0f;
@@ -131,7 +131,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 	}
 
 	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+								static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 
 	BodySprite.Draw();
 
@@ -732,7 +732,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -797,7 +797,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -1141,6 +1141,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	}
 	if ((Downwall.x < BodyDown && (Buried_LD.x > Buried_LD.y)) || (Downwall.y < BodyDown && (Buried_RD.x > Buried_RD.y)))
 	{
+		player->isRespawn = true;
 		push = fabs(BodyDown - center->y);
 		center->y = NowDown - push;
 	}

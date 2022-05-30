@@ -6,14 +6,14 @@
 
 namespace
 {
-	static size_t i = 0;
-	static ActFlag* actFlag = ActFlag::Get();
+static size_t i = 0;
+static ActFlag* actFlag = ActFlag::Get();
 
-	static int PlayerOffsetX = 0;
-	static int PlayerOffsetY = 0;
+static int PlayerOffsetX = 0;
+static int PlayerOffsetY = 0;
 
-	static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
-	static Stage* stage = Stage::Get();
+static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
+static Stage* stage = Stage::Get();
 }
 
 Player* Player::Get()
@@ -49,6 +49,7 @@ Player::Player() :
 	IsGoal(false),
 	IsColide(false),
 	IsDownBody(false),
+	isRespawn(false),
 	FaceLeg{}
 {
 }
@@ -760,9 +761,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if (((Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
-					(Body_One.IsActivate == true && Body_One.IsFold == true &&
-						Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
+					  Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
+					 (Body_One.IsActivate == true && Body_One.IsFold == true &&
+					  Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
 					IsMouseClickOpen(BodyType::right))
 				{
 					OpenCount = 0;
@@ -781,9 +782,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_One.IsActivate == true && Body_One.IsFold == true &&
-					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
-					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
+					 Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
+					 Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					 Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
 					IsMouseClickOpen(BodyType::left))
 				{
 					OpenCount = 0;
@@ -806,9 +807,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
-					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
+					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
+					 Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
 					IsMouseClickOpen(BodyType::down))
 				{
 					OpenCount = 0;
@@ -829,9 +830,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
-					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
+					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
+					 Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
 					IsUpBlocked == true && IsMouseClickOpen(BodyType::up))
 				{
 					OpenCount = 0;
@@ -1829,6 +1830,7 @@ void Player::IsOutsideFace()
 
 	if (NowStage == static_cast<size_t>(-1) || NowTile == static_cast<size_t>(-1))
 	{
+		isRespawn = true;
 		return;
 	}
 
@@ -2058,6 +2060,7 @@ void Player::IsOutsideFace()
 	}
 	if ((Downwall.x <= FaceDown && (Buried_LD.x >= Buried_LD.y)) || (Downwall.y <= FaceDown && (Buried_RD.x >= Buried_RD.y)))
 	{
+		isRespawn = true;
 		CenterPosition.y = NowDown - 25;
 	}
 }
@@ -2066,15 +2069,15 @@ bool Player::IsFall()
 {
 	int FallCount = 0;
 
-	if (Body_One.IsActivate == true && !Body_One.IsFold && Body_One.BodyIsFall == false)
+	if (Body_One.IsActivate == true && Body_One.BodyIsFall == false)
 	{
 		FallCount++;
 	}
-	if (Body_Three.IsActivate == true && !Body_Three.IsFold && Body_Three.BodyIsFall == false)
+	if (Body_Three.IsActivate == true && Body_Three.BodyIsFall == false)
 	{
 		FallCount++;
 	}
-	if (Body_Four.IsActivate == true && !Body_Four.IsFold && Body_Four.BodyIsFall == false)
+	if (Body_Four.IsActivate == true && Body_Four.BodyIsFall == false)
 	{
 		FallCount++;
 	}

@@ -17,16 +17,15 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 {
 	user_selecting = NOW_SELECTING::is_start;
 
-	titleMainSprite.Create(TexManager::LoadTexture("Resources/titr1.png"));
+	titleMainSprite.Create(TexManager::LoadTexture("Resources/title.png"));
 
 	cursor.Create(TexManager::LoadTexture("Resources/wakuF01.png"));
-	ui.Create(TexManager::LoadTexture("Resources/selectButton.png"));
 }
 
 //初期化
 void Title::Initialize()
 {
-
+	SChangeDir::Get()->PlayChangedDirection();
 }
 
 void Title::Finalize()
@@ -46,7 +45,12 @@ void Title::Update()
 	switch (user_selecting)
 	{
 	case Title::is_start:
-		if (inputManger->DecisionTrigger()) { mSceneChanger->ChangeScene(eScene_Game); }
+		if (inputManger->DecisionTrigger()) { 
+			SChangeDir::Get()->PlayChangingDirection();
+		}
+		if (SChangeDir::Get()->isChangeActivate) {
+			mSceneChanger->ChangeScene(eScene_Game);
+		}
 
 		break;
 	case Title::is_end:
@@ -80,8 +84,4 @@ void Title::Draw()
 		break;
 	}
 	cursor.Draw();
-
-	ui.DrawSprite(Raki_WinAPI::window_width - 248, MENUICON_START_Y + MENUICON_SIZE_Y * 2 + MENUICON_OFFSET);
-	ui.Draw();
-
 }

@@ -3,6 +3,7 @@
 #include "Raki_DX12B.h"
 #include "Stage.h"
 #include "Player.h"
+#include "SChangeDir.h"
 
 namespace
 {
@@ -77,10 +78,7 @@ void GameMainManager::Update()
 	{
 		changecount++;
 
-		if (changecount > 20)
-		{
-			IsGoSelect = true;
-		}
+		Audio::StopLoadedSound(playBGM);
 	}
 
 	//クリアフラグが立ったら遷移演出、セレクトに移動する処理を書きたい所存
@@ -115,6 +113,12 @@ void GameMainManager::GameInstanceUpdate()
 		//各ステージの処理
 		player->Update(stage->drawOffsetX, stage->drawOffsetY);
 		bool PlayerBodyStatus[4] = {};
+
+		if (player->isRespawn)
+		{
+			IsStart = false;
+			player->isRespawn = false;
+		}
 
 		IsFolds[0] = player->IsLeftFold;
 		IsFolds[1] = player->IsUpFold;
@@ -156,6 +160,7 @@ void GameMainManager::GameInstanceUpdate()
 			player->IsOpenCountStart = false;
 		}
 
+
 		//ゴールした判定？
 		if (player->IsGoal && !Ischangecount)
 		{
@@ -195,8 +200,14 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 
 	if (NowScene == 1)
 	{
-		tutorial.StartTutorial();
+		tutorial.StartNormalTutorial();
 	}
+	if (NowScene == 3)
+	{
+		tutorial.StartSelectTutorial();
+	}
+
+	SChangeDir::Get()->PlayChangedDirection();
 }
 
 void GameMainManager::SetGameToSelect()
@@ -207,6 +218,11 @@ void GameMainManager::SetGameToSelect()
 	changecount = 0;
 
 	tutorial.Init();
+}
+
+StageClearedControler* GameMainManager::GetSCCtrl()
+{
+	return &stageClearCtrl;
 }
 
 void GameMainManager::GameInstanceDraw()

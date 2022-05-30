@@ -49,6 +49,8 @@ public:
 	void SetSelectToGame(int SelectStageNum);
 	void SetGameToSelect();
 
+	StageClearedControler* GetSCCtrl();
+
 private:
 	void GameInstanceUpdate();
 	void GameInstanceDraw();

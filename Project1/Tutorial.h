@@ -1,5 +1,7 @@
 #pragma once
 #include "Sprite.h"
+#include "RVector.h"
+#include "Easing.h"
 
 class Tutorial
 {
@@ -12,6 +14,14 @@ public: //サブクラス
 		FOLD,  //折るのチュートリアル
 		SELECT //カーソル移動のチュートリアル
 	};
+
+public: //定数
+	static const int backFrameWadth; //背景の枠線の幅
+	
+	static const XMFLOAT2 moveSpriteSize;   //移動のチュートリアルの画像サイズ
+	static const XMFLOAT2 jumpSpriteSize;   //ジャンプのチュートリアルの画像サイズ
+	static const XMFLOAT2 foldSpriteSize;   //折る開くのチュートリアルの画像サイズ
+	static const XMFLOAT2 selectSpriteSize; //カーソル移動のチュートリアルの画像サイズ
 
 public: //メンバ関数
 	Tutorial();
@@ -29,9 +39,20 @@ public: //メンバ関数
 	void Reset();
 
 	// チュートリアルを開始する
-	void StartTutorial();
+	void StartNormalTutorial();
+	// チュートリアルを開始する
+	void StartSelectTutorial();
 	// チュートリアル中かどうか
 	inline bool GetTutorialFlag() { return isTutorial; }
+private:
+	// 移動のチュートリアル
+	void MoveTutorial(const XMFLOAT2& offset, bool flag);
+	// ジャンプのチュートリアル
+	void JumpTutorial(const XMFLOAT2& offset, bool flag);
+	// 折る開くのチュートリアル
+	void FoldTutorial(const XMFLOAT2& offset, bool flag);
+	// カーソル移動のチュートリアル
+	void SelectTutorial(const XMFLOAT2& offset, bool flag);
 
 public: //メンバ変数
 	bool isFirstOnly;
@@ -39,16 +60,21 @@ public: //メンバ変数
 private:
 	bool isTutorial;
 	TutorialState tutorialState;
-	bool isMoveTutorial;
-	bool isJumpTutorial;
-	bool isFoldTutorial;
 	bool isFirst;
+	bool isNormal;
+	bool isSelect;
 
 	//画像ハンドル
+	Sprite frameSprite;
 	Sprite moveSprite;
 	Sprite jumpSprite;
 	Sprite foldSprite;
 	Sprite selectSprite;
 
-	XMFLOAT2 spriteSize;
+	bool isEase;             //イージング中かどうか
+	TutorialState easeState; //どのチュートリアルが動いているか
+	float timeRate;
+	RVector3 startPos; //イージングの開始位置
+	RVector3 endPos;   //イージングの終了位置
+	RVector3 easePos;  //イージング中の座標
 };

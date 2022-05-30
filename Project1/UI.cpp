@@ -37,7 +37,7 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 		player->Init();
 		player->BodySetUp(PlayerTile);
 
-		if (StageNum == 0)
+		if (StageNum == 1 || StageNum == 3)
 		{
 			tutorial->Reset();
 		}
