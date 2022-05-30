@@ -1506,7 +1506,7 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 		switch (FoldType)
 		{
 		case BodyType::left:
-			if ((ThisTile->offsetX + ThisTile->width) * blockSize + 26 < player->CenterPosition.x &&
+			if ((ThisTile->offsetX + ThisTile->width) * blockSize + 25 < player->CenterPosition.x &&
 				(ThisTile->offsetX + ThisTile->width) * blockSize + 300 > player->CenterPosition.x &&
 				(ThisTile->offsetY) * blockSize < player->CenterPosition.y &&
 				(ThisTile->offsetY + ThisTile->height) * blockSize > player->CenterPosition.y)
@@ -1516,7 +1516,7 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 			break;
 
 		case BodyType::right:
-			if ((ThisTile->offsetX) * blockSize - 26 > player->CenterPosition.x &&
+			if ((ThisTile->offsetX) * blockSize - 25 > player->CenterPosition.x &&
 				(ThisTile->offsetX) * blockSize - 300 < player->CenterPosition.x &&
 				(ThisTile->offsetY) * blockSize < player->CenterPosition.y &&
 				(ThisTile->offsetY + ThisTile->height) * blockSize > player->CenterPosition.y)
@@ -1526,7 +1526,7 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 			break;
 
 		case BodyType::up:
-			if ((ThisTile->offsetY + ThisTile->height) * blockSize + 26 < player->CenterPosition.y &&
+			if ((ThisTile->offsetY + ThisTile->height) * blockSize + 25 < player->CenterPosition.y &&
 				(ThisTile->offsetY + ThisTile->height) * blockSize + 300 > player->CenterPosition.y &&
 				(ThisTile->offsetX) * blockSize < player->CenterPosition.x &&
 				(ThisTile->offsetX + ThisTile->width) * blockSize > player->CenterPosition.x)
@@ -1536,7 +1536,7 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 			break;
 
 		case BodyType::down:
-			if ((ThisTile->offsetY) * blockSize - 26 > player->CenterPosition.y &&
+			if ((ThisTile->offsetY) * blockSize - 25 > player->CenterPosition.y &&
 				(ThisTile->offsetY) * blockSize - 300 < player->CenterPosition.y &&
 				(ThisTile->offsetX) * blockSize < player->CenterPosition.x &&
 				(ThisTile->offsetX + ThisTile->width) * blockSize > player->CenterPosition.x)
@@ -2147,7 +2147,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 						playertiles->offsetX + playertiles->width >= stageData[selectStageNum].stageTileData[b].offsetX))
 				{
 					if (player->Body_Two.IsActivate && player->Body_Two.IsFold &&
-						player->Body_Two.AfterBodyFoldCount == 0 && !player->Body_Two.IsAction &&
+						!player->Body_Two.IsAction &&
 						player->IsUpBlocked)
 					{
 						if (player->IsOpenBlock(BodyType::up))
@@ -2172,7 +2172,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 						playertiles->offsetX + playertiles->width >= stageData[selectStageNum].stageTileData[b].offsetX))
 				{
 					if (player->Body_Four.IsActivate && player->Body_Four.IsFold &&
-						player->Body_Four.AfterBodyFoldCount == 0 && !player->Body_Four.IsAction)
+						!player->Body_Four.IsAction)
 					{
 						if (player->IsOpenBlock(BodyType::down))
 						{
@@ -2196,7 +2196,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 						playertiles->offsetY + playertiles->height >= stageData[selectStageNum].stageTileData[b].offsetY))
 				{
 					if (player->Body_One.IsActivate && player->Body_One.IsFold &&
-						player->Body_One.AfterBodyFoldCount == 0 && !player->Body_One.IsAction)
+						!player->Body_One.IsAction)
 					{
 						if (player->IsOpenBlock(BodyType::left))
 						{
@@ -2220,7 +2220,7 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 						playertiles->offsetY + playertiles->height >= stageData[selectStageNum].stageTileData[b].offsetY))
 				{
 					if (player->Body_Three.IsActivate && player->Body_Three.IsFold &&
-						player->Body_Three.AfterBodyFoldCount == 0 && !player->Body_Three.IsAction)
+						!player->Body_Three.IsAction)
 					{
 						if (player->IsOpenBlock(BodyType::right))
 						{

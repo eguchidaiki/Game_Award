@@ -1979,7 +1979,8 @@ void Player::IsOutsideFace()
 			if (FaceUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				FaceUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Leftwall.x > stage->GetStageTileOffsetX(i, j) * stage->blockSize)
+				if (Leftwall.x > stage->GetStageTileOffsetX(i, j) * stage->blockSize &&
+					fabs(Leftwall.x - stage->GetStageTileOffsetX(i, j) * stage->blockSize) < 600)
 				{
 					Leftwall.x = static_cast<float>(stage->GetStageTileOffsetX(i, j)) * stage->blockSize;
 				}
@@ -1988,7 +1989,8 @@ void Player::IsOutsideFace()
 			if (FaceDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				FaceDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Leftwall.y > (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
+				if (Leftwall.y > (stage->GetStageTileOffsetX(i, j)) * stage->blockSize &&
+					fabs(Leftwall.y - stage->GetStageTileOffsetX(i, j) * stage->blockSize) < 600)
 				{
 					Leftwall.y = static_cast<float>(stage->GetStageTileOffsetX(i, j)) * stage->blockSize;
 				}
@@ -1998,7 +2000,8 @@ void Player::IsOutsideFace()
 			if (FaceUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				FaceUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Rightwall.x < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (Rightwall.x < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+					fabs(Rightwall.x - fabs((stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)) < 600)
 				{
 					Rightwall.x = static_cast<float>(stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
@@ -2007,7 +2010,8 @@ void Player::IsOutsideFace()
 			if (FaceDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				FaceDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Rightwall.y < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (Rightwall.y < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+					fabs(Rightwall.y - fabs((stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)) < 600)
 				{
 					Rightwall.y = static_cast<float>(stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
@@ -2017,7 +2021,8 @@ void Player::IsOutsideFace()
 			if (FaceLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				FaceLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Upwall.x > stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+				if (Upwall.x > stage->GetStageTileOffsetY(i, j) * stage->blockSize &&
+					fabs(Upwall.x - stage->GetStageTileOffsetY(i, j) * stage->blockSize) < 600)
 				{
 					Upwall.x = static_cast<float>(stage->GetStageTileOffsetY(i, j)) * stage->blockSize;
 				}
@@ -2026,7 +2031,8 @@ void Player::IsOutsideFace()
 			if (FaceRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				FaceRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Upwall.y > (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
+				if (Upwall.y > (stage->GetStageTileOffsetY(i, j)) * stage->blockSize &&
+					fabs(Upwall.y - stage->GetStageTileOffsetY(i, j) * stage->blockSize) < 600)
 				{
 					Upwall.y = static_cast<float>(stage->GetStageTileOffsetY(i, j)) * stage->blockSize;
 				}
@@ -2036,7 +2042,8 @@ void Player::IsOutsideFace()
 			if (FaceLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				FaceLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Downwall.x < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (Downwall.x < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+					fabs(Downwall.x - fabs((stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)) < 600)
 				{
 					Downwall.x = static_cast<float>(stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
@@ -2045,7 +2052,8 @@ void Player::IsOutsideFace()
 			if (FaceRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				FaceRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Downwall.y < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (Downwall.y < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+					fabs(Downwall.y - fabs((stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)) < 600)
 				{
 					Downwall.y = static_cast<float>(stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}

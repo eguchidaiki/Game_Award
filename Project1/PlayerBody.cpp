@@ -8,9 +8,9 @@
 
 namespace
 {
-static Stage* stage = Stage::Get();
-static Player* player = Player::Get();
-static ActFlag* isact = ActFlag::Get();
+	static Stage* stage = Stage::Get();
+	static Player* player = Player::Get();
+	static ActFlag* isact = ActFlag::Get();
 }
 
 const float PlayerBody::BodySize = 50.0f;
@@ -131,7 +131,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 	}
 
 	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-								static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 
 	BodySprite.Draw();
 
@@ -600,6 +600,10 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 	if (IsFold || !IsActivate)
 	{
+		IsHitLeft = false;
+		IsHitUp = false;
+		IsHitRight = false;
+		IsHitDown = false;
 		return;
 	}
 
@@ -862,8 +866,12 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 {
 	Update(*center);
 
-	if (this->IsAction || !IsActivate || player->Player_IsAction)
+	if (this->IsAction || !IsActivate || player->Player_IsAction || IsFold)
 	{
+		IsOutSideLeft = false;
+		IsOutSideRight = false;
+		IsOutSideUp = false;
+		IsOutSideDown = false;
 		return;
 	}
 
@@ -967,7 +975,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Leftwall.x > stage->GetStageTileOffsetX(i, j) * stage->blockSize)
+				if (Leftwall.x > stage->GetStageTileOffsetX(i, j) * stage->blockSize &&
+					fabs(Leftwall.x - stage->GetStageTileOffsetX(i, j) * stage->blockSize) < 600)
 				{
 					Leftwall.x = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
@@ -976,7 +985,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Leftwall.y > (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
+				if (Leftwall.y > (stage->GetStageTileOffsetX(i, j)) * stage->blockSize &&
+					fabs(Leftwall.y - stage->GetStageTileOffsetX(i, j) * stage->blockSize) < 600)
 				{
 					Leftwall.y = stage->GetStageTileOffsetX(i, j) * stage->blockSize;
 				}
@@ -986,7 +996,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Rightwall.x < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (Rightwall.x < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+					fabs(Rightwall.x - fabs((stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)) < 600)
 				{
 					Rightwall.x = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
@@ -995,7 +1006,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyDown <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				BodyDown >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
 			{
-				if (Rightwall.y < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)
+				if (Rightwall.y < (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
+					fabs(Rightwall.y - fabs((stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize)) < 600)
 				{
 					Rightwall.y = (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize;
 				}
@@ -1005,7 +1017,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Upwall.x > stage->GetStageTileOffsetY(i, j) * stage->blockSize)
+				if (Upwall.x > stage->GetStageTileOffsetY(i, j) * stage->blockSize &&
+					fabs(Upwall.x - stage->GetStageTileOffsetY(i, j) * stage->blockSize) < 600)
 				{
 					Upwall.x = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
 				}
@@ -1014,7 +1027,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Upwall.y > (stage->GetStageTileOffsetY(i, j)) * stage->blockSize)
+				if (Upwall.y > (stage->GetStageTileOffsetY(i, j)) * stage->blockSize &&
+					fabs(Upwall.y - stage->GetStageTileOffsetY(i, j) * stage->blockSize) < 600)
 				{
 					Upwall.y = stage->GetStageTileOffsetY(i, j) * stage->blockSize;
 				}
@@ -1024,7 +1038,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyLeft <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyLeft >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Downwall.x < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (Downwall.x < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+					fabs(Downwall.x - fabs((stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)) < 600)
 				{
 					Downwall.x = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
@@ -1033,7 +1048,8 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 			if (BodyRight <= (stage->GetStageTileOffsetX(i, j) + stage->GetStageTileWidth(i, j)) * stage->blockSize &&
 				BodyRight >= (stage->GetStageTileOffsetX(i, j)) * stage->blockSize)
 			{
-				if (Downwall.y < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)
+				if (Downwall.y < (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
+					fabs(Downwall.y - fabs((stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize)) < 600)
 				{
 					Downwall.y = (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize;
 				}
