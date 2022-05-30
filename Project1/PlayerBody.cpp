@@ -630,13 +630,13 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 	{
 		BodyUp = BodyStartPos.y;
 		BodyDown = BodyEndPos.y - 1;
-		BodyAndLegDown = BodyDown + 8;
+		BodyAndLegDown = BodyDown + 9;
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
 		BodyDown = BodyStartPos.y - 1;
-		BodyAndLegDown = BodyDown + 8;
+		BodyAndLegDown = BodyDown + 9;
 	}
 
 	//四辺をブロックサイズで割った数
@@ -1187,7 +1187,7 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 
 bool PlayerBody::IsReverseHitBody(const unsigned char& direction)
 {
-	if (Player::Get()->IsPressInStage() == false || this->IsFold)
+	if (this->IsFold)
 	{
 		return false;
 	}
