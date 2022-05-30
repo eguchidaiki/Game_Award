@@ -1623,121 +1623,114 @@ int Stage::FoldSimulation(const RVector3& playerPos, const unsigned char& direct
 
 	isFold = false;
 
-	for (i = 0; i < stageData.size(); i++)
+
+	for (j = 0; j < SelectStage->stageTileData.size(); j++)
 	{
-		for (j = 0; j < stageData[i].stageTileData.size(); j++)
+		if ((playerPos.x / blockSize >= SelectStage->stageTileData[j].offsetX &&
+			playerPos.x / blockSize < SelectStage->stageTileData[j].offsetX + SelectStage->stageTileData[j].width) &&
+			(playerPos.y / blockSize >= SelectStage->stageTileData[j].offsetY &&
+				playerPos.y / blockSize < SelectStage->stageTileData[j].offsetY + SelectStage->stageTileData[j].height))
 		{
-			if ((playerPos.x / blockSize >= stageData[i].stageTileData[j].offsetX &&
-				playerPos.x / blockSize < stageData[i].stageTileData[j].offsetX + stageData[i].stageTileData[j].width) &&
-				(playerPos.y / blockSize >= stageData[i].stageTileData[j].offsetY &&
-					playerPos.y / blockSize < stageData[i].stageTileData[j].offsetY + stageData[i].stageTileData[j].height))
-			{
-				onPlayerStageData = i;
-			}
-			else
-			{
-				continue;
-			}
+			onPlayerStageData = selectStageNum;
+		}
+		else
+		{
+			continue;
+		}
 
-			switch (direction)
+		switch (direction)
+		{
+		case BodyType::up: //上入力
+		{
+			if (static_cast<unsigned char>(SelectStage->stageTileData[j].stageNumber) / SelectStage->width <= 0)
 			{
-			case BodyType::up: //上入力
-			{
-				if (static_cast<unsigned char>(stageData[i].stageTileData[j].stageNumber) / stageData[i].width <= 0)
-				{
-					// プレイヤーがいるステージタイルが端
-					break;
-				}
-
-				moveStageTile = stageData[i].stageTileData[j].stageNumber - stageData[i].width;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile < 0 ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					// ステージタイルがその方向に折れない
-					break;
-				}
-
-				isFold = true;
+				// プレイヤーがいるステージタイルが端
 				break;
 			}
-			case BodyType::down: //下入力
+
+			moveStageTile = SelectStage->stageTileData[j].stageNumber - SelectStage->width;
+			moveStageData = static_cast<size_t>(SelectStage->stageTile[moveStageTile]) - 1;
+
+			if (moveStageTile < 0 ||
+				SelectStage->stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
 			{
-				if (static_cast<unsigned char>(stageData[i].stageTileData[j].stageNumber) / stageData[i].width >= stageData[i].height - 1)
-				{
-					// プレイヤーがいるステージタイルが端
-					break;
-				}
-
-				moveStageTile = stageData[i].stageTileData[j].stageNumber + stageData[i].width;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					// ステージタイルがその方向に折れない
-					break;
-				}
-
-				isFold = true;
+				// ステージタイルがその方向に折れない
 				break;
 			}
-			case BodyType::left: //左入力
+
+			isFold = true;
+			break;
+		}
+		case BodyType::down: //下入力
+		{
+			if (static_cast<unsigned char>(SelectStage->stageTileData[j].stageNumber) / SelectStage->width >= SelectStage->height - 1)
 			{
-				if (static_cast<unsigned char>(stageData[i].stageTileData[j].stageNumber) % stageData[i].width <= 0)
-				{
-					// プレイヤーがいるステージタイルが端
-					break;
-				}
-
-				moveStageTile = static_cast<size_t>(stageData[i].stageTileData[j].stageNumber) - 1;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile < 0 ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					// ステージタイルがその方向に折れない
-					break;
-				}
-
-				isFold = true;
+				// プレイヤーがいるステージタイルが端
 				break;
 			}
-			case BodyType::right: //右入力
+
+			moveStageTile = SelectStage->stageTileData[j].stageNumber + SelectStage->width;
+			moveStageData = static_cast<size_t>(SelectStage->stageTile[moveStageTile]) - 1;
+
+			if (moveStageTile >= static_cast<size_t>(SelectStage->width * SelectStage->height) ||
+				SelectStage->stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
 			{
-				if (static_cast<unsigned char>(stageData[i].stageTileData[j].stageNumber) % stageData[i].width >= stageData[i].width - 1)
-				{
-					// プレイヤーがいるステージタイルが端
-					break;
-				}
-
-				moveStageTile = static_cast<size_t>(stageData[i].stageTileData[j].stageNumber) + 1;
-				moveStageData = static_cast<size_t>(stageData[i].stageTile[moveStageTile]) - 1;
-
-				if (moveStageTile >= static_cast<size_t>(stageData[i].width * stageData[i].height) ||
-					stageData[i].stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
-				{
-					// ステージタイルがその方向に折れない
-					break;
-				}
-
-				isFold = true;
+				// ステージタイルがその方向に折れない
 				break;
 			}
-			default:
-			{
-				*returnMapchip = nullptr;
 
-				return EF;
+			isFold = true;
+			break;
+		}
+		case BodyType::left: //左入力
+		{
+			if (static_cast<unsigned char>(SelectStage->stageTileData[j].stageNumber) % SelectStage->width <= 0)
+			{
+				// プレイヤーがいるステージタイルが端
 				break;
 			}
-			}
 
-			if (isFold)
+			moveStageTile = static_cast<size_t>(SelectStage->stageTileData[j].stageNumber) - 1;
+			moveStageData = static_cast<size_t>(SelectStage->stageTile[moveStageTile]) - 1;
+
+			if (moveStageTile < 0 ||
+				SelectStage->stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
 			{
+				// ステージタイルがその方向に折れない
 				break;
 			}
+
+			isFold = true;
+			break;
+		}
+		case BodyType::right: //右入力
+		{
+			if (static_cast<unsigned char>(SelectStage->stageTileData[j].stageNumber) % SelectStage->width >= SelectStage->width - 1)
+			{
+				// プレイヤーがいるステージタイルが端
+				break;
+			}
+
+			moveStageTile = static_cast<size_t>(SelectStage->stageTileData[j].stageNumber) + 1;
+			moveStageData = static_cast<size_t>(SelectStage->stageTile[moveStageTile]) - 1;
+
+			if (moveStageTile >= static_cast<size_t>(SelectStage->width * SelectStage->height) ||
+				SelectStage->stageTile[moveStageTile] == MapchipData::EMPTY_STAGE)
+			{
+				// ステージタイルがその方向に折れない
+				break;
+			}
+
+			isFold = true;
+			break;
+		}
+		default:
+		{
+			*returnMapchip = nullptr;
+
+			return EF;
+			break;
+		}
 		}
 
 		if (isFold)

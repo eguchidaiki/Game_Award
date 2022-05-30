@@ -1975,6 +1975,11 @@ void Player::IsOutsideFace()
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
+			if (stage->IsTileMove(i, j))
+			{
+				continue;
+			}
+
 			//左のoffset計算(左上)
 			if (FaceUp <= (stage->GetStageTileOffsetY(i, j) + stage->GetStageTileHeight(i, j)) * stage->blockSize &&
 				FaceUp >= stage->GetStageTileOffsetY(i, j) * stage->blockSize)
