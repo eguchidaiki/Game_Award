@@ -107,6 +107,8 @@ public: //メンバ関数
 	//ブロックに邪魔されずに開けるかどうか
 	bool IsOpenBlock(BodyType opentype);
 
+	void DeathAnimation();
+
 	// プレイヤーのサウンドの読み込み
 	void LoadPlayerSound();
 	// プレイヤーのサウンドデータの削除
@@ -230,6 +232,11 @@ public: //メンバ変数
 	//描画用スプライト
 	Sprite PlayerSprite;
 	Sprite PlayerSpriteAction;
+	Sprite deathSprite;
+
+	XMFLOAT2 deathPos;      //死んだときの座標
+	bool isDeath;           //死んだときのアニメーション中かどうか
+	size_t deathFrameCount; //死んだときのアニメーションカウント
 
 	//マウスのクリック座標
 	XMFLOAT2 PressPos = { 0, 0 };
