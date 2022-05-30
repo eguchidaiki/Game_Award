@@ -2165,6 +2165,10 @@ void Stage::SetOnPlayerStageTileOpen(std::vector<size_t>& stagenumber, std::vect
 		}
 	}
 
+	if (player->IsDirectionOpenAll(direction))
+	{
+		return;
+	}
 
 	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
 	{

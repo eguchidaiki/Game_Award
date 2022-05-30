@@ -360,10 +360,10 @@ public:
 	StageData* SelectStage;
 	size_t selectStageNum = 0;
 	size_t selectTileNum = 0;
+	std::vector<StageData> initStageData;
 
 private: //メンバ変数
 	std::vector<StageData> stageData;
-	std::vector<StageData> initStageData;
 
 
 	char* reverseMapchip;
