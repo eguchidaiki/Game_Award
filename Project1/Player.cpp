@@ -6,14 +6,14 @@
 
 namespace
 {
-static size_t i = 0;
-static ActFlag* actFlag = ActFlag::Get();
+	static size_t i = 0;
+	static ActFlag* actFlag = ActFlag::Get();
 
-static int PlayerOffsetX = 0;
-static int PlayerOffsetY = 0;
+	static int PlayerOffsetX = 0;
+	static int PlayerOffsetY = 0;
 
-static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
-static Stage* stage = Stage::Get();
+	static InputManger* inputManger = InputManger::Get(); //インプットマネージャー
+	static Stage* stage = Stage::Get();
 }
 
 Player* Player::Get()
@@ -50,7 +50,10 @@ Player::Player() :
 	IsColide(false),
 	IsDownBody(false),
 	isRespawn(false),
-	FaceLeg{}
+	FaceLeg{},
+	deathPos{},
+	isDeath(false),
+	deathFrameCount(0)
 {
 }
 
@@ -84,6 +87,23 @@ void Player::Init()
 
 void Player::Update(int offsetX, int offsetY)
 {
+	static size_t animationCount = 0;
+
+	animationCount++;
+	animationCount %= 0xFFFFFFFF;
+
+	if (isDeath)
+	{
+		if (animationCount % 5 == 0)
+		{
+			deathFrameCount++;
+		}
+		if (deathFrameCount >= 8 + 1)
+		{
+			isDeath = false;
+		}
+	}
+
 	PlayerOffsetX = offsetX;
 	PlayerOffsetY = offsetY;
 
@@ -225,46 +245,111 @@ void Player::Update(int offsetX, int offsetY)
 	Body_Four.Update(CenterPosition);
 	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
+
+	if (isRespawn)
+	{
+		DeathAnimation();
+	}
 }
 
 void Player::Draw(int offsetX, int offsetY)
 {
 	FaceLeg.Draw(offsetX, offsetY, IsLeft, IsRight);
+
+	float upPos = (CenterPosition.y - 25) + offsetY;
+	float downPos = (CenterPosition.y + 25) + offsetY;
+	float leftPos = (CenterPosition.x - 25) + offsetX;
+	float rightPos = (CenterPosition.x + 25) + offsetX;
+
 	if (IsLeft)
 	{
-		if (Player_IsAction)
+		if (isDeath)
+		{
+			if (deathFrameCount < 8)
+			{
+				deathSprite.uvOffsetHandle = 8 - deathFrameCount - 1;
+				deathSprite.DrawExtendSprite(
+					leftPos - 50, upPos - 50,
+					rightPos + 50, downPos + 50);
+			}
+			else
+			{
+				PlayerSprite.DrawExtendSprite(
+					leftPos, upPos,
+					rightPos, downPos);
+			}
+		}
+		else if (Player_IsAction)
 		{
 			PlayerSpriteAction.DrawExtendSprite(
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				leftPos, upPos,
+				rightPos, downPos);
 		}
 		else
 		{
 			PlayerSprite.DrawExtendSprite(
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				leftPos, upPos,
+				rightPos, downPos);
 		}
 	}
 	if (IsRight)
 	{
-		if (Player_IsAction)
+		if (isDeath)
+		{
+			if (deathFrameCount < 8)
+			{
+				deathSprite.uvOffsetHandle = 8 - deathFrameCount - 1;
+				deathSprite.DrawExtendSprite(
+					rightPos + 50, upPos - 50,
+					leftPos - 50, downPos + 50);
+			}
+			else
+			{
+				PlayerSprite.DrawExtendSprite(
+					rightPos, upPos,
+					leftPos, downPos);
+			}
+		}
+		else if (Player_IsAction)
 		{
 			PlayerSpriteAction.DrawExtendSprite(
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				rightPos, upPos,
+				leftPos, downPos);
 		}
 		else
 		{
 			PlayerSprite.DrawExtendSprite(
-				(CenterPosition.x + 25) + offsetX, (CenterPosition.y - 25) + offsetY,
-				(CenterPosition.x - 25) + offsetX, (CenterPosition.y + 25) + offsetY);
+				rightPos, upPos,
+				leftPos, downPos);
 		}
 	}
 
-	//bodyの描画(まとめた)
-	DrawBodys(offsetX, offsetY);
+	if (isDeath)
+	{
+		if (deathFrameCount < 8)
+		{
+			deathSprite.uvOffsetHandle = deathFrameCount;
+			deathSprite.DrawExtendSprite(
+				(deathPos.x - 75) + offsetX, (deathPos.y - 75) + offsetY,
+				(deathPos.x + 75) + offsetX, (deathPos.y + 75) + offsetY);
+		}
+	}
+	else
+	{
+		//bodyの描画(まとめた)
+		DrawBodys(offsetX, offsetY);
+	}
 
-	if (Player_IsAction)
+	if (isDeath)
+	{
+		deathSprite.Draw();
+
+		if (deathFrameCount >= 8)
+		{
+			PlayerSprite.Draw();
+		}
+	}
+	else if (Player_IsAction)
 	{
 		PlayerSpriteAction.Draw();
 	}
@@ -337,11 +422,14 @@ void Player::Create()
 		FaceHandle[0] = TexManager::LoadTexture("Resources/chara.png");
 		PlayerSprite.Create(FaceHandle[0]);
 	}
-
 	if ((PlayerSpriteAction.spdata->size.x <= 0) || (PlayerSpriteAction.spdata->size.y <= 0))
 	{
 		FaceHandle[1] = TexManager::LoadTexture("Resources/chara02.png");
 		PlayerSpriteAction.Create(FaceHandle[1]);
+	}
+	if ((deathSprite.spdata->size.x <= 0) || (deathSprite.spdata->size.y <= 0))
+	{
+		deathSprite.CreateAndSetDivisionUVOffsets(8, 4, 2, 150, 150, TexManager::LoadTexture("Resources/die/die.png"));
 	}
 
 	Body_One.Create();
@@ -761,9 +849,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if (((Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					  Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
-					 (Body_One.IsActivate == true && Body_One.IsFold == true &&
-					  Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::right) ||
+					(Body_One.IsActivate == true && Body_One.IsFold == true &&
+						Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::right)) &&
 					IsMouseClickOpen(BodyType::right))
 				{
 					OpenCount = 0;
@@ -782,9 +870,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_One.IsActivate == true && Body_One.IsFold == true &&
-					 Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
-					 Body_Three.IsActivate == true && Body_Three.IsFold == true &&
-					 Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
+					Body_One.AfterBodyFoldCount == 0 && Body_One.Body_Type == BodyType::left ||
+					Body_Three.IsActivate == true && Body_Three.IsFold == true &&
+					Body_Three.AfterBodyFoldCount == 0 && Body_Three.Body_Type == BodyType::left) &&
 					IsMouseClickOpen(BodyType::left))
 				{
 					OpenCount = 0;
@@ -807,9 +895,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
-					 Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::down ||
+					Body_Two.IsActivate == true && Body_Two.IsFold == true &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::down) &&
 					IsMouseClickOpen(BodyType::down))
 				{
 					OpenCount = 0;
@@ -830,9 +918,9 @@ void Player::Mouse_FoldOpen(int offsetX, int offsetY)
 					return;
 				}
 				if ((Body_Two.IsActivate == true && Body_Two.IsFold == true &&
-					 Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
-					 Body_Four.IsActivate == true && Body_Four.IsFold == true &&
-					 Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
+					Body_Two.AfterBodyFoldCount == 0 && Body_Two.Body_Type == BodyType::up ||
+					Body_Four.IsActivate == true && Body_Four.IsFold == true &&
+					Body_Four.AfterBodyFoldCount == 0 && Body_Four.Body_Type == BodyType::up) &&
 					IsUpBlocked == true && IsMouseClickOpen(BodyType::up))
 				{
 					OpenCount = 0;
@@ -2081,7 +2169,7 @@ bool Player::IsFall()
 	{
 		FallCount++;
 	}
-	if (IsFaceFall == false)
+	if (IsFaceFall == false && !IsDownBody)
 	{
 		FallCount++;
 	}
@@ -2651,6 +2739,13 @@ bool Player::IsOpenBlock(BodyType opentype)
 	}
 
 	return true;
+}
+
+void Player::DeathAnimation()
+{
+	isDeath = true;
+	deathPos = { CenterPosition.x, CenterPosition.y };
+	deathFrameCount = 0;
 }
 
 void Player::LoadPlayerSound()

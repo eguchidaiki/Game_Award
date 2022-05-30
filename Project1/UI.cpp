@@ -33,6 +33,8 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 
 	if ((IsResetPress && Input::isMouseClickTrigger(0)) || InputManger::Get()->ResetTrigger())
 	{
+		player->DeathAnimation();
+
 		stage->Reset(PlayerTile);
 		player->Init();
 		player->BodySetUp(PlayerTile);
