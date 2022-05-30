@@ -1264,7 +1264,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 
 	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
 	{
-		if (!SelectStage->stageTileData[a].isFold)
+		if (!SelectStage->stageTileData[a].isFold && SelectStage->stageTileData[a].Overlap == 0)
 		{
 			if (inputManeger->FoldUpTrigger() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::up)
@@ -1401,6 +1401,11 @@ bool Stage::IsTileFoldDirection(size_t stage, int direction)
 
 	for (int tile = 0; tile < SelectStage->stageTileData.size(); tile++)
 	{
+		if (SelectStage->stageTileData[tile].isFold)
+		{
+			continue;
+		}
+
 		switch (direction)
 		{
 		case BodyType::up:
@@ -1495,7 +1500,7 @@ bool Stage::IsPlayerPositionFold(int FoldType)
 	for (int a = 0; a < SelectStage->stageTileData.size(); a++)
 	{
 		//プレイヤーのいるタイルは飛ばす
-		if (IsPlayerTile(selectStageNum, a) == true ||
+		if ((IsPlayerTile(selectStageNum, a) && !IsNowTileOver(selectStageNum, a)) ||
 			stageData[selectStageNum].stageTileData[a].FoldType != FoldType)
 		{
 			continue;
@@ -2066,7 +2071,7 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 
 	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
 	{
-		if (IsPlayerTile(selectStageNum, b))
+		if (IsPlayerTile(selectStageNum, b) && !IsNowTileOver(selectStageNum, b))
 		{
 			continue;
 		}
