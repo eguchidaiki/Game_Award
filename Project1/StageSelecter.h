@@ -101,6 +101,8 @@ public:
 
 	void LoadStage(int stagenum);
 
+	void IconReset();
+
 private:
 	int _nowStageNumber = 0;
 

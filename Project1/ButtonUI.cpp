@@ -2,6 +2,13 @@
 
 SoundData UI_Button::_ui_push_sound;
 
+void UI_Button::Reset()
+{
+	isUserPushed = false;
+	isFunctionActivate = false;
+	count = 0;
+}
+
 void UI_Button::Init(int activateTimerag, UINT graphHandle, float baseWidth, float baseHeight)
 {
 	this->activateTimerag = activateTimerag;
