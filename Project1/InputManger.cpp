@@ -66,7 +66,7 @@ bool InputManger::EscapeTrigger()
 	return (isMenu == false && (Input::isKeyTrigger(DIK_ESCAPE)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_L));
 }
 
-bool InputManger::EscapeReturn()
+bool InputManger::EscapeRelease()
 {
 	return (isMenu == false && (Input::isKeyReleased(DIK_ESCAPE)) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_L));
 }
@@ -81,7 +81,7 @@ bool InputManger::UpTrigger()
 	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_UP) || Input::isXpadStickTiltTrigger(XPAD_LSTICK_DIR_UP);
 }
 
-bool InputManger::UpReturn()
+bool InputManger::UpRelease()
 {
 	return Input::isKeyReleased(DIK_W) || Input::isXpadButtonPushed(XPAD_BUTTON_CROSS_UP);
 }
@@ -96,7 +96,7 @@ bool InputManger::DownTrigger()
 	return Input::isKeyTrigger(DIK_S) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_DOWN) || Input::isXpadStickTiltTrigger(XPAD_LSTICK_DIR_DOWN);
 }
 
-bool InputManger::DownReturn()
+bool InputManger::DownRelease()
 {
 	return Input::isKeyReleased(DIK_S) || Input::isXpadButtonPushed(XPAD_BUTTON_CROSS_DOWN);
 }
@@ -111,7 +111,7 @@ bool InputManger::LeftTrigger()
 	return Input::isKeyTrigger(DIK_A) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_LEFT) || Input::isXpadStickTiltTrigger(XPAD_LSTICK_DIR_LEFT);
 }
 
-bool InputManger::LeftReturn()
+bool InputManger::LeftRelease()
 {
 	return Input::isKeyReleased(DIK_A) || Input::isXpadButtonPushed(XPAD_BUTTON_CROSS_LEFT);
 }
@@ -126,7 +126,7 @@ bool InputManger::RightTrigger()
 	return Input::isKeyTrigger(DIK_D) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_CROSS_RIGHT) || Input::isXpadStickTiltTrigger(XPAD_LSTICK_DIR_RIGHT);
 }
 
-bool InputManger::RightReturn()
+bool InputManger::RightRelease()
 {
 	return Input::isKeyReleased(DIK_D) || Input::isXpadButtonPushed(XPAD_BUTTON_CROSS_RIGHT);
 }
@@ -141,7 +141,7 @@ bool InputManger::SubUpTrigger()
 	return Input::isKeyTrigger(DIK_UP) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_UP);
 }
 
-bool InputManger::SubUpReturn()
+bool InputManger::SubUpRelease()
 {
 	return Input::isKeyReleased(DIK_UP);
 }
@@ -156,7 +156,7 @@ bool InputManger::SubDownTrigger()
 	return Input::isKeyTrigger(DIK_DOWN) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_DOWN);
 }
 
-bool InputManger::SubDownReturn()
+bool InputManger::SubDownRelease()
 {
 	return Input::isKeyReleased(DIK_DOWN);
 }
@@ -171,7 +171,7 @@ bool InputManger::SubLeftTrigger()
 	return Input::isKeyTrigger(DIK_LEFT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_LEFT);
 }
 
-bool InputManger::SubLeftReturn()
+bool InputManger::SubLeftRelease()
 {
 	return Input::isKeyReleased(DIK_LEFT);
 }
@@ -186,7 +186,7 @@ bool InputManger::SubRightTrigger()
 	return Input::isKeyTrigger(DIK_RIGHT) || Input::isXpadStickTiltTrigger(XPAD_RSTICK_DIR_RIGHT);
 }
 
-bool InputManger::SubRightReturn()
+bool InputManger::SubRightRelease()
 {
 	return Input::isKeyReleased(DIK_RIGHT);
 }
@@ -201,7 +201,7 @@ bool InputManger::DecisionTrigger()
 	return Input::isKeyTrigger(decisionKey) || Input::isXpadButtonPushTrigger(decisionXpad);
 }
 
-bool InputManger::DecisionReturn()
+bool InputManger::DecisionRelease()
 {
 	return Input::isKeyReleased(decisionKey) || Input::isXpadButtonPushed(decisionXpad);
 }
@@ -216,7 +216,7 @@ bool InputManger::CancelTrigger()
 	return Input::isKeyTrigger(cancelKey) || Input::isXpadButtonPushTrigger(cancelXpad);
 }
 
-bool InputManger::CancelReturn()
+bool InputManger::CancelRelease()
 {
 	return Input::isKeyReleased(cancelKey) || Input::isXpadButtonPushed(cancelXpad);
 }
@@ -231,7 +231,7 @@ bool InputManger::ResetTrigger()
 	return Input::isKeyTrigger(DIK_R) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_X);
 }
 
-bool InputManger::ResetReturn()
+bool InputManger::ResetRelease()
 {
 	return Input::isKeyReleased(DIK_R) || Input::isXpadButtonPushed(XPAD_BUTTON_X);
 }
@@ -246,7 +246,7 @@ bool InputManger::MenuTrigger()
 	return (isMenu && Input::isKeyTrigger(DIK_ESCAPE)) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_OPTION_R);
 }
 
-bool InputManger::MenuReturn()
+bool InputManger::MenuRelease()
 {
 	return (isMenu && Input::isKeyReleased(DIK_ESCAPE)) || Input::isXpadButtonPushed(XPAD_BUTTON_OPTION_R);
 }
@@ -261,7 +261,7 @@ bool InputManger::JumpTrigger()
 	return Input::isKeyTrigger(DIK_W) || Input::isXpadButtonPushTrigger(XPAD_BUTTON_A);
 }
 
-bool InputManger::JumpReturn()
+bool InputManger::JumpRelease()
 {
 	return Input::isKeyReleased(DIK_W) || Input::isXpadButtonPushed(XPAD_BUTTON_A);
 }
@@ -302,6 +302,42 @@ bool InputManger::FoldDownTrigger()
 	return SubUpTrigger();
 }
 
+bool InputManger::FoldLeftRelease()
+{
+	if (isInversionX)
+	{
+		return SubLeftRelease();
+	}
+	return SubRightRelease();
+}
+
+bool InputManger::FoldUpRelease()
+{
+	if (isInversionY)
+	{
+		return SubUpRelease();
+	}
+	return SubDownRelease();
+}
+
+bool InputManger::FoldRightRelease()
+{
+	if (isInversionX)
+	{
+		return SubRightRelease();
+	}
+	return SubLeftRelease();
+}
+
+bool InputManger::FoldDownRelease()
+{
+	if (isInversionY)
+	{
+		return SubDownRelease();
+	}
+	return SubUpRelease();
+}
+
 bool InputManger::OpenLeftTrigger()
 {
 	if (isInversionX)
@@ -336,6 +372,42 @@ bool InputManger::OpenDownTrigger()
 		return SubUpTrigger();
 	}
 	return SubDownTrigger();
+}
+
+bool InputManger::OpenLeftRelease()
+{
+	if (isInversionX)
+	{
+		return SubRightRelease();
+	}
+	return SubLeftRelease();
+}
+
+bool InputManger::OpenUpRelease()
+{
+	if (isInversionY)
+	{
+		return SubDownRelease();
+	}
+	return SubUpRelease();
+}
+
+bool InputManger::OpenRightRelease()
+{
+	if (isInversionX)
+	{
+		return SubLeftRelease();
+	}
+	return SubRightRelease();
+}
+
+bool InputManger::OpenDownRelease()
+{
+	if (isInversionY)
+	{
+		return SubUpRelease();
+	}
+	return SubDownRelease();
 }
 
 bool InputManger::FoldSelectTrigger()

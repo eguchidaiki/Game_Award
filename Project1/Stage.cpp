@@ -982,6 +982,8 @@ void Stage::SelectingStageTile()
 		{
 			selectCount = 0;
 		}
+		Audio::StopLoadedSound(selectSound);
+		Audio::volume = 0.75f;
 		Audio::PlayLoadedSound(selectSound);
 		isMoveSelectCursor = true;
 	}
