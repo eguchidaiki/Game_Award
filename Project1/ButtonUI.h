@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Sprite.h>
+#include <Audio.h>
 
 //ボタンクラス（動作自体は同じで、グラフィックやサイズなどを差し替えることで使い回す）
 class UI_Button
@@ -19,13 +20,15 @@ private:
 	const float EASE_SCALE_START_X = 1.0f;
 	float easeScaleX = 1.0f, easeSceleY = 1.0f;
 
+	static SoundData _ui_push_sound;
+
 public:
 	//このボタンはユーザーによって押されたか？
 	bool isUserPushed = false;
 	//このボタンが押されたことによって起こる処理を有効化させるか？
 	bool isFunctionActivate = false;
 
-
+	void Reset();
 	//初期化
 	void Init(int activateTimerag, UINT graphHandle, float baseWidth, float baseHeight);
 	//更新

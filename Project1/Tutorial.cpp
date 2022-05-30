@@ -22,8 +22,7 @@ Tutorial::Tutorial() :
 	tutorialState(TutorialState::NO_TUTORIAL),
 	isFirst(true),
 	isFirstOnly(false),
-	isNormal(false),
-	isSelect(false),
+	tutorialType(TutorialType::NORMAL_TYPE),
 	isEase(false),
 	easeState(TutorialState::NO_TUTORIAL),
 	timeRate(0.0f),
@@ -155,7 +154,8 @@ void Tutorial::Draw(int offsetX, int offsetY)
 	bool isPlayerUpBody = player->Body_Two.IsActivate && player->Body_Two.IsOpen;
 
 	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
-	frameSprite.DrawSprite(backFrameWadth, Raki_WinAPI::window_height - backFrameWadth - 130);
+	frameSprite.DrawExtendSprite(backFrameWadth, Raki_WinAPI::window_height / 2.0f,
+								 backFrameWadth + 150, Raki_WinAPI::window_height - backFrameWadth);
 	frameSprite.Draw();
 
 	if (tutorialState == TutorialState::NO_TUTORIAL)
@@ -219,13 +219,16 @@ void Tutorial::Create()
 
 void Tutorial::Reset()
 {
-	if (isNormal)
+	switch (tutorialType)
 	{
+	case TutorialType::NORMAL_TYPE:
 		tutorialState = TutorialState::MOVE;
-	}
-	else if (isSelect)
-	{
+		break;
+	case TutorialType::SELECT_TYPE:
 		tutorialState = TutorialState::SELECT;
+		break;
+	default:
+		break;
 	}
 
 	isTutorial = true;
@@ -234,7 +237,7 @@ void Tutorial::Reset()
 
 void Tutorial::StartNormalTutorial()
 {
-	if (isTutorial)
+	if (isTutorial && tutorialType == TutorialType::NORMAL_TYPE)
 	{
 		return;
 	}
@@ -246,14 +249,13 @@ void Tutorial::StartNormalTutorial()
 	}
 
 	isTutorial = true;
-	isNormal = true;
-	isSelect = false;
+	tutorialType == TutorialType::NORMAL_TYPE;
 	tutorialState = TutorialState::MOVE;
 }
 
 void Tutorial::StartSelectTutorial()
 {
-	if (isTutorial)
+	if (isTutorial && tutorialType == TutorialType::SELECT_TYPE)
 	{
 		return;
 	}
@@ -265,13 +267,24 @@ void Tutorial::StartSelectTutorial()
 	}
 
 	isTutorial = true;
-	isNormal = false;
-	isSelect = true;
+	tutorialType = TutorialType::SELECT_TYPE;
 	tutorialState = TutorialState::SELECT;
+}
+
+void Tutorial::SkipTutorial(const TutorialType& tutorialType)
+{
+	isTutorial = false;
+	this->tutorialType = tutorialType;
+	tutorialState = TutorialState::NO_TUTORIAL;
 }
 
 void Tutorial::MoveTutorial(const XMFLOAT2& offset, bool flag)
 {
+	if (tutorialType < TutorialType::NORMAL_TYPE)
+	{
+		return;
+	}
+
 	static float x = 0.0f, y = 0.0f;
 
 	if (tutorialState == TutorialState::MOVE)
@@ -305,6 +318,11 @@ void Tutorial::MoveTutorial(const XMFLOAT2& offset, bool flag)
 
 void Tutorial::JumpTutorial(const XMFLOAT2& offset, bool flag)
 {
+	if (tutorialType < TutorialType::NORMAL_TYPE)
+	{
+		return;
+	}
+
 	static float x = 0.0f, y = 0.0f;
 
 	if (tutorialState == TutorialState::JUMP)
@@ -338,6 +356,11 @@ void Tutorial::JumpTutorial(const XMFLOAT2& offset, bool flag)
 
 void Tutorial::FoldTutorial(const XMFLOAT2& offset, bool flag)
 {
+	if (tutorialType < TutorialType::NORMAL_TYPE)
+	{
+		return;
+	}
+
 	static float x = 0.0f, y = 0.0f;
 
 	if (tutorialState == TutorialState::FOLD)
@@ -371,7 +394,7 @@ void Tutorial::FoldTutorial(const XMFLOAT2& offset, bool flag)
 
 void Tutorial::SelectTutorial(const XMFLOAT2& offset, bool flag)
 {
-	if (isSelect == false)
+	if (tutorialType < TutorialType::SELECT_TYPE)
 	{
 		return;
 	}

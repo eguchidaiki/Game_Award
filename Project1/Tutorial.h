@@ -6,6 +6,7 @@
 class Tutorial
 {
 public: //サブクラス
+	// チュートリアルの状態
 	enum TutorialState
 	{
 		NO_TUTORIAL,
@@ -13,6 +14,11 @@ public: //サブクラス
 		JUMP,  //ジャンプのチュートリアル
 		FOLD,  //折るのチュートリアル
 		SELECT //カーソル移動のチュートリアル
+	};
+	enum TutorialType
+	{
+		NORMAL_TYPE, //普通のチュートリアル
+		SELECT_TYPE  //カーソル移動のチュートリアル
 	};
 
 public: //定数
@@ -40,8 +46,11 @@ public: //メンバ関数
 
 	// チュートリアルを開始する
 	void StartNormalTutorial();
-	// チュートリアルを開始する
+	// チュートリアルを開始する(ステージの選択)
 	void StartSelectTutorial();
+	// チュートリアルをスキップする
+	void SkipTutorial(const TutorialType& tutorialType);
+
 	// チュートリアル中かどうか
 	inline bool GetTutorialFlag() { return isTutorial; }
 private:
@@ -61,8 +70,7 @@ private:
 	bool isTutorial;
 	TutorialState tutorialState;
 	bool isFirst;
-	bool isNormal;
-	bool isSelect;
+	TutorialType tutorialType;
 
 	//画像ハンドル
 	Sprite frameSprite;

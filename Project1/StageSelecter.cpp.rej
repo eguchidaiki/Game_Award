@@ -1,0 +1,290 @@
+diff a/Project1/StageSelecter.cpp b/Project1/StageSelecter.cpp	(rejected hunks)
+@@ -25,11 +26,26 @@
+ 
+ void StageSelecter::Init()
+ {
+-	//繝ｪ繧ｽ繝ｼ繧ｹ隱ｭ縺ｿ霎ｼ縺ｿ
+ 	LoadSprite();
+-	//menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
+ 
+-	//譛蛻昴・繝壹・繧ｸ
++	//
++	float icon_posx_offset = static_cast<float>(Raki_WinAPI::window_width) / 6.0f;
++	float icon_posy_offset = Raki_WinAPI::window_height / 2;
++
++	float icon_x_offsets[4] = {};
++	float icon_y_offsets[4] = { icon_posy_offset,icon_posy_offset ,icon_posy_offset ,icon_posy_offset };
++	for (int i = 0; i < 4; i++) {
++		icon_x_offsets[i] = icon_posx_offset * (i + 1);
++	}
++	//アイコン画像のロード
++	std::array<UINT,20> graphHandles = LoadStageIcons();
++	UINT cursorRHandle = TexManager::LoadTexture("Resources/CC/selectBack.png");
++	//ページグラフィックの初期化
++	for (int i = 0; i < stagePage.size(); i++) {
++		stagePage[i].Init(icon_x_offsets, icon_y_offsets, graphHandles, cursorRHandle, cursorRHandle
++			, RVector3(50 + (i * 10), 0, 0));
++	}
++
+ 	nowpage = page_1_4;
+ 	nextpage = nowpage;
+ 
+@@ -41,82 +57,64 @@
+ 
+ void StageSelecter::Update()
+ {
+-	//繧ｹ繝・・繧ｸ驕ｸ謚槭・蜈･蜉帙ｒ讀懃衍
++
+ 	CheckToStageChangeInput();
+-	//繧ｹ繝・・繧ｸ驕ｸ謚槭・繝壹・繧ｸ繧貞・繧頑崛縺医ｋ蜈･蜉帙ｒ讀懃衍
++
+ 	CheckToPageChangeInput();
+-	//繝壹・繧ｸ縺ｫ蠢懊§縺滓ｼ泌・蜃ｦ逅・
++
+ 	PageChange();
+ 
++	//ページリソースを更新
++	for (auto& pages : stagePage) {
++		pages.Update();
++	}
+ 
+ }
+ 
+ void StageSelecter::Draw()
+ {
+-	switch (displayPage)
+-	{
+-	case StageSelecter::page_1_4:
+-		selectImg_1_4[nowDisplayNum].DrawSprite(0, 0);
+-		selectImg_1_4[nowDisplayNum].Draw();
+-		break;
+-	case StageSelecter::page_5_8:
+-		selectImg_5_8[nowDisplayNum].DrawSprite(0, 0);
+-		selectImg_5_8[nowDisplayNum].Draw();
+-		break;
+-	case StageSelecter::page_9_12:
+-		selectImg_9_12[nowDisplayNum].DrawSprite(0, 0);
+-		selectImg_9_12[nowDisplayNum].Draw();
+-		break;
+-	case StageSelecter::page_13_16:
+-		selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
+-		selectImg_13_16[nowDisplayNum].Draw();
+-		break;
+-
+-	case StageSelecter::page_17_20:
+-		selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
+-		selectImg_13_16[nowDisplayNum].Draw();
+-	default:
+-		break;
++	//switch (displayPage)
++	//{
++	//case StageSelecter::page_1_4:
++	//	selectImg_1_4[nowDisplayNum].DrawSprite(0, 0);
++	//	selectImg_1_4[nowDisplayNum].Draw();
++	//	break;
++	//case StageSelecter::page_5_8:
++	//	selectImg_5_8[nowDisplayNum].DrawSprite(0, 0);
++	//	selectImg_5_8[nowDisplayNum].Draw();
++	//	break;
++	//case StageSelecter::page_9_12:
++	//	selectImg_9_12[nowDisplayNum].DrawSprite(0, 0);
++	//	selectImg_9_12[nowDisplayNum].Draw();
++	//	break;
++	//case StageSelecter::page_13_16:
++	//	selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
++	//	selectImg_13_16[nowDisplayNum].Draw();
++	//	break;
++
++	//case StageSelecter::page_17_20:
++	//	selectImg_13_16[nowDisplayNum].DrawSprite(0, 0);
++	//	selectImg_13_16[nowDisplayNum].Draw();
++	//default:
++	//	break;
++	//}
++
++	for (auto& pages : stagePage) {
++		pages.Draw();
+ 	}
+ 
+-	/*ImguiMgr::Get()->StartDrawImgui("mouse", 150, 100);
+-	ImGui::Text("pos x : %f    y : %f", Input::getMousePos().x, Input::getMousePos().y);
+-	ImguiMgr::Get()->EndDrawImgui();*/
+ 
+-	if (nowpage != StageSelecter::page_1_4)
++	if (displayPage != StageSelecter::page_1_4)
+ 	{
+ 		SelectLeft.DrawSprite(29, 623);
+ 		SelectLeft.Draw();
+ 	}
+-	if (nowpage != StageSelecter::page_17_20)
++	if (displayPage != StageSelecter::page_17_20)
+ 	{
+ 		SelectRight.DrawSprite(1184, 623);
+ 		SelectRight.Draw();
+ 	}
+ 
+-	//float mouse_x = Input::getMousePos().x;
+-	//float mouse_y = Input::getMousePos().y;
+-
+-	/*if (mouse_x <= 92 && mouse_x >= 32 && mouse_y <= 686 && mouse_y >= 626)
+-	{
+-		SelectLeft.DrawExtendSprite(19, 613, 29 + 77, 623 + 77);
+-	}
+-	else
+-	{
+-		SelectLeft.DrawSprite(29, 623);
+-	}
+-	SelectLeft.Draw();*/
+-
+-	/*if (mouse_x <= 1248 && mouse_x >= 1188 && mouse_y <= 686 && mouse_y >= 626)
+-	{
+-		SelectRight.DrawExtendSprite(1174, 613, 1184 + 77, 623 + 77);
+-	}
+-	else
+-	{
+-		SelectRight.DrawSprite(1184, 623);
+-	}
+-	SelectRight.Draw();*/
+-
+ 	//カーソル描画
+ 	DrawCursor();
+ 
+@@ -189,6 +187,22 @@
+ 	SelectRight.Create(TexManager::LoadTexture(fullImgPath + "SelectRight" + filename));
+ }
+ 
++std::array< UINT, 20> StageSelecter::LoadStageIcons()
++{
++	std::array<UINT,20> handleTemp;
++
++	string folderPath = "Resources/CC/stageNumber/stageNumber";
++	string filename = ".png";
++
++	for (int i = 0; i < 20; i++) {
++		string number = std::to_string(i + 1);
++		string fullPath = folderPath + number + filename;
++		handleTemp[i] = TexManager::LoadTexture(fullPath);
++	}
++
++	return handleTemp;
++}
++
+ void StageSelecter::CheckToPageChangeInput()
+ {
+ 	//繧ｹ繝・・繧ｸ驕ｸ謚樔ｸｭ縺ｧ縺ｪ縺・↑繧牙・逅・＠縺ｪ縺・
+@@ -203,26 +217,46 @@
+ 	switch (user_selecting)
+ 	{
+ 	case StageSelecter::UI_BACK:
+-		//最初のページでないときにBACK
+-		if (inputManager->DecisionTrigger() && nowpage != page_1_4) {
++		////最初のページでないときにBACK
++		//if (inputManager->DecisionTrigger() && nowpage != page_1_4) {
++		//	//移動方向設定
++		//	pageMoveDir = is_back;
++		//	//次ページ設定
++		//	int pageNum = static_cast<int>(nextpage);
++		//	pageNum--;
++		//	nextpage = static_cast<STAGE_PAGE>(pageNum);
++		//}
++		if (nowpage != page_1_4) {
+ 			//移動方向設定
+ 			pageMoveDir = is_back;
+-			//次ページ設定
++			//前ページ設定
+ 			int pageNum = static_cast<int>(nextpage);
+ 			pageNum--;
+ 			nextpage = static_cast<STAGE_PAGE>(pageNum);
++			stagePage[pageNum].isDisplay = true;
+ 		}
+ 
++
++
+ 		break;
+ 	case StageSelecter::UI_FRONT:
+-		//最後のページでないときにFRONT
+-		if (inputManager->DecisionTrigger() && nowpage != page_17_20) {
++		////最後のページでないときにFRONT
++		//if (inputManager->DecisionTrigger() && nowpage != page_17_20) {
++		//	//移動方向設定
++		//	pageMoveDir = is_front;
++		//	//次ページ設定
++		//	int pageNum = static_cast<int>(nextpage);
++		//	pageNum++;
++		//	nextpage = static_cast<STAGE_PAGE>(pageNum);
++		//}
++		if (nowpage != page_17_20) {
+ 			//移動方向設定
+ 			pageMoveDir = is_front;
+ 			//次ページ設定
+ 			int pageNum = static_cast<int>(nextpage);
+ 			pageNum++;
+ 			nextpage = static_cast<STAGE_PAGE>(pageNum);
++			stagePage[pageNum - 1].isDisplay = false;
+ 		}
+ 
+ 		break;
+@@ -423,3 +457,63 @@
+ 	playerPtr->Init();
+ 	playerPtr->BodySetUp(playerPtr->playerTile);
+ }
++
++void Page::Init(float xicons[], float yicons[], std::array<UINT,20> uiGraphHandles, UINT cursorR, UINT cursorL,RVector3 easeTarget)
++{
++	//各種リソース初期化
++	for (int i = 0; i < 4; i++) {
++		iconX[i] = xicons[i];
++		iconY[i] = yicons[i];
++		stageIconButton[i].Init(60, uiGraphHandles[i], 64, 64);
++		this->cursorL.Create(cursorL);
++		this->cursorR.Create(cursorR);
++	}
++	//ウィンドウサイズと同じ解像度のレンダーテクスチャ
++	RenderTargetManager::GetInstance()->CreateRenderTexture(Raki_WinAPI::window_width, Raki_WinAPI::window_height);
++	//それを描画するスプライト
++	rtSprite.CreateRtexSprite(rtHandle);
++	//背景
++	backSprite.Create(TexManager::LoadTexture("Resources/CC/pageAnime/select1.png"));
++	//イージング目標
++	this->easeTarget = easeTarget;
++	//表示フラグ有効化
++	isDisplay = true;
++}
++
++void Page::Update()
++{
++	for (auto& ui : stageIconButton) {
++		ui.Update();
++	}
++
++	float rate = static_cast<float>(frame) / static_cast<float>(EASE_FRAME);
++	//イージング処理
++	if (isDisplay && frame <= EASE_FRAME) {
++		frame++;
++	}
++	else if (!isDisplay && frame >= EASE_FRAME) {
++		frame--;
++	}
++	drawLTpos = Rv3Ease::OutQuad(easeStart, easeTarget, rate);
++}
++
++void Page::Draw()
++{
++	//ページリソースをレンダリング
++	RenderTargetManager::GetInstance()->SetRenderTarget(rtHandle);
++	//背景
++	backSprite.DrawSprite(0, 0);
++	backSprite.Draw();
++	//ui
++	for (int i = 0; i < stageIconButton.size(); i++) {
++		stageIconButton[i].Draw(iconX[i], iconY[i]);
++	}
++	//左右表示（あとで）
++
++	//レンダリング終了
++	RenderTargetManager::GetInstance()->SetDrawBackBuffer();
++
++	//ページ描画
++	rtSprite.DrawRTexSprite(rtHandle, drawLTpos.x, drawLTpos.y, drawLTpos.x + 1280.0f, drawLTpos.y + 720.0f, 0.0f);
++	rtSprite.Draw();
++}
