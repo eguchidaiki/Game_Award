@@ -1098,19 +1098,19 @@ void PlayerBody::IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall,
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 50 <= BodyLeft)
+	if (NowLeft + 50 >= BodyLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 50 >= BodyRight)
+	if (NowRight + 50 <= BodyRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 50 <= BodyUp)
+	if (NowUp + 50 >= BodyUp)
 	{
 		IsOutSideUp = true;
 	}
-	if (NowDown + 50 >= BodyDown)
+	if (NowDown + 50 <= BodyDown)
 	{
 		IsOutSideDown = true;
 	}

@@ -2014,19 +2014,19 @@ void Player::IsOutsideFace()
 	IsOutSideUp = false;
 	IsOutSideDown = false;
 
-	if (NowLeft + 50 <= FaceLeft)
+	if (NowLeft + 50 >= FaceLeft)
 	{
 		IsOutSideLeft = true;
 	}
-	if (NowRight + 50 >= FaceRight)
+	if (NowRight + 50 <= FaceRight)
 	{
 		IsOutSideRight = true;
 	}
-	if (NowUp + 50 <= FaceUp)
+	if (NowUp + 50 >= FaceUp)
 	{
 		IsOutSideUp = true;
 	}
-	if (NowDown + 50 >= FaceDown)
+	if (NowDown + 50 <= FaceDown)
 	{
 		IsOutSideDown = true;
 	}
