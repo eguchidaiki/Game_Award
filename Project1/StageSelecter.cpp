@@ -81,12 +81,12 @@ void StageSelecter::Draw()
 	}
 
 
-	if (displayPage != StageSelecter::page_1_4)
+	if (nowpage != StageSelecter::page_1_4)
 	{
 		SelectLeft.DrawSprite(29, 623);
 		SelectLeft.Draw();
 	}
-	if (displayPage != StageSelecter::page_17_20)
+	if (nowpage != StageSelecter::page_17_20)
 	{
 		SelectRight.DrawSprite(1184, 623);
 		SelectRight.Draw();
@@ -116,7 +116,9 @@ void StageSelecter::Changing_UI_Number()
 	//入力によってインクリメント、デクリメント
 	int select_number = static_cast<int>(user_selecting);
 	if (inputManager->LeftTrigger() || Input::isKeyTrigger(DIK_LEFT)) {
-		if (user_selecting != UI_BACK) { select_number--; }
+		if (user_selecting != UI_BACK && (nowpage != StageSelecter::page_1_4 || user_selecting != UI_STAGEBOX_1)) { 
+			select_number--; 
+		}
 	}
 
 	if (inputManager->RightTrigger() || Input::isKeyTrigger(DIK_RIGHT)) {
@@ -261,6 +263,8 @@ void StageSelecter::CheckToStageChangeInput()
 		break;
 	}
 	if (selected) { 
+		//ボタン押す
+		stagePage[static_cast<int>(nowpage)].stageIconButton[select_Stage_num].UI_Push();
 		CheckLoadStage(select_Stage_num);
 		state = is_stageSelected_waiting; 
 		//これでステージ開始
@@ -342,6 +346,15 @@ void StageSelecter::LoadStage(int stagenum)
 	playerPtr->BodySetUp(playerPtr->playerTile);
 }
 
+void StageSelecter::IconReset()
+{
+	for (auto& page : stagePage) {
+		for (int i = 0; i < page.stageIconButton.size(); i++) {
+			page.stageIconButton[i].Reset();
+		}
+	}
+}
+
 void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandles, UINT cursorR, UINT cursorL, std::array<UINT, 20> backTexture)
 {
 	//各種リソース初期化
@@ -365,6 +378,7 @@ void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandle
 	for (int i = 0; i < backAnimation.size(); i++) {
 		backAnimation[i].Create(backTexture[i]);
 	}
+	
 	
 	//表示フラグ有効化
 	isDisplay = true;

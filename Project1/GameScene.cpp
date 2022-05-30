@@ -72,6 +72,7 @@ void GameScene::Update()
 			gamemain->SetGameToSelect();
 			selecter->isChanging_GameMain = false;
 			selecter->state = selecter->is_selecting;
+			selecter->IconReset();
 			nowState = is_Select;
 			InputManger::isMenu = false;
 			SChangeDir::Get()->PlayChangedDirection();

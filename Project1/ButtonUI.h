@@ -28,7 +28,7 @@ public:
 	//このボタンが押されたことによって起こる処理を有効化させるか？
 	bool isFunctionActivate = false;
 
-
+	void Reset();
 	//初期化
 	void Init(int activateTimerag, UINT graphHandle, float baseWidth, float baseHeight);
 	//更新
