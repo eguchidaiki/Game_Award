@@ -732,7 +732,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
@@ -797,7 +797,7 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 					{
 						if (IsHitDown == false)
 						{
-							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y + 1);
+							player->CenterPosition.y = (BodyAndLegdown_mapchip * 60) - (BodyAndLegDown - player->CenterPosition.y);
 							FallCount++;
 							player->IsInitJump = false;
 							IsHitDown = true;
