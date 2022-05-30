@@ -198,13 +198,27 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	//ステージ番号から
 	selecterPtr->LoadStage(SelectStageNum);
 
-	if (NowScene == 1)
+	if (NowScene >= 3)
 	{
-		tutorial.StartNormalTutorial();
+		if (NowScene == 3)
+		{
+			tutorial.StartSelectTutorial();
+		}
+		else
+		{
+			tutorial.SkipTutorial(Tutorial::TutorialType::SELECT_TYPE);
+		}
 	}
-	if (NowScene == 3)
+	else if (NowScene >= 1)
 	{
-		tutorial.StartSelectTutorial();
+		if (NowScene == 1)
+		{
+			tutorial.StartNormalTutorial();
+		}
+		else
+		{
+			tutorial.SkipTutorial(Tutorial::TutorialType::NORMAL_TYPE);
+		}
 	}
 
 	SChangeDir::Get()->PlayChangedDirection();

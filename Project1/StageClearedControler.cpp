@@ -9,13 +9,12 @@ InputManger* inputManger = InputManger::Get();
 
 void StageClearedControler::Init()
 {
-
 	//‰‰o‰Šú‰»
 	goalEffect.reset(new GoalEffects);
 	goalEffect->Init();
 
 	//UI‰Šú‰»
-	_go_select_button.Init(60, TexManager::LoadTexture("Resources/back.png"), 200, 90);
+	_go_select_button.Init(60, TexManager::LoadTexture("Resources/back.png"), 360, 90);
 	x1 = 1280.0f / 3.0f;
 	y1 = 720 * (2.0f / 3.0f);
 	_go_next_button.Init(60, TexManager::LoadTexture("Resources/next.png"), 200, 90);

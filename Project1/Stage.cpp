@@ -296,10 +296,10 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	for (i = 0; i < stageData.size(); i++)
 	{
-		if (i == static_cast<size_t>(nowPlayerStage))
-		{
-			continue;
-		}
+		//if (i == static_cast<size_t>(nowPlayerStage))
+		//{
+		//	continue;
+		//}
 
 		for (j = 0; j < stageData[i].stageTileData.size(); j++)
 		{
@@ -309,15 +309,15 @@ void Stage::Draw(const int offsetX, const int offsetY)
 		LineDraw(i, drawOffset);
 	}
 
-	if (nowPlayerStage >= 0)
-	{
-		for (j = 0; j < stageData[nowPlayerStage].stageTileData.size(); j++)
-		{
-			StageTileDraw(nowPlayerStage, j, drawOffset, 1.1f);
-		}
+	//if (nowPlayerStage >= 0)
+	//{
+	//	for (j = 0; j < stageData[nowPlayerStage].stageTileData.size(); j++)
+	//	{
+	//		StageTileDraw(nowPlayerStage, j, drawOffset, 1.1f);
+	//	}
 
-		LineDraw(nowPlayerStage, drawOffset, 1.1f);
-	}
+	//	LineDraw(nowPlayerStage, drawOffset, 1.1f);
+	//}
 
 	// 色の初期化
 	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
