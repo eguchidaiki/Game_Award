@@ -5,6 +5,7 @@
 #include "InputManger.h"
 #include "NY_random.h"
 #include "Raki_WinAPI.h" //無くても動く(どこでインクルードされてるか分からなかった)
+#include "TitleAudio.h"
 
 namespace
 {
@@ -37,6 +38,8 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 void Title::Initialize()
 {
 	SChangeDir::Get()->PlayChangedDirection();
+	TitleAudio::Get()->Init();
+	TitleAudio::Get()->Play();
 }
 
 void Title::Finalize()

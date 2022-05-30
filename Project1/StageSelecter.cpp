@@ -6,6 +6,7 @@
 #include "Stage.h"
 #include "Player.h"
 #include "InputManger.h"
+#include "TitleAudio.h"
 
 namespace
 {
@@ -53,9 +54,6 @@ void StageSelecter::Init()
 	user_selecting = UI_STAGEBOX_1;
 
 	nowDisplayNum = 0;
-
-	menuBGM = Audio::LoadSound_wav("Resources/sound/BGM/bgm01.wav");
-	Audio::SetPlayRoopmode(menuBGM, 255);
 }
 
 void StageSelecter::Update()
@@ -72,7 +70,7 @@ void StageSelecter::Update()
 	}
 
 	Audio::volume = 0.5f;
-	Audio::PlayLoadedSound(menuBGM);
+	TitleAudio::Get()->Play();
 }
 
 void StageSelecter::Draw()
@@ -101,7 +99,7 @@ void StageSelecter::Draw()
 
 void StageSelecter::Finalize()
 {
-	Audio::StopLoadedSound(menuBGM);
+	TitleAudio::Get()->Stop();
 }
 
 void StageSelecter::GoNextStage()

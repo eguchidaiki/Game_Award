@@ -184,8 +184,5 @@ private:
 
 
 	void DrawPages();
-
-	//BGM
-	SoundData menuBGM;
 };
 
