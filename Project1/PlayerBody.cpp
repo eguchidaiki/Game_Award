@@ -600,6 +600,10 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 	if (IsFold || !IsActivate)
 	{
+		IsHitLeft = false;
+		IsHitUp = false;
+		IsHitRight = false;
+		IsHitDown = false;
 		return;
 	}
 
