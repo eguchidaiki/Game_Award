@@ -1,0 +1,11 @@
+diff a/Project1/StageSelecter.h b/Project1/StageSelecter.h	(rejected hunks)
+@@ -105,6 +105,9 @@
+ 	//�X�e�[�W�w�i
+ 	std::array<Sprite, 20> stageBack;
+ 
++	//�y�[�W
++	std::array<Page, 5> stagePage;
++
+ 	//�J�[�\��
+ 	Sprite selectCursor;
+ 	const int cursorSpriteCount = 4;
