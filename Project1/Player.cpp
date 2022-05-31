@@ -2394,16 +2394,21 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 	//反転したブロックマップチップと顔の四隅との判定
 	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
-		for (int j = 0; j < stage->SelectStage->stageTileData.size(); j++)
+		//動いているタイルは無視
+		if (i == stage->selectStageNum)
 		{
-			//折っているタイルは無視
-			if (!stage->SelectStage->stageTileData[j].isFold)
+			continue;
+		}
+
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (stage->stageData[i].stageTileData[j].isFold == false)
 			{
 				continue;
 			}
 
 			//左上
-			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y - 30, 0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyLeft, BodyUp, 0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
@@ -2416,7 +2421,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 				}
 			}
 			//左下
-			if (stage->IsPositionTile({ CenterPosition.x - 25, CenterPosition.y + 33, 0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyLeft, BodyDown, 0.0f }, i, j))
 			{
 				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
@@ -2429,7 +2434,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 				}
 			}
 			//右上
-			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y - 30, 0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyRight, BodyUp, 0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
@@ -2442,7 +2447,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 				}
 			}
 			//右下
-			if (stage->IsPositionTile({ CenterPosition.x + 25, CenterPosition.y + 33, 0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyRight, BodyDown, 0.0f }, i, j))
 			{
 				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
 				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
