@@ -111,13 +111,18 @@ void Audio::SetPlayRoopmode(SoundData &soundData,int roopCount)
     }
 }
 
-void Audio::PlayLoadedSound(const SoundData &soundData)
+void Audio::PlayLoadedSound(const SoundData &soundData, bool isSerialPlay)
 {
     HRESULT result;
 
     XAUDIO2_VOICE_STATE state;
     soundData.source->GetState(&state);
-    if (state.BuffersQueued != 0) { return; }
+    if (state.BuffersQueued != 0 && !isSerialPlay) { return; }
+
+    //再生中だが連続再生するときは、止めてから再生する
+    if (state.BuffersQueued != 0 && isSerialPlay) {
+        StopLoadedSound(const_cast<SoundData&>(soundData));
+    }
     
     result = soundData.source->SetVolume(volume);
     //波形データ再生

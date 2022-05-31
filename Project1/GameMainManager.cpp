@@ -4,6 +4,7 @@
 #include "Stage.h"
 #include "Player.h"
 #include "SChangeDir.h"
+#include "BackGroundGraphic.h"
 
 namespace
 {
@@ -87,8 +88,10 @@ void GameMainManager::Update()
 
 void GameMainManager::Draw()
 {
+	//ゲーム本編描画
 	GameInstanceDraw();
 
+	//ステージクリア時の描画
 	stageClearCtrl.Draw();
 }
 
@@ -247,8 +250,8 @@ void GameMainManager::GameInstanceDraw()
 {
 	//各ステージの処理
 	SpriteManager::Get()->SetCommonBeginDraw();
-	Back.DrawExtendSprite(0, 0, 1280, 720);
-	Back.Draw();
+	bg.Update();
+	bg.Draw();
 
 	stage->Draw();
 	player->Draw(stage->drawOffsetX, stage->drawOffsetY);
