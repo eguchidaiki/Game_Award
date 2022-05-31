@@ -70,10 +70,16 @@ public: //メンバ関数
 	void IsOutsideBody(RVector3* center, float& FallSpeed, bool& isfall, bool& isjump, bool& iscolide);
 
 	/// <summary>
-	/// 反転したタイルと体の四隅の判定
+	/// 反転したタイルと体の四隅の判定(折る)
 	/// </summary>
 	/// <param name="stage">ステージデータ</param>
 	bool IsReverseHitBody(const unsigned char& direction);
+
+	/// <summary>
+	/// 開いたタイルと体の四隅の判定(折る)
+	/// </summary>
+	/// <param name="stage">ステージデータ</param>
+	bool IsReverseHitBodyOpen(const unsigned char& direction);
 
 	/// <summary>
 	/// 十字方向にブロックがあるかどうか

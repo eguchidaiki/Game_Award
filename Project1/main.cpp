@@ -47,7 +47,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     TexManager::InitTexManager();
 
     //マウスを使えるようにする
-    ActFlag::SetMouseFlag(true);
+    ActFlag::SetMouseFlag(false);
 
     //音
     Audio::Init();
@@ -76,10 +76,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         SChangeDir::Get()->Update();
 
+#ifdef _DEBUG
         if (InputManger::Get()->Escape())
         {
             break;
         }
+#endif //_DEBUG
 
         RenderTargetManager::GetInstance()->CrearAndStartDraw();
 

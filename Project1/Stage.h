@@ -309,10 +309,10 @@ public: //メンバ関数
 	char GetPositionStage(const RVector3& playerPos);
 	// 任意の座標からどのステージタイルにいるかを取得
 	void GetPositionTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
-						 bool isSkip = false, const size_t& skipStageNumber = 0);
+		bool isSkip = false, const size_t& skipStageNumber = 0);
 	// 任意の座標からどのステージタイルにいるかを取得(初期状態)
 	void GetPositionInitTile(const RVector3& center, size_t* stageNumber, size_t* stageTileNumber,
-							 bool isSkip = false, const size_t& skipStageNumber = 0);
+		bool isSkip = false, const size_t& skipStageNumber = 0);
 	//指定した場所のステージタイルにプレイヤーがいるかどうか
 	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
 	//任意の座標がどこかのタイルにいたらtrue
@@ -355,14 +355,16 @@ private:
 	// 一番上のステージタイルを探す
 	int SearchTopStageTile();
 
-private: //メンバ変数
-	std::vector<StageData> stageData;
-	std::vector<StageData> initStageData;
-
+public:
 	StageTileData* SelectTile;
 	StageData* SelectStage;
 	size_t selectStageNum = 0;
 	size_t selectTileNum = 0;
+	std::vector<StageData> initStageData;
+
+private: //メンバ変数
+	std::vector<StageData> stageData;
+
 
 	char* reverseMapchip;
 
