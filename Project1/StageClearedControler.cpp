@@ -27,6 +27,9 @@ void StageClearedControler::Init(StageSelecter *ptr)
 	ctrl_state = CONTROL_NOT_ALLOW;
 	//最初にユーザーが選んでるやつ
 	_user_selecting = USER_SELECT_NEXT;
+	if (ptr->SelectStageNum == 20) {
+		_user_selecting = USER_SELECT_BACK;
+	}
 
 	frameCount = 0;
 
@@ -54,7 +57,7 @@ void StageClearedControler::Draw(int rtHandle)
 	clearedBackSprite.Draw();
 
 	//ゲーム本編の画像を描画する
-	gameMainSprite.DrawRTexSprite(rtHandle, LT.x, LT.y, RB.x, RB.y, 0);
+	gameMainSprite.DrawRTexSprite(rtHandle, LT.x, LT.y, RB.x, RB.y, 0, DirectX::XMFLOAT4{ 0.5,0.5,0.5,1.0 });
 
 	if (ctrl_state == CONTROL_NOT_ALLOW) { return; }
 

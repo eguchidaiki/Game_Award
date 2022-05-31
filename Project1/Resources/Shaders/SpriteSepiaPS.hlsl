@@ -4,15 +4,15 @@ float4 main(VSOutput input) : SV_TARGET
 {
     float4 color = tex.Sample(smp, input.uv) * input.color;
 	
-    //float bright = 0.299f * color.r + 0.587f * color.g + 0.114f * color.b;
+    //float bright = (color.r + color.g + color.b) * 0.33f;
 	
     //float3 sepia;
 	
-    //sepia.r = input.freedata.r;
-    //sepia.g = input.freedata.g;
-    //sepia.b = input.freedata.b;
+    //sepia.r = bright * input.freedata.r;
+    //sepia.g = bright * input.freedata.g;
+    //sepia.b = bright * input.freedata.b;
     
-    //color.rgb *= sepia;
+    //color.rgb = sepia;
     
     return color;
 }
