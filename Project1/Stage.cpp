@@ -3793,7 +3793,7 @@ int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
 				break;
 
 			case MapchipData::LEFTONLY:
-				AllBlockSprite[selectStageNum][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				AllBlockSprite[selectStageNum][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 				break;
 
 			case MapchipData::UPONLY:
@@ -3801,7 +3801,7 @@ int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
 				break;
 
 			case MapchipData::RIGHTONLY:
-				AllBlockSprite[selectStageNum][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				AllBlockSprite[selectStageNum][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 				break;
 
 			case MapchipData::DOWNONLY:
@@ -3809,23 +3809,23 @@ int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
 				break;
 
 			case MapchipData::LEFTL:
-				AllBlockSprite[selectStageNum][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::UPL:
-				AllBlockSprite[selectStageNum][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::RIGHTL:
-				AllBlockSprite[selectStageNum][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-				break;
-
-			case MapchipData::DOWNL:
 				AllBlockSprite[selectStageNum][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 				break;
 
+			case MapchipData::UPL:
+				AllBlockSprite[selectStageNum][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+
+			case MapchipData::RIGHTL:
+				AllBlockSprite[selectStageNum][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+
+			case MapchipData::DOWNL:
+				AllBlockSprite[selectStageNum][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+
 			case MapchipData::LEFTU:
-				AllBlockSprite[selectStageNum][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				AllBlockSprite[selectStageNum][13].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 				break;
 
 			case MapchipData::UPU:
@@ -3833,7 +3833,7 @@ int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
 				break;
 
 			case MapchipData::RIGHTU:
-				AllBlockSprite[selectStageNum][13].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				AllBlockSprite[selectStageNum][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 				break;
 
 			case MapchipData::DOWNU:
@@ -3843,6 +3843,7 @@ int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
 			case MapchipData::NOFRAME:
 				AllBlockSprite[selectStageNum][15].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
 				break;
+
 			case MapchipData::EMPTY_STAGE:
 			case MapchipData::NONE:
 			case MapchipData::START:
