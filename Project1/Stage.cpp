@@ -1595,12 +1595,27 @@ bool Stage::IsNowTileOver(size_t stage, size_t tile)
 	{
 		for (int b = 0; b < stageData[a].stageTileData.size(); b++)
 		{
-			if (static_cast<size_t>(stageData[stage].stageTileData[tile].offsetX + 1) <= (stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) - 1 &&
-				static_cast<size_t>(stageData[a].stageTileData[b].offsetX + 1) <= (stageData[stage].stageTileData[tile].offsetX + stageData[stage].stageTileData[tile].width) - 1 &&
-				static_cast<size_t>(stageData[stage].stageTileData[tile].offsetY + 1) <= (stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) - 1 &&
-				static_cast<size_t>(stageData[a].stageTileData[b].offsetY + 1) <= (stageData[stage].stageTileData[tile].offsetY + stageData[stage].stageTileData[tile].height) - 1)
+			if (stageData[a].stageTileData[b].width == stageData[stage].stageTileData[tile].width &&
+				stageData[a].stageTileData[b].height == stageData[stage].stageTileData[tile].height)
 			{
-				overcount++;
+				if (static_cast<size_t>(stageData[stage].stageTileData[tile].offsetX + 1) <= (stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) - 1 &&
+					static_cast<size_t>(stageData[a].stageTileData[b].offsetX + 1) <= (stageData[stage].stageTileData[tile].offsetX + stageData[stage].stageTileData[tile].width) - 1 &&
+					static_cast<size_t>(stageData[stage].stageTileData[tile].offsetY + 1) <= (stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) - 1 &&
+					static_cast<size_t>(stageData[a].stageTileData[b].offsetY + 1) <= (stageData[stage].stageTileData[tile].offsetY + stageData[stage].stageTileData[tile].height) - 1)
+				{
+					overcount++;
+				}
+			}
+			else
+			{
+				if (IsPositionTile(player->CenterPosition, a, b)&&
+					static_cast<size_t>(stageData[stage].stageTileData[tile].offsetX + 1) <= (stageData[a].stageTileData[b].offsetX + stageData[a].stageTileData[b].width) - 1 &&
+					static_cast<size_t>(stageData[a].stageTileData[b].offsetX + 1) <= (stageData[stage].stageTileData[tile].offsetX + stageData[stage].stageTileData[tile].width) - 1 &&
+					static_cast<size_t>(stageData[stage].stageTileData[tile].offsetY + 1) <= (stageData[a].stageTileData[b].offsetY + stageData[a].stageTileData[b].height) - 1 &&
+					static_cast<size_t>(stageData[a].stageTileData[b].offsetY + 1) <= (stageData[stage].stageTileData[tile].offsetY + stageData[stage].stageTileData[tile].height) - 1)
+				{
+					overcount++;
+				}
 			}
 		}
 	}
