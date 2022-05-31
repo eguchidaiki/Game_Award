@@ -15,6 +15,7 @@ private:
 	const RVector3* pCenterPos = &Player::Get()->CenterPosition;
 	//現在のステージ番号取得
 
+	Sprite gameMainSprite;
 
 public:
 	StageClearedControler(){}
@@ -25,7 +26,7 @@ public:
 
 	void Update();
 
-	void Draw();
+	void Draw(int rtHandle);
 
 	//クリア時処理有効化
 	void ControlActivate();
@@ -63,13 +64,26 @@ private:
 	float x1 = 0.0f, y1 = 0.0f;
 	UI_Button _go_next_button;
 	float x2 = 0.0f, y2 = 0.0f;
-
 	const float SELECTING_SCALE = 1.2f;
+
+	//ステージクリア背景
+	Sprite clearedBackSprite;
 
 	//UIコントロールの状態を取得、変更
 	void Update_CheckControlStates();
+	//フレームカウント
 	int frameCount = 0;
+	//演出総フレーム数
 	const int DIRECTING_FRAME = 60;
+
+	//描画座標
+	RVector3 LT, RB;
+	//レンダーテクスチャ初期座標
+	RVector3 drawLT = { 0,0,0 };
+	RVector3 drawRB = { 1280,720,0 };
+	//ターゲット座標
+	RVector3 targetLT = { 1280.0f * 0.2f,720.0f * 0.35f,0 };
+	RVector3 targetRB = { 1280.0f * 0.8f,720.0f,0 };
 
 	//状態に応じた実際の処理
 	void Update_ControlMain();

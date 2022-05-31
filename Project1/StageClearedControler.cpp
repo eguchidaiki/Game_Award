@@ -21,6 +21,8 @@ void StageClearedControler::Init()
 	x2 = 1280.0f * (2.0f / 3.0f);
 	y2 = 720 * (2.0f / 3.0f);
 
+	clearedBackSprite.Create(TexManager::LoadTexture("Resources/stageClear.png"));
+
 	//入力禁止
 	ctrl_state = CONTROL_NOT_ALLOW;
 	//最初にユーザーが選んでるやつ
@@ -29,6 +31,8 @@ void StageClearedControler::Init()
 	frameCount = 0;
 
 	isAllowSwitching = false;
+
+	gameMainSprite.CreateRtexSprite(0);
 }
 
 void StageClearedControler::Update()
@@ -41,8 +45,15 @@ void StageClearedControler::Update()
 
 }
 
-void StageClearedControler::Draw()
+void StageClearedControler::Draw(int rtHandle)
 {
+	//背景描画しておく
+	clearedBackSprite.DrawExtendSprite(0, 0, 1280, 720);
+	clearedBackSprite.Draw();
+
+	//ゲーム本編の画像を描画する
+	gameMainSprite.DrawRTexSprite(rtHandle, LT.x, LT.y, RB.x, RB.y, 0);
+
 	if (ctrl_state == CONTROL_NOT_ALLOW) { return; }
 
 	//このクラス内の描画リソースは、操作が禁止されてないときは常に描画される
@@ -60,7 +71,7 @@ void StageClearedControler::ControlActivate()
 	if (ctrl_state != CONTROL_NOT_ALLOW) { return; }
 
 	//演出状態に移行
-	ctrl_state = CONTROL_ACTIVE;
+	ctrl_state = CONTROL_DIRECING;
 
 	goalEffect->Play();
 }
@@ -76,6 +87,12 @@ void StageClearedControler::Update_CheckControlStates()
 	//キャストしてこのタイミングでは整数で扱うようにする
 	int user_selecting = static_cast<int>(_user_selecting);
 
+	//レート
+	float rate = static_cast<float>(frameCount) / static_cast<float>(DIRECTING_FRAME);
+	//描画座標イージング実行
+	LT = Rv3Ease::OutQuad(drawLT, targetLT, rate);
+	RB = Rv3Ease::OutQuad(drawRB, targetRB, rate);
+
 	//状態遷移の判定を行う
 	switch (ctrl_state)
 	{
@@ -85,7 +102,8 @@ void StageClearedControler::Update_CheckControlStates()
 	case StageClearedControler::CONTROL_DIRECING:
 		//規定フレーム経過、または入力を検知
 		frameCount++;
-		if (frameCount < DIRECTING_FRAME)
+
+		if (frameCount > DIRECTING_FRAME)
 		{
 			//UI選択有効化
 			ctrl_state = CONTROL_ACTIVE;

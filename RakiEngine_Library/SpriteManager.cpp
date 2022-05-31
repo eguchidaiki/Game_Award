@@ -133,6 +133,9 @@ void SpriteManager::CreateSpritePipeline()
         {//色
             "INSTANCE_COLOR"    ,0,DXGI_FORMAT_R32G32B32A32_FLOAT, 1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
         },
+        {//ユーザ使用データ
+            "INSTANCE_FREEDATA",0,DXGI_FORMAT_R32G32B32A32_FLOAT, 1,D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,1
+        },
     };
 
     //-----グラフィックスパイプラインのセット-----//
@@ -157,7 +160,7 @@ void SpriteManager::CreateSpritePipeline()
     blenddesc.BlendEnable = true;//ブレンド有効
     blenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;//加算合成
     blenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;//ソースの値を100%使用
-    blenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;//デストの値を0%使用
+    blenddesc.DestBlendAlpha = D3D12_BLEND_ONE;//デストの値を0%使用
 
     //合成設定(各項目を書き換えることで設定可能)
     blenddesc.BlendOp = D3D12_BLEND_OP_ADD;//加算
