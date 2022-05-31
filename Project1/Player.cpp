@@ -47,6 +47,7 @@ Player::Player() :
 	FaceHandle{},
 	IsStart(false),
 	IsGoal(false),
+	isGoalPlayAudio(false),
 	IsColide(false),
 	IsDownBody(false),
 	isRespawn(false),
@@ -74,6 +75,7 @@ void Player::Init()
 	Player_IsAction = false;
 	IsColide = false;
 	IsGoal = false;
+	isGoalPlayAudio = false;
 
 	Body_One.Init(CenterPosition, BodyType::left);
 	Body_Two.Init(CenterPosition, BodyType::up);
@@ -165,7 +167,7 @@ void Player::Update(int offsetX, int offsetY)
 		CenterPosition.y += FallSpeed;
 	}
 
-	if (IsWalk && IsJump == false && IsFall() == false)
+	if (IsWalk && IsJump == false && IsFall() == false && IsGoal == false)
 	{
 		Audio::volume = 0.75f;
 		Audio::PlayLoadedSound(runSound);
@@ -1874,9 +1876,13 @@ void Player::IsHitPlayerBody()
 	{
 		IsGoal = true;
 
-		Audio::volume = 0.125f;
-		Audio::PlayLoadedSound(clearSound);
-		Audio::StopLoadedSound(runSound);
+		if (isGoalPlayAudio == false)
+		{
+			isGoalPlayAudio = true;
+			Audio::volume = 0.125f;
+			Audio::PlayLoadedSound(clearSound);
+			Audio::StopLoadedSound(runSound);
+		}
 	}
 
 	bool DiagonallyUpLeft = false;
