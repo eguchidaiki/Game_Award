@@ -7,8 +7,8 @@
 
 namespace
 {
-Stage* stage = Stage::Get();
-Player* player = Player::Get();
+	Stage* stage = Stage::Get();
+	Player* player = Player::Get();
 }
 
 GameMainManager::GameMainManager() :
@@ -98,6 +98,8 @@ void GameMainManager::Finalize()
 
 void GameMainManager::GameInstanceUpdate()
 {
+	player->Update(stage->drawOffsetX, stage->drawOffsetY);
+
 	if (!player->IsGoal)
 	{
 		ui.Update(player->playerTile, &Ischangecount, NowScene);
@@ -111,7 +113,6 @@ void GameMainManager::GameInstanceUpdate()
 		}
 
 		//各ステージの処理
-		player->Update(stage->drawOffsetX, stage->drawOffsetY);
 		bool PlayerBodyStatus[4] = {};
 
 		if (player->isRespawn)

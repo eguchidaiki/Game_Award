@@ -130,6 +130,11 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		return;
 	}
 
+	if(player->IsGoal)
+	{
+		return;
+	}
+
 	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
 		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 
