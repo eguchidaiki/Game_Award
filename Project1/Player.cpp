@@ -472,6 +472,11 @@ void Player::Key_Move()
 {
 	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
 
+	if(IsGoal)
+	{
+		return;
+	}
+
 	//左右移動
 	if (actFlag->MoveRight() && Player_IsAction == false)
 	{
