@@ -207,6 +207,7 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 		tutorial.StartSelectTutorial();
 	}
 
+
 	SChangeDir::Get()->PlayChangedDirection();
 }
 
@@ -216,6 +217,8 @@ void GameMainManager::SetGameToSelect()
 	Ischangecount = false;
 	IsGoSelect = false;
 	changecount = 0;
+
+	
 
 	tutorial.Init();
 }

@@ -80,7 +80,6 @@ void StageSelecter::Draw()
 		stagePage[i].Draw();
 	}
 
-
 	if (nowpage != StageSelecter::page_1_4)
 	{
 		SelectLeft.DrawSprite(29, 623);
@@ -266,7 +265,7 @@ void StageSelecter::CheckToStageChangeInput()
 		//ボタン押す
 		stagePage[static_cast<int>(nowpage)].stageIconButton[select_Stage_num].UI_Push();
 		CheckLoadStage(select_Stage_num);
-		state = is_stageSelected_waiting; 
+		state = is_stageSelected_waiting;
 		//これでステージ開始
 		isChanging_GameMain = true;
 	}
@@ -341,6 +340,8 @@ void StageSelecter::LoadStage(int stagenum)
 
 	string stageFullPath = stageFilePath + stageNumber + filename;
 
+	SelectStageNum = stagenum;
+
 	stagePtr->LoadStage(stageFullPath.c_str(), playerPtr->playerTile);
 	playerPtr->Init();
 	playerPtr->BodySetUp(playerPtr->playerTile);
@@ -353,6 +354,37 @@ void StageSelecter::IconReset()
 			page.stageIconButton[i].Reset();
 		}
 	}
+	//直前のステージのページに合わせて、選択位置も合わせておく
+	int page = (SelectStageNum - 1) / 4;
+	nowpage = static_cast<STAGE_PAGE>(page);
+	stagePage[page].isDisplay = true;
+	for (int i = page - 1; i >= 0; i--) {
+		stagePage[i].isDisplay = false;
+	}
+
+	int selectedBoxNum = SelectStageNum % 4;
+
+	switch (selectedBoxNum)
+	{
+	case 1:
+		user_selecting = UI_STAGEBOX_1;
+		break;
+
+	case 2:
+		user_selecting = UI_STAGEBOX_2;
+		break;
+
+	case 3:
+		user_selecting = UI_STAGEBOX_3;
+		break;
+
+	case 0:
+		user_selecting = UI_STAGEBOX_4;
+		break;
+	default:
+		break;
+	}
+
 }
 
 void Page::Init(float xicons[], float yicons[], std::array<UINT,4> uiGraphHandles, UINT cursorR, UINT cursorL, std::array<UINT, 20> backTexture)

@@ -13,6 +13,8 @@ class StageClearedControler
 private:
 	///プレイヤーの座標を参照（書き換え禁止）
 	const RVector3* pCenterPos = &Player::Get()->CenterPosition;
+	//現在のステージ番号取得
+
 
 public:
 	StageClearedControler(){}

@@ -116,10 +116,10 @@ void Title::Draw()
 	titleBackScreen.DrawSprite(0, 0);
 	titleBackScreen.Draw();
 
-	titleLogo.DrawExtendSprite(Raki_WinAPI::window_width / 2 - (380 / 2), Raki_WinAPI::window_height / 4 - (380 / 2),
-		Raki_WinAPI::window_width / 2 + (380 / 2), Raki_WinAPI::window_height / 4 + (380 / 2));
-	titleFont.DrawExtendSprite(Raki_WinAPI::window_width / 2 - (380 / 2), Raki_WinAPI::window_height / 4 - (230 / 2),
-		Raki_WinAPI::window_width / 2 + (380 / 2), Raki_WinAPI::window_height / 4 + (230 / 2));
+	titleLogo.DrawExtendSprite(Raki_WinAPI::window_width / 2 - (380 / 2), Raki_WinAPI::window_height / 4 - (380 / 2) + 60,
+		Raki_WinAPI::window_width / 2 + (380 / 2), Raki_WinAPI::window_height / 4 + (380 / 2) + 60);
+	titleFont.DrawExtendSprite(Raki_WinAPI::window_width / 2 - (380 / 2), Raki_WinAPI::window_height / 4 - (230 / 2) + 60,
+		Raki_WinAPI::window_width / 2 + (380 / 2), Raki_WinAPI::window_height / 4 + (230 / 2) + 60);
 
 	titleLogo.Draw();
 	titleFont.Draw();
