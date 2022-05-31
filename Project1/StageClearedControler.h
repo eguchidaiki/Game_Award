@@ -82,8 +82,8 @@ private:
 	RVector3 drawLT = { 0,0,0 };
 	RVector3 drawRB = { 1280,720,0 };
 	//ターゲット座標
-	RVector3 targetLT = { 1280.0f * 0.2f,720.0f * 0.35f,0 };
-	RVector3 targetRB = { 1280.0f * 0.8f,720.0f,0 };
+	RVector3 targetLT = { 326.0f,165.0f,0 };
+	RVector3 targetRB = { 933.0f,506.0f,0 };
 
 	//状態に応じた実際の処理
 	void Update_ControlMain();

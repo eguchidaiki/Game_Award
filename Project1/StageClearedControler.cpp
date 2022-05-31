@@ -15,11 +15,11 @@ void StageClearedControler::Init()
 
 	//UIèâä˙âª
 	_go_select_button.Init(60, TexManager::LoadTexture("Resources/back.png"), 360, 90);
-	x1 = 1280.0f / 3.0f;
-	y1 = 720 * (2.0f / 3.0f);
+	x1 = 1280.0f * (1.0f / 4.0f);
+	y1 = 720 * (8.0f / 9.0f);
 	_go_next_button.Init(60, TexManager::LoadTexture("Resources/next.png"), 200, 90);
-	x2 = 1280.0f * (2.0f / 3.0f);
-	y2 = 720 * (2.0f / 3.0f);
+	x2 = 1280.0f * (3.0f / 4.0f);
+	y2 = 720 * (8.0f / 9.0f);
 
 	clearedBackSprite.Create(TexManager::LoadTexture("Resources/stageClear.png"));
 
