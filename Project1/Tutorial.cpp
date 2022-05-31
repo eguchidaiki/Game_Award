@@ -119,7 +119,7 @@ void Tutorial::Update()
 			};
 			easePos = startPos;
 
-			tutorialState = TutorialState::FOLD;
+			tutorialState = TutorialState::NO_TUTORIAL;
 		}
 		break;
 	}
@@ -199,6 +199,8 @@ void Tutorial::Draw(int offsetX, int offsetY)
 	}
 	else
 	{
+		CharacterDraw();
+
 		if (tutorialState >= TutorialState::MOVE)
 		{
 			MoveTutorial(offset, isPlayerUpBody);
@@ -232,20 +234,40 @@ void Tutorial::Create()
 		UINT moveHandle = TexManager::LoadTexture("./Resources/tutorial/idouUI.png");
 		moveSprite.Create(moveHandle);
 	}
+	if ((moveFontSprite.spdata->size.x <= 0) || (moveFontSprite.spdata->size.y <= 0))
+	{
+		UINT moveHandle = TexManager::LoadTexture("./Resources/tutorial/string/tutorialUI1.png");
+		moveFontSprite.Create(moveHandle);
+	}
 	if ((jumpSprite.spdata->size.x <= 0) || (jumpSprite.spdata->size.y <= 0))
 	{
 		UINT jumpHandle = TexManager::LoadTexture("./Resources/tutorial/jump/AJump1.png");
 		jumpSprite.Create(jumpHandle);
+	}
+	if ((jumpFontSprite.spdata->size.x <= 0) || (jumpFontSprite.spdata->size.y <= 0))
+	{
+		UINT jumpHandle = TexManager::LoadTexture("./Resources/tutorial/string/tutorialUI3.png");
+		jumpFontSprite.Create(jumpHandle);
 	}
 	if ((foldSprite.spdata->size.x <= 0) || (foldSprite.spdata->size.y <= 0))
 	{
 		UINT foldHandle = TexManager::LoadTexture("./Resources/tutorial/oruUI.png");
 		foldSprite.Create(foldHandle);
 	}
+	if ((foldFontSprite.spdata->size.x <= 0) || (foldFontSprite.spdata->size.y <= 0))
+	{
+		UINT foldHandle = TexManager::LoadTexture("./Resources/tutorial/string/tutorialUI2.png");
+		foldFontSprite.Create(foldHandle);
+	}
 	if ((selectSprite.spdata->size.x <= 0) || (selectSprite.spdata->size.y <= 0))
 	{
 		UINT selectHandle = TexManager::LoadTexture("./Resources/tutorial/select.png");
 		selectSprite.Create(selectHandle);
+	}
+	if ((selectFontSprite.spdata->size.x <= 0) || (selectFontSprite.spdata->size.y <= 0))
+	{
+		UINT selectHandle = TexManager::LoadTexture("./Resources/tutorial/string/tutorialUI4.png");
+		selectFontSprite.Create(selectHandle);
 	}
 }
 
@@ -255,6 +277,9 @@ void Tutorial::Reset()
 	{
 	case TutorialType::NORMAL_TYPE:
 		tutorialState = TutorialState::MOVE;
+		break;
+	case TutorialType::FOLD_TYPE:
+		tutorialState = TutorialState::FOLD;
 		break;
 	case TutorialType::SELECT_TYPE:
 		tutorialState = TutorialState::SELECT;
@@ -283,6 +308,24 @@ void Tutorial::StartNormalTutorial()
 	isTutorial = true;
 	tutorialType = TutorialType::NORMAL_TYPE;
 	tutorialState = TutorialState::MOVE;
+}
+
+void Tutorial::StartFoldTutorial()
+{
+	if (isTutorial && tutorialType == TutorialType::FOLD_TYPE)
+	{
+		return;
+	}
+
+	if (isFirstOnly && isFirst == false)
+	{
+		isTutorial = false;
+		return;
+	}
+
+	isTutorial = true;
+	tutorialType = TutorialType::FOLD_TYPE;
+	tutorialState = TutorialState::FOLD;
 }
 
 void Tutorial::StartSelectTutorial()
@@ -321,12 +364,9 @@ void Tutorial::MoveTutorial(const XMFLOAT2& offset, bool flag)
 
 	if (tutorialState == TutorialState::MOVE)
 	{
-		x = offset.x - 50.0f;
-		y = offset.y - (flag * PlayerBody::BodySize + moveSpriteSize.y + 10.0f);
+		x = 230.0f + 170.0f;
+		y = 45.0f + backFrameWadth;
 		startPos = { x, y, 0.0f };
-
-		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-		moveSprite.DrawSprite(x, y);
 	}
 	else
 	{
@@ -343,9 +383,9 @@ void Tutorial::MoveTutorial(const XMFLOAT2& offset, bool flag)
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		moveSprite.DrawExtendSprite(x, y, x + moveSpriteSize.x * drawScale, y + moveSpriteSize.y * drawScale);
-	}
 
-	moveSprite.Draw();
+		moveSprite.Draw();
+	}
 }
 
 void Tutorial::JumpTutorial(const XMFLOAT2& offset, bool flag)
@@ -359,12 +399,9 @@ void Tutorial::JumpTutorial(const XMFLOAT2& offset, bool flag)
 
 	if (tutorialState == TutorialState::JUMP)
 	{
-		x = offset.x - 50.0f;
-		y = offset.y - (flag * PlayerBody::BodySize + jumpSpriteSize.y + 10.0f);
+		x = 215.0f + 170.0f;
+		y = 50.0f + backFrameWadth;
 		startPos = { x, y, 0.0f };
-
-		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-		jumpSprite.DrawSprite(x, y);
 	}
 	else
 	{
@@ -381,14 +418,14 @@ void Tutorial::JumpTutorial(const XMFLOAT2& offset, bool flag)
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		jumpSprite.DrawExtendSprite(x, y, x + jumpSpriteSize.x * drawScale, y + jumpSpriteSize.y * drawScale);
-	}
 
-	jumpSprite.Draw();
+		jumpSprite.Draw();
+	}
 }
 
 void Tutorial::FoldTutorial(const XMFLOAT2& offset, bool flag)
 {
-	if (tutorialType < TutorialType::NORMAL_TYPE)
+	if (tutorialType < TutorialType::FOLD_TYPE)
 	{
 		return;
 	}
@@ -397,12 +434,9 @@ void Tutorial::FoldTutorial(const XMFLOAT2& offset, bool flag)
 
 	if (tutorialState == TutorialState::FOLD)
 	{
-		x = offset.x - 50.0f;
-		y = offset.y - (flag * PlayerBody::BodySize + foldSpriteSize.y + 10.0f);
+		x = 130.0f + 170.0f;
+		y = 30.0f + backFrameWadth;
 		startPos = { x, y, 0.0f };
-
-		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-		foldSprite.DrawSprite(x, y);
 	}
 	else
 	{
@@ -419,9 +453,9 @@ void Tutorial::FoldTutorial(const XMFLOAT2& offset, bool flag)
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		foldSprite.DrawExtendSprite(x, y, x + foldSpriteSize.x * drawScale, y + foldSpriteSize.y * drawScale);
-	}
 
-	foldSprite.Draw();
+		foldSprite.Draw();
+	}
 }
 
 void Tutorial::SelectTutorial(const XMFLOAT2& offset, bool flag)
@@ -435,12 +469,9 @@ void Tutorial::SelectTutorial(const XMFLOAT2& offset, bool flag)
 
 	if (tutorialState == TutorialState::SELECT)
 	{
-		x = offset.x - 50.0f;
-		y = offset.y - (flag * PlayerBody::BodySize + selectSpriteSize.y + 30.0f);
+		x = 170.0f + 170.0f;
+		y = 50.0f + backFrameWadth;
 		startPos = { x, y, 0.0f };
-
-		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
-		selectSprite.DrawSprite(x, y);
 	}
 	else
 	{
@@ -457,7 +488,49 @@ void Tutorial::SelectTutorial(const XMFLOAT2& offset, bool flag)
 
 		Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 0.5f);
 		selectSprite.DrawExtendSprite(x, y, x + selectSpriteSize.x * drawScale, y + selectSpriteSize.y * drawScale);
+
+		selectSprite.Draw();
+	}
+}
+
+void Tutorial::CharacterDraw()
+{
+	if (tutorialState == TutorialState::NO_TUTORIAL)
+	{
+		return;
 	}
 
-	selectSprite.Draw();
+	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
+	static const float x = 170.0f;
+	static const float y = backFrameWadth;
+
+	switch (tutorialState)
+	{
+	case TutorialState::MOVE:
+	{
+		moveFontSprite.DrawSprite(x, y);
+		moveFontSprite.Draw();
+		break;
+	}
+	case TutorialState::JUMP:
+	{
+		jumpFontSprite.DrawSprite(x, y);
+		jumpFontSprite.Draw();
+		break;
+	}
+	case TutorialState::FOLD:
+	{
+		foldFontSprite.DrawSprite(x, y);
+		foldFontSprite.Draw();
+		break;
+	}
+	case TutorialState::SELECT:
+	{
+		selectFontSprite.DrawSprite(x, y);
+		selectFontSprite.Draw();
+		break;
+	}
+	default:
+		break;
+	}
 }

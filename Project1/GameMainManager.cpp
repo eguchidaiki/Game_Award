@@ -213,6 +213,17 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 			tutorial.SkipTutorial(Tutorial::TutorialType::SELECT_TYPE);
 		}
 	}
+	else if (NowScene >= 2)
+	{
+		if (NowScene == 2)
+		{
+			tutorial.StartFoldTutorial();
+		}
+		else
+		{
+			tutorial.SkipTutorial(Tutorial::TutorialType::FOLD_TYPE);
+		}
+	}
 	else if (NowScene >= 1)
 	{
 		if (NowScene == 1)
