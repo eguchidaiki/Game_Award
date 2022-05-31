@@ -49,6 +49,9 @@ void GameMainManager::Update()
 	if (!player->IsGoal) {
 		Audio::PlayLoadedSound(playBGM);
 	}
+	else {
+		Audio::StopLoadedSound(playBGM);
+	}
 
 	//ゲーム内インスタンスの更新処理（ようは俺が作ってないクラスの更新処理。ややこしくなるからラップした）
 	GameInstanceUpdate();
