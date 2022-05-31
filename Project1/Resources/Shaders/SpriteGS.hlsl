@@ -41,6 +41,7 @@ void main(
         element.size = input[0].size;
         element.uvOffset = input[0].uvOffset;
         element.color = input[0].color;
+        element.freedata = input[0].freedata;
 		//èoóÕ
 		output.Append(element);
 	}

@@ -20,6 +20,7 @@ struct VSOutput
     float2 size       : INSTANCE_DRAWSIZE;
     float4 uvOffset   : INSTANCE_UVOFFSET;
     float4 color      : INSTANCE_COLOR;
+    float4 freedata   : INSTANCE_FREEDATA;
 };
 
 //ジオメトリ出力構造体
@@ -31,4 +32,5 @@ struct GSOutput
     float2 size       : INSTANCE_DRAWSIZE;
     float4 uvOffset : INSTANCE_UVOFFSET;
     float4 color : INSTANCE_COLOR;
+    float4 freedata : INSTANCE_FREEDATA;
 };

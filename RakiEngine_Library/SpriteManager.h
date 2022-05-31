@@ -28,6 +28,7 @@ typedef struct SpriteInstance
 	XMFLOAT2 drawsize;	//縦横幅
 	XMFLOAT4 uvOffset;	//uv値
 	XMFLOAT4 color;
+	XMFLOAT4 freeData01;//ユーザー自由使用データ
 };
 
 //定数バッファデータ構造体

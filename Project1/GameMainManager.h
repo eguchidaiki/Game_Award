@@ -8,6 +8,7 @@
 #include "StageClearedControler.h"
 #include "BackGroundGraphic.h"
 
+#include <RenderTargetManager.h>
 #include <array>
 #include <Audio.h>
 
@@ -26,6 +27,9 @@ private:
 	Tutorial tutorial;
 
 	BackGroundGraphic bg;
+
+	//ゲーム本編の描画ハンドル
+	int gameMainGraphHandle;
 
 public:
 	//今プレイしているステージ番号
