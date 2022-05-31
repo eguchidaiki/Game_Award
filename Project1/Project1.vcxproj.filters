@@ -121,6 +121,9 @@
     <ClCompile Include="ButtonUI.cpp" />
     <ClCompile Include="SChangeDir.cpp" />
     <ClCompile Include="TitleAudio.cpp" />
+    <ClCompile Include="BackGroundGraphic.cpp">
+      <Filter>Scene\gameMain\effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActFlag.h">
@@ -211,6 +214,9 @@
     <ClInclude Include="ButtonUI.h" />
     <ClInclude Include="SChangeDir.h" />
     <ClInclude Include="TitleAudio.h" />
+    <ClInclude Include="BackGroundGraphic.h">
+      <Filter>Scene\gameMain\effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\block.png">

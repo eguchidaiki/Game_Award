@@ -7,6 +7,7 @@
 #include "StageSelecter.h"
 #include "StageClearedControler.h"
 
+#include <array>
 #include <Audio.h>
 
 class GameMainManager
