@@ -27,6 +27,8 @@ public: //ƒƒ“ƒo•Ï”
 	bool IsWalkAnimation = false;
 	size_t WalkAnimationCount = 0;
 
+	size_t animationCount = 0;
+
 	//‰æ‘œƒnƒ“ƒhƒ‹
 	UINT FootHandle;
 	Sprite FootSprite;

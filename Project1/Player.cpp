@@ -244,18 +244,22 @@ void Player::Update(int offsetX, int offsetY)
 	//それぞれの体のアップデート処理(有効化されているときのみ)
 
 	Body_One.Update(CenterPosition);
+	Body_One.BodyFootUpdate();
 	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsAroundBlock();
 
 	Body_Two.Update(CenterPosition);
+	Body_Two.BodyFootUpdate();
 	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.IsAroundBlock();
 
 	Body_Three.Update(CenterPosition);
+	Body_Three.BodyFootUpdate();
 	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.IsAroundBlock();
 
 	Body_Four.Update(CenterPosition);
+	Body_Four.BodyFootUpdate();
 	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
 
