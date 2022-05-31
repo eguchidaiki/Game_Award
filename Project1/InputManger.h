@@ -127,6 +127,12 @@ public: //メンバ関数
 	// ジャンプ(離した瞬間の判定)
 	bool JumpRelease();
 
+	//折る操作
+	bool FoldLeft();
+	bool FoldUp();
+	bool FoldRight();
+	bool FoldDown();
+
 	//折る操作のトリガー
 	bool FoldLeftTrigger();
 	bool FoldUpTrigger();

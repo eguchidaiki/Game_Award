@@ -520,7 +520,7 @@ void Player::Key_Move()
 void Player::Key_FoldOpen()
 {
 	//折る入力
-	if (actFlag->FoldLeft())
+	//if (actFlag->FoldLeft())
 	{ //左に折る
 		if (IsDirectionFoldAll(BodyType::left))
 		{
@@ -530,7 +530,7 @@ void Player::Key_FoldOpen()
 			return;
 		}
 	}
-	if (actFlag->FoldUp())
+	//if (actFlag->FoldUp())
 	{ //上に折る
 		if (IsDirectionFoldAll(BodyType::up))
 		{
@@ -540,7 +540,7 @@ void Player::Key_FoldOpen()
 			return;
 		}
 	}
-	if (actFlag->FoldRight())
+	//if (actFlag->FoldRight())
 	{ //右に折る
 		if (IsDirectionFoldAll(BodyType::right))
 		{
@@ -550,7 +550,7 @@ void Player::Key_FoldOpen()
 			return;
 		}
 	}
-	if (actFlag->FoldDown())
+	//if (actFlag->FoldDown())
 	{ //下に折る
 		if (IsDirectionFoldAll(BodyType::down))
 		{
@@ -562,7 +562,7 @@ void Player::Key_FoldOpen()
 	}
 
 	//開く入力
-	if (actFlag->OpenLeft())
+	//if (actFlag->OpenLeft())
 	{ //左に開く
 		if (IsOpenBlock(BodyType::left))
 		{
@@ -572,7 +572,7 @@ void Player::Key_FoldOpen()
 			return;
 		}
 	}
-	if (actFlag->OpenUp())
+	//if (actFlag->OpenUp())
 	{ //上に開く
 		if (IsOpenBlock(BodyType::up))
 		{
@@ -582,7 +582,7 @@ void Player::Key_FoldOpen()
 			return;
 		}
 	}
-	if (actFlag->OpenRight())
+	//if (actFlag->OpenRight())
 	{ //右に開く
 		if (IsOpenBlock(BodyType::right))
 		{
@@ -592,7 +592,7 @@ void Player::Key_FoldOpen()
 			return;
 		}
 	}
-	if (actFlag->OpenDown())
+	//if (actFlag->OpenDown())
 	{ //下に開く
 		if (IsOpenBlock(BodyType::down))
 		{
