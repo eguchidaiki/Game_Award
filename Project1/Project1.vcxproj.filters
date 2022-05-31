@@ -28,6 +28,9 @@
     <FxCompile Include="Resources\Shaders\SpriteVS.hlsl">
       <Filter>リソースファイル\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\Shaders\SpriteSepiaPS.hlsl">
+      <Filter>リソースファイル\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActFlag.cpp">

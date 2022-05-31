@@ -38,7 +38,7 @@ void GameMainManager::Init()
 
 	tutorial.Create();
 
-	stageClearCtrl.Init();
+	stageClearCtrl.Init(selecterPtr);
 
 	gameMainGraphHandle = RenderTargetManager::GetInstance()->CreateRenderTexture(
 		Raki_WinAPI::window_width, Raki_WinAPI::window_height);
@@ -210,7 +210,7 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	changecount = 0;
 	IsStart = false;
 	NowScene = SelectStageNum;
-	stageClearCtrl.Init();
+	stageClearCtrl.Init(selecterPtr);
 
 	//ステージ番号から
 	selecterPtr->LoadStage(SelectStageNum);

@@ -7,7 +7,7 @@ namespace
 InputManger* inputManger = InputManger::Get();
 }
 
-void StageClearedControler::Init()
+void StageClearedControler::Init(StageSelecter *ptr)
 {
 	//演出初期化
 	goalEffect.reset(new GoalEffects);
@@ -15,11 +15,11 @@ void StageClearedControler::Init()
 
 	//UI初期化
 	_go_select_button.Init(60, TexManager::LoadTexture("Resources/back.png"), 360, 90);
-	x1 = 1280.0f / 3.0f;
-	y1 = 720 * (2.0f / 3.0f);
+	x1 = 1280.0f * (1.0f / 4.0f);
+	y1 = 720 * (8.0f / 9.0f);
 	_go_next_button.Init(60, TexManager::LoadTexture("Resources/next.png"), 200, 90);
-	x2 = 1280.0f * (2.0f / 3.0f);
-	y2 = 720 * (2.0f / 3.0f);
+	x2 = 1280.0f * (3.0f / 4.0f);
+	y2 = 720 * (8.0f / 9.0f);
 
 	clearedBackSprite.Create(TexManager::LoadTexture("Resources/stageClear.png"));
 
@@ -33,6 +33,8 @@ void StageClearedControler::Init()
 	isAllowSwitching = false;
 
 	gameMainSprite.CreateRtexSprite(0);
+
+	selecter = ptr;
 }
 
 void StageClearedControler::Update()
@@ -116,7 +118,7 @@ void StageClearedControler::Update_CheckControlStates()
 		break;
 	case StageClearedControler::CONTROL_ACTIVE:
 		//UI選択の入力（どっちを選択してるか？）
-		if (inputManger->LeftTrigger()) { user_selecting = 0; }
+		if (inputManger->LeftTrigger() && selecter->SelectStageNum != 20) { user_selecting = 0; }
 		if (inputManger->RightTrigger()) { user_selecting = 1; }
 		_user_selecting = static_cast<STAGE_CLEARED_USER_SELECTING>(user_selecting);
 
@@ -187,7 +189,9 @@ void StageClearedControler::Draw_UI()
 	switch (_user_selecting)
 	{
 	case StageClearedControler::USER_SELECT_NEXT:
-		_go_next_button.Draw(x1, y1, SELECTING_SCALE, SELECTING_SCALE);
+		if (selecter->SelectStageNum != 20) {
+			_go_next_button.Draw(x1, y1, SELECTING_SCALE, SELECTING_SCALE);
+		}
 		_go_select_button.Draw(x2, y2);
 		break;
 	case StageClearedControler::USER_SELECT_BACK:
