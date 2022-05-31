@@ -38,6 +38,8 @@ void StageClearedControler::Init(StageSelecter *ptr)
 	gameMainSprite.CreateRtexSprite(0);
 
 	selecter = ptr;
+
+	sepiaRate = 0.0f;
 }
 
 void StageClearedControler::Update()
@@ -57,7 +59,7 @@ void StageClearedControler::Draw(int rtHandle)
 	clearedBackSprite.Draw();
 
 	//ゲーム本編の画像を描画する
-	gameMainSprite.DrawRTexSprite(rtHandle, LT.x, LT.y, RB.x, RB.y, 0, DirectX::XMFLOAT4{ 0.5,0.5,0.5,1.0 });
+	gameMainSprite.DrawRTexSprite(rtHandle, LT.x, LT.y, RB.x, RB.y, 0, DirectX::XMFLOAT4{ 0.9f,0.9f,0.8f,sepiaRate });
 
 	if (ctrl_state == CONTROL_NOT_ALLOW) { return; }
 
@@ -108,8 +110,10 @@ void StageClearedControler::Update_CheckControlStates()
 		//規定フレーム経過、または入力を検知
 		frameCount++;
 
+		sepiaRate = rate;
 		if (frameCount > DIRECTING_FRAME)
 		{
+			sepiaRate = 1.0f;
 			//UI選択有効化
 			ctrl_state = CONTROL_ACTIVE;
 		}
@@ -198,7 +202,9 @@ void StageClearedControler::Draw_UI()
 		_go_select_button.Draw(x2, y2);
 		break;
 	case StageClearedControler::USER_SELECT_BACK:
-		_go_next_button.Draw(x1, y1);
+		if (selecter->SelectStageNum != 20) {
+			_go_next_button.Draw(x1, y1);
+		}
 		_go_select_button.Draw(x2, y2, SELECTING_SCALE, SELECTING_SCALE);
 		break;
 	default:
