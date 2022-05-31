@@ -275,6 +275,20 @@ void StageSelecter::CheckToStageChangeInput()
 
 void StageSelecter::DrawCursor()
 {
+	int changecount = 0;
+	for (int a = 0; a < 5; a++)
+	{
+		if (stagePage[a].displayNum > 0 && stagePage[a].displayNum < 19)
+		{
+			changecount++;
+		}
+	}
+
+	if (changecount > 0)
+	{
+		return;
+	}
+
 	std::array<int, 4> boxLeft;
 	for (int i = 0; i < 4; i++)
 	{
