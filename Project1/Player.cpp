@@ -2391,6 +2391,11 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 		}
 	}
 
+	if (mapchip == NULL)
+	{
+		return false;
+	}
+
 	//反転したブロックマップチップと顔の四隅との判定
 	for (int i = 0; i < stage->GetStageDataSize(); i++)
 	{
@@ -2415,7 +2420,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 
 				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
 
-				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
@@ -2428,7 +2433,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 
 				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
 
-				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
@@ -2441,7 +2446,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 
 				MapchipPos = (up_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
 
-				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
@@ -2454,7 +2459,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 
 				MapchipPos = (down_mapchip_tile) * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
 
-				if (stage->IsMapchipBlocks(mapchip[MapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[MapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
