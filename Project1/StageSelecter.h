@@ -184,6 +184,7 @@ private:
 	//•`‰æŠÖ”Œn
 	void DrawCursor();
 
+	SoundData uiMoveSound;
 
 	void DrawPages();
 };

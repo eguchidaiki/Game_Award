@@ -32,6 +32,8 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 		MENUICON_SIZE_X, MENUICON_SIZE_Y);
 
 	titleDirectState = TITLE_DIRECT_USER_SELECT;
+
+	uiMoveSound = Audio::LoadSound_wav("Resources/sound/SE/mouse02.wav");
 }
 
 //初期化
@@ -59,8 +61,14 @@ void Title::Update()
 
 		break;
 	case Title::TITLE_DIRECT_USER_SELECT:
-		if ((inputManger->DownTrigger() || Input::isKeyTrigger(DIK_DOWN)) && user_selecting == is_start) { user_select_index++; }
-		if ((inputManger->UpTrigger() || Input::isKeyTrigger(DIK_UP)) && user_selecting == is_end) { user_select_index--; }
+		if ((inputManger->DownTrigger() || Input::isKeyTrigger(DIK_DOWN)) && user_selecting == is_start) { 
+			user_select_index++;
+			Audio::PlayLoadedSound(uiMoveSound, true);
+		}
+		if ((inputManger->UpTrigger() || Input::isKeyTrigger(DIK_UP)) && user_selecting == is_end) { 
+			user_select_index--; 
+			Audio::PlayLoadedSound(uiMoveSound, true);
+		}
 
 		user_selecting = static_cast<NOW_SELECTING>(user_select_index);
 

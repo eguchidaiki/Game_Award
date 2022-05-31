@@ -54,6 +54,8 @@ void StageSelecter::Init()
 	user_selecting = UI_STAGEBOX_1;
 
 	nowDisplayNum = 0;
+
+	uiMoveSound = Audio::LoadSound_wav("Resources/sound/SE/mouse02.wav");
 }
 
 void StageSelecter::Update()
@@ -117,6 +119,7 @@ void StageSelecter::Changing_UI_Number()
 	if (inputManager->LeftTrigger() || Input::isKeyTrigger(DIK_LEFT)) {
 		if (user_selecting != UI_BACK && (nowpage != StageSelecter::page_1_4 || user_selecting != UI_STAGEBOX_1)) { 
 			select_number--; 
+			Audio::PlayLoadedSound(uiMoveSound, true);
 		}
 	}
 
@@ -124,6 +127,7 @@ void StageSelecter::Changing_UI_Number()
 		if (user_selecting != UI_FRONT && (nowpage != StageSelecter::page_17_20 || user_selecting != UI_STAGEBOX_4))
 		{
 			select_number++;
+			Audio::PlayLoadedSound(uiMoveSound, true);
 		}
 	}
 	user_selecting = static_cast<NOW_SELECTING>(select_number);
