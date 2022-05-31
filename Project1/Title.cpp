@@ -79,6 +79,8 @@ void Title::Update()
 			titleDirectState = TITLE_DIRECT_USER_SELECT;
 		}
 		if (InputManger::Get()->DecisionTrigger()) {
+			titleAlpha = 1.0f;
+			title_lt = title_e_lt;
 			frame = TITLE_ALPHA_EASE_TIME + BUTTON_EASE_TIME;
 		}
 
