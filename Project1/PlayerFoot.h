@@ -24,7 +24,12 @@ public: //ƒƒ“ƒo•Ï”
 	bool FootIsAction;
 	bool IsFootUp;
 
+	bool IsWalkAnimation = false;
+	size_t WalkAnimationCount = 0;
+
 	//‰æ‘œƒnƒ“ƒhƒ‹
 	UINT FootHandle;
 	Sprite FootSprite;
+
+	Sprite FootAnimation;
 };
