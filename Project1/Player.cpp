@@ -2367,6 +2367,10 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 		if (stage->SelectStage->stageTileData[j].isFold)
 		{
 			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+			if (stage->IsPlayerTile(stage->selectStageNum, j))
+			{
+				return false;
+			}
 		}
 	}
 
@@ -2375,7 +2379,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 	{
 		for (int j = 0; j < stage->SelectStage->stageTileData.size(); j++)
 		{
-			//動いているタイルは無視
+			//折っているタイルは無視
 			if (!stage->SelectStage->stageTileData[j].isFold)
 			{
 				continue;
