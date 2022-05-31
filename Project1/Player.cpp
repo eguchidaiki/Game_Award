@@ -109,7 +109,7 @@ void Player::Update(int offsetX, int offsetY)
 
 	if (IsGoal)
 	{
-		if (animationCount % 5 == 0)
+		if (animationCount % 3 == 0)
 		{
 			goalFrameCount++;
 		}
@@ -1659,7 +1659,7 @@ void Player::IsHitPlayerBody()
 
 	//顔の四辺
 	float FaceLeft = CenterPosition.x - 25;
-	float FaceUp = CenterPosition.y - 25;
+	float FaceUp = CenterPosition.y - 24;
 	float FaceRight = CenterPosition.x + 25;
 	float FaceDown = CenterPosition.y + 25;
 	float FaceAndLegDown = CenterPosition.y + 33;
