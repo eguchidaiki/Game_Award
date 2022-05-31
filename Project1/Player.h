@@ -223,6 +223,7 @@ public: //メンバ変数
 
 	//ゴールに触れているかどうか
 	bool IsGoal;
+	bool isGoalPlayAudio; //ゴール時の音が再生されたかどうか
 
 	//ブロックに当たっているかどうか
 	bool IsColide;
