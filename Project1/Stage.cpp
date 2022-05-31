@@ -2092,8 +2092,6 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 		return;
 	}
 
-
-
 	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
 	{
 		if (IsPlayerTile(selectStageNum, b) && !IsNowTileOver(selectStageNum, b))
