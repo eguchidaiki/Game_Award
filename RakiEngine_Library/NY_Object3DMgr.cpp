@@ -289,7 +289,7 @@ Pipeline3D NY_Object3DManager::CreateMPPipelineState(Pipeline3D defaultPP)
     mpblenddesc.BlendEnable = true;//ブレンド有効
     mpblenddesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;//加算合成
     mpblenddesc.SrcBlendAlpha = D3D12_BLEND_ONE;//ソースの値を100%使用
-    mpblenddesc.DestBlendAlpha = D3D12_BLEND_ZERO;//デストの値を0%使用
+    mpblenddesc.DestBlendAlpha = D3D12_BLEND_ONE;//デストの値を0%使用
 
     //合成設定(各項目を書き換えることで設定可能)
     mpblenddesc.BlendOp = D3D12_BLEND_OP_ADD;//加算

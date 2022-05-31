@@ -39,6 +39,9 @@ void GameMainManager::Init()
 	tutorial.Create();
 
 	stageClearCtrl.Init();
+
+	gameMainGraphHandle = RenderTargetManager::GetInstance()->CreateRenderTexture(
+		Raki_WinAPI::window_width, Raki_WinAPI::window_height);
 }
 
 void GameMainManager::Update()
@@ -88,11 +91,18 @@ void GameMainManager::Update()
 
 void GameMainManager::Draw()
 {
+	//ハンドル設定
+	RenderTargetManager::GetInstance()->SetRenderTarget(gameMainGraphHandle);
+	RenderTargetManager::GetInstance()->ClearRenderTexture(gameMainGraphHandle);
+
 	//ゲーム本編描画
 	GameInstanceDraw();
 
-	//ステージクリア時の描画
-	stageClearCtrl.Draw();
+	////ハンドル戻す
+	RenderTargetManager::GetInstance()->SetDrawBackBuffer();
+
+	//ステージクリア時の描画(ハンドル渡す)
+	stageClearCtrl.Draw(gameMainGraphHandle);
 }
 
 void GameMainManager::Finalize()
