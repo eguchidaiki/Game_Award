@@ -6,6 +6,7 @@
 #include "GoalEffects.h"
 #include "Player.h"
 #include "ButtonUI.h"
+#include "StageSelecter.h"
 
 //ステージクリア時の挙動を管理するクラス
 class StageClearedControler
@@ -17,12 +18,14 @@ private:
 
 	Sprite gameMainSprite;
 
+	StageSelecter* selecter;
+
 public:
 	StageClearedControler(){}
 	~StageClearedControler(){}
 
 	//初期化
-	void Init();
+	void Init(StageSelecter *ptr);
 
 	void Update();
 
