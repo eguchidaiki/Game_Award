@@ -641,13 +641,13 @@ void PlayerBody::IsHitBody(RVector3* center, float& FallSpeed, bool& isfall, boo
 
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
-		BodyUp = BodyStartPos.y;
+		BodyUp = BodyStartPos.y + 1;
 		BodyDown = BodyEndPos.y - 1;
 		BodyAndLegDown = BodyDown + 9;
 	}
 	else
 	{
-		BodyUp = BodyEndPos.y;
+		BodyUp = BodyEndPos.y + 1;
 		BodyDown = BodyStartPos.y - 1;
 		BodyAndLegDown = BodyDown + 9;
 	}
