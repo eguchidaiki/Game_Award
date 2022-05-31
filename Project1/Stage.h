@@ -353,9 +353,12 @@ private:
 	int FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, const unsigned char direction,
 		const int offsetX, const int offsetY);
 
+	// ゴーストの計算
 	int Ghost();
-	// ゴーストの描画
-	int GhostDraw(const XMFLOAT2& offset, const float& saturationColor = 1.0f);
+	// 折った時のゴーストの描画
+	int GhostDrawFold(const XMFLOAT2& offset, const float& saturationColor = 1.0f);
+	// 開いた時のゴーストの描画
+	int GhostDrawOpen(const XMFLOAT2& offset, const float& saturationColor = 1.0f);
 
 	// イージングの初期化
 	void EaseingInit(const size_t& moveStage, const size_t& moveTile, const int& direction);
@@ -389,6 +392,7 @@ private: //メンバ変数
 	std::vector<RVector3> SelectFrame_D;
 
 	int foldDirection;
+	bool isFold;
 	size_t ghostTileNum;
 
 	//折り目の画像ハンドル

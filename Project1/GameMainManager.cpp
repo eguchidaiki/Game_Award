@@ -215,9 +215,9 @@ void GameMainManager::SetSelectToGame(int SelectStageNum)
 	//ステージ番号から
 	selecterPtr->LoadStage(SelectStageNum);
 
-	if (NowScene >= 3)
+	if (NowScene >= 8)
 	{
-		if (NowScene == 3)
+		if (NowScene == 8)
 		{
 			tutorial.StartSelectTutorial();
 		}
