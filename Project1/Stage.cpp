@@ -59,6 +59,8 @@ Stage::Stage() :
 	stageData{},
 	initStageData{},
 	reverseMapchip(nullptr),
+	foldDirection(4),
+	ghostTileNum(0),
 	lineHandle(0),
 	AllBlockHandle(),
 	EmptyHandle(0),
@@ -104,6 +106,8 @@ void Stage::Updata()
 	EaseingUpdate();
 
 	particleManager->Prototype_Update();
+
+	Ghost();
 
 	for (i = 0; i < stageData.size(); i++)
 	{
@@ -318,6 +322,8 @@ void Stage::Draw(const int offsetX, const int offsetY)
 
 	//	LineDraw(nowPlayerStage, drawOffset, 1.1f);
 	//}
+
+	GhostDraw(drawOffset);
 
 	// 色の初期化
 	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
@@ -1268,7 +1274,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 	{
 		if (!SelectStage->stageTileData[a].isFold && SelectStage->stageTileData[a].Overlap == 0)
 		{
-			if (inputManeger->FoldUpTrigger() &&
+			if (inputManeger->FoldUpRelease() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::up)
 			{
 				if (IsTileFoldDirection(selectStageNum, BodyType::up))
@@ -1277,8 +1283,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 					break;
 				}
 			}
-			else if (inputManeger->FoldDownTrigger() &&
-				SelectStage->stageTileData[a].FoldType == BodyType::down)
+			else if (inputManeger->FoldDownRelease() &&
+					 SelectStage->stageTileData[a].FoldType == BodyType::down)
 			{
 				if (IsTileFoldDirection(selectStageNum, BodyType::down))
 				{
@@ -1286,8 +1292,8 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 					break;
 				}
 			}
-			else if (inputManeger->FoldLeftTrigger() &&
-				SelectStage->stageTileData[a].FoldType == BodyType::left)
+			else if (inputManeger->FoldLeftRelease() &&
+					 SelectStage->stageTileData[a].FoldType == BodyType::left)
 			{
 				if (IsTileFoldDirection(selectStageNum, BodyType::left))
 				{
@@ -1295,7 +1301,7 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 					break;
 				}
 			}
-			else if (inputManeger->FoldRightTrigger() &&
+			else if (inputManeger->FoldRightRelease() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::right)
 			{
 				if (IsTileFoldDirection(selectStageNum, BodyType::right))
@@ -1315,25 +1321,25 @@ int Stage::FoldAndOpen(const RVector3& playerPos, bool BodyStatus[4], bool IsFoo
 	{
 		if (SelectStage->stageTileData[a].isFold)
 		{
-			if (inputManeger->OpenUpTrigger() &&
+			if (inputManeger->OpenUpRelease() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::up)
 			{
 				direction = BodyType::up;
 				break;
 			}
-			else if (inputManeger->OpenDownTrigger() &&
+			else if (inputManeger->OpenDownRelease() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::down)
 			{
 				direction = BodyType::down;
 				break;
 			}
-			else if (inputManeger->OpenLeftTrigger() &&
+			else if (inputManeger->OpenLeftRelease() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::left)
 			{
 				direction = BodyType::left;
 				break;
 			}
-			else if (inputManeger->OpenRightTrigger() &&
+			else if (inputManeger->OpenRightRelease() &&
 				SelectStage->stageTileData[a].FoldType == BodyType::right)
 			{
 				direction = BodyType::right;
@@ -2093,8 +2099,6 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 		return;
 	}
 
-
-
 	for (int b = 0; b < SelectStage->stageTileData.size(); b++)
 	{
 		if (IsPlayerTile(selectStageNum, b) && !IsNowTileOver(selectStageNum, b))
@@ -2530,6 +2534,11 @@ bool Stage::IsAnyTile(const RVector3& center)
 
 bool Stage::IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber)
 {
+	if (stageNumber >= stageData.size() || stageTileNumber >= stageData[stageNumber].stageTileData.size())
+	{
+		return false;
+	}
+
 	float left = (float)stageData[stageNumber].stageTileData[stageTileNumber].offsetX * blockSize;
 	float up = (float)stageData[stageNumber].stageTileData[stageTileNumber].offsetY * blockSize;
 	float right = left + blockSize * (float)stageData[stageNumber].stageTileData[stageTileNumber].width;
@@ -2785,9 +2794,8 @@ int Stage::Open(const unsigned char& direction, const size_t& onPlayerStage, con
 	return 0;
 }
 
-int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor)
+int Stage::StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float& saturationColor)
 {
-
 	if (stageNumber >= stageData.size())
 	{
 		return EF;
@@ -2953,9 +2961,8 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 	static char sideStageTile = 0;
 	static char sideStageData = 0;
 
-	// 色設定
-	Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * saturationColor, lineColor[stageNumber % 4].y * saturationColor,
-		lineColor[stageNumber % 4].z * saturationColor, lineColor[stageNumber % 4].w * saturationColor);
+	float frameColor = saturationColor;
+	float foldColor = saturationColor * 1.5f;
 
 	// 折り目・枠線の描画
 	for (j = 0; j < stageData[stageNumber].stageTileData.size(); j++)
@@ -2967,17 +2974,29 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * foldColor, lineColor[stageNumber % 4].y * foldColor,
+											lineColor[stageNumber % 4].z * foldColor, lineColor[stageNumber % 4].w * foldColor);
+
 				FoldDraw(stageNumber, j, BodyType::left,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+											lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 				FlameDraw(stageNumber, j, BodyType::left,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
+			// 色設定
+			Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+										lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 			FlameDraw(stageNumber, j, BodyType::left,
 				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
@@ -2988,17 +3007,29 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * foldColor, lineColor[stageNumber % 4].y * foldColor,
+											lineColor[stageNumber % 4].z * foldColor, lineColor[stageNumber % 4].w * foldColor);
+
 				FoldDraw(stageNumber, j, BodyType::right,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+											lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 				FlameDraw(stageNumber, j, BodyType::right,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
+			// 色設定
+			Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+										lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 			FlameDraw(stageNumber, j, BodyType::right,
 				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
@@ -3009,17 +3040,29 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * foldColor, lineColor[stageNumber % 4].y * foldColor,
+											lineColor[stageNumber % 4].z * foldColor, lineColor[stageNumber % 4].w * foldColor);
+
 				FoldDraw(stageNumber, j, BodyType::up,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+											lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 				FlameDraw(stageNumber, j, BodyType::up,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
+			// 色設定
+			Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+										lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 			FlameDraw(stageNumber, j, BodyType::up,
 				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
@@ -3030,17 +3073,29 @@ int Stage::LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const flo
 
 			if (sideStageData != MapchipData::EMPTY_STAGE)
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * foldColor, lineColor[stageNumber % 4].y * foldColor,
+											lineColor[stageNumber % 4].z * foldColor, lineColor[stageNumber % 4].w * foldColor);
+
 				FoldDraw(stageNumber, j, BodyType::down,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 			else
 			{
+				// 色設定
+				Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+											lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 				FlameDraw(stageNumber, j, BodyType::down,
 					static_cast<int>(offset.x), static_cast<int>(offset.y));
 			}
 		}
 		else
 		{
+			// 色設定
+			Sprite::SetSpriteColorParam(lineColor[stageNumber % 4].x * frameColor, lineColor[stageNumber % 4].y * frameColor,
+										lineColor[stageNumber % 4].z * frameColor, lineColor[stageNumber % 4].w * frameColor);
+
 			FlameDraw(stageNumber, j, BodyType::down,
 				static_cast<int>(offset.x), static_cast<int>(offset.y));
 		}
@@ -3261,6 +3316,214 @@ int Stage::FoldDraw(const size_t& stageNumber, const size_t& stageTileNumber, co
 		break;
 	}
 	}
+
+	return 0;
+}
+
+int Stage::Ghost()
+{
+	using namespace std;
+
+	if (inputManeger->FoldUp())
+	{
+		foldDirection = BodyType::up;
+	}
+	else if (inputManeger->FoldDown())
+	{
+		foldDirection = BodyType::down;
+	}
+	else if (inputManeger->FoldLeft())
+	{
+		foldDirection = BodyType::left;
+	}
+	else if (inputManeger->FoldRight())
+	{
+		foldDirection = BodyType::right;
+	}
+	else
+	{
+		foldDirection = -1;
+		return EF;
+	}
+
+	char* mapChip = reverseMapchip;
+
+	if (FoldSimulation(player->CenterPosition, foldDirection, &mapChip) == EF)
+	{
+		return EF;
+	}
+
+	vector<size_t> stageNumber;
+	vector<size_t> onPlayerStage;
+	vector<size_t> moveStageTile;
+	vector<size_t> moveStageData;
+
+	SetOnPlayerStageTileFold(stageNumber, onPlayerStage, moveStageTile, moveStageData, foldDirection);
+
+	if (moveStageData.size() == 0)
+	{
+		return EF;
+	}
+	ghostTileNum = moveStageData[0];
+
+	return 0;
+}
+
+int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
+{
+	if (selectStageNum >= stageData.size())
+	{
+		return EF;
+	}
+	if (ghostTileNum >= stageData[selectStageNum].stageTileData.size())
+	{
+		return EF;
+	}
+	if (stageData[selectStageNum].stageTileData[ghostTileNum].stageEase.isMove)
+	{
+		return EF;
+	}
+	if (foldDirection != stageData[selectStageNum].stageTileData[ghostTileNum].FoldType)
+	{
+		return EF;
+	}
+
+	static XMFLOAT2 drawOffset = {};
+	switch (foldDirection)
+	{
+	case BodyType::up:
+	{
+		drawOffset.x = offset.x;
+		drawOffset.y = offset.y + stageData[selectStageNum].stageTileData[ghostTileNum].height * blockSize;
+		break;
+	}
+	case BodyType::down:
+	{
+		drawOffset.x = offset.x;
+		drawOffset.y = offset.y - stageData[selectStageNum].stageTileData[ghostTileNum].height * blockSize;
+		break;
+	}
+	case BodyType::left:
+	{
+		drawOffset.x = offset.x + stageData[selectStageNum].stageTileData[ghostTileNum].width * blockSize;
+		drawOffset.y = offset.y;
+		break;
+	}
+	case BodyType::right:
+	{
+		drawOffset.x = offset.x - stageData[selectStageNum].stageTileData[ghostTileNum].width * blockSize;
+		drawOffset.y = offset.y;
+		break;
+	}
+	default:
+	{
+		return EF;
+		break;
+	}
+	}
+
+	static RVector3 pos1 = {}, pos2 = {};
+	static XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, saturationColor * 0.5f };
+
+	// 色の設定
+	Sprite::SetSpriteColorParam(color.x, color.y, color.z, color.w);
+
+	for (mapchipPos = 0; mapchipPos < stageData[selectStageNum].stageTileData[ghostTileNum].size; mapchipPos++)
+	{
+		x = mapchipPos % stageData[selectStageNum].stageTileData[ghostTileNum].width;
+		y = mapchipPos / stageData[selectStageNum].stageTileData[ghostTileNum].width;
+
+		pos1.x = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].x + drawOffset.x;
+		pos1.y = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].y + drawOffset.y;
+		pos1.z = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].z;
+		pos2.x = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].x + drawOffset.x;
+		pos2.y = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].y + drawOffset.y;
+		pos2.z = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].z;
+
+		switch (stageData[selectStageNum].stageTileData[ghostTileNum].mapchip[mapchipPos])
+		{
+		case MapchipData::BLOCK:
+		{
+			AllBlockSprite[selectStageNum][0].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+		}
+		case MapchipData::GOAL:
+		{
+			MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+		}
+		case MapchipData::HORIZONTAL:
+			AllBlockSprite[selectStageNum][1].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::VERTICAL:
+			AllBlockSprite[selectStageNum][2].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::LEFTONLY:
+			AllBlockSprite[selectStageNum][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::UPONLY:
+			AllBlockSprite[selectStageNum][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::RIGHTONLY:
+			AllBlockSprite[selectStageNum][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::DOWNONLY:
+			AllBlockSprite[selectStageNum][6].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::LEFTL:
+			AllBlockSprite[selectStageNum][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::UPL:
+			AllBlockSprite[selectStageNum][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::RIGHTL:
+			AllBlockSprite[selectStageNum][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::DOWNL:
+			AllBlockSprite[selectStageNum][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::LEFTU:
+			AllBlockSprite[selectStageNum][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::UPU:
+			AllBlockSprite[selectStageNum][12].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::RIGHTU:
+			AllBlockSprite[selectStageNum][13].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::DOWNU:
+			AllBlockSprite[selectStageNum][14].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+
+		case MapchipData::NOFRAME:
+			AllBlockSprite[selectStageNum][15].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+			break;
+		case MapchipData::EMPTY_STAGE:
+		case MapchipData::NONE:
+		case MapchipData::START:
+		default:
+		{
+			continue;
+			break;
+		}
+		}
+	}
+
+	// 色の初期化
+	Sprite::SetSpriteColorParam(1.0f, 1.0f, 1.0f, 1.0f);
 
 	return 0;
 }
