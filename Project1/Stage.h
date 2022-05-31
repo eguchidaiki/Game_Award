@@ -317,8 +317,10 @@ public: //メンバ関数
 	bool IsPositionInitTile(size_t StageNum, size_t StageTileNum);
 	//任意の座標がどこかのタイルにいたらtrue
 	bool IsAnyTile(const RVector3& center);
-	//任意の座標がステージタイルにいるのか
+	//任意の座標がどのステージタイルにいるのか
 	bool IsPositionTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
+	//任意の座標がどのイニットステージタイルにいるのか
+	bool IsPositionInitTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber);
 
 	//パーティクル生成
 	void CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum);
@@ -364,9 +366,9 @@ public:
 	size_t selectStageNum = 0;
 	size_t selectTileNum = 0;
 	std::vector<StageData> initStageData;
+	std::vector<StageData> stageData;
 
 private: //メンバ変数
-	std::vector<StageData> stageData;
 
 
 	char* reverseMapchip;

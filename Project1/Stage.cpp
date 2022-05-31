@@ -2542,6 +2542,23 @@ bool Stage::IsPositionTile(const RVector3& center, const size_t& stageNumber, co
 	}
 }
 
+bool Stage::IsPositionInitTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber)
+{
+	float left = (float)initStageData[stageNumber].stageTileData[stageTileNumber].offsetX * blockSize;
+	float up = (float)initStageData[stageNumber].stageTileData[stageTileNumber].offsetY * blockSize;
+	float right = left + blockSize * (float)initStageData[stageNumber].stageTileData[stageTileNumber].width;
+	float down = up + blockSize * (float)initStageData[stageNumber].stageTileData[stageTileNumber].height;
+
+	if (center.x > left && center.x < right && center.y > up && center.y < down)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)
 {
 	for (int a = 0; a < 40; a++)
