@@ -88,8 +88,10 @@ void GameMainManager::Update()
 
 void GameMainManager::Draw()
 {
+	//ゲーム本編描画
 	GameInstanceDraw();
 
+	//ステージクリア時の描画
 	stageClearCtrl.Draw();
 }
 
