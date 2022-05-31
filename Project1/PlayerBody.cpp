@@ -130,6 +130,11 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		return;
 	}
 
+	if(player->IsGoal)
+	{
+		return;
+	}
+
 	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
 		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
 
@@ -1382,6 +1387,10 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 		if (stage->SelectStage->stageTileData[j].isFold)
 		{
 			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+			if (stage->IsPlayerTile(stage->selectStageNum, j))
+			{
+				return false;
+			}
 		}
 	}
 
