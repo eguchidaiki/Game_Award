@@ -476,7 +476,7 @@ void Player::Key_Move()
 {
 	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
 
-	if(IsGoal)
+	if (IsGoal)
 	{
 		return;
 	}
@@ -1842,59 +1842,41 @@ void Player::IsHitPlayerBody()
 	int right_mapchip_tile;
 	int down_mapchip_tile;
 
+	float goal_L;
+	float goal_U;
+	float goal_R;
+	float goal_D;
+
 	//ゴール判定
 	for (i = 0; i < stage->GetStageDataSize(); i++)
 	{
 		for (j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			//ゴール判定
-			if (stage->IsPositionTile(CenterPosition, i, j))
+			for (int y = 0; y < stage->GetStageTileHeight(i, j); y++)
 			{
-				left_mapchip_tile = left_mapchip % stage->GetStageTileWidth(i, j);
-				up_mapchip_tile = up_mapchip % stage->GetStageTileHeight(i, j);
-				right_mapchip_tile = right_mapchip % stage->GetStageTileWidth(i, j);
-				down_mapchip_tile = down_mapchip % stage->GetStageTileHeight(i, j);
-
-				//左上
-				MapchipPos = up_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
-				MapchipPos_Goal[0] = up_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
-				MapchipPos_Goal[1] = down_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (left_mapchip_tile);
-				MapchipPos_Goal[2] = down_mapchip_tile * static_cast<int>(stage->GetStageTileWidth(i, j)) + (right_mapchip_tile);
-
-				if (Player_IsAction == false)
+				for (int x = 0; x < stage->GetStageTileWidth(i, j); x++)
 				{
-					int GoalCount = 0;
-					if (stage->GetStageMapchip(i, j, MapchipPos) == MapchipData::GOAL)
+					int ThisMapchip = y * stage->GetStageTileWidth(i, j) + x;
+					if (stage->GetStageMapchip(i, j, ThisMapchip) == MapchipData::GOAL)
 					{
-						GoalCount++;
-					}
-					//右上
-					if (stage->GetStageMapchip(i, j, MapchipPos_Goal[0]) == MapchipData::GOAL)
-					{
-						GoalCount++;
-					}
-					//左下
-					if (stage->GetStageMapchip(i, j, MapchipPos_Goal[1]) == MapchipData::GOAL)
-					{
-						GoalCount++;
-					}
-					//右下
-					if (stage->GetStageMapchip(i, j, MapchipPos_Goal[2]) == MapchipData::GOAL)
-					{
-						GoalCount++;
-					}
-
-					if (GoalCount >= 4)
-					{
-						IsGoal = true;
-
-						Audio::volume = 0.125f;
-						Audio::PlayLoadedSound(clearSound);
-						Audio::StopLoadedSound(runSound);
+						goal_L = (stage->GetStageTileOffsetX(i, j) + x) * stage->blockSize;
+						goal_U = (stage->GetStageTileOffsetY(i, j) + y) * stage->blockSize;
+						goal_R = goal_L + stage->blockSize;
+						goal_D = goal_U + stage->blockSize;
 					}
 				}
 			}
 		}
+	}
+	//ゴール判定
+	if (FaceLeft + 35 < goal_R && FaceRight - 35 > goal_L &&
+		FaceUp + 35 < goal_D && FaceDown - 35 > goal_U)
+	{
+		IsGoal = true;
+
+		Audio::volume = 0.125f;
+		Audio::PlayLoadedSound(clearSound);
+		Audio::StopLoadedSound(runSound);
 	}
 
 	bool DiagonallyUpLeft = false;
