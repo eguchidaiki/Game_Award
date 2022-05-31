@@ -108,7 +108,7 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		return;
 	}
 
-	if(player->IsGoal)
+	if (player->IsGoal)
 	{
 		return;
 	}
@@ -1353,23 +1353,23 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 	if (BodyStartPos.x < BodyEndPos.x)
 	{
 		BodyLeft = BodyStartPos.x;
-		BodyRight = BodyStartPos.x + (BodySize - 1.0f);
+		BodyRight = BodyLeft + BodySize;
 	}
 	else
 	{
 		BodyLeft = BodyEndPos.x;
-		BodyRight = BodyEndPos.x + (BodySize - 1.0f);
+		BodyRight = BodyLeft + BodySize;
 	}
 
 	if (BodyStartPos.y < BodyEndPos.y)
 	{
 		BodyUp = BodyStartPos.y;
-		BodyDown = BodyStartPos.y + ((BodySize + 8) - 1.0f);
+		BodyDown = BodyUp + BodySize;
 	}
 	else
 	{
 		BodyUp = BodyEndPos.y;
-		BodyDown = BodyEndPos.y + ((BodySize + 8) - 1.0f);
+		BodyDown = BodyUp + BodySize;
 	}
 
 	//四辺をブロックサイズで割った数
@@ -1402,18 +1402,28 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 		}
 	}
 
+	if (mapchip == NULL)
+	{
+		return false;
+	}
+
 	for (size_t i = 0; i < stage->GetStageDataSize(); i++)
 	{
+		//動いているタイルは無視
+		if (i == stage->selectStageNum)
+		{
+			continue;
+		}
+
 		for (size_t j = 0; j < stage->GetStageTileDataSize(i); j++)
 		{
-			//動いているタイルは無視
-			if (!stage->SelectStage->stageTileData[j].isFold)
+			if (stage->stageData[i].stageTileData[j].isFold == false)
 			{
 				continue;
 			}
 
 			//左上
-			if (stage->IsPositionTile({ BodyLeft,BodyUp,0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyLeft,BodyUp,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
@@ -1421,13 +1431,13 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
 			}
 			//左下
-			if (stage->IsPositionTile({ BodyLeft,BodyDown,0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyLeft,BodyDown,0.0f }, i, j))
 			{
 				BodyLeft_mapchip_tile = BodyLeft_mapchip % stage->GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
@@ -1435,13 +1445,13 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyLeft_mapchip_tile;
 
-				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
 			}
 			//右上
-			if (stage->IsPositionTile({ BodyRight,BodyUp,0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyRight,BodyUp,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
 				BodyUp_mapchip_tile = BodyUp_mapchip % stage->GetStageTileHeight(i, j);
@@ -1449,13 +1459,13 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyUp_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}
 			}
 			//右下
-			if (stage->IsPositionTile({ BodyRight,BodyDown,0.0f }, i, j))
+			if (stage->IsPositionInitTile({ BodyRight,BodyDown,0.0f }, i, j))
 			{
 				BodyRight_mapchip_tile = BodyRight_mapchip % stage->GetStageTileWidth(i, j);
 				BodyDown_mapchip_tile = BodyDown_mapchip % stage->GetStageTileHeight(i, j);
@@ -1463,7 +1473,7 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 				//今いる座標のマップチップを確認
 				mapchipPos = BodyDown_mapchip_tile * stage->GetStageTileWidth(i, j) + BodyRight_mapchip_tile;
 
-				if (stage->IsMapchipBlocks(mapchip[mapchipPos]))
+				if (stage->IsMapchipBlocks(mapchip[mapchipPos]) && mapchip != NULL)
 				{
 					return true;
 				}

@@ -2555,6 +2555,23 @@ bool Stage::IsPositionTile(const RVector3& center, const size_t& stageNumber, co
 	}
 }
 
+bool Stage::IsPositionInitTile(const RVector3& center, const size_t& stageNumber, const size_t& stageTileNumber)
+{
+	float left = (float)initStageData[stageNumber].stageTileData[stageTileNumber].offsetX * blockSize;
+	float up = (float)initStageData[stageNumber].stageTileData[stageTileNumber].offsetY * blockSize;
+	float right = left + blockSize * (float)initStageData[stageNumber].stageTileData[stageTileNumber].width;
+	float down = up + blockSize * (float)initStageData[stageNumber].stageTileData[stageTileNumber].height;
+
+	if (center.x > left && center.x < right && center.y > up && center.y < down)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void Stage::CreateParticle(const size_t& StageDataNum, const size_t& StageTileDataNum)
 {
 	for (int a = 0; a < 40; a++)
@@ -3733,97 +3750,108 @@ int Stage::GhostDraw(const XMFLOAT2& offset, const float& saturationColor)
 	// 色の設定
 	Sprite::SetSpriteColorParam(color.x, color.y, color.z, color.w);
 
-	for (mapchipPos = 0; mapchipPos < stageData[selectStageNum].stageTileData[ghostTileNum].size; mapchipPos++)
+	for (y = 0; y < stageData[selectStageNum].stageTileData[ghostTileNum].height; y++)
 	{
-		x = mapchipPos % stageData[selectStageNum].stageTileData[ghostTileNum].width;
-		y = mapchipPos / stageData[selectStageNum].stageTileData[ghostTileNum].width;
-
-		pos1.x = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].x + drawOffset.x;
-		pos1.y = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].y + drawOffset.y;
-		pos1.z = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].z;
-		pos2.x = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].x + drawOffset.x;
-		pos2.y = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].y + drawOffset.y;
-		pos2.z = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].z;
-
-		switch (stageData[selectStageNum].stageTileData[ghostTileNum].mapchip[mapchipPos])
+		for (x = 0; x < stageData[selectStageNum].stageTileData[ghostTileNum].width; x++)
 		{
-		case MapchipData::BLOCK:
-		{
-			AllBlockSprite[selectStageNum][0].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
-		}
-		case MapchipData::GOAL:
-		{
-			MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
-		}
-		case MapchipData::HORIZONTAL:
-			AllBlockSprite[selectStageNum][1].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			if (foldDirection == BodyType::up || foldDirection == BodyType::down)
+			{
+				mapchipPos = y * stageData[selectStageNum].stageTileData[ghostTileNum].width + x;
+				reverseMapchipPos = (stageData[selectStageNum].stageTileData[ghostTileNum].height - y - 1) * stageData[selectStageNum].stageTileData[ghostTileNum].width + x;
+			}
+			else if (foldDirection == BodyType::left || foldDirection == BodyType::right)
+			{
+				mapchipPos = y * stageData[selectStageNum].stageTileData[ghostTileNum].width + x;
+				reverseMapchipPos = y * stageData[selectStageNum].stageTileData[ghostTileNum].width + (stageData[selectStageNum].stageTileData[ghostTileNum].width - x - 1);
+			}
 
-		case MapchipData::VERTICAL:
-			AllBlockSprite[selectStageNum][2].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			pos1.x = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].x + drawOffset.x;
+			pos1.y = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].y + drawOffset.y;
+			pos1.z = stageData[selectStageNum].stageTileData[ghostTileNum].drawLeftUp[mapchipPos].z;
+			pos2.x = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].x + drawOffset.x;
+			pos2.y = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].y + drawOffset.y;
+			pos2.z = stageData[selectStageNum].stageTileData[ghostTileNum].drawRightDown[mapchipPos].z;
 
-		case MapchipData::LEFTONLY:
-			AllBlockSprite[selectStageNum][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			switch (stageData[selectStageNum].stageTileData[ghostTileNum].mapchip[reverseMapchipPos])
+			{
+			case MapchipData::BLOCK:
+			{
+				AllBlockSprite[selectStageNum][0].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+			}
+			case MapchipData::GOAL:
+			{
+				MapchipSpriteGoal.DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+			}
+			case MapchipData::HORIZONTAL:
+				AllBlockSprite[selectStageNum][1].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::UPONLY:
-			AllBlockSprite[selectStageNum][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::VERTICAL:
+				AllBlockSprite[selectStageNum][2].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::RIGHTONLY:
-			AllBlockSprite[selectStageNum][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::LEFTONLY:
+				AllBlockSprite[selectStageNum][3].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::DOWNONLY:
-			AllBlockSprite[selectStageNum][6].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::UPONLY:
+				AllBlockSprite[selectStageNum][4].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::LEFTL:
-			AllBlockSprite[selectStageNum][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::RIGHTONLY:
+				AllBlockSprite[selectStageNum][5].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::UPL:
-			AllBlockSprite[selectStageNum][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::DOWNONLY:
+				AllBlockSprite[selectStageNum][6].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::RIGHTL:
-			AllBlockSprite[selectStageNum][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::LEFTL:
+				AllBlockSprite[selectStageNum][7].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::DOWNL:
-			AllBlockSprite[selectStageNum][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::UPL:
+				AllBlockSprite[selectStageNum][8].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::LEFTU:
-			AllBlockSprite[selectStageNum][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::RIGHTL:
+				AllBlockSprite[selectStageNum][9].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::UPU:
-			AllBlockSprite[selectStageNum][12].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::DOWNL:
+				AllBlockSprite[selectStageNum][10].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::RIGHTU:
-			AllBlockSprite[selectStageNum][13].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::LEFTU:
+				AllBlockSprite[selectStageNum][11].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::DOWNU:
-			AllBlockSprite[selectStageNum][14].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
+			case MapchipData::UPU:
+				AllBlockSprite[selectStageNum][12].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
 
-		case MapchipData::NOFRAME:
-			AllBlockSprite[selectStageNum][15].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
-			break;
-		case MapchipData::EMPTY_STAGE:
-		case MapchipData::NONE:
-		case MapchipData::START:
-		default:
-		{
-			continue;
-			break;
-		}
+			case MapchipData::RIGHTU:
+				AllBlockSprite[selectStageNum][13].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+
+			case MapchipData::DOWNU:
+				AllBlockSprite[selectStageNum][14].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+
+			case MapchipData::NOFRAME:
+				AllBlockSprite[selectStageNum][15].DrawExtendSprite(pos1.x, pos1.y, pos2.x, pos2.y);
+				break;
+			case MapchipData::EMPTY_STAGE:
+			case MapchipData::NONE:
+			case MapchipData::START:
+			default:
+			{
+				continue;
+				break;
+			}
+			}
 		}
 	}
 
