@@ -45,6 +45,9 @@ public: //メンバ関数
 	//スライド
 	void Body_Slide(RVector3& center);
 
+	//足の更新処理
+	void BodyFootUpdate();
+
 	/// <summary>
 	/// 体を有効化した時の設定
 	/// </summary>

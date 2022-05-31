@@ -337,7 +337,10 @@ private:
 
 	// ステージタイルの描画
 	// saturationColorが1だと元の色で表示する
-	int StageTileDraw(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float& saturationColor = 1.0f);
+	int StageTileDrawOpen(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
+	//折ったときの描画
+	int StageTileDrawFold(const size_t& stageNumber, const size_t& stageTileNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);
+
 	// 枠線・折り目の描画
 	// saturationColorが1だと元の色で表示する
 	int LineDraw(const size_t& stageNumber, const XMFLOAT2& offset, const float saturationColor = 1.0f);

@@ -78,5 +78,7 @@ public:
 	const int MENUICON_SIZE_X = 280;
 	const int MENUICON_OFFSET = 30;
 
+	SoundData uiMoveSound;
+
 };
 

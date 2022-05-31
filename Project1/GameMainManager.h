@@ -6,6 +6,7 @@
 
 #include "StageSelecter.h"
 #include "StageClearedControler.h"
+#include "BackGroundGraphic.h"
 
 #include <array>
 #include <Audio.h>
@@ -23,6 +24,8 @@ private:
 	UI ui;
 
 	Tutorial tutorial;
+
+	BackGroundGraphic bg;
 
 public:
 	//今プレイしているステージ番号
@@ -57,5 +60,6 @@ private:
 	void GameInstanceDraw();
 
 	StageClearedControler stageClearCtrl;
+
 };
 

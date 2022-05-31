@@ -95,32 +95,10 @@ void PlayerBody::Update(RVector3& center)
 		IsLegDraw = true;
 	}
 
-	//体の四辺
-	float BodyLeft;
-	float BodyDown;
-
-	//StartPosとEndPosの位置関係によって上下左右の設定を変える
-	if (BodyStartPos.x < BodyEndPos.x)
+	if (player->Player_IsAction)
 	{
-		BodyLeft = BodyStartPos.x - 5;
+		IsLegDraw = false;
 	}
-	else
-	{
-		BodyLeft = BodyEndPos.x - 5;
-	}
-
-	if (BodyStartPos.y < BodyEndPos.y)
-	{
-		BodyDown = BodyEndPos.y;
-	}
-	else
-	{
-		BodyDown = BodyStartPos.y;
-	}
-
-	RVector3 FootUpPosition = { BodyLeft,BodyDown,0.0f };
-
-	BodyLeg.Update(FootUpPosition, player->IsDownBody, 1);
 }
 
 void PlayerBody::Draw(int offsetX, int offsetY)
@@ -130,15 +108,20 @@ void PlayerBody::Draw(int offsetX, int offsetY)
 		return;
 	}
 
-	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
-		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
-
-	BodySprite.Draw();
+	if(player->IsGoal)
+	{
+		return;
+	}
 
 	if (IsLegDraw)
 	{
 		BodyLeg.Draw(offsetX, offsetY, player->IsLeft, player->IsRight);
 	}
+
+	BodySprite.DrawExtendSprite(static_cast<int>(BodyStartPos.x) + offsetX, static_cast<int>(BodyStartPos.y) + offsetY,
+		static_cast<int>(BodyEndPos.x) + offsetX, static_cast<int>(BodyEndPos.y) + offsetY);
+
+	BodySprite.Draw();
 }
 
 void PlayerBody::Create()
@@ -545,6 +528,36 @@ void PlayerBody::Body_Slide(RVector3& center)
 			IsSlide = false;
 		}
 	}
+}
+
+void PlayerBody::BodyFootUpdate()
+{
+	//体の四辺
+	float BodyLeft;
+	float BodyDown;
+
+	//StartPosとEndPosの位置関係によって上下左右の設定を変える
+	if (BodyStartPos.x < BodyEndPos.x)
+	{
+		BodyLeft = BodyStartPos.x - 5;
+	}
+	else
+	{
+		BodyLeft = BodyEndPos.x - 5;
+	}
+
+	if (BodyStartPos.y < BodyEndPos.y)
+	{
+		BodyDown = BodyEndPos.y;
+	}
+	else
+	{
+		BodyDown = BodyStartPos.y;
+	}
+
+	RVector3 FootUpPosition = { BodyLeft,BodyDown,0.0f };
+
+	BodyLeg.Update(FootUpPosition, player->IsDownBody, 1);
 }
 
 void PlayerBody::setactivate(RVector3 center)
@@ -1382,6 +1395,10 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 		if (stage->SelectStage->stageTileData[j].isFold)
 		{
 			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+			if (stage->IsPlayerTile(stage->selectStageNum, j))
+			{
+				return false;
+			}
 		}
 	}
 

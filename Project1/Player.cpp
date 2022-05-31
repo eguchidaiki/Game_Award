@@ -69,6 +69,7 @@ void Player::Init()
 
 	FallSpeed = 3.0f;
 	IsAllFall = true;
+	IsInitJump = true;
 	IsJump = false;
 	Player_IsAction = false;
 	IsColide = false;
@@ -101,6 +102,18 @@ void Player::Update(int offsetX, int offsetY)
 		if (deathFrameCount >= 8 + 1)
 		{
 			isDeath = false;
+		}
+	}
+
+	if (IsGoal)
+	{
+		if (animationCount % 5 == 0)
+		{
+			goalFrameCount++;
+		}
+		if (goalFrameCount > 7)
+		{
+			goalFrameCount = 0;
 		}
 	}
 
@@ -231,18 +244,22 @@ void Player::Update(int offsetX, int offsetY)
 	//それぞれの体のアップデート処理(有効化されているときのみ)
 
 	Body_One.Update(CenterPosition);
+	Body_One.BodyFootUpdate();
 	Body_One.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_One.IsAroundBlock();
 
 	Body_Two.Update(CenterPosition);
+	Body_Two.BodyFootUpdate();
 	Body_Two.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Two.IsAroundBlock();
 
 	Body_Three.Update(CenterPosition);
+	Body_Three.BodyFootUpdate();
 	Body_Three.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Three.IsAroundBlock();
 
 	Body_Four.Update(CenterPosition);
+	Body_Four.BodyFootUpdate();
 	Body_Four.IsOutsideBody(&CenterPosition, FallSpeed, IsAllFall, IsJump, IsColide);
 	Body_Four.IsAroundBlock();
 
@@ -261,7 +278,16 @@ void Player::Draw(int offsetX, int offsetY)
 	float leftPos = (CenterPosition.x - 25) + offsetX;
 	float rightPos = (CenterPosition.x + 25) + offsetX;
 
-	if (IsLeft)
+	if (IsGoal)
+	{
+		goalSprite.uvOffsetHandle = goalFrameCount;
+		goalSprite.DrawExtendSprite(
+			leftPos, (CenterPosition.y - 57) + offsetY,
+			rightPos, (CenterPosition.y + 33) + offsetY);
+		goalSprite.Draw();
+	}
+
+	if (IsLeft && !IsGoal)
 	{
 		if (isDeath)
 		{
@@ -292,7 +318,7 @@ void Player::Draw(int offsetX, int offsetY)
 				rightPos, downPos);
 		}
 	}
-	if (IsRight)
+	if (IsRight && !IsGoal)
 	{
 		if (isDeath)
 		{
@@ -431,6 +457,10 @@ void Player::Create()
 	{
 		deathSprite.CreateAndSetDivisionUVOffsets(8, 4, 2, 150, 150, TexManager::LoadTexture("Resources/die/die.png"));
 	}
+	if ((goalSprite.spdata->size.x <= 0) || (goalSprite.spdata->size.y <= 0))
+	{
+		goalSprite.CreateAndSetDivisionUVOffsets(8, 8, 1, 50, 89, TexManager::LoadTexture("Resources/playerClear.png"));
+	}
 
 	Body_One.Create();
 	Body_Two.Create();
@@ -445,6 +475,11 @@ void Player::Create()
 void Player::Key_Move()
 {
 	IsWalk = (actFlag->MoveLeft() || actFlag->MoveRight()) && (!Player_IsAction);
+
+	if(IsGoal)
+	{
+		return;
+	}
 
 	//左右移動
 	if (actFlag->MoveRight() && Player_IsAction == false)
@@ -2367,6 +2402,10 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 		if (stage->SelectStage->stageTileData[j].isFold)
 		{
 			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+			if (stage->IsPlayerTile(stage->selectStageNum, j))
+			{
+				return false;
+			}
 		}
 	}
 
@@ -2375,7 +2414,7 @@ bool Player::IsReverseHitFaceOpen(const unsigned char& direction)
 	{
 		for (int j = 0; j < stage->SelectStage->stageTileData.size(); j++)
 		{
-			//動いているタイルは無視
+			//折っているタイルは無視
 			if (!stage->SelectStage->stageTileData[j].isFold)
 			{
 				continue;
