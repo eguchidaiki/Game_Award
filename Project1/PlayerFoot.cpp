@@ -35,6 +35,31 @@ void PlayerFoot::Set()
 
 void PlayerFoot::Update(RVector3& DownPos, bool IsDownBody, int BodyDis)
 {
+	if (!FootIsAction && player->IsWalk && (!player->IsJump || !player->Player_IsAction || !player->IsAllFall))
+	{
+		IsWalkAnimation = true;
+	}
+	else
+	{
+		IsWalkAnimation = false;
+		WalkAnimationCount = 0;
+	}
+
+	animationCount++;
+	animationCount %= 0xFFFFFFFF;
+
+	if (IsWalkAnimation)
+	{
+		if (animationCount % 5 == 0)
+		{
+			WalkAnimationCount++;
+		}
+		if (WalkAnimationCount > 11)
+		{
+			WalkAnimationCount = 0;
+		}
+	}
+
 	if (FootIsAction == true)
 	{
 		ease.addTime += ease.maxTime / 40.0f;
@@ -59,13 +84,31 @@ void PlayerFoot::Draw(int offsetX, int offsetY, bool isleft, bool isright)
 		return;
 	}
 
-	if (isleft)
+	if (IsWalkAnimation)
+	{
+		FootAnimation.uvOffsetHandle = WalkAnimationCount;
+		if (isleft)
+		{
+			FootAnimation.DrawExtendSprite(
+				static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y - 6) + offsetY,
+				static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY);
+		}
+		if (isright)
+		{
+			FootAnimation.DrawExtendSprite(
+				static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y - 6) + offsetY,
+				static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY);
+		}
+		FootAnimation.Draw();
+	}
+
+	if (isleft && !IsWalkAnimation)
 	{
 		FootSprite.DrawExtendSprite(
 			static_cast<int>(FootLeftUpPosition.x) + offsetX, static_cast<int>(FootLeftUpPosition.y) + offsetY,
 			static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + 8 + offsetY);
 	}
-	if (isright)
+	if (isright && !IsWalkAnimation)
 	{
 		FootSprite.DrawExtendSprite(
 			static_cast<int>(FootLeftUpPosition.x) + 60 + offsetX, static_cast<int>(FootLeftUpPosition.y) + offsetY,
@@ -81,5 +124,10 @@ void PlayerFoot::Create()
 	{
 		FootHandle = TexManager::LoadTexture("./Resources/playerLegs.png");
 		FootSprite.Create(FootHandle);
+	}
+
+	if ((FootAnimation.spdata->size.x <= 0) || (FootAnimation.spdata->size.y <= 0))
+	{
+		FootAnimation.CreateAndSetDivisionUVOffsets(12, 12, 1, 57, 13, TexManager::LoadTexture("Resources/playerRunLeg.png"));
 	}
 }
