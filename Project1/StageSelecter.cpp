@@ -114,6 +114,12 @@ void StageSelecter::GoNextStage()
 
 void StageSelecter::Changing_UI_Number()
 {
+	for (auto& p : stagePage) {
+		if (p.displayNum != 0 && p.displayNum != 19) {
+			return;
+		}
+	}
+
 	//入力によってインクリメント、デクリメント
 	int select_number = static_cast<int>(user_selecting);
 	if (inputManager->LeftTrigger() || Input::isKeyTrigger(DIK_LEFT)) {
