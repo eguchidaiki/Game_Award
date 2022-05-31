@@ -69,6 +69,8 @@ private:
 	float x2 = 0.0f, y2 = 0.0f;
 	const float SELECTING_SCALE = 1.2f;
 
+	float sepiaRate = 0.0f;
+
 	//ステージクリア背景
 	Sprite clearedBackSprite;
 

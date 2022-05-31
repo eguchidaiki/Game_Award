@@ -513,6 +513,7 @@ void Sprite::InstanceUpdate()
         insmap[i].uvOffset = spdata->insWorldMatrixes[i].uvOffset;
         insmap[i].drawsize = spdata->insWorldMatrixes[i].drawsize;
         insmap[i].color = spdata->insWorldMatrixes[i].color;
+        insmap[i].freeData01 = spdata->insWorldMatrixes[i].freeData01;
     }
     spdata->vertInsBuff->Unmap(0, nullptr);
 
