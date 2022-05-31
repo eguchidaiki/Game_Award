@@ -17,7 +17,8 @@ private:
 
 class BackGroundGraphic
 {
-private:
+public:
+
 	//îwåi
 	Sprite backGroundSprite;
 	Sprite birdSprite;
@@ -45,5 +46,8 @@ private:
 	const float bird_vel_x = 1.2f;
 	int			frame = 0;
 
+	const int CLOUD_SPAWNFRAME_01 = 240;
+	const int CLOUD_SPAWNFRAME_02 = 480;
+	const int CLOUD_SPAWNFRAME_03 = 720;
 };
 
