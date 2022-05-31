@@ -1,4 +1,10 @@
 #include "PlayerFoot.h"
+#include "Player.h"
+
+namespace
+{
+	static Player* player = Player::Get();
+}
 
 PlayerFoot::PlayerFoot() :
 	FootLeftUpPosition{},
@@ -48,6 +54,11 @@ void PlayerFoot::Update(RVector3& DownPos, bool IsDownBody, int BodyDis)
 
 void PlayerFoot::Draw(int offsetX, int offsetY, bool isleft, bool isright)
 {
+	if (player->IsGoal)
+	{
+		return;
+	}
+
 	if (isleft)
 	{
 		FootSprite.DrawExtendSprite(
