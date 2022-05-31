@@ -50,7 +50,7 @@ void PlayerFoot::Update(RVector3& DownPos, bool IsDownBody, int BodyDis)
 
 	if (IsWalkAnimation)
 	{
-		if (animationCount % 5 == 0)
+		if (animationCount % 3 == 0)
 		{
 			WalkAnimationCount++;
 		}
