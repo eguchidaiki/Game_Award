@@ -2111,7 +2111,6 @@ void Stage::SetOnPlayerStageTileFold(std::vector<size_t>& stagenumber, std::vect
 				stagenumber.push_back(selectStageNum);
 				onplayerstage.push_back(stageData[selectStageNum].stageTileData[b].stageNumber);
 				moveStageData.push_back(b);
-
 				break;
 			}
 			case BodyType::down:

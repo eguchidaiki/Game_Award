@@ -45,7 +45,20 @@ void UI::Update(unsigned char PlayerTile[4], bool* Isback, int StageNum)
 		}
 	}
 
-	if ((IsPausePress && Input::isMouseClickTrigger(0)) || InputManger::Get()->MenuTrigger())
+	int movestagecount = 0;
+
+	for (int i = 0; i < stage->GetStageDataSize(); i++)
+	{
+		for (int j = 0; j < stage->GetStageTileDataSize(i); j++)
+		{
+			if (stage->IsTileMove(i, j))
+			{
+				movestagecount++;
+			}
+		}
+	}
+
+	if ((IsPausePress && Input::isMouseClickTrigger(0)) || InputManger::Get()->MenuTrigger() && movestagecount == 0)
 	{
 		*Isback = true;
 	}

@@ -69,6 +69,7 @@ void Player::Init()
 
 	FallSpeed = 3.0f;
 	IsAllFall = true;
+	IsInitJump = true;
 	IsJump = false;
 	Player_IsAction = false;
 	IsColide = false;
@@ -101,6 +102,18 @@ void Player::Update(int offsetX, int offsetY)
 		if (deathFrameCount >= 8 + 1)
 		{
 			isDeath = false;
+		}
+	}
+
+	if (IsGoal)
+	{
+		if (animationCount % 5 == 0)
+		{
+			goalFrameCount++;
+		}
+		if (goalFrameCount > 7)
+		{
+			goalFrameCount = 0;
 		}
 	}
 
@@ -261,7 +274,16 @@ void Player::Draw(int offsetX, int offsetY)
 	float leftPos = (CenterPosition.x - 25) + offsetX;
 	float rightPos = (CenterPosition.x + 25) + offsetX;
 
-	if (IsLeft)
+	if (IsGoal)
+	{
+		goalSprite.uvOffsetHandle = goalFrameCount;
+		goalSprite.DrawExtendSprite(
+			leftPos, (CenterPosition.y - 57) + offsetY,
+			rightPos, (CenterPosition.y + 33) + offsetY);
+		goalSprite.Draw();
+	}
+
+	if (IsLeft && !IsGoal)
 	{
 		if (isDeath)
 		{
@@ -292,7 +314,7 @@ void Player::Draw(int offsetX, int offsetY)
 				rightPos, downPos);
 		}
 	}
-	if (IsRight)
+	if (IsRight && !IsGoal)
 	{
 		if (isDeath)
 		{
@@ -430,6 +452,10 @@ void Player::Create()
 	if ((deathSprite.spdata->size.x <= 0) || (deathSprite.spdata->size.y <= 0))
 	{
 		deathSprite.CreateAndSetDivisionUVOffsets(8, 4, 2, 150, 150, TexManager::LoadTexture("Resources/die/die.png"));
+	}
+	if ((goalSprite.spdata->size.x <= 0) || (goalSprite.spdata->size.y <= 0))
+	{
+		goalSprite.CreateAndSetDivisionUVOffsets(8, 8, 1, 50, 89, TexManager::LoadTexture("Resources/playerClear.png"));
 	}
 
 	Body_One.Create();

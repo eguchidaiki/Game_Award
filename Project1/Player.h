@@ -244,6 +244,9 @@ public: //メンバ変数
 	bool isDeath;           //死んだときのアニメーション中かどうか
 	size_t deathFrameCount; //死んだときのアニメーションカウント
 
+	Sprite goalSprite;
+	size_t goalFrameCount;
+
 	//マウスのクリック座標
 	XMFLOAT2 PressPos = { 0, 0 };
 	XMFLOAT2 ReleasePos = { 0, 0 };
