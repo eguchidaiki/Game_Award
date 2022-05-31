@@ -45,14 +45,12 @@ void PlayerFoot::Update(RVector3& DownPos, bool IsDownBody, int BodyDis)
 		WalkAnimationCount = 0;
 	}
 
-	static size_t animationCount = 0;
-
 	animationCount++;
 	animationCount %= 0xFFFFFFFF;
 
 	if (IsWalkAnimation)
 	{
-		if (animationCount % 10 == 0)
+		if (animationCount % 5 == 0)
 		{
 			WalkAnimationCount++;
 		}
