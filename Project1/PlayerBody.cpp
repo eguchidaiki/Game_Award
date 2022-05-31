@@ -1382,6 +1382,10 @@ bool PlayerBody::IsReverseHitBodyOpen(const unsigned char& direction)
 		if (stage->SelectStage->stageTileData[j].isFold)
 		{
 			mapchip = stage->initStageData[stage->selectStageNum].stageTileData[j].mapchip;
+			if (stage->IsPlayerTile(stage->selectStageNum, j))
+			{
+				return false;
+			}
 		}
 	}
 
