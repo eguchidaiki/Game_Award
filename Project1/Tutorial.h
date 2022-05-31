@@ -18,6 +18,7 @@ public: //サブクラス
 	enum TutorialType
 	{
 		NORMAL_TYPE, //普通のチュートリアル
+		FOLD_TYPE,   //折るのチュートリアル
 		SELECT_TYPE  //カーソル移動のチュートリアル
 	};
 
@@ -48,6 +49,8 @@ public: //メンバ関数
 
 	// チュートリアルを開始する
 	void StartNormalTutorial();
+	// チュートリアルを開始する(折る)
+	void StartFoldTutorial();
 	// チュートリアルを開始する(ステージの選択)
 	void StartSelectTutorial();
 	// チュートリアルをスキップする
@@ -64,6 +67,8 @@ private:
 	void FoldTutorial(const XMFLOAT2& offset, bool flag);
 	// カーソル移動のチュートリアル
 	void SelectTutorial(const XMFLOAT2& offset, bool flag);
+	// 文字の描画
+	void CharacterDraw();
 
 public: //メンバ変数
 	bool isFirstOnly;
@@ -77,9 +82,13 @@ private:
 	//画像ハンドル
 	Sprite frameSprite;
 	Sprite moveSprite;
+	Sprite moveFontSprite;
 	Sprite jumpSprite;
+	Sprite jumpFontSprite;
 	Sprite foldSprite;
+	Sprite foldFontSprite;
 	Sprite selectSprite;
+	Sprite selectFontSprite;
 
 	XMFLOAT2 frameOffset;
 	float drawScale;
