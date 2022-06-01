@@ -25,6 +25,7 @@ Title::Title(ISceneChanger* changer) : BaseScene(changer)
 	titleBackScreen.Create(TexManager::LoadTexture("Resources/titleResource/titleBack.png"));
 	titleLogo.Create(TexManager::LoadTexture("Resources/titleResource/titleUI03.png"));
 	titleFont.Create(TexManager::LoadTexture("Resources/titleResource/titleUI02.png"));
+	titleAButton.Create(TexManager::LoadTexture("Resources/titleResource/titleUI01.png"));
 
 	go_next_Button.Init(60, TexManager::LoadTexture("Resources/titleResource/titleUI04.png"),
 		MENUICON_SIZE_X, MENUICON_SIZE_Y);
@@ -163,6 +164,9 @@ void Title::Draw()
 		ui_lt.y + MENUICON_SIZE_Y / 2);
 	go_end_Button.Draw(ui_lt.x + MENUICON_SIZE_X / 2,
 		ui_lt.y + (MENUICON_SIZE_Y / 2) * 3 + MENUICON_OFFSET);
+
+	titleAButton.DrawSprite(Raki_WinAPI::window_width - 188, 634);
+	titleAButton.Draw();
 
 	switch (user_selecting)
 	{

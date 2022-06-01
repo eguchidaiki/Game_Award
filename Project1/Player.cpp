@@ -97,7 +97,7 @@ void Player::Update(int offsetX, int offsetY)
 
 	if (isDeath)
 	{
-		if (animationCount % 5 == 0)
+		if (animationCount % 3 == 0)
 		{
 			deathFrameCount++;
 		}
