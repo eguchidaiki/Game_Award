@@ -83,6 +83,7 @@ public:
 	Sprite titleBackScreen;
 	Sprite titleLogo;
 	Sprite titleFont;
+	Sprite titleAButton;
 	
 	//ƒ{ƒ^ƒ“
 	UI_Button go_next_Button;
